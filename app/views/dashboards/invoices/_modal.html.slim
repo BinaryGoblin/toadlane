@@ -1,0 +1,106 @@
+.modal.modal-lg.fade tabindex="-1" role="dialog" id="modal_invoice_#{modal.id.to_s}"
+  .modal-dialog: .modal-content
+    .modal-header
+      .pull-right data-dismiss="modal"= fa_icon 'close'
+      h4.modal-title Print this invoice
+
+    .modal-body
+      h4.text-uppercase.pull-right Invoce
+
+      .pull-left
+        h4.text-uppercase Toadlane llc.
+        div Best deals in town!
+
+      .text-center style="padding:0 200px 10px"= image_tag 'logo-header.png'
+
+      table.table-checkout style="margin-bottom:0"
+        tbody
+          tr
+            td colspan="2" width="50%" valign="top"
+              dl
+                dt Name:
+                dd= modal.product.user.name
+
+                dt Adress:
+                dd= modal.product.user.location
+
+                dt Zip-Code:
+                dd= modal.product.user.zip_code
+
+                dt City:
+                dd= modal.product.user.city
+
+                dt State:
+                dd= modal.product.user.state
+
+                dt Country:
+                dd = modal.product.user.country
+
+            td colspan="2" valign="top" align="right"
+              h4.text-uppercase invoce ##{modal.id}
+              div Date: #{modal.created_at.strftime('%d-%m-%Y')}
+
+          tr
+            td colspan="2" valign="top"
+              h4.text-uppercase To:
+              br
+              dl
+                dt Name:
+                dd= current_user.name
+
+                dt Adress:
+                dd= current_user.location
+
+                dt Zip-Code:
+                dd= current_user.zip_code
+
+                dt City:
+                dd= current_user.city
+
+                dt State:
+                dd= current_user.state
+
+                dt Country:
+                dd = current_user.country
+
+                dt Phone:
+                dd= current_user.phone
+
+            td colspan="2" valign="top"
+              h4.text-uppercase For:
+              br
+              div Deals
+              div 
+                | [P.O. #]
+          
+      table.table-checkout
+        thead
+          tr
+            th description
+            th qty
+            th price
+            th amount
+          
+        tbody
+          tr
+            td= modal.product.name
+            td= modal.count
+            td $ #{number_with_precision(modal.unit_price, precision: 2, delimiter: '')}
+            td $ #{number_with_precision(modal.count * modal.unit_price, precision: 2, delimiter: '')}
+
+          tr
+            td colspan="3" #{number_with_precision(modal.rebate_percent, precision: 2, delimiter: '')}% rebate for purchasing #{modal.count} pcs
+            td $ -#{number_with_precision(modal.rebate_price, precision: 2, delimiter: '')}
+
+          tr
+            td colspan="3" Taxes (#{modal.product.tax.try(:value)}%) for non-resalers
+            td $ #{number_with_precision(modal.taxes_price, precision: 2, delimiter: '')}
+
+          / tr
+          /   td colspan="3" Flat shipping
+          /   td $ 0.00
+
+          tr
+            td.no-border colspan="2"
+            td.text-center: b.text-uppercase Total:
+            td: b $ #{number_with_precision(modal.amount, precision: 2, delimiter: '')}

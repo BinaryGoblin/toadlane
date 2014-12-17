@@ -1,0 +1,95 @@
+#form_message.modal.fade tabindex="-1" role="dialog"
+  = form_tag messages_path
+    = hidden_field_tag 'message[user_id]', product.user.id
+
+    .modal-dialog: .modal-content
+      .modal-header
+        .pull-right data-dismiss="modal"= fa_icon 'close'
+        h4.modal-title Send a message
+
+      .modal-body
+        .form-group
+          = label_tag 'message_subject', 'Subject:'
+          = text_field_tag 'message[subject]', nil, class: 'form-control'
+
+        .form-group
+          = label_tag 'message_body', 'Your message:'
+          = text_area_tag 'message[body]', nil, class: 'form-control'
+
+      .modal-footer= button_tag 'Send', class: 'btn btn-warning', data: { disable_with: 'Please wait...' }
+
+
+#form_request.modal.fade tabindex="-1" role="dialog"
+  = form_tag requests_path
+    = hidden_field_tag 'request[user_id]', product.user.id
+
+    .modal-dialog: .modal-content
+      .modal-header
+        .pull-right data-dismiss="modal"= fa_icon 'close'
+        h4.modal-title Send a request
+
+      .modal-body
+        .form-group
+          = label_tag 'request_subject', 'Subject:'
+          = text_field_tag 'request[subject]', nil, class: 'form-control'
+
+        .form-group
+          = label_tag 'request_body', 'Your request:'
+          = text_area_tag 'request[body]', nil, class: 'form-control'
+
+      .modal-footer= button_tag 'Send', class: 'btn btn-warning', data: { disable_with: 'Please wait...' }
+
+
+#form_checkout.modal.modal-lg.fade tabindex="-1" role="dialog"
+  .modal-dialog: .modal-content
+    .modal-header
+      .pull-right data-dismiss="modal"= fa_icon 'close'
+      h4.modal-title Checkout
+
+    .modal-body: table.table-checkout
+      thead
+        tr
+          th description
+          th qty
+          th price
+          th amount
+        
+      tbody
+        tr
+          td Tmobile & ATT iPhone 5S FACTORY SEALED LOCKED
+          td.armor-quantity 1
+          td $ #{number_with_precision(product.unit_price, precision: 2, delimiter: '')}
+          td $ <span class="armor-unit-total">#{number_with_precision(product.unit_price, precision: 2, delimiter: '')}</span>
+
+        tr
+          td colspan="3" <span class="armor-rebate">0.00</span>% rebate for purchasing <span class="armor-quantity">1</span> pcs
+          td $ -<span class="armor-rabete-price">0.00</span>
+
+        tr
+          td colspan="3" Taxes (#{product.tax.try(:value)}%) for non-resalers
+          td $ <span class="armor-taxes-price">0.00</span>
+
+        / tr
+        /   td colspan="3" Flat shipping
+        /   td $ <span class="armor-flat">0.00</span>
+
+        tr
+          td.no-border colspan="2"
+          td.text-center: b.text-uppercase Total:
+          td: b $ <span class="armor-total">#{number_with_precision(product.unit_price, precision: 2, delimiter: '')}</span>
+        
+    .modal-footer.text-right
+      = form_tag armor_orders_path
+        = hidden_field_tag 'armor_order[product_id]', product.id
+        = hidden_field_tag 'armor_order[unit_price]', number_with_precision(product.unit_price, precision: 2, delimiter: '')
+        = hidden_field_tag 'armor_order[amount]', number_with_precision(product.unit_price, precision: 2, delimiter: '')
+        = hidden_field_tag 'armor_order[count]', '1'
+        = hidden_field_tag 'armor_order[summary]', 'products to ' + product.status_characteristic
+        = hidden_field_tag 'armor_order[description]', strip_tags(product.description)
+
+        = hidden_field_tag 'armor_order[taxes_price]', '0'
+        = hidden_field_tag 'armor_order[rebate_price]', '0'
+        = hidden_field_tag 'armor_order[rebate_percent]', '0'
+
+        button.btn.btn-default type="button" data-dismiss="modal" Cancel
+        button.btn.btn-primary type="submit" data-disable_with="Please wait..." Ok

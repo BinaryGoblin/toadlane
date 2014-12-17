@@ -1,0 +1,56 @@
+.wrap
+  .carousel-product-title
+    h3 Recommended
+    .actions
+      = link_to 'See all products', all_products_path, class: 'btn btn-success pull-right'
+      = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
+
+  #products_first.carousel.product-carousel.slide data-ride="carousel"
+    = products_carousel_items @products_recomended
+
+    a.left.carousel-control href="#products_first" role="button" data-slide="prev"
+    a.right.carousel-control href="#products_first" role="button" data-slide="next"
+
+  .carousel-product-title
+    h3 Best offers
+    .actions
+      = link_to 'See all offers', offers_products_path, class: 'btn btn-default pull-right'
+      = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
+
+  #products_second.carousel.product-carousel.slide data-ride="carousel"
+    = products_carousel_items @products_best
+
+    a.left.carousel-control href="#products_second" role="button" data-slide="prev"
+    a.right.carousel-control href="#products_second" role="button" data-slide="next"
+
+  .carousel-product-title
+    h3 New deals
+    .actions
+      = link_to 'See all deals', '#', class: 'btn btn-default pull-right'
+      = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
+
+  #products_third.carousel.product-carousel.slide data-ride="carousel"
+    = products_carousel_items @products_new_deals
+
+    a.left.carousel-control href="#products_third" role="button" data-slide="prev"
+    a.right.carousel-control href="#products_third" role="button" data-slide="next"
+
+/ .featured-sellers: .wrap
+/   .carousel-product-title
+/     h3 Featured sellers
+/     .actions= link_to 'see all sellers', '#', class: 'btn btn-default pull-right'
+
+/   #sellers.carousel.featured-seller-carousel.slide data-ride="carousel"
+/     = sellers_carousel_items @featured_sellers
+
+/     a.left.carousel-control href="#sellers" role="button" data-slide="prev"
+/     a.right.carousel-control href="#sellers" role="button" data-slide="next"
+
+.few: .wrap
+  span here are a few of our partners that make the TOAD experience more secure and profitable
+
+  .brands-logo
+    = link_to image_tag('img-brand-1.png'), '#'
+    = link_to image_tag('img-brand-2.gif'), '#'
+    = link_to image_tag('img-brand-3.png'), '#'
+    = link_to image_tag('img-brand-5.jpg'), '#'

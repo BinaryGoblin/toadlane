@@ -1,0 +1,102 @@
+.mailers {
+  position: absolute;  
+  top: 95px;
+  bottom: 135px;
+  left: 50%;
+  margin-left: $wrap-width-small / -2;
+
+  > .fa {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -20px 0 0 -20px;
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+    color: #cccfd3;
+    text-align: center;
+  }
+
+  h3 {
+    line-height: 1;
+    font-size: 28px;
+    text-align: center;
+    color: #cccfd3;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    position: absolute;
+    width: 45%;
+    top: 0;
+    padding: 10px 0;
+    text-shadow: 0 0 1px white;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  li {
+    @include clearfix;
+    @include transition(.2s);
+
+    &:hover {
+      background: white;
+    }
+  }
+
+  label {
+    padding: 8px 2px 6px 10px;
+    display: block;
+  }
+
+  > div {
+    position: absolute;
+    z-index: 10000;
+    top: 43px;
+    bottom: 0;
+    width: 45%;
+    overflow: scroll;
+
+    a {
+      font-size: 16px;
+    }
+  }
+
+  .mtitle-products {
+    left: 0;
+  }
+
+  .mtitle-users {
+    right: 0;
+  }
+
+  .icheckbox {
+    float: left;
+    margin-right: 10px;
+  }
+
+  .price {
+    margin: -6px 0 0 15px;
+  }
+}
+
+.mailers-product {
+  left: 0%;
+
+  .name {
+    overflow: hidden;
+    @include text-overflow;
+  }
+}
+      
+.mailers-users {
+  right: 0%;
+
+  .name {
+    font-size: 14px;
+    overflow: hidden;
+    @include text-overflow;
+  }
+}

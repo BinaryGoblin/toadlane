@@ -1,0 +1,21 @@
+.wrap-sm
+  .table-options= link_to fa_icon('plus', text: 'New Tax Level'), new_admin_tax_path, class: 'btn btn-default pull-right'
+
+  table.table
+    thead
+      tr
+        th ID
+        th Name
+        th Value
+        th
+
+    tbody
+      - @taxes.each do |tax|
+        tr
+          td = tax.id
+          td = tax.name
+          td #{tax.value} %
+          td.text-right
+            = link_to 'Edit', edit_admin_tax_path(tax), class: 'view'
+            |  | 
+            = link_to 'Delete', admin_tax_path(tax), method: :delete, data: { confirm: 'Are you sure?' }, class: 'view view-red'

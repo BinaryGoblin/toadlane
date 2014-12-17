@@ -1,0 +1,24 @@
+.wrap-sm
+  table.table
+    thead
+      tr
+        th ID
+        th Name
+        th Email
+        th Certificate
+        th.text-center Is reseller
+        th
+
+    tbody
+      - @resellers.each do |reseller|
+        tr
+          td = reseller.id
+          td = reseller.name
+          td = reseller.email
+          td = link_to 'Get certificate', get_certificate_admin_reseller_path(reseller.id) if reseller.certificate.present?
+          - if reseller.is_reseller
+            td.text-center: span.label.label-green Yes
+            td.text-right= link_to 'None reseller', admin_reseller_path(reseller), method: :delete, data: { confirm: 'Are you sure?' }, class: 'view view-red'
+          - else
+            td.text-center: span.label.label-red No
+            td.text-right= link_to 'Make reseller', admin_reseller_path(reseller), method: :put, data: { confirm: 'Are you sure?' }, class: 'view'

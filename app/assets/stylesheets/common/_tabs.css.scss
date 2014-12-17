@@ -1,0 +1,22 @@
+.tabs {
+  background: white;
+  padding: 15px 0;
+  margin-bottom: 30px;
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    @include clearfix;
+  }
+
+  li {
+    float: left;
+    margin-right: 10px;
+
+    &:last-child {
+      float: right;
+      margin-right: 0;
+    }
+  }
+}

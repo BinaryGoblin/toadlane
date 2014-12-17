@@ -1,0 +1,16 @@
+header.header: .wrap
+  = link_to image_tag('logo-header.png'), '/', class: 'logo'
+
+  ul.header-nav.pull-left
+    li= nav_link 'why toad?', faq_path(anchor: 'whytoad')
+    li= nav_link 'Sellers', faq_path(anchor: 'sellers')
+    li= nav_link 'faq', faq_path
+
+  .header-user.pull-right
+    - if current_user
+      .want-sell-buy Want to sell or buy?<br>Then press me
+      = link_to 'WTS / WTB', new_dashboards_product_path, class: 'btn btn-default'
+      = link_to 'My Toad', dashboards_profile_path, class: 'btn btn-success'
+    - else
+      = link_to 'Login', new_user_session_path, class: 'btn btn-default'
+      = link_to 'Sign Up', new_user_registration_path, class: 'btn btn-success'

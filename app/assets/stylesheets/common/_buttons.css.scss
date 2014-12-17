@@ -1,0 +1,198 @@
+.btn {
+  display: inline-block;
+  margin-bottom: 0;
+  font-family: 'PT Sans Narrow', sans-serif;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  vertical-align: middle;
+  cursor: pointer;
+  background-image: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 7px $padding-base-horizontal 5px;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  border-radius: $border-radius-base;
+  @include user-select(none);
+  @include transition(opacity .2s);
+
+  // .win & {
+  //   padding: 6px $padding-base-horizontal;
+  // }
+
+  &:hover,
+  &:focus {
+    color: $btn-default-color;
+    text-decoration: none;
+  }
+
+  &:active,
+  &.active {
+    outline: 0;
+    background-image: none;
+    @include box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
+  }
+
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    cursor: not-allowed;
+    pointer-events: none;
+    @include opacity(.75);
+    @include box-shadow(none);
+  }
+
+  .fa {
+    margin-right: 5px;
+  }
+}
+
+// Buttons color
+.btn-default {
+  color: #444;
+  border: 2px solid #d3d6d9;
+  padding: 6px $padding-base-horizontal 4px;
+  @include transition(border-color .2s);
+
+  &:hover,
+  &:focus,
+  &:active,
+  &.active {
+    border-color: #5c8f10;
+    @include box-shadow(none);
+  }
+
+  .win & {
+    padding: 6px $padding-base-horizontal 5px;
+  }
+}
+
+.btn-primary {
+  color: white;
+  border-color: 1px solid transparent;
+  border-top-color: #22a3ec;
+  border-bottom-color: #176895;
+  text-shadow: 0 1px 0 #176895;
+  padding: 7px $padding-base-horizontal+1px 5px;
+  @include gradient-vertical(#22a3ec, #1b7db4);
+
+  &:hover,
+  &:focus,
+  &:active,
+  &.active {
+    color: white;
+    @include gradient-vertical(#22a3ec, #1b7db4);
+  }
+
+  .win & {
+    padding: 6px $padding-base-horizontal+1px;
+  }
+}
+
+.btn-success {
+  color: white;
+  border: 1px solid transparent;
+  border-bottom-color: #3d6411;
+  border-top-color: #59af0c;
+  text-shadow: 0 1px 0 #3d6411;
+  padding: 7px $padding-base-horizontal+1px 5px;
+  @include gradient-vertical(#59af0c, #5c8f10);
+
+  &:hover,
+  &:focus,
+  &:active,
+  &.active {
+    color: white;
+    @include gradient-vertical(#59af0c, #5c8f10);
+  }
+
+  .win & {
+    padding: 6px $padding-base-horizontal+1px;
+  }
+}
+
+.btn-info {
+  @include button-variant($btn-info-color, $btn-info-bg, $btn-info-border);
+}
+
+.btn-warning {
+  color: white;
+  border: none;
+  border-bottom: 1px solid #7a4124;
+  text-shadow: 0 1px 0 #7a4124;
+  @include gradient-vertical(#ff8724, #c96514);
+
+  &:hover,
+  &:focus,
+  &:active,
+  &.active {
+    color: white;
+    @include gradient-vertical(#ff8724, #c96514);
+  }
+}
+
+.btn-danger {
+  @include button-variant($btn-danger-color, $btn-danger-bg, $btn-danger-border);
+}
+
+.btn-black {
+  color: white;
+  border: 1px solid transparent;
+  border-bottom-color: #2c2f34;
+  border-top-color: #5d636f;
+  text-shadow: 0 1px 0 #2c2f34;
+  padding: 7px $padding-base-horizontal+1px 5px;
+  @include gradient-vertical(#5d636f, #393c42);
+
+  &:hover,
+  &:focus,
+  &:active,
+  &.active {
+    color: white;
+    @include gradient-vertical(#5d636f, #393c42);
+  }
+
+  .win & {
+    padding: 6px $padding-base-horizontal+1px;
+  }
+}
+
+// Buttons size
+.btn-lg {
+  padding: ($padding-large-vertical + 1) $padding-large-horizontal ($padding-large-vertical - 1);
+  font-size: $font-size-large;
+  line-height: $line-height-large;
+  border-radius: $border-radius-large;
+
+  .win & {
+    padding: ($padding-large-vertical + 1) $padding-large-horizontal ($padding-large-vertical - 1);
+  }
+}
+
+.btn-sm {
+  @include button-size($padding-small-vertical, $padding-small-horizontal, $font-size-small, $line-height-small, $border-radius-small);
+}
+
+.btn-xs {
+  @include button-size($padding-xs-vertical, $padding-xs-horizontal, $font-size-small, $line-height-small, $border-radius-small);
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+
+  & + .btn-block {
+    margin-top: 5px;
+  }
+}
+
+// Specificity overrides
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  &.btn-block {
+    width: 100%;
+  }
+}

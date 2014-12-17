@@ -1,0 +1,39 @@
+= render '/shared/tabs'
+
+.wrap-sm
+  .table-options
+    = link 'For sell', dashboards_orders_path(type_order: 'sell'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
+    = link 'For buy', dashboards_orders_path(type_order: 'buy'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
+    = link_to 'FRESH', dashboards_orders_path, class: 'btn btn-default pull-right'
+    .selected-labels
+      span Selected:
+      = link_to 'Delete', delete_cascade_dashboards_orders_path, method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'label label-red'
+
+  table.table data-behavior="TableCheckbox" data-options='{"paramName":"orders_ids"}'
+    thead
+      tr
+        th: input type="checkbox"
+        th Order ID:
+        th Status:
+        th Product name:
+        th Unit price:
+        th Quantity:
+        th Order Total:
+        th.text-center Details
+
+    tbody
+      - @orders.each do |order|
+        tr
+          td: input type="checkbox" value="#{order.id}"
+          td= order.id
+          td.text-orange =Constants::Order::STATES.detect { |p| p[:key] == order.status }[:description]
+          td= link_to order.product.name, product_path(order.product, cat_id: order.product.main_category), class: 'link link-ulined', target: '_blank'
+          td= number_to_currency(order.unit_price, :unit => "$", precision: 2)
+          td= order.count
+          td= number_to_currency(order.amount, :unit => "$", precision: 2)
+          td.text-center= link_to 'View', '#modal_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
+
+.footer-actions: .fa-container: .wrap-sm
+  = will_paginate @orders
+
+= render partial: 'modal', collection: @orders

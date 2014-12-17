@@ -1,0 +1,14 @@
+= render '/shared/tabs'
+
+.conversation: .wrap-sm
+  h3= conversation.subject
+
+  .form-conversation.pull-right= render partial: 'form', locals: { conversation: conversation }
+
+  ul.messages-list
+    - conversation.receipts_for(current_user).each do |receipt|
+      li
+        - message = receipt.message
+        b= get_user_by_id(message.sender_id).name
+        p= message.body
+        small= time_ago_in_words message.updated_at

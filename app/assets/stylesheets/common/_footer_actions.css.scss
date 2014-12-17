@@ -1,0 +1,24 @@
+.footer-actions {
+  padding-bottom: 94px;
+
+  .fa-container {
+    background: white;
+    height: 64px;
+    padding: 15px 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: $footer-height;
+    @include clearfix;
+  }
+
+  .btn {
+    &.pull-left + .btn.pull-left {
+      margin-left: 10px;
+    }
+
+    &.pull-right + .btn.pull-right {
+      margin-right: 10px;
+    }
+  }
+}

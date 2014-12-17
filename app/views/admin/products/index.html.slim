@@ -1,0 +1,35 @@
+.wrap-sm
+  table.table
+    thead
+      tr
+        th ID
+        th Product name
+        th Unit price
+        th Valid from
+        th Valid until
+        th
+        th
+
+    tbody
+      - @products.each do |product|
+        tr
+          td= product.id
+          td= link_to product.name, product_path(product, cat_id: product.main_category), class: 'link link-ulined', target: '_blank'
+          td= number_to_currency(product.unit_price, :unit => "$ ", precision: 2)
+          td
+            small.date= product.start_date.strftime('%d-%m-%Y')
+            small.time= product.start_date.strftime('%T')
+          td
+            small.date= product.end_date.strftime('%d-%m-%Y')
+            small.time= product.end_date.strftime('%T')
+          td.text-green.text-right width="100px": .saved.hide Saved!
+          td width="150px"
+            = select_tag product.status_action, options_for_select(@status_actions, product.status_action), include_blank: true, data: { behavior: 'Select', url: admin_product_path(product) }, class: 'status'
+
+.footer-actions: .fa-container: .wrap-sm
+  .show_all style="font-size:14px;padding-top:8px"
+    | #{@products.count} Products 
+    - unless params[:count].present? || @products.count < 20
+      = link_to 'Show all', admin_products_path(count: @products.count), class: 'link link-ulined'
+
+  = will_paginate @products

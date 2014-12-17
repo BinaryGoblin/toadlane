@@ -1,0 +1,4 @@
+.product-list
+  .price.pull-right #{number_to_currency(product_list.unit_price, precision: 0, unit: '$', delimiter: '')}/Unit
+  .name.pull-left= link_to product_list.name, product_path(product_list, cat_id: product_list.main_category), class: 'link-ulined'
+  .desc= strip_tags product_list.description

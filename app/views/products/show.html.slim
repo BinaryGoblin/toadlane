@@ -1,0 +1,154 @@
+.actions-panel-product: .wrap-sm
+  / = link_to 'Next product', '#', class: 'btn btn-default pull-right'
+  / = link_to 'Previous', '#', class: 'btn btn-default pull-right'
+  / = link_to 'Back to explore', '#', class: 'btn btn-default pull-right'
+
+  - if sub_categories_of_product(@product.id).present?
+    h4
+      span Categories:
+      = sub_categories_of_product @product.id
+
+  h1= @product.name
+
+.view-product
+  .wrap-sm
+    .vp-right-col
+      .time-left
+        h3 time left to buy:
+        = time_left @product.end_date
+
+      .vp-seller: .white-panel
+        .vp-title Seller
+        table: tr
+          td
+            .img= image_tag @product.user.asset(:small) if @product.user.asset?
+            / .rating
+            /   | Rating: 
+            /   div 
+            /     span.star
+            /     span.star
+            /     span.star.active
+            /     span.star
+            /     span.star
+          td
+            .status.text-uppercase
+              b Status: 
+              span.text-green Verified
+
+            .name
+              b= @product.user.name
+              span TX 75601
+
+            - if @product.user.benefits.reject{ |e| e.empty? }.present?
+              .sell
+                b SELL:
+                .sell-list= @product.user.benefits.reject{ |e| e.empty? }.join(', ')
+
+            - if @product.user.facebook.present?
+              .fb-link= link_to 'Facebook profile', @product.user.facebook, class: 'link link-ulined link-sm text-uppercase', target: '_blank'
+
+        a.vp-title href="#" data-toggle="modal" data-target="#form_message" Send a message <i class="fa fa-plus-square pull-right"></i>
+        a.vp-title href="#" data-toggle="modal" data-target="#form_request" Send a request <i class="fa fa-plus-square pull-right"></i>
+
+      - if @product.amount.present?
+        - sold_out = (@product.sold_out.present? ? @product.sold_out : 0)
+        - available = @product.amount - sold_out
+        - maxoptions = ',"max":' + available.to_s
+
+      .white-panel.vp-calculation data-behavior="CalculationProduct" data-options='{"pricebreaks":#{@product.pricebreaks.collect { |p| { quantity: p.quantity, price: p.price } }.to_json},"maxquantity":#{available.present? ? available.to_s : '"Infinity"'}}'
+
+        .progress: i style="width:#{100-sold_out*100/@product.amount}%"
+
+        table: tr
+          td
+            span For sale:
+            b= @product.amount
+          td
+            span Sold out: 
+            b= sold_out
+          td
+            span Available to buy: 
+            b.text-green= available
+
+        hr
+
+        .quantity
+          .pull-left
+            span.text-left Select quantity:
+            .form-control-number data-behavior="FieldQuantity" data-options='{"min":1#{maxoptions}}'
+              .minus= fa_icon 'minus'
+              .plus= fa_icon 'plus'
+              input.calc-quantity.form-control.text-center type="text" value="1"
+
+          .pull-right
+            span.text-right Totals:
+            .price data-unit-price="#{number_with_precision(@product.unit_price, precision: 0, delimiter: '')}" #{number_to_currency(@product.unit_price, :unit => "$", precision: 0, delimiter: '')}/Unit
+          
+        ul
+          li
+            span <span class="calc-rebate">0.00</span>% rebate for purchasing <span class="calc-pcs">0</span> pcs:
+            b.pull-right.calc-rebate-price 0,00
+          li
+            span Taxes (<span class="calc-taxes">#{@product.tax.try(:value)}</span>%) for non-resalers:
+            b.pull-right.calc-taxes-price 0,00
+          li
+            span Line Total:
+            b.pull-right.calc-cart 0,00
+          li
+            span Cart Subtotal:
+            b.pull-right.calc-cart 0,00
+          li.text-green
+            b Cart Total:
+            b.pull-right.calc-cart 0,00
+
+      .white-panel.vp-share
+        b.text-uppercase.pull-left Share:
+        .addthis_sharing_toolbox.pull-right
+        = javascript_include_tag '//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51a8787656fab455'
+
+    .vp-left-col
+      - if @product.images.any?
+        #slider.vp-carousel.carousel.slide data-ride="carousel"
+          ol.carousel-indicators
+            - if @product.images.count > 1
+              - @product.images.each_with_index do |item, index|
+                li class="#{'active' if index == 0}" data-target="#slider" data-slide-to="#{index}"
+
+          .carousel-inner
+            - @product.images.each_with_index do |item, index|
+              .item class="#{'active' if index == 0}"= image_tag item.image(:big)
+
+          - if @product.images.count > 1
+            a.left.carousel-control href="#slider" role="button" data-slide="prev"
+            a.right.carousel-control href="#slider" role="button" data-slide="next"
+
+      .white-panel.wp-table
+        - if @product.pricebreaks.any?
+          .vp-title Pricebreaks:
+          = pricebreak_table @product.pricebreaks, @product.unit_price, available
+
+        - if current_user.armor_profile.present?
+          .text-center= link_to 'Proceed to checkout', '#', class: 'btn btn-success btn-lg checkout', data: {  toggle: 'modal', target: '#form_checkout' }
+        - else 
+          .wrong.text-center
+            |
+              Please fill out your profile details. <br>
+              Until your profile is complete, you will not be able to create orders.
+
+      - if @product.description.present?
+        .white-panel= simple_format @product.description
+
+  - if @related_products.any?
+    .wrap
+      .carousel-product-title: h3 Related products
+
+      #related_products.carousel.product-carousel.slide data-ride="carousel"
+        = products_carousel_items @related_products
+        
+        - if @related_products.count > 4
+          a.left.carousel-control href="#related_products" role="button" data-slide="prev"
+          a.right.carousel-control href="#related_products" role="button" data-slide="next"
+
+      .text-center= link_to 'See all related products', '#', class: 'btn btn-success'
+
+= render partial: 'modals', locals: { product: @product }

@@ -1,0 +1,29 @@
+= form_tag services_admin_mailers_path
+  .wrap-sm.mailers
+    = fa_icon 'arrow-right'
+
+    h3.mtitle-products Products
+    .mailers-product
+      ul
+        - @products.each do |product|
+          li: label
+            input type="checkbox" name="mailer[products_ids][]" value="#{product.id}"
+            .price.pull-right= number_to_currency(product.unit_price, :unit => "$ ", precision: 2)
+            .name= link_to product.name, product_path(product, cat_id: product.main_category), class: 'link link-ulined', target: '_blank'
+
+    h3.mtitle-users Users
+    .mailers-users
+      ul 
+        - @users.each do |user|
+          li: label
+            input type="checkbox" name="mailer[users_ids][]" value="#{user.id}"
+            .name
+              - if user.name.present?
+                = user.name
+                |  (#{user.email})
+              - else
+               = user.email
+
+  .footer-actions: .fa-container: .wrap-sm.text-center
+    = button_tag fa_icon('check', text: 'Save'), class: 'btn btn-success'
+  

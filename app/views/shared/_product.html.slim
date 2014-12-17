@@ -1,0 +1,25 @@
+.product
+  .img
+    - if product.images.first.present?
+      = image_tag product.images.first.image(:medium)
+    - else
+      = image_tag 'product-missing.png'
+
+  .show-time= fa_icon 'clock-o'
+
+  .price #{number_to_currency(product.unit_price, precision: 0, unit: '$', delimiter: '')}/Unit
+
+  .name= link_to product.name, product_path(product, cat_id: product.main_category)
+
+  .desc= truncate strip_tags(product.description), length: 110
+
+  .time-left
+    h3 time left to buy:
+    = time_left product.end_date
+
+    = link_to product.status_characteristic + ' now!', product_path(product, cat_id: product.main_category), class: 'btn btn-success'
+  
+  - if product.pricebreaks.present?
+    = slider_pricebreaks product.pricebreaks, number_with_precision(product.unit_price, precision: 0, delimiter: '')
+  - else
+    .quantity.text-center style="margin-top:20px": .lbl No pricebreaks

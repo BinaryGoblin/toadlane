@@ -1,0 +1,40 @@
+.wrap {
+  margin: auto;
+  width: $wrap-width-default;
+  padding: 0 10px;
+  position: relative;
+  @include clearfix;
+}
+
+.wrap-sm {
+  width: $wrap-width-small;
+  @extend .wrap;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.text-left {
+  text-align: left !important;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-green {
+  color: #5c8f10;
+}
+
+.text-red {
+  color: #b90012;
+}
+
+.text-orange {
+  color: #ff8724;
+}

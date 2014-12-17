@@ -1,0 +1,192 @@
+= render '/shared/tabs'
+
+= form_for @user, url: dashboards_profile_path, :html => { autocomplete: "off", data: { behavior: 'Validations', options: '{"rules":{"user[armor_bank_account_attributes][account_routing]":{"routing":true}}}'} } do |f|
+  .wrap-sm
+    - unless @user.armor_profile.present?
+      .error-explanation Please fill out your profile details. Until your profile is complete, you will not be able to create orders.
+
+    - if @user.errors.any?
+      .error-explanation
+        h5= "#{pluralize(@user.errors.count, "error")} data from being saved:"
+        ul
+          - @user.errors.full_messages.each do |message|
+            li = message
+
+    table.profile-table: tr
+      td
+        h4 Your<br>account:
+
+        .profile-image-container
+          label Your photo:
+          .profile-user-image
+            - if @user.asset?
+              .image-tag style="background-image:url(#{@user.asset(:small)})"
+          .text-center Supported extensions:<br>JPG, PNG, GIF<br>Max. upload file size 2MB.
+          a#delete-image.btn.btn-black.pull-right= fa_icon 'trash-o'
+          .btn.btn-primary
+            span Upload photo
+            = f.file_field :asset, accept: 'image/*', data: { behavior: 'UploadImage', options: '{"conteiner":".profile-user-image","deleteBtn":"#delete-image"}' }
+      td
+        .form-group
+          = f.label :name, 'Name:', class: 'required'
+          = f.text_field :name, class: 'form-control', required: true
+
+        .form-group
+          = f.label :phone, 'Phone:', class: 'required'
+          = f.telephone_field :phone, class: 'form-control', data: { behavior: 'IntlPhone' }, required: true
+
+        .form-group
+          = f.label :company, 'Company:'
+          = f.text_field :company, class: 'form-control'
+
+        .form-group
+          = f.label :email, 'Email:', class: 'required'
+          = f.text_field :email, class: 'form-control', disabled: true, required: true
+
+        .form-group
+          = f.label :new_password, 'Change my password:'
+          = f.password_field :new_password, autocomplete: "off", class: 'form-control'
+
+        .form-group
+          = f.label :new_password_confirmation, 'Confirm password:'
+          = f.password_field :new_password_confirmation, autocomplete: "off", class: 'form-control'
+
+      td
+        .form-group
+          = f.label :location, 'Address:', class: 'required'
+          = f.text_field :location, class: 'form-control', required: true
+
+        .form-group
+          = f.label :city, 'City:', class: 'required'
+          = f.text_field :city, class: 'form-control', required: true
+
+        .form-group
+          = f.label :state, 'State:', class: 'required'
+          = f.text_field :state, class: 'form-control', required: true
+
+        .form-group
+          = f.label :zip_code, 'Zip code:', class: 'required'
+          = f.text_field :zip_code, class: 'form-control', required: true
+
+        .form-group
+          = f.label :country, 'Country:', class: 'required'
+          = f.country_select 'country', [ 'US', 'GB' ], { iso_codes: true }, { class: 'form-control' }
+
+        .form-group
+          = f.label :facebook, 'Facebook account:'
+          = f.text_field :facebook, class: 'form-control'
+
+        .form-group
+          label Products to sell:
+          = f.select :benefits, @user.benefits, {}, multiple: true, data: { behavior: 'Select', options: '{"plugins":["remove_button"],"create":"true"}' }
+
+    hr
+
+    table.profile-table.last
+      tr
+        td: h4 Payment<br>settings:
+
+        td
+          .form-group
+            label Resale certificate:
+            .form-upload-file data-behavior="UploadFile" data-options='{"deleteBtn":"#btn_delete_file"}'
+              = f.file_field :certificate, accept: ".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif"
+              input.form-control type="text" value="#{@user.certificate.filename if @user.certificate}"
+              .hide: input type="checkbox" name="user[certificate_delete]" value="#{@user.certificate.id if @user.certificate}"
+              a.btn.btn-primary.pull-right Upload
+            a#btn_delete_file.btn.btn-black.btn-remove= fa_icon 'trash-o'
+            span Supported extensions: jpg, png, gif, PDF, DOC, DOCX, XLS.<br>Max. upload file size 2MB.
+
+        td
+          .form-group
+            = f.label :ein_tax, 'EIN Tax #:'
+            = f.text_field :ein_tax, class: 'form-control'
+
+      tr
+        td
+        td          
+          .form-group
+            label Account type:
+            = select_tag 'user[armor_bank_account_attributes][account_type]', options_for_select({"Business Checking" => "1", "Business Savings" => "2", "Personal Checking" => "3", "Personal Savings" => "4"}, @user.armor_bank_account.account_type), data: { behavior: 'Select' }, include_blank: true, placeholder: 'Select one...'
+
+          .form-group
+            label Account location:
+            .radios data-behavior="SetFieldDisabled" data-options='{"true_condition":"us","fields":["#account_swift","#account_iban"]}'
+              label
+                = radio_button_tag 'user[armor_bank_account_attributes][account_location]', 'us', @user.armor_bank_account.account_location == 'us'
+                | US bank account
+              label
+                = radio_button_tag 'user[armor_bank_account_attributes][account_location]', 'non_us', @user.armor_bank_account.account_location.blank? || @user.armor_bank_account.account_location == 'non_us'
+                | Non-US bank account
+
+          .form-group
+            label Account bank:
+            input.form-control type="text" name="user[armor_bank_account_attributes][account_bank]" value="#{@user.armor_bank_account.account_bank}"
+
+          .form-group
+            label Account routing:
+            input.form-control type="text" name="user[armor_bank_account_attributes][account_routing]" value="#{@user.armor_bank_account.account_routing}"
+
+          / .form-group: label Primary credit card:
+          
+          / .card.card-front
+          /   .form-group
+          /     label Cardholder name:
+          /     input.form-control type="text"
+
+          /   .form-group.card-naumber
+          /     label Card number:
+          /     input.form-control type="text" placeholder="0000" maxlength="4"
+          /     input.form-control type="text" placeholder="0000" maxlength="4"
+          /     input.form-control type="text" placeholder="0000" maxlength="4"
+          /     input.form-control type="text" placeholder="0000" maxlength="4"
+
+          /   .form-group.card-valid
+          /     label Valid to:
+          /     input.form-control type="text" placeholder="01" maxlength="2"
+          /     span 
+          /       | /
+          /     input.form-control type="text" placeholder="16" maxlength="2"
+
+        td
+          .form-group
+            label Account swift:
+            input#account_swift.form-control type="text" name="user[armor_bank_account_attributes][account_swift]" value="#{@user.armor_bank_account.account_swift}"
+
+          .form-group
+            label Account account:
+            input.form-control type="text" name="user[armor_bank_account_attributes][account_account]" value="#{@user.armor_bank_account.account_account}"
+
+          .form-group
+            label Account iban:
+            input#account_iban.form-control type="text" name="user[armor_bank_account_attributes][account_iban]" value="#{@user.armor_bank_account.account_iban}"
+
+          / .card.card-back
+          /   .form-group
+          /     label CVS:
+          /     input.form-control type="text" placeholder="000" maxlength="3"
+
+          /   p
+          /     = fa_icon 'shield'
+          /     | Transmission of information is protected by SSL certificate of 
+          /     a.link-ulined href="http://www.armorpayments.com/" target="_blank" Armorpayments.com
+          /     br
+          /     | Toad.la - fully meets the safety standards of Visa and MasterCard.
+
+    hr
+
+    table.profile-table: tr
+      td: h4 Notification<br>settings:
+      td colspan="2"
+        .checkbox: label
+          = f.check_box :receive_private_info
+          | Receive emails when someone leaves you a private message
+        .checkbox: label
+          = f.check_box :receive_new_offer
+          | Receive emails with new offers
+        .checkbox: label
+          = f.check_box :receive_tips
+          | Receive emails with tips, hints, report on any new services
+
+  .footer-actions: .fa-container: .wrap-sm.text-center
+    button.btn.btn-success.submit type="submit"= fa_icon 'check', text: 'SAVE CHANGES'

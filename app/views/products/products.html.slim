@@ -1,0 +1,6 @@
+.wrap-sm: .products
+  = render partial: '/shared/product', collection: @products
+
+.footer-actions: .fa-container: .wrap-sm
+  - if @products
+    = will_paginate @products

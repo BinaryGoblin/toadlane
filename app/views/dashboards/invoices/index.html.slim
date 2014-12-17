@@ -1,0 +1,36 @@
+= render '/shared/tabs'
+
+.wrap-sm
+  .table-options
+    .selected-labels
+      span Selected:
+      = link_to 'Delete', delete_cascade_dashboards_invoices_path, method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'label label-red'
+
+  table.table data-behavior="TableCheckbox" data-options='{"paramName":"invoices_ids"}'
+    thead
+      tr
+        th: input type="checkbox"
+        th Invoice ID:
+        th Date:
+        th Product name:
+        th Unit price:
+        th Quantity:
+        th Total:
+        th.text-center Details
+
+    tbody
+      - @invoices.each do |invoice|
+        tr
+          td: input type="checkbox" value="#{invoice.id}"
+          td= invoice.id
+          td= invoice.created_at.strftime('%d-%m-%Y')
+          td= link_to invoice.product.name, product_path(invoice.product, cat_id: invoice.product.main_category), class: 'link link-ulined', target: '_blank'
+          td= number_to_currency(invoice.unit_price, :unit => "$", precision: 2)
+          td= invoice.count
+          td= number_to_currency(invoice.amount, :unit => "$", precision: 2)
+          td.text-center= link_to 'View', '#modal_invoice_' + invoice.id.to_s, class: 'view', data: { toggle: 'modal' }
+
+.footer-actions: .fa-container: .wrap-sm
+  = will_paginate @invoices
+
+= render partial: 'modal', collection: @invoices
