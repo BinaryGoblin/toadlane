@@ -59,11 +59,15 @@ group :test do
   gem 'shoulda', '3.5.0'
   gem 'shoulda-matchers', '2.5.0'
   gem 'factory_girl_rails', require: false
-  gem 'faker', '1.2.0', require: false
+  #gem 'faker', '1.2.0'
   gem 'populator', '1.0.0'
   #gem 'fixture_builder'
   gem 'fuubar'
   gem 'webmock', require: false # Library for stubbing and setting expectations on HTTP requests
+end
+
+group :development, :test do
+  gem 'faker', '1.2.0'
 end
 
 gem 'rails_12factor', group: :production
