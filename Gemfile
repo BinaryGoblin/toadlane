@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+ruby '2.1.1'
 gem 'rails', '4.0.1'
 gem 'pg', '0.17.1'
 
@@ -65,6 +66,7 @@ group :test do
   gem 'webmock', require: false # Library for stubbing and setting expectations on HTTP requests
 end
 
+gem 'rails_12factor', group: :production
 gem 'parallel_tests'
 
 gem 'sidekiq', '3.2.6'
