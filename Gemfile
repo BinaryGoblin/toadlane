@@ -59,7 +59,7 @@ group :test do
   gem 'shoulda', '3.5.0'
   gem 'shoulda-matchers', '2.5.0'
   gem 'factory_girl_rails', require: false
-  gem 'faker', '1.2.0'
+  gem 'faker', '1.2.0', require: false
   gem 'populator', '1.0.0'
   #gem 'fixture_builder'
   gem 'fuubar'
