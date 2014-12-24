@@ -13,7 +13,7 @@ gem 'jbuilder', '~> 1.2'
 gem 'therubyracer','0.10.2', :platform => :ruby
 gem 'devise', '3.2.4'
 gem 'cancan', '1.6.10'
-gem 'rolify', '3.4.0'
+gem 'rolify', '3.4.1'
 gem 'time_difference', '0.3.2'
 gem 'country_select', '1.3.1'
 
@@ -44,9 +44,11 @@ gem 'kaminari', '0.16.1'
 # Dev - debugging group
 group :development do
   gem 'pry', '0.10.0'
-  gem 'ruby-debug-ide', '0.4.22'
-  gem 'rb-readline', '0.5.1'
-  gem 'debase', '0.0.9'
+  gem "better_errors"
+  gem "binding_of_caller"
+  #gem 'ruby-debug-ide', '0.4.22'
+  #gem 'rb-readline', '0.5.1'
+  #gem 'debase', '0.0.9'
 end
 
 group :doc do
@@ -66,7 +68,7 @@ group :test do
   gem 'webmock', require: false # Library for stubbing and setting expectations on HTTP requests
 end
 
-gem 'rails_12factor', group: :production
+gem 'rails_12factor'
 gem 'parallel_tests'
 
 gem 'sidekiq', '3.2.6'
