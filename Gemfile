@@ -68,7 +68,7 @@ group :test do
   gem 'webmock', require: false # Library for stubbing and setting expectations on HTTP requests
 end
 
-gem 'rails_12factor'
+gem 'rails_12factor', group: :production
 gem 'parallel_tests'
 
 gem 'sidekiq', '3.2.6'
