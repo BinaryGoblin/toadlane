@@ -31,25 +31,25 @@
     p Gain access to the world’s largest group of industry leading, influential, bulk buyers and market expanders.
 
 .wrap
-  .carousel-product-title
-    h2 Want to sell
-    = select_tag :cat_sell, options_from_collection_for_select(main_categories, :id, :name), class: 'list', data: { behavior: 'CustomSelect' }
+  /.carousel-product-title
+  /  h2 Want to sell
+  /  = select_tag :cat_sell, options_from_collection_for_select(main_categories, :id, :name), class: 'list', data: { behavior: 'CustomSelect' }
 
-  #products_sell.carousel.product-carousel.slide data-ride="carousel" data-behavior="CategoryProducts" data-options='{"categories":"#cat_sell","remoteUrl":"#{search_by_sell_main_index_path}"}'
-    .carousel-inner.bottom-line
+  /#products_sell.carousel.product-carousel.slide data-ride="carousel" data-behavior="CategoryProducts" data-options='{"categories":"#cat_sell","remoteUrl":"#{search_by_sell_main_index_path}"}'
+    /.carousel-inner.bottom-line
 
-    a.left.carousel-control href="#products_sell" role="button" data-slide="prev"
-    a.right.carousel-control href="#products_sell" role="button" data-slide="next"
+    /a.left.carousel-control href="#products_sell" role="button" data-slide="prev"
+    /a.right.carousel-control href="#products_sell" role="button" data-slide="next"
 
-  .carousel-product-title
-    h2 Want to buy
-    = select_tag :cat_buy, options_from_collection_for_select(main_categories, :id, :name), class: 'list', data: { behavior: 'CustomSelect' }
+  /.carousel-product-title
+    /h2 Want to buy
+    /= select_tag :cat_buy, options_from_collection_for_select(main_categories, :id, :name), class: 'list', data: { behavior: 'CustomSelect' }
 
-  #products_buy.carousel.product-carousel.second-product-carousel.slide data-ride="carousel" data-behavior="CategoryProducts" data-options='{"categories":"#cat_buy","remoteUrl":"#{search_by_buy_main_index_path}"}'
-    .carousel-inner
+  /#products_buy.carousel.product-carousel.second-product-carousel.slide data-ride="carousel" data-behavior="CategoryProducts" data-options='{"categories":"#cat_buy","remoteUrl":"#{search_by_buy_main_index_path}"}'
+    /.carousel-inner
 
-    a.left.carousel-control href="#products_buy" role="button" data-slide="prev"
-    a.right.carousel-control href="#products_buy" role="button" data-slide="next"
+   / a.left.carousel-control href="#products_buy" role="button" data-slide="prev"
+    /a.right.carousel-control href="#products_buy" role="button" data-slide="next"
 
   .try-out
     p Try out our tiered pricing model and see how much you save
