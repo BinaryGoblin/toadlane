@@ -14,6 +14,8 @@ Toad::Application.routes.draw do
   namespace :dashboards, path: 'dashboard' do
     resource :profile, only: [:update, :show]
 
+    resources :payments
+
     resources :products, except: :show do
       collection do
         delete :delete_cascade
