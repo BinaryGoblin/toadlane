@@ -79,10 +79,10 @@ Toad::Application.configure do
   config.log_formatter = ::Logger::Formatter.new
 
   #-----------------------
-  config.action_mailer.default_url_options = { :host => 'toadlane.com' }
+  config.action_mailer.default_url_options = { :host => 'staging-toadlane.herokuapp.com' }
   ActionMailer::Base.perform_deliveries = true
   ActionMailer::Base.delivery_method = :smtp
-  routes.default_url_options = { host: 'toadlane.com' }
+  routes.default_url_options = { host: 'staging-toadlane.herokuapp.com' }
 
   ActionMailer::Base.smtp_settings = {
     address: "mail.toadlane.com",
