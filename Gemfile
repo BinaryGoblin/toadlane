@@ -38,6 +38,7 @@ gem 'angularjs-rails', '1.2.14'
 gem 'elementaljs-rails', '~> 0.0.11'
 
 gem 'paperclip', '4.2.0'
+gem 'aws-sdk'
 gem 'searchkick', '0.8.0'
 gem 'kaminari', '0.16.1'
 
