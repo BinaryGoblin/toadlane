@@ -27,8 +27,8 @@ class Dashboards::ProductsController < ::DashboardsController
     start_date = DateTime.new(product_params["start_date(1i)"].to_i, product_params["start_date(2i)"].to_i, product_params["start_date(3i)"].to_i, product_params["start_date(4i)"].to_i, product_params["start_date(5i)"].to_i)
     end_date = DateTime.new(product_params["end_date(1i)"].to_i, product_params["end_date(2i)"].to_i, product_params["end_date(3i)"].to_i, product_params["end_date(4i)"].to_i, product_params["end_date(5i)"].to_i)
 
-    if pricebreak_params[:pricebreaks_attributes].present?
-      pricebreak_params[:pricebreaks_attributes] =  pricebreak_params[:pricebreaks_attributes]
+    if product_params[:pricebreak_attributes].present?
+      product_params[:pricebreak_attributes] =  product_params[:pricebreak_attributes]
     end
 
     if product_params[:product_categories_attributes].present?
