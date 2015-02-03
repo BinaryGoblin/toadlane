@@ -193,7 +193,7 @@ class Dashboards::ProductsController < ::DashboardsController
       sub_pricebreaks = []
 
       pricebreaks.each do |pricebreak|
-        sub_pricebreaks << { pricebreak_id: pricebreak }
+        sub_pricebreaks << { product_id: pricebreak }
       end
 
       sub_pricebreaks
