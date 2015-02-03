@@ -27,13 +27,15 @@ class Dashboards::ProductsController < ::DashboardsController
     start_date = DateTime.new(product_params["start_date(1i)"].to_i, product_params["start_date(2i)"].to_i, product_params["start_date(3i)"].to_i, product_params["start_date(4i)"].to_i, product_params["start_date(5i)"].to_i)
     end_date = DateTime.new(product_params["end_date(1i)"].to_i, product_params["end_date(2i)"].to_i, product_params["end_date(3i)"].to_i, product_params["end_date(4i)"].to_i, product_params["end_date(5i)"].to_i)
 
-    if product_params[:pricebreak_attributes].present?
-      product_params[:pricebreak_attributes] =  product_params[:pricebreak_attributes]
+    if product_params[:pricebreaks_attributes].present?
+      product_params[:pricebreaks_attributes] =  product_params[:pricebreaks_attributes]
     end
 
     if product_params[:product_categories_attributes].present?
       product_params[:product_categories_attributes] = parse_categories product_params[:product_categories_attributes]
     end
+
+    Rails.logger.info product_params.inspect
 
     if product_params[:images_attributes].present?
       images = product_params.extract!(:images_attributes)
