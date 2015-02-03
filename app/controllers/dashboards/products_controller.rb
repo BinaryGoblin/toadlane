@@ -28,7 +28,7 @@ class Dashboards::ProductsController < ::DashboardsController
     end_date = DateTime.new(product_params["end_date(1i)"].to_i, product_params["end_date(2i)"].to_i, product_params["end_date(3i)"].to_i, product_params["end_date(4i)"].to_i, product_params["end_date(5i)"].to_i)
 
     if product_params[:pricebreaks_attributes].present?
-      product_params[:pricebreaks_attributes] =  product_params[:pricebreaks_attributes]
+      product_params[:pricebreaks_attributes] =  parse_pricebrakes product_params[:pricebreaks_attributes]
     end
 
     if product_params[:product_categories_attributes].present?
@@ -187,5 +187,15 @@ class Dashboards::ProductsController < ::DashboardsController
       end
 
       sub_categories
+    end
+
+    def parse_pricebrakes pricebreaks
+      sub_pricebreaks = []
+
+      pricebreaks.each do |pricebreak|
+        sub_pricebreaks << { price_id: pricebreak }
+      end
+
+      sub_pricebreaks
     end
 end
