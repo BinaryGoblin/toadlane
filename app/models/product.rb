@@ -6,7 +6,7 @@ class Product < ActiveRecord::Base
   has_many :product_categories
   has_many :categories, through: :product_categories, dependent: :destroy
   has_many :images
-  has_many :pricebreaks
+  has_many :pricebreaks, autosave: true
   belongs_to :category, class_name: "Category", foreign_key: :main_category
   belongs_to :tax
 
