@@ -1,4 +1,5 @@
 class Product < ActiveRecord::Base
+   attr_accessible :company_attributes
   belongs_to :user
 
   has_paper_trail
@@ -11,7 +12,7 @@ class Product < ActiveRecord::Base
   belongs_to :tax
 
   accepts_nested_attributes_for :product_categories
-  accepts_nested_attributes_for :pricebreaks#, :reject_if => :all_blank
+  accepts_nested_attributes_for :pricebreaks, :reject_if => :all_blank
 
   validates_numericality_of :unit_price, :amount, only_integer: false
 
@@ -39,4 +40,12 @@ class Product < ActiveRecord::Base
     category = himself.main_category
     Product.where("main_category = ?", category).where("id != ?", himself)
   end
+
+def build_pricebrake(params = {})
+  self.product = Pricebreak.new(params)
+end
+
+def pricebrake_attributes=(attributes)
+  self.product = Pricebreak.new(attributes)
+end
 end
