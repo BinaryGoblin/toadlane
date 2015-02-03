@@ -38,5 +38,5 @@ class Product < ActiveRecord::Base
     himself = Product.find(id)
     category = himself.main_category
     Product.where("main_category = ?", category).where("id != ?", himself)
-  endz
+  end
 end
