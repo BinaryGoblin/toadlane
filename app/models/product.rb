@@ -1,5 +1,4 @@
 class Product < ActiveRecord::Base
-   attr_accessible :company_attributes
   belongs_to :user
 
   has_paper_trail
@@ -39,13 +38,5 @@ class Product < ActiveRecord::Base
     himself = Product.find(id)
     category = himself.main_category
     Product.where("main_category = ?", category).where("id != ?", himself)
-  end
-
-def build_pricebrake(params = {})
-  self.product = Pricebreak.new(params)
-end
-
-def pricebrake_attributes=(attributes)
-  self.product = Pricebreak.new(attributes)
-end
+  endz
 end
