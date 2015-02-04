@@ -61,8 +61,8 @@ class Dashboards::ProfilesController < ::DashboardsController
             'user_phone' => current_user.phone
           })
           data.update_company({
-            'account' => current_user.armor_profile.armor_account,            
-            'company' => current_user.company
+            'account' => "current_user.armor_profile.armor_account",            
+            'company' => "current_user.company"
           })
           data.update_address({
             'account' => current_user.armor_profile.armor_account,            
