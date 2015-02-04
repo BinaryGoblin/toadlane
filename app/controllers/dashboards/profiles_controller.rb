@@ -61,13 +61,8 @@ class Dashboards::ProfilesController < ::DashboardsController
             'user_phone' => current_user.phone
           })
           data.update_company({
-<<<<<<< HEAD
             :account => current_user.armor_profile.armor_account,            
             'company' => current_user.company
-=======
-            'account' => "current_user.armor_profile.armor_account",            
-            'company' => "current_user.company"
->>>>>>> parent of b9882be... symbol changed
           })
           data.update_address({
             'account' => current_user.armor_profile.armor_account,            
