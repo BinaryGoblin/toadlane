@@ -36,7 +36,7 @@ class ArmorService
   end
 
   def update_company(opts = {})
-    result = @client.accounts.update(opts['account'].to_s, {:company => opts['company'].to_s})
+    result = @client.accounts.update(opts['account'].to_s }) #, {:company => opts['company'].to_s})
   end
 
   def update_address(opts = {})
