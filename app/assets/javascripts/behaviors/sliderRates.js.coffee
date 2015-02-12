@@ -41,4 +41,4 @@ class Behavior.SliderRates
       cost = ui.value * @options.unit_price
     
     @$cost.text '$' + cost.toFixed(2).toString()
-    @$save.text '$' + save.toFixed(2).toString()
+    @$save.text '$' + save.toFixed(2).toString().replace ',', '.'
