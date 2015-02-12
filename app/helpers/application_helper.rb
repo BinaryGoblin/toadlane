@@ -212,7 +212,7 @@ module ApplicationHelper
 
     you_save = content_tag :div, class: 'you_save' do
       concat content_tag :div, 'You save:', class: 'lbl'
-      concat content_tag :span, '$0,00', class: 'pb-save'
+      concat content_tag :span, '$0.00', class: 'pb-save'
     end
 
     quantity + cost + you_save
