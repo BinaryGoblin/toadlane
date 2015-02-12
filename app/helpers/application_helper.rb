@@ -207,7 +207,7 @@ module ApplicationHelper
 
     cost = content_tag :div, class: 'cost' do
       concat content_tag :div, 'Cost:', class: 'lbl'
-      concat content_tag :span, number_to_currency(unit_price, precision: 2, unit: '$', separator: ',', delimiter: ''), class: 'pb-cost'
+      concat content_tag :span, number_to_currency(unit_price, precision: 2, unit: '$'), class: 'pb-cost'
     end
 
     you_save = content_tag :div, class: 'you_save' do
