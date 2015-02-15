@@ -30,7 +30,7 @@ module ApplicationHelper
   end
 
   def sub_categories_of_product id
-    categories = Product.find(id).categories
+    categories = Product.unscoped.find(id).categories
 
     if categories.present?
       content_tag :div do

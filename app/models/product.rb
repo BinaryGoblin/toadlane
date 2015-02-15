@@ -35,7 +35,7 @@ class Product < ActiveRecord::Base
   self.per_page = 16
 
   def self.related_products_by_main_category(id)
-    himself = Product.find(id)
+    himself = Product.unscoped.find(id)
     category = himself.main_category
     Product.where("main_category = ?", category).where("id != ?", himself)
   end
