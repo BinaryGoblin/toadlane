@@ -1,6 +1,6 @@
 Toad::Application.routes.draw do
 
-  resources :armor_orders, only: [:index, :create, :show, :destroy]
+  resources :armor_orders, only: [:index, :create, :show, :destroy, :new]
   resources :armor_invoices, only: [:index, :show, :destroy]
 
   get 'why' => 'infos#why_toad'
