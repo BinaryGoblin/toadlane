@@ -89,8 +89,8 @@ Toad::Application.configure do
     port: 587,
     authentication: "plain",
     enable_starttls_auto: false,
-    user_name: "hello@toadlane.com",
-    password: "jkk3aLki"
+    user_name: ENV['WELCOME_EMAIL'],
+    password: ENV['WELCOME_EMAIL_PASSWORD']
   }
   #-----------------------
 #  config.action_mailer.default_url_options = { :host => "toad.demo.xmarka.net" }
