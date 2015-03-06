@@ -28,10 +28,10 @@ Toad::Application.configure do
   config.assets.debug = true
 
   #-----------------------
-  config.action_mailer.default_url_options = { :host => '193.108.45.98:4600' }
+  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
   ActionMailer::Base.perform_deliveries = true
   ActionMailer::Base.delivery_method = :smtp
-  routes.default_url_options = { host: '193.108.45.98:4600' }
+  routes.default_url_options = { host: 'localhost:3000' }
   ActionMailer::Base.smtp_settings = {
     address: "smtp.gmail.com",
     port: 587,
@@ -41,5 +41,5 @@ Toad::Application.configure do
     password: ENV['WELCOME_EMAIL_PASSWORD']
   }
   #-----------------------
-  config.action_mailer.default_url_options = { :host => "193.108.45.98:4600" }
+  config.action_mailer.default_url_options = { :host => "localhost:3000" }
 end
