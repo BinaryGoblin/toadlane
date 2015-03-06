@@ -79,21 +79,32 @@ Toad::Application.configure do
   config.log_formatter = ::Logger::Formatter.new
 
   #-----------------------
-  config.action_mailer.default_url_options = { :host => 'toadlane.com' }
+  config.action_mailer.default_url_options = { :host => 'toadlane.herokuapp.com' }
   ActionMailer::Base.perform_deliveries = true
   ActionMailer::Base.delivery_method = :smtp
-  routes.default_url_options = { host: 'toadlane.com' }
+  routes.default_url_options = { host: 'toadlane.herokuapp.com' }
 
   ActionMailer::Base.smtp_settings = {
     address: "mail.toadlane.com",
     port: 587,
     authentication: "plain",
     enable_starttls_auto: false,
-    user_name: "hello@toadlane.com",
-    password: "jkk3aLki"
+    user_name: ENV['WELCOME_EMAIL'],
+    password: ENV['WELCOME_EMAIL_PASSWORD']
   }
   #-----------------------
 #  config.action_mailer.default_url_options = { :host => "toad.demo.xmarka.net" }
 
+  #config aws for production ENV file storage
+  config.paperclip_defaults = {
+     :storage => :s3,
+     :s3_credentials => {
+         :bucket => ENV['S3_BUCKET_NAME'],
+         :access_key_id => ENV['AWS_ACCESS_KEY_ID'],
+         :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
+     }
+  }
+
+  Paperclip::Attachment.default_options[:s3_host_name] = 's3-us-west-2.amazonaws.com'
 
 end

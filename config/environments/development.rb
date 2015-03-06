@@ -37,8 +37,8 @@ Toad::Application.configure do
     port: 587,
     authentication: "plain",
     enable_starttls_auto: true,
-    user_name: "toad.b2b@gmail.com",
-    password: "toad.b2btoad.b2b"
+    user_name: ENV['WELCOME_EMAIL'],
+    password: ENV['WELCOME_EMAIL_PASSWORD']
   }
   #-----------------------
   config.action_mailer.default_url_options = { :host => "193.108.45.98:4600" }

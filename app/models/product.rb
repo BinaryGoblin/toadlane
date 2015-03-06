@@ -6,7 +6,7 @@ class Product < ActiveRecord::Base
   has_many :product_categories
   has_many :categories, through: :product_categories, dependent: :destroy
   has_many :images
-  has_many :pricebreaks
+  has_many :pricebreaks, autosave: true
   belongs_to :category, class_name: "Category", foreign_key: :main_category
   belongs_to :tax
 
@@ -35,7 +35,7 @@ class Product < ActiveRecord::Base
   self.per_page = 16
 
   def self.related_products_by_main_category(id)
-    himself = Product.find(id)
+    himself = Product.unscoped.find(id)
     category = himself.main_category
     Product.where("main_category = ?", category).where("id != ?", himself)
   end

@@ -3,6 +3,7 @@
     li= tab_link_to 'My profile', dashboards_profile_path, is: 'profiles'
     / li= tab_link_to 'My groups', groups_dashboards_path
     li: a.btn.btn-default.disabled My groups
+    li= tab_link_to 'Payments', dashboards_payments_path, is: 'payments'
     li= tab_link_to 'My products', dashboards_products_path, is: 'products'
     li= tab_link_to 'My requests', dashboards_requests_path(box: 'inbox'), is: 'requests'
     li= tab_link_to 'Orders', dashboards_orders_path(type_order: 'buy'), is: 'orders', disabled: !current_user.armor_profile.present?

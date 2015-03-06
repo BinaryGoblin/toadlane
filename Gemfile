@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.1.1'
+ruby '2.1.2'
 gem 'rails', '4.0.1'
 gem 'pg', '0.17.1'
 
@@ -10,10 +10,10 @@ gem 'coffee-rails', '~> 4.0.0'
 # gem 'turbolinks'
 gem 'jbuilder', '~> 1.2'
 
-gem 'therubyracer','0.10.2', :platform => :ruby
+gem 'therubyracer','~> 0.12.0', :platform => :ruby
 gem 'devise', '3.2.4'
 gem 'cancan', '1.6.10'
-gem 'rolify', '3.4.0'
+gem 'rolify', '3.4.1'
 gem 'time_difference', '0.3.2'
 gem 'country_select', '1.3.1'
 
@@ -38,15 +38,18 @@ gem 'angularjs-rails', '1.2.14'
 gem 'elementaljs-rails', '~> 0.0.11'
 
 gem 'paperclip', '4.2.0'
+gem 'aws-sdk'
 gem 'searchkick', '0.8.0'
 gem 'kaminari', '0.16.1'
 
 # Dev - debugging group
 group :development do
   gem 'pry', '0.10.0'
-  gem 'ruby-debug-ide', '0.4.22'
-  gem 'rb-readline', '0.5.1'
-  gem 'debase', '0.0.9'
+  gem "better_errors"
+  gem "binding_of_caller"
+  #gem 'ruby-debug-ide', '0.4.22'
+  #gem 'rb-readline', '0.5.1'
+  #gem 'debase', '0.0.9'
 end
 
 group :doc do

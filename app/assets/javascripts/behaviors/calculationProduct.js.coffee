@@ -32,7 +32,7 @@ class Behavior.CalculationProduct
     @$quantity.on 'change:quantity keyup', => do @calculation
 
   fixed: (number) =>
-    number.toFixed(2).toString().replace '.', ','
+    number.toFixed(2).toString()
 
   calculation: =>
     total  = 0

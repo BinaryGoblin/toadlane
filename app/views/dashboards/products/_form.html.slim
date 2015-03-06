@@ -46,8 +46,8 @@
             = f.select :tax_id, options_from_collection_for_select(taxes, :id, :value, @product.tax_id), {}, data: { behavior: 'Select' }
 
           .status_action
-            = f.label :status_characteristic, 'Status action:', class: 'required'
-            = f.select :status_characteristic, [['Buy', 'buy'], ['Sell', 'sell']], {}, data: { behavior: 'Select' }
+            = f.label :status_characteristic, 'I am:', class: 'required'
+            = f.select :status_characteristic, [['Buying', 'buy'], ['Selling', 'sell']], {}, data: { behavior: 'Select' }
 
           .status
             = f.label :status, 'Product status:'

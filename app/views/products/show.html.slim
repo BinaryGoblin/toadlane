@@ -82,24 +82,24 @@
 
           .pull-right
             span.text-right Totals:
-            .price data-unit-price="#{number_with_precision(@product.unit_price, precision: 0, delimiter: '')}" #{number_to_currency(@product.unit_price, :unit => "$", precision: 0, delimiter: '')}/Unit
+            .price data-unit-price="#{number_with_precision(@product.unit_price, precision: 0, delimiter: '')}" #{number_to_currency(@product.unit_price, :unit => "$", precision: 0)}/Unit
           
         ul
           li
             span <span class="calc-rebate">0.00</span>% rebate for purchasing <span class="calc-pcs">0</span> pcs:
-            b.pull-right.calc-rebate-price 0,00
+            b.pull-right.calc-rebate-price 0.00
           li
             span Taxes (<span class="calc-taxes">#{@product.tax.try(:value)}</span>%) for non-resalers:
-            b.pull-right.calc-taxes-price 0,00
+            b.pull-right.calc-taxes-price 0.00
           li
             span Line Total:
-            b.pull-right.calc-cart 0,00
+            b.pull-right.calc-cart 0.00
           li
             span Cart Subtotal:
-            b.pull-right.calc-cart 0,00
+            b.pull-right.calc-cart 0.00
           li.text-green
             b Cart Total:
-            b.pull-right.calc-cart 0,00
+            b.pull-right.calc-cart 0.00
 
       .white-panel.vp-share
         b.text-uppercase.pull-left Share:

@@ -30,7 +30,7 @@ module ApplicationHelper
   end
 
   def sub_categories_of_product id
-    categories = Product.find(id).categories
+    categories = Product.unscoped.find(id).categories
 
     if categories.present?
       content_tag :div do
@@ -207,12 +207,12 @@ module ApplicationHelper
 
     cost = content_tag :div, class: 'cost' do
       concat content_tag :div, 'Cost:', class: 'lbl'
-      concat content_tag :span, number_to_currency(unit_price, precision: 2, unit: '$', separator: ',', delimiter: ''), class: 'pb-cost'
+      concat content_tag :span, number_to_currency(unit_price, precision: 2, unit: '$'), class: 'pb-cost'
     end
 
     you_save = content_tag :div, class: 'you_save' do
       concat content_tag :div, 'You save:', class: 'lbl'
-      concat content_tag :span, '$0,00', class: 'pb-save'
+      concat content_tag :span, '$0.00', class: 'pb-save'
     end
 
     quantity + cost + you_save

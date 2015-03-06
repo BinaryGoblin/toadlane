@@ -5,6 +5,7 @@ header.header: .wrap
     li= nav_link 'why toad?', faq_path(anchor: 'whytoad')
     li= nav_link 'Sellers', faq_path(anchor: 'sellers')
     li= nav_link 'faq', faq_path
+    li= link_to 'Blog', "http://toadchat.blogspot.com/"
 
   .header-user.pull-right
     - if current_user
