@@ -10,7 +10,6 @@ gem 'coffee-rails', '~> 4.1.0'
 # gem 'turbolinks'
 gem 'jbuilder', '~> 2.2.9'
 
-gem 'therubyracer','~> 0.12.0', platform: :ruby
 gem 'devise', '~> 3.4.1'
 gem 'cancancan', '~> 1.10.1'
 gem 'rolify', '~> 4.0.0'
