@@ -6,6 +6,7 @@
 - `WELCOME_EMAIL_PASSWORD`
 - `BONSAI_URL`
 - `ELASTICSEARCH_URL`
+- `SECRET_KEY_BASE` - generate with `rake secret`
 
 ## Heroku deployment notes
 
