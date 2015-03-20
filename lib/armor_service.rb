@@ -3,11 +3,9 @@ class ArmorService
   attr_accessor :client, :account, :user, :order
   
   def initialize()
-    if Rails.env.production?
-      @client = ArmorPayments::API.new '3e96f3cd9d27d471740124868ac7906d', '101a2b03f84a1cb16aa0fa3f22f9c3006af025198605876cf81735bbe1417536'
-    else
-      @client = ArmorPayments::API.new 'fac5d8a4eab1c348925a7a5421367d86', '6956753620b1cdecfbbcbe4a6f3287a4b748edc6b8eff1e8d8dbf23b679db8d5', sandbox=true
-    end
+    sandbox = if Rails.env.development? then true else false end
+    secrets = Rails.application.secrets
+    @client = ArmorPayments::API.new(secrets['armor_api_key'], secrets['armor_api_secret'], sandbox)
   end
 
   def create_account(opts = {})

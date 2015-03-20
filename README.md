@@ -7,6 +7,8 @@
 - `BONSAI_URL`
 - `ELASTICSEARCH_URL`
 - `SECRET_KEY_BASE` - generate with `rake secret`
+- `ARMOR_API_KEY`
+- `ARMOR_API_SECRET`
 
 ## Heroku deployment notes
 
