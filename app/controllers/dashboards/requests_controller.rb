@@ -12,7 +12,7 @@ class Dashboards::RequestsController < ::DashboardsController
       conversations =  Request.where(sender_id: current_user.id)
     end
 
-    @conversations = conversations.order('created_at DESC').uniq_by(&:conversation)
+    @conversations = conversations.order('created_at DESC').uniq(&:conversation)
   end
 
   def show
