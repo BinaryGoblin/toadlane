@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
 
     if current_user.present? && current_user.role.present?
       if current_user.role.name == 'superadmin' || current_user.role.name == 'admin'
-        admin_dashboards_path
+        admin_root_path
       else
         unless current_user.armor_profile.present?
           if current_user.name.present? && current_user.email.present? && current_user.phone.present?
