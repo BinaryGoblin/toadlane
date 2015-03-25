@@ -41,7 +41,7 @@ gem 'kaminari', '~> 0.16.3'
 
 # Dev - debugging group
 group :development do
-  gem 'pry', '~> 0.10.1'
+  gem 'pry-rails'
   gem "better_errors", '~> 2.1.1'
   gem "binding_of_caller", '~> 0.7.2'
   #gem 'ruby-debug-ide'
