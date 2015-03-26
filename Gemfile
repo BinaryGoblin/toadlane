@@ -75,7 +75,7 @@ gem 'armor_payments', '~> 0.1.0'
 
 gem 'will_paginate', '~> 3.0.7'
 
-gem 'mailboxer', '~> 0.12.5'
+gem 'mailboxer', github: 'lacco/mailboxer'
 gem 'acts-as-messageable', '~> 0.4.10'
 
 gem 'paper_trail', '~> 3.0.7'
