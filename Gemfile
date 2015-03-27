@@ -44,13 +44,6 @@ group :development do
   gem 'pry-rails'
   gem "better_errors", '~> 2.1.1'
   gem "binding_of_caller", '~> 0.7.2'
-  #gem 'ruby-debug-ide'
-  #gem 'rb-readline'
-  #gem 'debase'
-end
-
-group :doc do
-  gem 'sdoc', '~> 0.4.1', require: false
 end
 
 group :test do
@@ -59,14 +52,23 @@ group :test do
   gem 'shoulda', '~> 3.5.0'
   gem 'shoulda-matchers', '~> 2.8.0'
   gem 'factory_girl_rails', '~> 4.5.0', require: false
-  gem 'faker', '~> 1.4.3'
   gem 'populator', '~> 1.0.0'
   #gem 'fixture_builder'
   gem 'fuubar', '~> 2.0.0'
   gem 'webmock', '~> 1.20.4', require: false # Library for stubbing and setting expectations on HTTP requests
 end
 
+group :doc do
+  gem 'sdoc', '~> 0.4.1', require: false
+end
+
+group :development, :test do
+  gem 'faker', '~> 1.4.3'
+  gem 'railroady'
+end
+
 gem 'rails_12factor', group: [:production, :staging]
+
 gem 'parallel_tests', '~> 1.3.1'
 
 gem 'sidekiq', '~> 3.3.2'
