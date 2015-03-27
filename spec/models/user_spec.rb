@@ -11,10 +11,6 @@ describe User do
    it { should have_many(:products) }
   end
 
-  describe 'validations' do
-  # it { should ensure_length_of(:name).is_at_least(1).is_at_most(100) }
-  end
-
   describe 'fields' do
     it { should have_db_column(:email).of_type(:string) }
     it { should have_db_column(:name).of_type(:string) }
