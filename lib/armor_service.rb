@@ -1,5 +1,4 @@
 class ArmorService
-  require 'armor_payments'
   attr_accessor :client, :account, :user, :order
   
   def initialize()

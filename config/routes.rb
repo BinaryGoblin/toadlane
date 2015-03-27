@@ -32,11 +32,11 @@ Toad::Application.routes.draw do
       end
     end
 
-    resources :requests do
-      member do
-        post :reply
-      end
-    end
+    # resources :requests do
+    #   member do
+    #     post :reply
+    #   end
+    # end
 
     resources :orders, only: [:index] do
       collection do

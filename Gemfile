@@ -41,7 +41,7 @@ gem 'kaminari', '~> 0.16.3'
 
 # Dev - debugging group
 group :development do
-  gem 'pry', '~> 0.10.1'
+  gem 'pry-rails'
   gem "better_errors", '~> 2.1.1'
   gem "binding_of_caller", '~> 0.7.2'
   #gem 'ruby-debug-ide'
@@ -66,7 +66,7 @@ group :test do
   gem 'webmock', '~> 1.20.4', require: false # Library for stubbing and setting expectations on HTTP requests
 end
 
-gem 'rails_12factor', group: :production
+gem 'rails_12factor', group: [:production, :staging]
 gem 'parallel_tests', '~> 1.3.1'
 
 gem 'sidekiq', '~> 3.3.2'
@@ -75,7 +75,7 @@ gem 'armor_payments', '~> 0.1.0'
 
 gem 'will_paginate', '~> 3.0.7'
 
-gem 'mailboxer', '~> 0.12.5'
+gem 'mailboxer', github: 'lacco/mailboxer'
 gem 'acts-as-messageable', '~> 0.4.10'
 
 gem 'paper_trail', '~> 3.0.7'
