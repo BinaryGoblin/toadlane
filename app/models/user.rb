@@ -55,8 +55,4 @@ class User < ActiveRecord::Base
   def mailboxer_email(object)
     email
   end
-
-  def create_armor_bank_account
-    ArmorBankAccount.create(user: self)
-  end
 end
