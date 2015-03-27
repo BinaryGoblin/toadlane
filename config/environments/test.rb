@@ -35,4 +35,7 @@ Toad::Application.configure do
   config.active_support.deprecation = :stderr
 
   config.action_mailer.default_url_options = { :host => "193.108.45.101" }
+
+  # Stop suppressing ActiveRecord errors
+  config.active_record.raise_in_transactional_callbacks = true
 end
