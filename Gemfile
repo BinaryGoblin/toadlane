@@ -44,6 +44,8 @@ group :development do
   gem 'pry-rails'
   gem "better_errors", '~> 2.1.1'
   gem "binding_of_caller", '~> 0.7.2'
+  gem 'guard-rails'
+  gem 'guard-rspec'
 end
 
 group :test do
