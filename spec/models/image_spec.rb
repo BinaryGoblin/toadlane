@@ -3,10 +3,6 @@ require 'spec_helper'
 describe Image do
   let(:image) { FactoryGirl.create(:image) }
 
-  it 'has a valid factory' do
-    expect(image).to be_valid
-  end
-
   describe 'associations' do
     it { should belong_to(:product) }
   end
