@@ -17,5 +17,24 @@ describe ArmorProfile do
     it 'does create an ArmorProfile' do
       expect { user.save }.to change { ArmorProfile.count }
     end
+
+    context 'with valid armor_profile' do
+      before do
+        User.skip_callback(:save, :after, :create_armor_profile)
+      end
+
+      let(:persisted_user) { user.tap(&:save) }
+      let(:profile) do
+        profile = persisted_user.build_armor_profile
+        profile.save
+        profile
+      end
+
+      it 'populates armor_account and armor_user' do
+        expect(profile.armor_account).to be_present
+        expect(profile.armor_user).to be_present
+      end
+    end
   end
+
 end

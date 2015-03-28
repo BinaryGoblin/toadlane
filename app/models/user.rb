@@ -37,7 +37,9 @@ class User < ActiveRecord::Base
   scope :featured, -> { limit(16) }
 
   after_create :create_armor_bank_account
-  after_save :create_armor_profile, if: -> { self.name && self.phone }
+  after_save :create_armor_profile,
+    if: -> { self.name && self.phone },
+    unless: -> { self.armor_profile }
 
   def role
     self.roles.all.first
