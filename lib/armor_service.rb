@@ -2,7 +2,7 @@ class ArmorService
   attr_accessor :client, :account, :user, :order
   
   def initialize()
-    sandbox = if Rails.env.development? then true else false end
+    sandbox = if Rails.env.production? then false else true end
     secrets = Rails.application.secrets
     @client = ArmorPayments::API.new(secrets['armor_api_key'], secrets['armor_api_secret'], sandbox)
   end
