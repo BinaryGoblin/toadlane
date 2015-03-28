@@ -39,7 +39,7 @@
 # zeus: false                          # enables zeus gem.
 # CLI: 'rails server'                  # customizes runner command. Omits all options except `pid_file`!
 
-guard 'rspec', cmd: 'bundle exec rspec' do
+guard 'rspec', cmd: 'rspec' do
   watch(%r{^app/(.+)\.rb$})             { |m| "spec/#{m[1]}_spec.rb" }
   watch(%r{^spec/(.+)\.rb$})            { |m| "spec/#{m[1]}.rb" }
 end
