@@ -27,18 +27,7 @@ class Dashboards::PaymentsController < ApplicationController
     respond_to do |format|
       if @user.update(user_params)      
        
-        if !@user.armor_profile.present?
-          data = ArmorService.new
-          account = data.create_account({
-            'user_name' => current_user.name,
-            'user_email' => current_user.email,
-            'user_phone' => current_user.phone
-          })
-          if account.present?
-            profile = ArmorProfile.create(user_id: current_user.id, armor_account: account.to_i)
-            profile.update(armor_user: data.get_user(account).to_i)
-          end
-        else
+        if @user.armor_profile.present?
           data = ArmorService.new
           data.update_user({
             'account' => current_user.armor_profile.armor_account,

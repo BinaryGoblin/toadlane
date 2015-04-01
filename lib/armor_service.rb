@@ -2,7 +2,7 @@ class ArmorService
   attr_accessor :client, :account, :user, :order
   
   def initialize()
-    sandbox = if Rails.env.development? then true else false end
+    sandbox = if Rails.env.production? then false else true end
     secrets = Rails.application.secrets
     @client = ArmorPayments::API.new(secrets['armor_api_key'], secrets['armor_api_secret'], sandbox)
   end
@@ -13,8 +13,6 @@ class ArmorService
       "user_name" => opts['user_name'],
       "user_email" => opts['user_email'],
       "user_phone" => opts['user_phone'],
-      "user_password" => SecureRandom.hex(26),
-      "confirmed"  => true
     })
     if data[:status] == 200
       @account = data[:body]['account_id']
@@ -91,3 +89,22 @@ class ArmorService
   end
 end
 
+class ArmorService
+  class BadResponseError < StandardError
+  end
+end
+
+module ArmorPayments
+  class Resource
+    def request(method, params)
+      response = connection.send(method, params)
+      if response.get_header('Content-Type') =~ /json/i
+        response.body = JSON.parse response.body
+      end
+      if !response.status.between?(200,299)
+        raise ArmorService::BadResponseError.new(response.body)
+      end
+      response
+    end
+  end
+end

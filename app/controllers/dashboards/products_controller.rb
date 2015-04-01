@@ -20,9 +20,7 @@ class Dashboards::ProductsController < ::DashboardsController
 
   def create
 
-    unless current_user.armor_profile.present?
-      return 
-    end
+    return if !current_user.armor_profile.present?
 
     start_date = DateTime.new(product_params["start_date(1i)"].to_i, product_params["start_date(2i)"].to_i, product_params["start_date(3i)"].to_i, product_params["start_date(4i)"].to_i, product_params["start_date(5i)"].to_i)
     end_date = DateTime.new(product_params["end_date(1i)"].to_i, product_params["end_date(2i)"].to_i, product_params["end_date(3i)"].to_i, product_params["end_date(4i)"].to_i, product_params["end_date(5i)"].to_i)

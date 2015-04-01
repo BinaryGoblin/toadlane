@@ -37,6 +37,9 @@ class User < ActiveRecord::Base
   scope :featured, -> { limit(16) }
 
   after_create :create_armor_bank_account
+  after_save :create_armor_profile,
+    if: -> { self.name && self.phone },
+    unless: -> { self.armor_profile }
 
   def role
     self.roles.all.first
@@ -54,9 +57,5 @@ class User < ActiveRecord::Base
 
   def mailboxer_email(object)
     email
-  end
-
-  def create_armor_bank_account
-    ArmorBankAccount.create(user: self)
   end
 end

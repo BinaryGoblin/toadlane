@@ -5,8 +5,8 @@ FactoryGirl.define do
     start_date Time.now - 1.year
     end_date Time.now + 1.year
     unit_price 100
-    tax_level 12
     status true
+    amount 100
 
     association :user
   end
