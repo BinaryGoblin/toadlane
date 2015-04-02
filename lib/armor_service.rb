@@ -90,7 +90,13 @@ class ArmorService
 end
 
 class ArmorService
-  class BadResponseError < StandardError
+  class BadResponseError < StandardError;
+    attr_accessor :response
+
+    def initialize(response)
+      @response = response
+      super(response.body)
+    end
   end
 end
 
@@ -102,7 +108,7 @@ module ArmorPayments
         response.body = JSON.parse response.body
       end
       if !response.status.between?(200,299)
-        raise ArmorService::BadResponseError.new(response.body)
+        raise ArmorService::BadResponseError.new(response)
       end
       response
     end
