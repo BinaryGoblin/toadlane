@@ -83,7 +83,7 @@ class ArmorOrdersController < ApplicationController
       end
     end
 
-    redirect_to dashboards_invoices_path
+    redirect_to dashboards_orders_path
   end
 
   def update

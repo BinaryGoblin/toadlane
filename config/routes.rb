@@ -1,7 +1,6 @@
 Toad::Application.routes.draw do
 
   resources :armor_orders, only: [:index, :create, :show, :destroy, :new]
-  resources :armor_invoices, only: [:index, :show, :destroy]
 
   get 'why' => 'infos#why_toad'
   get 'brokers' => 'infos#brokers_info'
@@ -46,12 +45,6 @@ Toad::Application.routes.draw do
 
     resources :shipments, only: [:index]
     
-    resources :invoices, only: [:index] do
-      collection do
-        delete :delete_cascade
-      end
-    end
-
     root 'profiles#show'
   end
 
