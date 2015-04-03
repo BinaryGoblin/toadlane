@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150328000058) do
+ActiveRecord::Schema.define(version: 20150403201930) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(version: 20150328000058) do
   create_table "armor_orders", force: :cascade do |t|
     t.integer  "buyer_id"
     t.integer  "seller_id"
-    t.integer  "account_id"
+    t.integer  "account_id",         limit: 8
     t.integer  "product_id"
     t.integer  "order_id",           limit: 8
     t.integer  "status"
