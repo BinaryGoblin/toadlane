@@ -3,6 +3,8 @@ class ArmorOrder < ActiveRecord::Base
   belongs_to :user, class_name: 'Seller', foreign_key: 'seller_id'
   belongs_to :product
 
+  validates_presence_of :unit_price, :account_id
+
   default_scope { where.not(unit_price: nil, account_id: nil) }
 
   def self.own_orders(id)
