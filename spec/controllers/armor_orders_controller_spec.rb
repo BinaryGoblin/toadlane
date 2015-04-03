@@ -5,7 +5,6 @@ RSpec.describe ArmorOrdersController, type: :controller do
     let(:user) { User.create(email: Faker::Internet.safe_email, password: 'password', name: "Test User", phone: '+12223334444') }
     let(:product) { Product.create(name: "Test Product", amount: 100, unit_price: 100, end_date: 1.day.from_now, user: user) }
 
-
     let(:armor_order_params) do
       {
         armor_order: {
