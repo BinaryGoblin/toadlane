@@ -1,5 +1,5 @@
 class Dashboards::OrdersController < ::DashboardsController
-  before_action :get_order_status, only: [:index]
+  # before_action :get_order_status, only: [:index]
 
   def index
     if params[:type_order] == 'buy'
