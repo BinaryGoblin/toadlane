@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150403201930) do
+ActiveRecord::Schema.define(version: 20150403210127) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,8 +50,8 @@ ActiveRecord::Schema.define(version: 20150403201930) do
   add_index "armor_invoices", ["product_id"], name: "index_armor_invoices_on_product_id", using: :btree
 
   create_table "armor_orders", force: :cascade do |t|
-    t.integer  "buyer_id"
-    t.integer  "seller_id"
+    t.integer  "buyer_id",           limit: 8
+    t.integer  "seller_id",          limit: 8
     t.integer  "account_id",         limit: 8
     t.integer  "product_id"
     t.integer  "order_id",           limit: 8
