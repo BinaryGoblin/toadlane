@@ -36,40 +36,8 @@ class User < ActiveRecord::Base
   after_save :create_armor_profile,
     if: -> { self.name && self.phone },
     unless: -> { self.armor_profile }
-  after_save :update_all_the_things,
-    if: -> { self.armor_profile }
-
-  def update_all_the_things
-    # data = ArmorService.new
-    # data.update_user({
-    #    :account => current_user.armor_profile.armor_account,
-    #   'user' => current_user.armor_profile.armor_user_id,
-    #   'user_name' => current_user.name,
-    #   'user_phone' => current_user.phone
-    # })
-    # data.update_company({
-    #   :account => current_user.armor_profile.armor_account,
-    #   'company' => current_user.company
-    # })
-    # data.update_address({
-    #  :account => current_user.armor_profile.armor_account,
-    #   'address' => current_user.address,
-    #   'city' => current_user.city,
-    #   'state' => current_user.state,
-    #   'postal_code' => current_user.postal_code,
-    #   'country' => current_user.country
-    # })
-    # data.create_armor_bank_account({
-    #   :account => current_user.armor_profile.armor_account,
-    #   'type' => current_user.armor_bank_account.account_type,
-    #   'location' => current_user.armor_bank_account.account_location,
-    #   'bank' => current_user.armor_bank_account.account_bank,
-    #   'routing' => current_user.armor_bank_account.account_routing,
-    #   'swift' => current_user.armor_bank_account.account_swift,
-    #   'account' => current_user.armor_bank_account.account_account,
-    #   'iban' => current_user.armor_bank_account.account_iban
-    # })
-  end
+  after_save :update_armor_api_user, if: :armor_api_user_changed?
+  after_save :update_armor_api_account, if: :armor_api_account_changed?
 
   def role
     self.roles.all.first
@@ -87,5 +55,39 @@ class User < ActiveRecord::Base
 
   def mailboxer_email(object)
     email
+  end
+
+  private
+  def armor_api_user_changed?
+    (self.changed & %w{name email phone}).any?
+  end
+
+  def armor_api_account_changed?
+    (self.changed & %w{company address city state postal_code country phone}).any?
+  end
+
+  def update_armor_api_user
+    armor_api.users(self.armor_profile.armor_account_id).update(
+      self.armor_profile.armor_user_id,
+      user_name: self.name,
+      user_phone: self.phone
+    )
+  end
+
+  def update_armor_api_account
+    armor_api.accounts.update(
+      self.armor_profile.armor_account_id,
+      company:      self.company,
+      address:      self.address,
+      city:         self.city,
+      state:        self.state,
+      postal_code:  self.postal_code,
+      phone:        self.phone,
+      country:      self.country
+    )
+  end
+
+  def armor_api
+    @armor_api_client ||= ArmorService.new.client
   end
 end
