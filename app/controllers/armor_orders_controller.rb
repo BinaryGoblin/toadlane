@@ -37,15 +37,15 @@ class ArmorOrdersController < ApplicationController
       account_id: current_user.armor_profile.armor_account
     }
 
-    @ao = ArmorOrder.new(armor_order_params.merge(additional_params))
+    @armor_order = ArmorOrder.new(armor_order_params.merge(additional_params))
 
     respond_to do |format|
-      if @ao.save
+      if @armor_order.save
         format.html { redirect_to dashboards_orders_path, notice: 'Armor Order was successfully created.' }
-        format.json { render :show, status: :created, location: @ao }
+        format.json { render :show, status: :created, location: @armor_order }
       else
         format.html { render :new }
-        format.json { render json: @ao.errors, status: :unprocessable_entity }
+        format.json { render json: @armor_order.errors, status: :unprocessable_entity }
       end
     end
   end
