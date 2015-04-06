@@ -22,7 +22,7 @@ class ArmorProfile < ActiveRecord::Base
   def populate_armor_fields(account_id)
     api_user_id = get_api_user(account_id)["user_id"].to_i
     self.update_attributes(
-      armor_account: account_id,
+      armor_account_id: account_id,
       armor_user: api_user_id
     )
   end
@@ -32,6 +32,6 @@ class ArmorProfile < ActiveRecord::Base
   end
 
   def armor_account_exists?
-    armor_account && armor_user ? true : false
+    armor_account_id && armor_user_id ? true : false
   end
 end

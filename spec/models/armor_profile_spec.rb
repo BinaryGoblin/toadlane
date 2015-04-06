@@ -30,9 +30,9 @@ RSpec.describe ArmorProfile do
         profile
       end
 
-      it 'populates armor_account and armor_user' do
-        expect(profile.armor_account).to be_present
-        expect(profile.armor_user).to be_present
+      it 'populates armor_account_id and armor_user_id' do
+        expect(profile.armor_account_id).to be_present
+        expect(profile.armor_user_id).to be_present
       end
     end
   end

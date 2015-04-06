@@ -27,14 +27,14 @@ class ArmorOrdersController < ApplicationController
       'description' => armor_order_params["description"]
     }
     
-    client.orders(current_user.armor_profile.armor_account).create(api_armor_order_params)
+    client.orders(current_user.armor_profile.armor_account_id).create(api_armor_order_params)
 
     additional_params = {
       buyer_id: current_user.armor_profile.armor_user,
       seller_id: product.user.armor_profile.armor_user,
       product_id: product.id,
       status_change: DateTime.now,
-      account_id: current_user.armor_profile.armor_account
+      account_id: current_user.armor_profile.armor_account_id
     }
 
     @armor_order = ArmorOrder.new(armor_order_params.merge(additional_params))

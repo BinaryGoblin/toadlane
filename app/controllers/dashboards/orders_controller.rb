@@ -29,7 +29,7 @@ class Dashboards::OrdersController < ::DashboardsController
 
       @orders.each do |order|
         result = data.get_order_status({
-          'account' => current_user.armor_profile.armor_account,
+          'account' => current_user.armor_profile.armor_account_id,
           'order_id' => order.order_id
         })
         if result
