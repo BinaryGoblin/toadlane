@@ -15,9 +15,6 @@ class User < ActiveRecord::Base
   has_one :certificate, dependent: :destroy
   has_one :armor_profile, dependent: :destroy
 
-  has_one :armor_bank_account, dependent: :destroy
-  accepts_nested_attributes_for :armor_bank_account
-
   has_and_belongs_to_many :roles,
                           :join_table => :users_roles,
                           :foreign_key => 'user_id',
@@ -36,7 +33,6 @@ class User < ActiveRecord::Base
 
   scope :featured, -> { limit(16) }
 
-  after_create :create_armor_bank_account
   after_save :create_armor_profile,
     if: -> { self.name && self.phone },
     unless: -> { self.armor_profile }

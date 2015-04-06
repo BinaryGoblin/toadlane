@@ -11,25 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150403210127) do
+ActiveRecord::Schema.define(version: 20150406143401) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "armor_bank_accounts", force: :cascade do |t|
-    t.integer  "account_type"
-    t.string   "account_location"
-    t.string   "account_bank"
-    t.string   "account_routing"
-    t.string   "account_swift"
-    t.string   "account_account"
-    t.string   "account_iban"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "armor_bank_accounts", ["user_id"], name: "index_armor_bank_accounts_on_user_id", using: :btree
 
   create_table "armor_invoices", force: :cascade do |t|
     t.integer  "buyer_id"
