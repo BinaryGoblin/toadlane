@@ -43,7 +43,7 @@ class User < ActiveRecord::Base
     # data = ArmorService.new
     # data.update_user({
     #    :account => current_user.armor_profile.armor_account,
-    #   'user' => current_user.armor_profile.armor_user,
+    #   'user' => current_user.armor_profile.armor_user_id,
     #   'user_name' => current_user.name,
     #   'user_phone' => current_user.phone
     # })

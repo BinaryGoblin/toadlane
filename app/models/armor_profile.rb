@@ -23,7 +23,7 @@ class ArmorProfile < ActiveRecord::Base
     api_user_id = get_api_user(account_id)["user_id"].to_i
     self.update_attributes(
       armor_account_id: account_id,
-      armor_user: api_user_id
+      armor_user_id: api_user_id
     )
   end
 
