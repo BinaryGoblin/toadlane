@@ -1,7 +1,14 @@
 require 'spec_helper'
 
 RSpec.describe ArmorProfile do
-  let(:user) { User.new(email: Faker::Internet.safe_email, password: Faker::Internet.password, name: name, phone: phone) }
+  let(:user) do
+    User.new(
+      email: Faker::Internet.safe_email,
+      password: Faker::Internet.password,
+      name: name,
+      phone: phone
+    )
+  end
 
   context 'without user name and phone' do
     let(:name) { nil }
