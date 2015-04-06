@@ -53,10 +53,10 @@ class User < ActiveRecord::Base
     # })
     # data.update_address({
     #  :account => current_user.armor_profile.armor_account,
-    #   'address' => current_user.location,
+    #   'address' => current_user.address,
     #   'city' => current_user.city,
     #   'state' => current_user.state,
-    #   'postal_code' => current_user.zip_code,
+    #   'postal_code' => current_user.postal_code,
     #   'country' => current_user.country
     # })
     # data.create_armor_bank_account({

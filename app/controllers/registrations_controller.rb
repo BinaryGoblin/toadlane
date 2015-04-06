@@ -42,6 +42,6 @@ class RegistrationsController < Devise::RegistrationsController
 
   private
     def user_params
-      params.fetch(:user, {}).permit(:email, :name, :password, :password_confirmation, :company, :location, :phone)
+      params.fetch(:user, {}).permit(:email, :name, :password, :password_confirmation, :company, :address, :phone)
     end
 end

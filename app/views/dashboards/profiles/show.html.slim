@@ -53,8 +53,8 @@
 
       td
         .form-group
-          = f.label :location, 'Address:', class: 'required'
-          = f.text_field :location, class: 'form-control', required: true
+          = f.label :address, 'Address:', class: 'required'
+          = f.text_field :address, class: 'form-control', required: true
 
         .form-group
           = f.label :city, 'City:', class: 'required'
@@ -65,8 +65,8 @@
           = f.text_field :state, class: 'form-control', required: true
 
         .form-group
-          = f.label :zip_code, 'Zip code:', class: 'required'
-          = f.text_field :zip_code, class: 'form-control', required: true
+          = f.label :postal_code, 'Postal code:', class: 'required'
+          = f.text_field :postal_code, class: 'form-control', required: true
 
         .form-group
           = f.label :country, 'Country:', class: 'required'
