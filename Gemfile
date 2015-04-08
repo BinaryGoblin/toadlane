@@ -73,8 +73,6 @@ gem 'rails_12factor', group: [:production, :staging]
 
 gem 'parallel_tests', '~> 1.3.1'
 
-gem 'sidekiq', '~> 3.3.2'
-
 gem 'armor_payments', '~> 0.1.0'
 
 gem 'will_paginate', '~> 3.0.7'
