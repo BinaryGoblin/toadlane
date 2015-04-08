@@ -8,8 +8,8 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for resource
 
-    if current_user.present? && current_user.role.present?
-      if current_user.role.name == 'superadmin' || current_user.role.name == 'admin'
+    if current_user.present? && current_user.roles.any?
+      if current_user.has_role?(:superadmin) || current_user.has_role?(:admin)
         admin_root_path
       else
         dashboards_profile_path

@@ -2,7 +2,7 @@ class Admin::MailersController < Admin::ApplicationController
   layout 'admin_dashboard'
 
   def index
-    @users = User.users.where(receive_new_offer: true).order('id ASC')
+    @users = Role.find_by(name: :user).users.where(receive_new_offer: true).order('id ASC')
     @products = Product.all.order('updated_at DESC')
   end
 
