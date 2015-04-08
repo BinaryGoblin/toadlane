@@ -1,6 +1,6 @@
 class ArmorProfile < ActiveRecord::Base
   belongs_to :user
-  after_save :create_armor_api_account, unless: :armor_account_exists?
+  after_create :create_armor_api_account, unless: :armor_account_exists?
 
   def client
     @client ||= service.client

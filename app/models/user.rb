@@ -33,11 +33,11 @@ class User < ActiveRecord::Base
 
   scope :featured, -> { limit(16) }
 
-  after_save :create_armor_profile,
+  after_update :create_armor_profile,
     if: -> { self.name && self.phone },
     unless: -> { self.armor_profile }
-  after_save :update_armor_api_user, if: :armor_api_user_changed?
-  after_save :update_armor_api_account, if: :armor_api_account_changed?
+  after_update :update_armor_api_user, if: :armor_api_user_changed?
+  after_update :update_armor_api_account, if: :armor_api_account_changed?
 
   def role
     self.roles.all.first
