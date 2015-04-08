@@ -2,6 +2,8 @@ class User < ActiveRecord::Base
   rolify
   acts_as_messageable
 
+  has_one :armor_profile
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :confirmable,
@@ -86,7 +88,7 @@ class User < ActiveRecord::Base
 
   def populate_armor_fields(account_id)
     api_user_id = get_api_user(account_id)["user_id"].to_i
-    self.update_attributes(
+    self.update_columns(
       armor_account_id: account_id,
       armor_user_id: api_user_id
     )
