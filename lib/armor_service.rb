@@ -16,6 +16,10 @@ class ArmorService
       @response = response
       super(response.body)
     end
+
+    def errors
+      response.data[:body]["errors"]
+    end
   end
 end
 
