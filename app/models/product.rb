@@ -14,7 +14,7 @@ class Product < ActiveRecord::Base
   accepts_nested_attributes_for :pricebreaks, :reject_if => :all_blank
 
   validates_numericality_of :unit_price, :amount, only_integer: false
-  validates_presence_of :end_date
+  validates_presence_of :end_date, :status_characteristic
 
   searchkick autocomplete: ['name'], fields: [:name, :main_category]
 

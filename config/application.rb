@@ -37,5 +37,6 @@ module Toad
     I18n.enforce_available_locales = false
 
     config.active_job.queue_adapter = :delayed_job
+    config.active_record.raise_in_transactional_callbacks = true
   end
 end
