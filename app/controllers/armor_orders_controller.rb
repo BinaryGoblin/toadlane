@@ -20,21 +20,21 @@ class ArmorOrdersController < ApplicationController
     product = Product.find(armor_order_params[:product_id])
 
     api_armor_order_params = { 
-      'seller_id'   => "#{product.user.armor_profile.armor_user_id}",
-      'buyer_id'    => "#{current_user.armor_profile.armor_user_id}",
+      'seller_id'   => "#{product.user.armor_user_id}",
+      'buyer_id'    => "#{current_user.armor_user_id}",
       'amount'      => armor_order_params["amount"],
       'summary'     => armor_order_params["summary"],
       'description' => armor_order_params["description"]
     }
     
-    client.orders(current_user.armor_profile.armor_account_id).create(api_armor_order_params)
+    client.orders(current_user.armor_account_id).create(api_armor_order_params)
 
     additional_params = {
-      buyer_id: current_user.armor_profile.armor_user_id,
-      seller_id: product.user.armor_profile.armor_user_id,
+      buyer_id: current_user.armor_user_id,
+      seller_id: product.user.armor_user_id,
       product_id: product.id,
       status_change: DateTime.now,
-      account_id: current_user.armor_profile.armor_account_id
+      account_id: current_user.armor_account_id
     }
 
     @armor_order = ArmorOrder.new(armor_order_params.merge(additional_params))

@@ -67,8 +67,8 @@ class User < ActiveRecord::Base
   end
 
   def update_armor_api_user
-    armor_api.users(self.armor_profile.armor_account_id).update(
-      self.armor_profile.armor_user_id,
+    armor_api.users(self.armor_account_id).update(
+      self.armor_user_id,
       user_name: self.name,
       user_phone: self.phone
     )
@@ -76,7 +76,7 @@ class User < ActiveRecord::Base
 
   def update_armor_api_account
     armor_api.accounts.update(
-      self.armor_profile.armor_account_id,
+      self.armor_account_id,
       company:      self.company,
       address:      self.address,
       city:         self.city,

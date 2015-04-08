@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150406151454) do
+ActiveRecord::Schema.define(version: 20150408135613) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -223,12 +223,12 @@ ActiveRecord::Schema.define(version: 20150406151454) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "",    null: false
-    t.string   "encrypted_password",     default: "",    null: false
+    t.string   "email",                            default: "",    null: false
+    t.string   "encrypted_password",               default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,     null: false
+    t.integer  "sign_in_count",                    default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -247,16 +247,18 @@ ActiveRecord::Schema.define(version: 20150406151454) do
     t.string   "country"
     t.string   "facebook"
     t.string   "ein_tax"
-    t.boolean  "receive_private_info",   default: true
-    t.boolean  "receive_new_offer",      default: true
-    t.boolean  "receive_tips",           default: true
+    t.boolean  "receive_private_info",             default: true
+    t.boolean  "receive_new_offer",                default: true
+    t.boolean  "receive_tips",                     default: true
     t.string   "asset_file_name"
     t.string   "asset_file_size"
     t.string   "asset_content_type"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "benefits"
-    t.boolean  "is_reseller",            default: false
+    t.boolean  "is_reseller",                      default: false
+    t.integer  "armor_account_id",       limit: 8
+    t.integer  "armor_user_id",          limit: 8
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

@@ -29,7 +29,7 @@ class Dashboards::OrdersController < ::DashboardsController
 
       @orders.each do |order|
         begin
-          result = client.orders(current_user.armor_profile.armor_account_id).get(order.order_id)
+          result = client.orders(current_user.armor_account_id).get(order.order_id)
         rescue
         ensure
           order.update(status: result.data[:body]['status'].to_i) if result
