@@ -35,5 +35,7 @@ module Toad
     config.autoload_paths += %W(#{config.root}/lib)
 
     I18n.enforce_available_locales = false
+
+    config.active_job.queue_adapter = :delayed_job
   end
 end

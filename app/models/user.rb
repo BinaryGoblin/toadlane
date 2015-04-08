@@ -43,13 +43,15 @@ class User < ActiveRecord::Base
   end
 
   private
-  def armor_api_user_changed?
-    (self.changed & %w{name email phone}).any?
+  def create_armor_api_account
+    response = armor_api.accounts.create({
+      user_name: self.name,
+      user_email: self.email,
+      user_phone: self.phone
+    })
+    populate_armor_fields(response.body["account_id"])
   end
-
-  def armor_api_account_changed?
-    (self.changed & %w{company address city state postal_code country phone}).any?
-  end
+  handle_asynchronously :create_armor_api_account
 
   def update_armor_api_user
     armor_api.users(self.armor_account_id).update(
@@ -58,6 +60,7 @@ class User < ActiveRecord::Base
       user_phone: self.phone
     )
   end
+  handle_asynchronously :update_armor_api_user
 
   def update_armor_api_account
     armor_api.accounts.update(
@@ -71,14 +74,14 @@ class User < ActiveRecord::Base
       country:      self.country
     )
   end
+  handle_asynchronously :update_armor_api_account
 
-  def create_armor_api_account
-    response = armor_api.accounts.create({
-      user_name: self.name,
-      user_email: self.email,
-      user_phone: self.phone
-    })
-    populate_armor_fields(response.body["account_id"])
+  def armor_api_user_changed?
+    (self.changed & %w{name email phone}).any?
+  end
+
+  def armor_api_account_changed?
+    (self.changed & %w{company address city state postal_code country phone}).any?
   end
 
   def populate_armor_fields(account_id)
