@@ -2,7 +2,7 @@
 
 .wrap-sm
   .table-options
-    - if current_user.armor_profile.present?
+    - if current_user.armor_api_account_exists?
       = link_to fa_icon('plus', text: 'New product'), new_dashboards_product_path, class: 'btn btn-default pull-right', disabled: false
     - else
       = link_to fa_icon('plus', text: 'New product'), new_dashboards_product_path, class: 'btn btn-default pull-right', disabled: true

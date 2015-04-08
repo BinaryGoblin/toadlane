@@ -13,7 +13,6 @@ class User < ActiveRecord::Base
   has_many :requests_of_receiver, class_name: 'Request', foreign_key: :receiver_id
 
   has_one :certificate, dependent: :destroy
-  has_one :armor_profile, dependent: :destroy
 
   has_and_belongs_to_many :roles,
                           :join_table => :users_roles,
@@ -33,28 +32,14 @@ class User < ActiveRecord::Base
 
   scope :featured, -> { limit(16) }
 
-  after_update :create_armor_profile,
+  after_update :create_armor_api_account,
     if: -> { self.name && self.phone },
-    unless: -> { self.armor_profile }
+    unless: :armor_api_account_exists?
   after_update :update_armor_api_user, if: :armor_api_user_changed?
   after_update :update_armor_api_account, if: :armor_api_account_changed?
 
-  def role
-    self.roles.all.first
-  end
-
-  def self.users
-    users = []
-    data = User.all.to_a
-    data.each do |user|
-      users << user.id if user.has_role? :user 
-    end
-    
-    User.where(id: users)
-  end
-
-  def mailboxer_email(object)
-    email
+  def armor_api_account_exists?
+    self.armor_account_id && self.armor_user_id
   end
 
   private
@@ -85,6 +70,27 @@ class User < ActiveRecord::Base
       phone:        self.phone,
       country:      self.country
     )
+  end
+
+  def create_armor_api_account
+    response = armor_api.accounts.create({
+      user_name: self.name,
+      user_email: self.email,
+      user_phone: self.phone
+    })
+    populate_armor_fields(response.body["account_id"])
+  end
+
+  def populate_armor_fields(account_id)
+    api_user_id = get_api_user(account_id)["user_id"].to_i
+    self.update_attributes(
+      armor_account_id: account_id,
+      armor_user_id: api_user_id
+    )
+  end
+
+  def get_api_user(id)
+    armor_api.users(id).all.body.first
   end
 
   def armor_api
