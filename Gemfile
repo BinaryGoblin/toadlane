@@ -7,7 +7,6 @@ gem 'pg', '~> 0.18.1'
 gem 'sass-rails', '~> 5.0.1'
 gem 'uglifier', '~> 2.7.1'
 gem 'coffee-rails', '~> 4.1.0'
-# gem 'turbolinks'
 gem 'jbuilder', '~> 2.2.9'
 
 gem 'devise', '~> 3.4.1'
@@ -71,8 +70,6 @@ end
 
 gem 'rails_12factor', group: [:production, :staging]
 
-gem 'parallel_tests', '~> 1.3.1'
-
 gem 'armor_payments', '~> 0.1.0'
 
 gem 'will_paginate', '~> 3.0.7'
@@ -82,7 +79,3 @@ gem 'acts-as-messageable', '~> 0.4.10'
 
 gem 'paper_trail', '~> 3.0.7'
 gem 'puma', '~> 2.11.1'
-
-gem 'savon', '~> 2.10.0'
-gem 'uuid', '~> 2.3.7'
-gem 'wasabi', '~> 3.4.0'
