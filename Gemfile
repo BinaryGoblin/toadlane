@@ -34,7 +34,7 @@ gem 'angularjs-rails', '~> 1.3.14'
 gem 'elementaljs-rails', '~> 0.0.11'
 
 gem 'paperclip', '~> 4.2.1'
-gem 'aws-sdk', '~> 2.0.29'
+gem 'aws-sdk', '< 2.0'
 gem 'searchkick', '~> 0.8.7'
 gem 'kaminari', '~> 0.16.3'
 
@@ -79,3 +79,4 @@ gem 'acts-as-messageable', '~> 0.4.10'
 
 gem 'paper_trail', '~> 3.0.7'
 gem 'puma', '~> 2.11.1'
+
