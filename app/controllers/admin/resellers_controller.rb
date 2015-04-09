@@ -4,7 +4,7 @@ class Admin::ResellersController < Admin::ApplicationController
   before_action :set_reseller, only: [:update, :destroy, :get_certificate]
 
   def index
-    @resellers = User.users.order('id ASC')
+    @resellers = Role.find_by(name: :user).users.order('id ASC')
   end
 
   def update

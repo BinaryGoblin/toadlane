@@ -16,7 +16,7 @@ describe User do
     it { should have_db_column(:name).of_type(:string) }
     it { should have_db_column(:phone).of_type(:string) }
     it { should have_db_column(:company).of_type(:string) }
-    it { should have_db_column(:location).of_type(:string) }
+    it { should have_db_column(:address).of_type(:string) }
     it { should have_db_column(:facebook).of_type(:string) }
     it { should have_db_column(:ein_tax).of_type(:string) }
     it { should have_db_column(:receive_private_info).of_type(:boolean) }

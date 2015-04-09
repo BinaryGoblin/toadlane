@@ -7,7 +7,6 @@ gem 'pg', '~> 0.18.1'
 gem 'sass-rails', '~> 5.0.1'
 gem 'uglifier', '~> 2.7.1'
 gem 'coffee-rails', '~> 4.1.0'
-# gem 'turbolinks'
 gem 'jbuilder', '~> 2.2.9'
 
 gem 'devise', '~> 3.4.1'
@@ -35,9 +34,10 @@ gem 'angularjs-rails', '~> 1.3.14'
 gem 'elementaljs-rails', '~> 0.0.11'
 
 gem 'paperclip', '~> 4.2.1'
-gem 'aws-sdk', '~> 2.0.29'
+gem 'aws-sdk', '< 2.0'
 gem 'searchkick', '~> 0.8.7'
 gem 'kaminari', '~> 0.16.3'
+gem 'delayed_job_active_record', '~> 4.0.3'
 
 # Dev - debugging group
 group :development do
@@ -71,10 +71,6 @@ end
 
 gem 'rails_12factor', group: [:production, :staging]
 
-gem 'parallel_tests', '~> 1.3.1'
-
-gem 'sidekiq', '~> 3.3.2'
-
 gem 'armor_payments', '~> 0.1.0'
 
 gem 'will_paginate', '~> 3.0.7'
@@ -85,6 +81,3 @@ gem 'acts-as-messageable', '~> 0.4.10'
 gem 'paper_trail', '~> 3.0.7'
 gem 'puma', '~> 2.11.1'
 
-gem 'savon', '~> 2.10.0'
-gem 'uuid', '~> 2.3.7'
-gem 'wasabi', '~> 3.4.0'

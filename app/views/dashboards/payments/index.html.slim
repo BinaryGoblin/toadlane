@@ -2,7 +2,7 @@
 
 = form_for @user, url: dashboards_profile_path, :html => { autocomplete: "off", data: { behavior: 'Validations', options: '{"rules":{"user[armor_bank_account_attributes][account_routing]":{"routing":true}}}'} } do |f|
   .wrap-sm
-    - unless @user.armor_profile.present?
+    - unless @user.armor_api_account_exists?
       .error-explanation Please fill out your profile details. Until your profile is complete, you will not be able to create orders.
 
     - if @user.errors.any?
@@ -37,25 +37,25 @@
         td          
           .form-group
             label Account type:
-            = select_tag 'user[armor_bank_account_attributes][account_type]', options_for_select({"Business Checking" => "1", "Business Savings" => "2", "Personal Checking" => "3", "Personal Savings" => "4"}, @user.armor_bank_account.account_type), data: { behavior: 'Select' }, include_blank: true, placeholder: 'Select one...'
+            /= select_tag 'user[armor_bank_account_attributes][account_type]', options_for_select({"Business Checking" => "1", "Business Savings" => "2", "Personal Checking" => "3", "Personal Savings" => "4"}, @user.armor_bank_account.account_type), data: { behavior: 'Select' }, include_blank: true, placeholder: 'Select one...'
 
           .form-group
             label Account location:
             .radios data-behavior="SetFieldDisabled" data-options='{"true_condition":"us","fields":["#account_swift","#account_iban"]}'
               label
-                = radio_button_tag 'user[armor_bank_account_attributes][account_location]', 'us', @user.armor_bank_account.account_location == 'us'
+                /= radio_button_tag 'user[armor_bank_account_attributes][account_location]', 'us', @user.armor_bank_account.account_location == 'us'
                 | US bank account
               label
-                = radio_button_tag 'user[armor_bank_account_attributes][account_location]', 'non_us', @user.armor_bank_account.account_location.blank? || @user.armor_bank_account.account_location == 'non_us'
+                /= radio_button_tag 'user[armor_bank_account_attributes][account_location]', 'non_us', @user.armor_bank_account.account_location.blank? || @user.armor_bank_account.account_location == 'non_us'
                 | Non-US bank account
 
           .form-group
             label Account bank:
-            input.form-control type="text" name="user[armor_bank_account_attributes][account_bank]" value="#{@user.armor_bank_account.account_bank}"
+            /input.form-control type="text" name="user[armor_bank_account_attributes][account_bank]" value="#{@user.armor_bank_account.account_bank}"
 
           .form-group
             label Account routing:
-            input.form-control type="text" name="user[armor_bank_account_attributes][account_routing]" value="#{@user.armor_bank_account.account_routing}"
+            /input.form-control type="text" name="user[armor_bank_account_attributes][account_routing]" value="#{@user.armor_bank_account.account_routing}"
 
           / .form-group: label Primary credit card:
           
@@ -81,15 +81,15 @@
         td
           .form-group
             label Account swift:
-            input#account_swift.form-control type="text" name="user[armor_bank_account_attributes][account_swift]" value="#{@user.armor_bank_account.account_swift}"
+            /input#account_swift.form-control type="text" name="user[armor_bank_account_attributes][account_swift]" value="#{@user.armor_bank_account.account_swift}"
 
           .form-group
             label Account account:
-            input.form-control type="text" name="user[armor_bank_account_attributes][account_account]" value="#{@user.armor_bank_account.account_account}"
+            /input.form-control type="text" name="user[armor_bank_account_attributes][account_account]" value="#{@user.armor_bank_account.account_account}"
 
           .form-group
             label Account iban:
-            input#account_iban.form-control type="text" name="user[armor_bank_account_attributes][account_iban]" value="#{@user.armor_bank_account.account_iban}"
+            /input#account_iban.form-control type="text" name="user[armor_bank_account_attributes][account_iban]" value="#{@user.armor_bank_account.account_iban}"
 
           / .card.card-back
           /   .form-group

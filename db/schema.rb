@@ -11,25 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150328000058) do
+ActiveRecord::Schema.define(version: 20150408164731) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "armor_bank_accounts", force: :cascade do |t|
-    t.integer  "account_type"
-    t.string   "account_location"
-    t.string   "account_bank"
-    t.string   "account_routing"
-    t.string   "account_swift"
-    t.string   "account_account"
-    t.string   "account_iban"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "armor_bank_accounts", ["user_id"], name: "index_armor_bank_accounts_on_user_id", using: :btree
 
   create_table "armor_invoices", force: :cascade do |t|
     t.integer  "buyer_id"
@@ -50,12 +35,12 @@ ActiveRecord::Schema.define(version: 20150328000058) do
   add_index "armor_invoices", ["product_id"], name: "index_armor_invoices_on_product_id", using: :btree
 
   create_table "armor_orders", force: :cascade do |t|
-    t.integer  "buyer_id"
-    t.integer  "seller_id"
-    t.integer  "account_id"
+    t.integer  "buyer_id",           limit: 8
+    t.integer  "seller_id",          limit: 8
+    t.integer  "account_id",         limit: 8
     t.integer  "product_id"
     t.integer  "order_id",           limit: 8
-    t.integer  "status"
+    t.integer  "status",                         default: 0
     t.float    "unit_price"
     t.integer  "count"
     t.float    "amount"
@@ -74,8 +59,8 @@ ActiveRecord::Schema.define(version: 20150328000058) do
   end
 
   create_table "armor_profiles", force: :cascade do |t|
-    t.integer  "armor_account", limit: 8
-    t.integer  "armor_user",    limit: 8
+    t.integer  "armor_account_id", limit: 8
+    t.integer  "armor_user_id",    limit: 8
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -100,6 +85,22 @@ ActiveRecord::Schema.define(version: 20150328000058) do
   end
 
   add_index "certificates", ["user_id"], name: "index_certificates_on_user_id", using: :btree
+
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer  "priority",   default: 0, null: false
+    t.integer  "attempts",   default: 0, null: false
+    t.text     "handler",                null: false
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.string   "queue"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
   create_table "images", force: :cascade do |t|
     t.integer  "product_id"
@@ -238,12 +239,12 @@ ActiveRecord::Schema.define(version: 20150328000058) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "",    null: false
-    t.string   "encrypted_password",     default: "",    null: false
+    t.string   "email",                            default: "",    null: false
+    t.string   "encrypted_password",               default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,     null: false
+    t.integer  "sign_in_count",                    default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -255,23 +256,25 @@ ActiveRecord::Schema.define(version: 20150328000058) do
     t.string   "name"
     t.string   "phone"
     t.string   "company"
-    t.string   "location"
-    t.string   "zip_code"
+    t.string   "address"
+    t.string   "postal_code"
     t.string   "city"
     t.string   "state"
     t.string   "country"
     t.string   "facebook"
     t.string   "ein_tax"
-    t.boolean  "receive_private_info",   default: true
-    t.boolean  "receive_new_offer",      default: true
-    t.boolean  "receive_tips",           default: true
+    t.boolean  "receive_private_info",             default: true
+    t.boolean  "receive_new_offer",                default: true
+    t.boolean  "receive_tips",                     default: true
     t.string   "asset_file_name"
     t.string   "asset_file_size"
     t.string   "asset_content_type"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "benefits"
-    t.boolean  "is_reseller",            default: false
+    t.boolean  "is_reseller",                      default: false
+    t.integer  "armor_account_id",       limit: 8
+    t.integer  "armor_user_id",          limit: 8
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

@@ -1,6 +1,7 @@
 class ArmorProfile < ActiveRecord::Base
+  after_create :create_armor_api_account, unless: :armor_account_exists?
+
   belongs_to :user
-  after_save :create_armor_api_account, unless: :armor_account_exists?
 
   def client
     @client ||= service.client
@@ -21,9 +22,9 @@ class ArmorProfile < ActiveRecord::Base
 
   def populate_armor_fields(account_id)
     api_user_id = get_api_user(account_id)["user_id"].to_i
-    self.update_attributes(
-      armor_account: account_id,
-      armor_user: api_user_id
+    self.update_columns(
+      armor_account_id: account_id,
+      armor_user_id: api_user_id
     )
   end
 
@@ -32,6 +33,6 @@ class ArmorProfile < ActiveRecord::Base
   end
 
   def armor_account_exists?
-    armor_account && armor_user ? true : false
+    armor_account_id && armor_user_id ? true : false
   end
 end

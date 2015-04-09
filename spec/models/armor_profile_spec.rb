@@ -1,7 +1,14 @@
 require 'spec_helper'
 
-describe ArmorProfile do
-  let(:user) { User.new(email: Faker::Internet.safe_email, password: Faker::Internet.password, name: name, phone: phone) }
+RSpec.describe ArmorProfile do
+  let(:user) do
+    User.new(
+      email: Faker::Internet.safe_email,
+      password: Faker::Internet.password,
+      name: name,
+      phone: phone
+    )
+  end
 
   context 'without user name and phone' do
     let(:name) { nil }
@@ -30,9 +37,9 @@ describe ArmorProfile do
         profile
       end
 
-      it 'populates armor_account and armor_user' do
-        expect(profile.armor_account).to be_present
-        expect(profile.armor_user).to be_present
+      it 'populates armor_account_id and armor_user_id' do
+        expect(profile.armor_account_id).to be_present
+        expect(profile.armor_user_id).to be_present
       end
     end
   end

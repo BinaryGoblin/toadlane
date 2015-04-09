@@ -2,7 +2,7 @@
 
 = form_for @user, url: dashboards_profile_path, :html => { autocomplete: "off", data: { behavior: 'Validations', options: '{"rules":{"user[armor_bank_account_attributes][account_routing]":{"routing":true}}}'} } do |f|
   .wrap-sm
-    - unless @user.armor_profile.present?
+    - unless @user.armor_api_account_exists?
       .error-explanation Please fill out your profile details. Until your profile is complete, you will not be able to create orders.
 
     - if @user.errors.any?
@@ -53,8 +53,8 @@
 
       td
         .form-group
-          = f.label :location, 'Address:', class: 'required'
-          = f.text_field :location, class: 'form-control', required: true
+          = f.label :address, 'Address:', class: 'required'
+          = f.text_field :address, class: 'form-control', required: true
 
         .form-group
           = f.label :city, 'City:', class: 'required'
@@ -65,8 +65,8 @@
           = f.text_field :state, class: 'form-control', required: true
 
         .form-group
-          = f.label :zip_code, 'Zip code:', class: 'required'
-          = f.text_field :zip_code, class: 'form-control', required: true
+          = f.label :postal_code, 'Postal code:', class: 'required'
+          = f.text_field :postal_code, class: 'form-control', required: true
 
         .form-group
           = f.label :country, 'Country:', class: 'required'

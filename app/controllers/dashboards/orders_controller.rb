@@ -1,5 +1,5 @@
 class Dashboards::OrdersController < ::DashboardsController
-  before_action :get_order_status, only: [:index]
+  # before_action :get_order_status, only: [:index]
 
   def index
     if params[:type_order] == 'buy'
@@ -25,15 +25,14 @@ class Dashboards::OrdersController < ::DashboardsController
    def get_order_status
     @orders = ArmorOrder.where(deleted: false).own_orders(current_user.id)
     if @orders.any?
-      data = ArmorService.new
+      client = ArmorService.new.client
 
       @orders.each do |order|
-        result = data.get_order_status({
-          'account' => current_user.armor_profile.armor_account,
-          'order_id' => order.order_id
-        })
-        if result
-          order.update(status: result.to_i)
+        begin
+          result = client.orders(current_user.armor_account_id).get(order.order_id)
+        rescue
+        ensure
+          order.update(status: result.data[:body]['status'].to_i) if result
         end
       end
     end
