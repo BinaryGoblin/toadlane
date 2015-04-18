@@ -16,8 +16,8 @@
   .time-left
     h3 time left to buy:
     = time_left product.end_date
-
-    = link_to product.status_characteristic + ' now!', product_path(product, cat_id: product.main_category), class: 'btn btn-success'
+    - display_text = if product.status_characteristic && product.status_characteristic == 'sell' then 'buy' else 'sell' end
+    = link_to "#{display_text} now!", product_path(product, cat_id: product.main_category), class: 'btn btn-success'
   
   - if product.pricebreaks.present?
     = slider_pricebreaks product.pricebreaks, number_with_precision(product.unit_price, precision: 0, delimiter: '')
