@@ -34,4 +34,5 @@ Make sure to use `$ foreman start` to run the server and process background jobs
     - `$ psql`
     - `>>> create database toad_development;` And quit psql
 1. `$ rake db:migrate` to migrate schema to local empty database
-1. `$ rails server`
+1. `$ bin/rails server`
+1. Open http://localhost:3000
