@@ -20,4 +20,18 @@ Also, set the Heroku worker to at least one in order to process background jobs:
 
 ## Running the server
 
-Make sure to use `$foreman start` to run the server and process background jobs. You must also have elasticsearch running, which you can start with `$ elasticsearch`.
+Make sure to use `$ foreman start` to run the server and process background jobs. You must also have elasticsearch running, which you can start with `$ elasticsearch`.
+
+## Getting Started
+
+1. Read the Readme
+1. Confirm Ruby version (.ruby-version)
+1. Confirm Bundle installation and afterwards, bundle install 
+1. Confirm Postgresql is properly installed and configured
+    - Copy `config/database.yml.example` to `config/database.yml`
+    - Change authentication in `database.yml` to your PostgreSQL user authentication
+    - Create the database `$ createdb`
+    - `$ psql`
+    - `>>> create database toad_development;` And quit psql
+1. `$ rake db:migrate` to migrate schema to local empty database
+1. `$ rails server`
