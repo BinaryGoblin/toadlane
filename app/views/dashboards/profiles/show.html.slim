@@ -73,10 +73,6 @@
           = f.country_select 'country', [ 'US', 'GB' ], { iso_codes: true }, { class: 'form-control' }
 
         .form-group
-          = f.label :facebook, 'Facebook account:'
-          = f.text_field :facebook, class: 'form-control'
-
-        .form-group
           label Products to sell:
           = f.select :benefits, @user.benefits, {}, multiple: true, data: { behavior: 'Select', options: '{"plugins":["remove_button"],"create":"true"}' }
 
