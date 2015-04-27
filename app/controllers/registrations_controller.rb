@@ -6,8 +6,7 @@ class RegistrationsController < Devise::RegistrationsController
     yield resource if block_given?
     if resource_saved
       if params[:type_of_account] == 'user'
-        role = Role.find_by_name('user')
-        resource.add_role role.name
+        resource.add_role 'user'
 
         raw, enc = Devise.token_generator.generate(resource.class, :confirmation_token)
         resource.confirmation_token = enc
@@ -16,8 +15,7 @@ class RegistrationsController < Devise::RegistrationsController
         UserMailer.event_notification_user(user, raw).deliver
 
       elsif params[:type_of_account] == 'admin'
-        role = Role.find_by_name('admin')
-        resource.add_role role.name
+        resource.add_role 'admin'
 
         raw, enc = Devise.token_generator.generate(resource.class, :confirmation_token)
         resource.confirmation_token = enc
@@ -25,8 +23,7 @@ class RegistrationsController < Devise::RegistrationsController
         resource.save
         UserMailer.event_notification_admin(user, raw).deliver
       else
-        role = Role.find_by_name('user')
-        resource.add_role role.name
+        resource.add_role 'user'
       end
 
       redirect_to root_path, notice: 'You will receive an email with instructions about how to confirm your account in a few minutes.'
