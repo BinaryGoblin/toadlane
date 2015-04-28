@@ -33,8 +33,9 @@ class ArmorOrder < ActiveRecord::Base
     rescue ArmorService::BadResponseError => e
       self.update_attribute(:status, 'failed')
       Rails.logger.warn e.errors
+    else
+      self.update_attribute(:status, 'completed')
     end
-    self.update_attribute(:status, 'completed')
   end
   handle_asynchronously :create_armor_api_order
 end
