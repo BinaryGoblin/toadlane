@@ -16,16 +16,17 @@ html
 
     .find-and-explore
 
-      .fe-toggle
-         input#fe-buy type="radio" name="type" value="buy" checked=(params[:type] == 'buy' || params[:type] != 'sell')
-         label.text.active for="fe-buy" buy
-
-         input#fe-sell type="radio" name="type" value="sell" checked=(params[:type] == 'sell')
-         label.text for="fe-sell" sell
 
       .fe-search
 
         = form_tag search_path, method: :get do
+
+          .fe-toggle
+             input#fe-buy type="radio" name="type" value="buy" checked=(params[:type] == 'buy' || params[:type] != 'sell')
+             label.text.active for="fe-buy" WTB
+
+             input#fe-sell type="radio" name="type" value="sell" checked=(params[:type] == 'sell')
+             label.text for="fe-sell" WTS
 
           = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'fe-categories', data: { behavior: 'CustomSelect' }
 
