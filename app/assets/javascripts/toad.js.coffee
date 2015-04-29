@@ -2,6 +2,7 @@
 #= require jquery_ujs
 #= require jquery-ui/slider
 #= require jquery-ui/selectmenu
+#= require jquery-ui/tooltip
 
 #= require ./plugins/jquery.validate
 #= require_tree ./plugins
@@ -19,3 +20,4 @@
 $(document).ready ->
   Elemental.addNamespace App
   Elemental.load document
+  $(".fe-toggle").tooltip({tooltipClass: "search-tooltip"})
