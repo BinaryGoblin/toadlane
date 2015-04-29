@@ -77,10 +77,10 @@
 }
 
 .fe-toggle {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 53px;
+  position: relative;
+  left: -3px;
+  top: -3px;
+  display: inline-block;
   background: white;
   border: 1px solid #ddd;
   border-radius: 5px;
