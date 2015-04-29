@@ -1,10 +1,8 @@
 # encoding: UTF-8
-#require "faker"
 
 namespace :db do
   desc 'populate db by Product'
   task populate_db_product: :environment do
-    require "faker"
 #    category  = Category.
 
 #    role = Role.find_by_name('user').id
