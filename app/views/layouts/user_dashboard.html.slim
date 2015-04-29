@@ -23,10 +23,10 @@ html
 
           .fe-toggle
              input#fe-buy type="radio" name="type" value="buy" checked=(params[:type] == 'buy' || params[:type] != 'sell')
-             label.text.active for="fe-buy" WTB
+             label.text.active title="Search for products people want to buy" for="fe-buy" WTB
 
              input#fe-sell type="radio" name="type" value="sell" checked=(params[:type] == 'sell')
-             label.text for="fe-sell" WTS
+             label.text title="Search for products currently on sale" for="fe-sell" WTS
 
           = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'fe-categories', data: { behavior: 'CustomSelect' }
 
