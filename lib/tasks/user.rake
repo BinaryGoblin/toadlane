@@ -10,11 +10,6 @@ namespace :db do
         user = User.new(
           email:                 "user#{data}@example.com",
           password:              '12345678',
-          password_confirmation: '12345678',
-          name: Faker::Name.first_name,
-          company: Faker::Company.name,
-          location: Faker::Address.street_address,
-          phone: Faker::PhoneNumber.cell_phone
         )
         user.skip_confirmation!
         user.save
