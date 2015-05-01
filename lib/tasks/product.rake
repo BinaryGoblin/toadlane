@@ -1,17 +1,15 @@
 # encoding: UTF-8
-#require "faker"
 
 namespace :db do
   desc 'populate db by Product'
   task populate_db_product: :environment do
-    require "faker"
 #    category  = Category.
 
 #    role = Role.find_by_name('user').id
 #    find = []
 #    users = User.all
 #    users.each do |user|
-#      find << user.roles.pluck(:id).include?(role) 
+#      find << user.roles.pluck(:id).include?(role)
 #    end
 
     # TODO without array
@@ -19,9 +17,9 @@ namespace :db do
     user = User.find_by_email(data_users.sample).id
 
     (1..10).each do |data|
-      unless Product.find_by_name(Faker::Name.name)
+      unless Product.find_by_name("Product No. #{data}")
         product = Product.new(
-          name: Faker::Name.name,
+          name: "Product No. #{data}",
           description: 'description',
           start_date: Date.today - 1.day,
           end_date: Date.today + 5.day,
@@ -34,7 +32,7 @@ namespace :db do
         )
         product.save!
         puts "---> added product #{product.name}"
-        
+
         category = Category.all.sample
         product.categories << category
         puts "---> added product to category #{category.name}"
