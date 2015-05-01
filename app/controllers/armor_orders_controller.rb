@@ -17,7 +17,7 @@ class ArmorOrdersController < ApplicationController
 
   def create
     product = Product.find(armor_order_params[:product_id])
-    
+
     additional_params = {
       buyer_id: current_user.armor_user_id,
       seller_id: product.user.armor_user_id,
@@ -30,14 +30,15 @@ class ArmorOrdersController < ApplicationController
 
     respond_to do |format|
       if @armor_order.save
-        api_armor_order_params = { 
+
+        api_armor_order_params = {
           'seller_id'   => "#{product.user.armor_user_id}",
           'buyer_id'    => "#{current_user.armor_user_id}",
           'amount'      => armor_order_params["amount"],
-          'summary'     => armor_order_params["summary"],
-          'description' => armor_order_params["description"]
+          'summary'     => product.name,
+          'description' => product.description
         }
-        
+
         @armor_order.create_armor_api_order(current_user.armor_account_id, api_armor_order_params)
 
         format.html { redirect_to dashboards_orders_path, notice: 'Armor Order was successfully created.' }
