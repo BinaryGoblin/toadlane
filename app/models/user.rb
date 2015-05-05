@@ -32,8 +32,6 @@ class User < ActiveRecord::Base
 
   serialize :benefits, Array
 
-  scope :featured, -> { limit(16) }
-
   after_update :create_armor_api_account,
     if: -> { self.name && self.phone },
     unless: :armor_api_account_exists?

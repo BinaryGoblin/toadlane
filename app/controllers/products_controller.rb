@@ -10,7 +10,7 @@ class ProductsController < ApplicationController
       @products_recommended = Product.where(status_action: 'recommended').order(:created_at).limit(16)
       @products_best = Product.where(status_action: 'best').order(:created_at).limit(16)
       @products_new_deals = Product.order(:created_at).limit(16)
-      @featured_sellers = User.featured
+      @featured_sellers = User.limit(16)
     else
       redirect_to root_path
     end
