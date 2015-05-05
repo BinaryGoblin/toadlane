@@ -6,7 +6,7 @@ class Admin::ProductsController < Admin::ApplicationController
   def index
     @status_actions = [
       ['Futured', 'futured'],
-      ['Recomended', 'recomended'],
+      ['Recommended', 'recommended'],
       ['Best', 'best']
     ]
     @products = Product.unscoped.paginate(page: params[:page], per_page: params[:count]).order('id DESC')

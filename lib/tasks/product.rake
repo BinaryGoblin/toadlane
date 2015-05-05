@@ -27,7 +27,7 @@ namespace :db do
           unit_price: rand(5..20),
           amount: rand(15..170),
           user_id: user,
-          status_action: ["active", "disabled", "futured", "recomended", "best"].sample,
+          status_action: ["active", "disabled", "futured", "recommended", "best"].sample,
           status_characteristic: ["sell", "buy"].sample
         )
         product.save!

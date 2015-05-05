@@ -6,7 +6,7 @@
       = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
 
   #products_first.carousel.product-carousel.slide data-ride="carousel"
-    = products_carousel_items @products_recomended
+    = products_carousel_items @products_recommended
 
     a.left.carousel-control href="#products_first" role="button" data-slide="prev"
     a.right.carousel-control href="#products_first" role="button" data-slide="next"
