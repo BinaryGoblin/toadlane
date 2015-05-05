@@ -99,6 +99,6 @@ class User < ActiveRecord::Base
   end
 
   def armor_api
-    @armor_api_client ||= ArmorService.new.client
+    @armor_api_client ||= ArmorService.new
   end
 end

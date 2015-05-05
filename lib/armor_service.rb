@@ -6,6 +6,26 @@ class ArmorService
     secrets = Rails.application.secrets
     @client = ArmorPayments::API.new(secrets['armor_api_key'], secrets['armor_api_secret'], sandbox)
   end
+
+  def method_missing(method_name, *args, &block)
+    @client.send(method_name, *args, &block)
+  end
+
+  def accounts(*args, &block)
+    @client.accounts(*args, &block)
+  end
+
+  def users(*args, &block)
+    @client.users(*args, &block)
+  end
+
+  def orders(*args, &block)
+    @client.orders(*args, &block)
+  end
+
+  def shipmentcarriers(*args, &block)
+    @client.shipmentcarriers(*args, &block)
+  end
 end
 
 class ArmorService
