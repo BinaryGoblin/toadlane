@@ -18,9 +18,6 @@ class Product < ActiveRecord::Base
 
   searchkick autocomplete: ['name'], fields: [:name, :main_category]
 
-  scope :for_sell, -> (id) { where(main_category: id, status_characteristic: 'sell').order(:created_at).limit(16) }
-  scope :for_buy, -> (id) { where(main_category: id, status_characteristic: 'buy').order(:created_at).limit(16) }
-
   scope :best, -> { where(status_action: 'best').order(:created_at).limit(16) }
   scope :new_deals, -> { order(:created_at).limit(16) }  
 

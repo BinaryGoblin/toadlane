@@ -6,7 +6,7 @@ class MainController < ApplicationController
   end
 
   def search_by_sell
-    products = Product.for_sell category_params[:id]
+    products = Product.where(main_category: category_params[:id], status_characteristic: 'sell').order(:created_at).limit(16) 
 
     products_html = products_for_category products
 
@@ -14,7 +14,7 @@ class MainController < ApplicationController
   end
 
   def search_by_buy
-    products = Product.for_buy category_params[:id]
+    products = Product.where(main_category: category_params[:id], status_characteristic: 'buy').order(:created_at).limit(16)
 
     products_html = products_for_category products
 
