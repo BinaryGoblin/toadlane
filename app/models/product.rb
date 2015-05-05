@@ -18,12 +18,7 @@ class Product < ActiveRecord::Base
 
   searchkick autocomplete: ['name'], fields: [:name, :main_category]
 
-  scope :best, -> { where(status_action: 'best').order(:created_at).limit(16) }
-  scope :new_deals, -> { order(:created_at).limit(16) }  
-
   default_scope { where("end_date > ?", DateTime.now).where(status: true) }
-
-  scope :all_products, -> { order('updated_at DESC') }
 
   self.per_page = 16
 

@@ -8,8 +8,8 @@ class ProductsController < ApplicationController
   def index
     if current_user.present?
       @products_recomended = Product.recomended
-      @products_best = Product.best
-      @products_new_deals = Product.new_deals
+      @products_best = Product.where(status_action: 'best').order(:created_at).limit(16)
+      @products_new_deals = Product.order(:created_at).limit(16)
       @featured_sellers = User.featured
     else
       redirect_to root_path
@@ -21,7 +21,7 @@ class ProductsController < ApplicationController
   end
 
   def products
-    @products = Product.all_products.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    @products = Product.order('updated_at DESC').paginate(page: params[:page], per_page: params[:count]).order('id DESC')
   end
  
   def offers
