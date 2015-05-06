@@ -18,7 +18,6 @@
 /public/assets
 /public/system
 /ext
-config/database.yml
 *.swo
 *.swp
 *.out
