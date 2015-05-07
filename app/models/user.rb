@@ -47,7 +47,8 @@ class User < ActiveRecord::Base
     response = armor_api.accounts.create({
       user_name: self.name,
       user_email: self.email,
-      user_phone: self.phone
+      user_phone: self.phone,
+      email_confirmed: true
     })
     populate_armor_fields(response.body["account_id"])
   end
