@@ -28,7 +28,7 @@ class ArmorOrder < ActiveRecord::Base
   def create_armor_api_order(account_id, params)
     self.update_attribute(:status, 'processing')
     begin
-      client = ArmorService.new.client
+      client = ArmorService.new
       client.orders(account_id).create(params)
     rescue ArmorService::BadResponseError => e
       self.update_attribute(:status, 'failed')

@@ -18,20 +18,7 @@ class Product < ActiveRecord::Base
 
   searchkick autocomplete: ['name'], fields: [:name, :main_category]
 
-  scope :own, -> (id) { where(user_id: id) }
-
-  scope :by_count, -> (id) { limit(id) }
-  scope :for_sell, -> (id) { where(main_category: id, status_characteristic: 'sell').order(:created_at).limit(16) }
-  scope :for_buy, -> (id) { where(main_category: id, status_characteristic: 'buy').order(:created_at).limit(16) }
-
-  scope :recomended, -> { where(status_action: 'recomended').order(:created_at).limit(16) }
-  scope :best, -> { where(status_action: 'best').order(:created_at).limit(16) }
-  scope :new_deals, -> { order(:created_at).limit(16) }  
-
   default_scope { where("end_date > ?", DateTime.now).where(status: true) }
-
-  scope :all_products, -> { order('updated_at DESC') }
-  scope :all_offers, -> { where(status_characteristic: 'sell') }
 
   self.per_page = 16
 

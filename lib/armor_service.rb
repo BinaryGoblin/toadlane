@@ -2,9 +2,19 @@ class ArmorService
   attr_accessor :client
   
   def initialize()
-    sandbox = if Rails.env.production? then false else true end
-    secrets = Rails.application.secrets
-    @client = ArmorPayments::API.new(secrets['armor_api_key'], secrets['armor_api_secret'], sandbox)
+    self.client = ArmorPayments::API.new(
+      Rails.application.secrets['armor_api_key'], 
+      Rails.application.secrets['armor_api_secret'], 
+      use_sandbox?
+    )
+  end
+
+  def method_missing(method_name, *args, &block)
+    self.client.send(method_name, *args, &block)
+  end
+
+  def use_sandbox?
+    !Rails.env.production?
   end
 end
 

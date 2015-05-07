@@ -32,8 +32,6 @@ class User < ActiveRecord::Base
 
   serialize :benefits, Array
 
-  scope :featured, -> { limit(16) }
-
   after_update :create_armor_api_account,
     if: -> { self.name && self.phone },
     unless: :armor_api_account_exists?
@@ -99,6 +97,6 @@ class User < ActiveRecord::Base
   end
 
   def armor_api
-    @armor_api_client ||= ArmorService.new.client
+    @armor_api_client ||= ArmorService.new
   end
 end

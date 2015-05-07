@@ -25,7 +25,7 @@ class Dashboards::OrdersController < ::DashboardsController
    def get_order_status
     @orders = ArmorOrder.where(deleted: false).own_orders(current_user.id)
     if @orders.any?
-      client = ArmorService.new.client
+      client = ArmorService.new
 
       @orders.each do |order|
         begin

@@ -4,11 +4,7 @@ class ArmorProfile < ActiveRecord::Base
   belongs_to :user
 
   def client
-    @client ||= service.client
-  end
-
-  def service
-    @service ||= ArmorService.new
+    @client ||= ArmorService.new
   end
 
   def create_armor_api_account
