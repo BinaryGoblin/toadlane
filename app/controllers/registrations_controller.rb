@@ -26,7 +26,7 @@ class RegistrationsController < Devise::RegistrationsController
         resource.add_role 'user'
       end
 
-      redirect_to root_path, notice: 'You will receive an email with instructions about how to confirm your account in a few minutes.'
+      redirect_to root_path, notice: 'Your account was successfully created! You will receive an email with instructions about how to confirm your account in a few minutes.'
     else
       clean_up_passwords resource
       @validatable = devise_mapping.validatable?
