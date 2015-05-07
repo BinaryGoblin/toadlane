@@ -2,7 +2,7 @@
 
 .wrap-sm
   .table-options
-    = link 'Sentbox', dashboards_requests_path(box: 'sent'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
+    = link 'Sent', dashboards_requests_path(box: 'sent'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
     = link 'Inbox', dashboards_requests_path(box: 'inbox'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
 
   table.table data-behavior="TableCheckbox"
@@ -20,4 +20,3 @@
           td.text-right= link_to 'Reply', dashboards_request_path(conversation.conversation), class: 'view'
 
 .footer-actions: .fa-container: .wrap-sm
-  / = will_paginate @conversations
