@@ -71,7 +71,7 @@ class User < ActiveRecord::Base
       state:        self.state,
       postal_code:  self.postal_code,
       phone:        self.phone,
-      country:      self.country
+      country:      self.country.downcase # Must be lowercase for ArmorPayments
     )
   end
   handle_asynchronously :update_armor_api_account
