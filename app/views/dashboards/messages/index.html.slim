@@ -3,17 +3,12 @@
 .wrap-sm
   .table-options
     = link 'Trash', dashboards_messages_path(box: 'trash'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-    = link 'Sentbox', dashboards_messages_path(box: 'sent'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
+    = link 'Sent', dashboards_messages_path(box: 'sent'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
     = link 'Inbox', dashboards_messages_path(box: 'inbox'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-
-    / .selected-labels
-    /   span Selected:
-    /   = link_to 'Delete', '#', method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'label label-red'
 
   table.table data-behavior="TableCheckbox"
     thead
       tr
-        / th: input type="checkbox"
         th Subject:
         th Date:
         th
@@ -21,7 +16,6 @@
     tbody
       - @conversations.each do |conversation|
         tr
-          / td: input type="checkbox" value=""
           td= link_to conversation.subject, dashboards_message_path(conversation)
           td= conversation.updated_at.to_formatted_s(:long_ordinal)
           td.text-right
