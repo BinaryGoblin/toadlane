@@ -127,7 +127,7 @@
           .vp-title Pricebreaks:
           = pricebreak_table @product.pricebreaks, @product.unit_price, available
 
-        - if current_user.armor_api_account_exists?
+        - if current_user.armor_api_account_persisted?
           .text-center= link_to 'Proceed to checkout', '#', class: 'btn btn-success btn-lg checkout', data: {  toggle: 'modal', target: '#form_checkout' }
         - else 
           .wrong.text-center

@@ -11,7 +11,7 @@ class Dashboards::ProductsController < ::DashboardsController
   end
 
   def new
-    if current_user.armor_api_account_exists?
+    if current_user.armor_api_account_persisted?
       @product = Product.new
     else
       redirect_to dashboards_profile_path
@@ -20,7 +20,7 @@ class Dashboards::ProductsController < ::DashboardsController
 
   def create
 
-    return if !current_user.armor_api_account_exists?
+    return if !current_user.armor_api_account_persisted?
 
     start_date = DateTime.new(product_params["start_date(1i)"].to_i, product_params["start_date(2i)"].to_i, product_params["start_date(3i)"].to_i, product_params["start_date(4i)"].to_i, product_params["start_date(5i)"].to_i)
     end_date = DateTime.new(product_params["end_date(1i)"].to_i, product_params["end_date(2i)"].to_i, product_params["end_date(3i)"].to_i, product_params["end_date(4i)"].to_i, product_params["end_date(5i)"].to_i)
