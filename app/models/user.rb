@@ -1,3 +1,4 @@
+
 class User < ActiveRecord::Base
   rolify
   acts_as_messageable
@@ -32,17 +33,34 @@ class User < ActiveRecord::Base
 
   serialize :benefits, Array
 
+  after_create :associate_api_user
   after_update :create_armor_api_account,
     if: -> { self.name && self.phone },
-    unless: :armor_api_account_exists?
+    unless: :armor_api_account_persisted?
   after_update :update_armor_api_user, if: :armor_api_user_changed?
   after_update :update_armor_api_account, if: :armor_api_account_changed?
 
-  def armor_api_account_exists?
+  def armor_api_account_persisted?
     self.armor_account_id && self.armor_user_id
   end
 
   private
+  def associate_api_user
+    if armor_api_account_exists?
+      armor_user = armor_api_users.find {|u| u['email'] == self.email }
+      self.update_columns(armor_account_id: armor_user['account_id'], armor_user_id: armor_user['user_id'])
+    end
+  end
+  handle_asynchronously :associate_api_user
+
+  def armor_api_account_exists?
+    armor_api_users.any? {|u| u['email'] == self.email }
+  end
+
+  def armor_api_users
+    @armor_api_users ||= armor_api.partner.users(Rails.application.secrets['armor_partner_id']).all.body
+  end
+
   def create_armor_api_account
     response = armor_api.accounts.create({
       user_name: self.name,
@@ -92,6 +110,7 @@ class User < ActiveRecord::Base
       armor_user_id: api_user_id
     )
   end
+  handle_asynchronously :populate_armor_fields
 
   def get_api_user(id)
     armor_api.users(id).all.body.first
