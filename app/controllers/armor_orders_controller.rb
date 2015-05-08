@@ -16,7 +16,7 @@ class ArmorOrdersController < ApplicationController
   end
 
   def create
-    product = Product.find(armor_order_params[:product_id])
+    product = Product.unexpired.find(armor_order_params[:product_id])
 
     additional_params = {
       buyer_id: current_user.armor_user_id,

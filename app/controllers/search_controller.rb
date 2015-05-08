@@ -1,6 +1,6 @@
 class SearchController < ApplicationController
   layout 'user_dashboard'
-  
+
   def index
     query = params[:query].presence || '*'
     conditions = {}
@@ -18,7 +18,7 @@ class SearchController < ApplicationController
 
   def autocomplete
     data = params[:query]
-    render json: Product.where(status_characteristic: params[:type]).where("name ILIKE ?", "%#{data}%").limit(8).collect { |p| { name: p.name, cat_id: p.main_category, category: p.category.name, unit_price: p.unit_price } }
+    render json: Product.unexpired.where(status_characteristic: params[:type]).where("name ILIKE ?", "%#{data}%").limit(8).collect { |p| { name: p.name, cat_id: p.main_category, category: p.category.name, unit_price: p.unit_price } }
   end
 end
 

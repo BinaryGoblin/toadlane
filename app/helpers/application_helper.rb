@@ -30,7 +30,7 @@ module ApplicationHelper
   end
 
   def sub_categories_of_product id
-    categories = Product.unscoped.find(id).categories
+    categories = Product.find(id).categories
 
     if categories.present?
       content_tag :div do
@@ -126,7 +126,7 @@ module ApplicationHelper
         concat content_tag :span, diff_general[:seconds]
         concat content_tag :span, 'sec.'
       end
-        
+
       content_tag :div, class: 'time' do
         days + hours + minutes + seconds
       end
@@ -167,7 +167,7 @@ module ApplicationHelper
       else
         last_quantity = ''
       end
-      
+
       tr_first = (pricebreak.quantity + 1).to_s + ' - ' + last_quantity
       tr_second = '$ ' + pricebreak.price.round.to_s
       tr_third = (pricebreak.quantity + 1).to_s + ' needed'
@@ -230,7 +230,7 @@ module ApplicationHelper
     if current_user.is_reseller
       Tax.all.order(:value)
     else
-      Tax.where.not(value: 0).order(:value)    
+      Tax.where.not(value: 0).order(:value)
     end
   end
 end

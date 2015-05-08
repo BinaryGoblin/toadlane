@@ -7,9 +7,9 @@ class ProductsController < ApplicationController
 
   def index
     if current_user.present?
-      @products_recommended = Product.where(status_action: 'recommended').order(:created_at).limit(16)
-      @products_best = Product.where(status_action: 'best').order(:created_at).limit(16)
-      @products_new_deals = Product.order(:created_at).limit(16)
+      @products_recommended = Product.unexpired.where(status_action: 'recommended').order(:created_at).limit(16)
+      @products_best = Product.unexpired.where(status_action: 'best').order(:created_at).limit(16)
+      @products_new_deals = Product.unexpired.order(:created_at).limit(16)
       @featured_sellers = User.limit(16)
     else
       redirect_to root_path
@@ -21,11 +21,11 @@ class ProductsController < ApplicationController
   end
 
   def products
-    @products = Product.order('updated_at DESC').paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    @products = Product.unexpired.order('updated_at DESC').paginate(page: params[:page], per_page: params[:count]).order('id DESC')
   end
- 
+
   def offers
-    @products = Product.where(status_characteristic: 'sell').paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    @products = Product.unexpired.where(status_characteristic: 'sell').paginate(page: params[:page], per_page: params[:count]).order('id DESC')
     render 'products/products'
   end
 
@@ -35,6 +35,6 @@ class ProductsController < ApplicationController
 
   private
     def set_product
-      @product = Product.unscoped.find(params[:id])
+      @product = Product.find(params[:id])
     end
 end

@@ -9,7 +9,7 @@ class Admin::ProductsController < Admin::ApplicationController
       ['Recommended', 'recommended'],
       ['Best', 'best']
     ]
-    @products = Product.unscoped.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    @products = Product.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
   end
 
   def update
@@ -24,7 +24,7 @@ class Admin::ProductsController < Admin::ApplicationController
 
   private
     def set_product
-      @product = Product.find(params[:id])
+      @product = Product.unexpired.find(params[:id])
     end
 
     def product_params
