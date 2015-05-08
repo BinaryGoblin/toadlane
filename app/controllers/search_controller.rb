@@ -13,7 +13,7 @@ class SearchController < ApplicationController
     conditions[:main_category] = params[:cat_id]
     conditions[:start_date] = {lt: Time.now}
 
-    @products = Product.search query, where: conditions, order: orders, page: params[:page], per_page: params[:count]
+    @products = Product.unexpired.search query, where: conditions, order: orders, page: params[:page], per_page: params[:count]
   end
 
   def autocomplete
