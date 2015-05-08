@@ -9,6 +9,7 @@
 - `SECRET_KEY_BASE` - generate with `rake secret`
 - `ARMOR_API_KEY`
 - `ARMOR_API_SECRET`
+- `ARMOR_PARTNER_ID`
 - `DEVISE_SECRET_KEY`
 
 ## Heroku deployment notes
