@@ -71,7 +71,7 @@ end
 
 gem 'rails_12factor', group: [:production, :staging]
 
-gem 'armor_payments', '~> 0.1.0'
+gem 'armor_payments', '~> 0.1.0', github: 'Armor-Payments/armor_payments_ruby', ref: '22ea212b214ab0f389327893685cb10f375c2fcd'
 
 gem 'will_paginate', '~> 3.0.7'
 
