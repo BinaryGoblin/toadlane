@@ -2,7 +2,7 @@ class Dashboards::ProductsController < ::DashboardsController
   before_action :set_product, only: [:show, :edit, :update, :destroy]
 
   def index
-    @products = Product.unscoped.where(user_id: current_user.id).paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    @products = Product.where(user_id: current_user.id).paginate(page: params[:page], per_page: params[:count]).order('id DESC')
     @products_count = @products.count
   end
 
@@ -140,7 +140,7 @@ class Dashboards::ProductsController < ::DashboardsController
   def delete_cascade
     if params[:products_ids].present?
       params[:products_ids].each do |id|
-        Product.unscoped.find(id).destroy
+        Product.find(id).destroy
       end
     end
 
@@ -150,17 +150,17 @@ class Dashboards::ProductsController < ::DashboardsController
   def active_cascade
     if params[:products_ids].present?
       params[:products_ids].each do |id|
-        Product.unscoped.find(id).update(status: true)
+        Product.find(id).update(status: true)
       end
     end
-    
+
     render json: :ok
   end
 
   def inactive_cascade
     if params[:products_ids].present?
       params[:products_ids].each do |id|
-        Product.unscoped.find(id).update(status: false)
+        Product.find(id).update(status: false)
       end
     end
 
@@ -169,7 +169,7 @@ class Dashboards::ProductsController < ::DashboardsController
 
   private
     def set_product
-      @product = Product.unscoped.find(params[:id])
+      @product = Product.find(params[:id])
     end
 
     def product_params

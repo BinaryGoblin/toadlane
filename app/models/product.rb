@@ -18,13 +18,7 @@ class Product < ActiveRecord::Base
 
   searchkick autocomplete: ['name'], fields: [:name, :main_category]
 
-  default_scope { where("end_date > ?", DateTime.now).where(status: true) }
+  scope :unexpired, -> { where("end_date > ?", DateTime.now).where(status: true) }
 
   self.per_page = 16
-
-  def self.related_products_by_main_category(id)
-    himself = Product.unscoped.find(id)
-    category = himself.main_category
-    Product.where("main_category = ?", category).where("id != ?", himself)
-  end
 end

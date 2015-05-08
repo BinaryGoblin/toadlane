@@ -3,11 +3,11 @@ class Admin::MailersController < Admin::ApplicationController
 
   def index
     @users = Role.find_by(name: :user).users.where(receive_new_offer: true).order('id ASC')
-    @products = Product.all.order('updated_at DESC')
+    @products = Product.unexpired.all.order('updated_at DESC')
   end
 
   def services
-    products = Product.where(id: mailer_params[:products_ids])
+    products = Product.unexpired.where(id: mailer_params[:products_ids])
     users = User.where(id: mailer_params[:users_ids], receive_new_offer: true)
 
     if users.any? && products.any?
