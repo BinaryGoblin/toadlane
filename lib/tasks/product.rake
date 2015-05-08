@@ -17,7 +17,7 @@ namespace :db do
     user = User.find_by_email(data_users.sample).id
 
     (1..10).each do |data|
-      unless Product.unexpired.find_by_name("Product No. #{data}")
+      unless Product.unexpired.find_by(name: "Product No. #{data}")
         product = Product.new(
           name: "Product No. #{data}",
           description: 'description',
