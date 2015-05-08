@@ -17,7 +17,7 @@ class ProductsController < ApplicationController
   end
 
   def show
-    @related_products = Product.related_products_by_main_category @product.id
+    @related_products = Product.unexpired.where(main_category: @product.main_category).where.not(id: @product.id)
   end
 
   def products

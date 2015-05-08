@@ -21,10 +21,4 @@ class Product < ActiveRecord::Base
   scope :unexpired, -> { where("end_date > ?", DateTime.now).where(status: true) }
 
   self.per_page = 16
-
-  def self.related_products_by_main_category(id)
-    himself = Product.find(id)
-    category = himself.main_category
-    Product.unexpired.where("main_category = ?", category).where("id != ?", himself)
-  end
 end
