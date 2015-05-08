@@ -14,17 +14,17 @@
   .wrap-sm
     .vp-right-col
       .time-left
-        h3 time left to buy:
+        h3 time left:
         = time_left @product.end_date
 
       .vp-seller: .white-panel
-        .vp-title Seller
+        .vp-title User
         table: tr
           td
             .img= image_tag @product.user.asset(:small) if @product.user.asset?
             / .rating
-            /   | Rating: 
-            /   div 
+            /   | Rating:
+            /   div
             /     span.star
             /     span.star
             /     span.star.active
@@ -32,7 +32,7 @@
             /     span.star
           td
             .status.text-uppercase
-              b Status: 
+              b Status:
               span.text-green Verified
 
             .name
@@ -64,10 +64,10 @@
             span For sale:
             b= @product.amount
           td
-            span Sold out: 
+            span Sold out:
             b= sold_out
           td
-            span Available to buy: 
+            span Available to buy:
             b.text-green= available
 
         hr
@@ -83,7 +83,7 @@
           .pull-right
             span.text-right Totals:
             .price data-unit-price="#{number_with_precision(@product.unit_price, precision: 0, delimiter: '')}" #{number_to_currency(@product.unit_price, :unit => "$", precision: 0)}/Unit
-          
+
         ul
           li
             span <span class="calc-rebate">0.00</span>% rebate for purchasing <span class="calc-pcs">0</span> pcs:
@@ -129,7 +129,7 @@
 
         - if current_user.armor_api_account_persisted?
           .text-center= link_to 'Proceed to checkout', '#', class: 'btn btn-success btn-lg checkout', data: {  toggle: 'modal', target: '#form_checkout' }
-        - else 
+        - else
           .wrong.text-center
             |
               Please fill out your profile details. <br>
@@ -144,7 +144,7 @@
 
       #related_products.carousel.product-carousel.slide data-ride="carousel"
         = products_carousel_items @related_products
-        
+
         - if @related_products.count > 4
           a.left.carousel-control href="#related_products" role="button" data-slide="prev"
           a.right.carousel-control href="#related_products" role="button" data-slide="next"
