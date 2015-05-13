@@ -1,4 +1,3 @@
-
 class User < ActiveRecord::Base
   rolify
   acts_as_messageable
