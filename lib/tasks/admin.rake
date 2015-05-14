@@ -28,5 +28,14 @@ namespace :db do
     end
     puts '---> delete data from User'
   end
+
+  desc 'Migrate status_characteristic to type'
+  task 'product:status_characteristic_to_type': :environment do
+    Product.all.each do |product|
+      type = if product.status_characteristic =~ /buy/i then 1 else 0 end
+      product.update_column(:type, type)
+      puts "\##{product.id}: \"#{product.name}\" now listed as #{product.type}"
+    end
+  end
 end
 
