@@ -2,8 +2,6 @@ class User < ActiveRecord::Base
   rolify
   acts_as_messageable
 
-  has_one :armor_profile
-
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :confirmable,
@@ -38,6 +36,10 @@ class User < ActiveRecord::Base
     unless: :armor_api_account_persisted?
   after_update :update_armor_api_user, if: :armor_api_user_changed?
   after_update :update_armor_api_account, if: :armor_api_account_changed?
+
+  def armor_orders
+    ArmorOrder.where('buyer_id = ? OR seller_id = ?', self.id, self.id)
+  end
 
   def armor_api_account_persisted?
     self.armor_account_id && self.armor_user_id

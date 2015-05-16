@@ -19,8 +19,8 @@ class ArmorOrdersController < ApplicationController
     product = Product.unexpired.find(armor_order_params[:product_id])
 
     additional_params = {
-      buyer_id: current_user.armor_user_id,
-      seller_id: product.user.armor_user_id,
+      buyer_id: current_user.id,
+      seller_id: product.user.id,
       product_id: product.id,
       status_change: DateTime.now,
       account_id: current_user.armor_account_id

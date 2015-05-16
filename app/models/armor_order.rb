@@ -1,6 +1,6 @@
 class ArmorOrder < ActiveRecord::Base
-  belongs_to :user, class_name: 'Buyer', foreign_key: 'buyer_id'
-  belongs_to :user, class_name: 'Seller', foreign_key: 'seller_id'
+  belongs_to :buyer, class_name: 'User', foreign_key: 'buyer_id'
+  belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'
   belongs_to :product
 
   validates_presence_of :unit_price, :account_id
