@@ -1,29 +1,18 @@
 class ArmorOrder < ActiveRecord::Base
-  belongs_to :user, class_name: 'Buyer', foreign_key: 'buyer_id'
-  belongs_to :user, class_name: 'Seller', foreign_key: 'seller_id'
+  belongs_to :buyer, class_name: 'User', foreign_key: 'buyer_id'
+  belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'
   belongs_to :product
 
   validates_presence_of :unit_price, :account_id
 
-  default_scope { where.not(unit_price: nil, account_id: nil) }
+  scope :for_dashboard, -> (page, per_page) do
+    where(deleted: false)
+    .order('created_at DESC')
+    .paginate(page: page, per_page: per_page)
+  end
 
   # not_started must be first (ie. at index 0) for the default value to be correct
   enum status: %i{ not_started processing completed failed }
-
-  def self.own_orders(id)
-    armor_user = User.find(id).armor_user_id if id.present?
-    ArmorOrder.where("buyer_id = ? or seller_id = ?", armor_user, armor_user )
-  end
-
-  def self.orders_for_sell(id)
-    armor_user = User.find(id).armor_user_id if id.present?
-    ArmorOrder.where("buyer_id = ?", armor_user )
-  end
-
-  def self.orders_for_buy(id)
-    armor_user = User.find(id).armor_user_id if id.present?
-    ArmorOrder.where("seller_id = ?", armor_user )
-  end
 
   def create_armor_api_order(account_id, params)
     self.update_attribute(:status, 'processing')

@@ -28,5 +28,34 @@ namespace :db do
     end
     puts '---> delete data from User'
   end
+
+  desc 'Migrate status_characteristic to type'
+  task 'product:status_characteristic_to_type': :environment do
+    Product.all.each do |product|
+      begin
+        type = if product.status_characteristic =~ /buy/i then 1 else 0 end
+        product.update_column(:type, type)
+        puts "\##{product.id}: \"#{product.name}\" now listed as #{product.type}"
+      rescue => e
+        puts "Error: #{e.message}"
+        puts "Product #: #{product.id}, \"#{product.name}\" not updated"
+      end
+    end
+  end
+
+  desc 'Convert ArmorOrder seller/buyer ids to reference user Primary Keys'
+  task 'armor_order:fix_ids': :environment do
+    ArmorOrder.all.each do |order|
+      begin
+        order.seller_id = User.find_by(armor_user_id: order.seller_id).id
+        order.buyer_id = User.find_by(armor_user_id: order.buyer_id).id
+        order.save
+        puts "ArmorOrder #: #{order.id} updated"
+      rescue => e
+        puts "Error: #{e.message}"
+        puts "ArmorOrder ##{order.id}, sold to #{order.buyer_id} by #{order.seller_id} not updated"
+      end
+    end
+  end
 end
 

@@ -1,6 +1,9 @@
 class Product < ActiveRecord::Base
   belongs_to :user
 
+  self.inheritance_column = nil # So that the :type enum doesn't complain about Single Table Inheritance
+  enum type: [ :on_sale, :in_demand ]
+
   has_paper_trail
 
   has_many :product_categories
