@@ -37,8 +37,14 @@ class User < ActiveRecord::Base
   after_update :update_armor_api_user, if: :armor_api_user_changed?
   after_update :update_armor_api_account, if: :armor_api_account_changed?
 
-  def armor_orders
-    ArmorOrder.where('buyer_id = ? OR seller_id = ?', self.id, self.id)
+  def armor_orders(type=nil)
+    if type == 'bought'
+      ArmorOrder.where(buyer_id: self.id)
+    elsif type == 'sold'
+      ArmorOrder.where(seller_id: self.id)
+    else
+      ArmorOrder.where('buyer_id = ? OR seller_id = ?', self.id, self.id)
+    end
   end
 
   def armor_api_account_persisted?

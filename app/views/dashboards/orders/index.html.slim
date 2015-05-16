@@ -2,9 +2,9 @@
 
 .wrap-sm
   .table-options
-    = link 'For sell', dashboards_orders_path(type_order: 'sell'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-    = link 'For buy', dashboards_orders_path(type_order: 'buy'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-    = link_to 'FRESH', dashboards_orders_path, class: 'btn btn-default pull-right'
+    = link_to 'All', dashboards_orders_path, class: 'btn btn-default pull-right'
+    = link 'Sold', dashboards_orders_path(bought_or_sold: 'sold'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
+    = link 'Bought', dashboards_orders_path(bought_or_sold: 'bought'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
     .selected-labels
       span Selected:
       = link_to 'Delete', delete_cascade_dashboards_orders_path, method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'label label-red'
