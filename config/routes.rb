@@ -49,9 +49,6 @@ Toad::Application.routes.draw do
     end
   end
 
-  resources :messages, only: [:create]
-  resources :requests, only: [:create]
-
   devise_for :users, :controllers => { :registrations => "registrations", confirmations: 'confirmations' }
 
   get 'faq' => 'static_pages#faq', as: :faq
