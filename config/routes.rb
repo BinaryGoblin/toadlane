@@ -2,8 +2,6 @@ Toad::Application.routes.draw do
 
   resources :armor_orders, except: [:update, :edit]
 
-  get 'contacts' => 'infos#contacts_info'
-  get 'payments' => 'infos#payments_info'
 
   get 'search' => 'search#index', as: :search
 
@@ -83,5 +81,8 @@ Toad::Application.routes.draw do
     end
   end
 
-  root 'main#index'
+  get 'faq' => 'static_pages#faq', as: :faq
+  get 'contact_info' => 'static_pages#contact_info'
+  get 'payment_info' => 'static_pages#payment_info'
+  root 'static_pages#home'
 end
