@@ -74,13 +74,6 @@ Toad::Application.routes.draw do
     root 'categories#index'
   end
 
-  resources :main, only: [:index] do
-    collection do
-      post :search_by_sell
-      post :search_by_buy
-    end
-  end
-
   get 'faq' => 'static_pages#faq', as: :faq
   get 'contact_info' => 'static_pages#contact_info'
   get 'payment_info' => 'static_pages#payment_info'
