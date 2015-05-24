@@ -54,26 +54,6 @@ Toad::Application.routes.draw do
 
   devise_for :users, :controllers => { :registrations => "registrations", confirmations: 'confirmations' }
 
-  devise_for :admin, class_name: 'User', controllers: { sessions: 'admin/sessions', confirmations: 'admin/confirmations' }
-
-  namespace :admin do
-    resources :categories
-    resources :taxes
-    resources :resellers, only: [:index, :update, :destroy] do
-      member do
-        get :get_certificate
-      end
-    end
-    resources :products, only: [:index, :update]
-    resources :mailers, only: [:index] do
-      collection do
-        post :services
-      end
-    end
-    resources :importers, only: [:index, :create]
-    root 'categories#index'
-  end
-
   get 'faq' => 'static_pages#faq', as: :faq
   get 'contact_info' => 'static_pages#contact_info'
   get 'payment_info' => 'static_pages#payment_info'
