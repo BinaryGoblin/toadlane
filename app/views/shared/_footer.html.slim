@@ -2,7 +2,10 @@ footer.footer: .wrap
   = link_to image_tag('logo-footer.png'), '/', class: 'logo'
 
   .copy.pull-left
-    div <span>© 2014</span>, Toad.la
+    div
+    	span
+    		= "© #{Time.now.year}"
+  		| , Toad.la
     div All rights reserved!!!
 
   ul.footer-nav.pull-right
