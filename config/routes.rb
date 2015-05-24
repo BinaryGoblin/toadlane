@@ -2,9 +2,6 @@ Toad::Application.routes.draw do
 
   resources :armor_orders, except: [:update, :edit]
 
-  get 'why' => 'infos#why_toad'
-  get 'brokers' => 'infos#brokers_info'
-  get 'faq' => 'infos#faq_info'
   get 'contacts' => 'infos#contacts_info'
   get 'payments' => 'infos#payments_info'
 
@@ -23,14 +20,6 @@ Toad::Application.routes.draw do
       end
     end
 
-    resources :messages do
-      member do
-        post :reply
-        post :trash
-        post :untrash
-      end
-    end
-
     resources :orders, only: [:index] do
       collection do
         delete :delete_cascade
@@ -38,11 +27,11 @@ Toad::Application.routes.draw do
     end
 
     resources :shipments, only: [:index]
-    
+
     root 'profiles#show'
   end
 
-  resources :search do 
+  resources :search do
     collection do
       get :autocomplete
     end
@@ -67,12 +56,12 @@ Toad::Application.routes.draw do
 
   devise_for :users, :controllers => { :registrations => "registrations", confirmations: 'confirmations' }
 
-  devise_for :admin, class_name: 'User', controllers: { sessions: 'admin/sessions', confirmations: 'admin/confirmations' } 
+  devise_for :admin, class_name: 'User', controllers: { sessions: 'admin/sessions', confirmations: 'admin/confirmations' }
 
   namespace :admin do
     resources :categories
     resources :taxes
-    resources :resellers, only: [:index, :update, :destroy] do 
+    resources :resellers, only: [:index, :update, :destroy] do
       member do
         get :get_certificate
       end
