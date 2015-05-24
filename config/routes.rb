@@ -2,8 +2,14 @@ Toad::Application.routes.draw do
 
   resources :armor_orders, except: [:update, :edit]
 
+  get 'search/autocomplete'
+  get 'search/index'
 
-  get 'search' => 'search#index', as: :search
+  get 'faq' => 'static_pages#faq', as: :faq
+  get 'contact_info' => 'static_pages#contact_info'
+  get 'payment_info' => 'static_pages#payment_info'
+  root 'static_pages#home'
+
 
   namespace :dashboards, path: 'dashboard' do
     resource :profile, only: [:update, :show]
@@ -29,11 +35,6 @@ Toad::Application.routes.draw do
     root 'profiles#show'
   end
 
-  resources :search do
-    collection do
-      get :autocomplete
-    end
-  end
 
   resources :categories do
     member do
@@ -50,9 +51,4 @@ Toad::Application.routes.draw do
   end
 
   devise_for :users, :controllers => { :registrations => "registrations", confirmations: 'confirmations' }
-
-  get 'faq' => 'static_pages#faq', as: :faq
-  get 'contact_info' => 'static_pages#contact_info'
-  get 'payment_info' => 'static_pages#payment_info'
-  root 'static_pages#home'
 end

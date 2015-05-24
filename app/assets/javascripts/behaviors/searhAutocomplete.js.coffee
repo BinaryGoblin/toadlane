@@ -1,6 +1,6 @@
-App.registerBehavior 'SearhAutocomplete'
+App.registerBehavior 'SearchAutocomplete'
 
-class Behavior.SearhAutocomplete
+class Behavior.SearchAutocomplete
   constructor: ($el) ->
     $form = $el.closest 'form'
     $button = $form.find '[type=submit]'
@@ -12,12 +12,12 @@ class Behavior.SearhAutocomplete
       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name')
       queryTokenizer: Bloodhound.tokenizers.whitespace
       limit: 8
-      remote: 
+      remote:
         url: '/search/autocomplete'
         replace: (url, query) -> url + '?query=' + query + '&type=' + searchType
 
     search.initialize()
- 
+
     $el.typeahead { hint: true, minLength: 1 }, {
       name: 'search',
       displayKey: 'name',
