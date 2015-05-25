@@ -1,6 +1,6 @@
 = render '/shared/tabs'
 
-= form_for @user, url: dashboards_profile_path, :html => { autocomplete: "off", data: { behavior: 'Validations', options: '{"rules":{"user[armor_bank_account_attributes][account_routing]":{"routing":true}}}'} } do |f|
+= form_for @user, url: dashboard_profile_path, :html => { autocomplete: "off", data: { behavior: 'Validations', options: '{"rules":{"user[armor_bank_account_attributes][account_routing]":{"routing":true}}}'} } do |f|
   .wrap-sm
     - unless @user.armor_api_account_persisted?
       .error-explanation Please fill out your profile details. Until your profile is complete, you will not be able to create orders.

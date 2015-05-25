@@ -14,7 +14,7 @@ class Dashboard::ProductsController < DashboardController
     if current_user.armor_api_account_persisted?
       @product = Product.new
     else
-      redirect_to dashboards_profile_path
+      redirect_to dashboard_profile_path
     end
   end
 
@@ -53,11 +53,11 @@ class Dashboard::ProductsController < DashboardController
         end
 
         if params[:button] == 'new'
-          path = new_dashboards_product_path
+          path = new_dashboard_product_path
         elsif params[:button] == 'edit'
-          path = edit_dashboards_product_path(@product)
+          path = edit_dashboard_product_path(@product)
         else
-          path = dashboards_products_path
+          path = dashboard_products_path
         end
 
         format.html { redirect_to path }
@@ -116,11 +116,11 @@ class Dashboard::ProductsController < DashboardController
         end
 
         if params[:button] == 'new'
-          path = new_dashboards_product_path
+          path = new_dashboard_product_path
         elsif params[:button] == 'edit'
-          path = edit_dashboards_product_path(@product)
+          path = edit_dashboard_product_path(@product)
         else
-          path = dashboards_products_path
+          path = dashboard_products_path
         end
 
         format.html { redirect_to path }
@@ -133,7 +133,7 @@ class Dashboard::ProductsController < DashboardController
   def destroy
     @product.destroy
     respond_to do |format|
-      format.html { redirect_to dashboards_products_path }
+      format.html { redirect_to dashboard_products_path }
     end
   end
 

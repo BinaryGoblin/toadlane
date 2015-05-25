@@ -2,8 +2,8 @@
 
 .wrap-sm
   .table-options
-    = link 'Sent', dashboards_requests_path(box: 'sent'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-    = link 'Inbox', dashboards_requests_path(box: 'inbox'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
+    = link 'Sent', dashboard_requests_path(box: 'sent'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
+    = link 'Inbox', dashboard_requests_path(box: 'inbox'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
 
   table.table data-behavior="TableCheckbox"
     thead
@@ -15,8 +15,8 @@
     tbody
       - @conversations.each do |conversation|
         tr
-          td= link_to conversation.subject, dashboards_request_path(conversation.conversation)
+          td= link_to conversation.subject, dashboard_request_path(conversation.conversation)
           td= conversation.updated_at.to_formatted_s(:long_ordinal)
-          td.text-right= link_to 'Reply', dashboards_request_path(conversation.conversation), class: 'view'
+          td.text-right= link_to 'Reply', dashboard_request_path(conversation.conversation), class: 'view'
 
 .footer-actions: .fa-container: .wrap-sm

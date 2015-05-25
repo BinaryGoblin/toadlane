@@ -25,7 +25,7 @@ class Dashboard::PaymentsController < DashboardController
 
     respond_to do |format|
       if @user.update(user_params)
-        format.html { redirect_to dashboards_payments_path }
+        format.html { redirect_to dashboard_payments_path }
       else
         format.html { render action: 'show' }
     	end

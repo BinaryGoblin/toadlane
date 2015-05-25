@@ -34,7 +34,7 @@
         .form-group
           = f.label :description, 'Description:'
           = f.text_area :description, class: 'form-control', placeholder: 'Write something about your product...', maxlength: '1000'
-        
+
       td
         .clearfix
           .unit
@@ -95,7 +95,7 @@
               input type="file" name="product[images_attributes][]" accept="image/*"
 
     hr
-    
+
     table: tr
       td
         .offer-item
@@ -146,7 +146,7 @@
               = f.text_field :dimension_weight, class: 'form-control'
 
     hr
-    
+
     label.lg Pricebreaks:
     ul.pricebreaks
       - if @product.pricebreaks.any?
@@ -165,7 +165,7 @@
 
             span.btn.btn-default.remove= fa_icon 'trash-o'
             .hide: input type="checkbox" name="product[pricebreaks_delete][]" value="#{pb.id}"
-      
+
       - else
         li.pricebreak
           .index 1
@@ -198,4 +198,4 @@
     = f.button fa_icon('check', text: 'Save & close'), value: 'close', class: 'btn btn-success pull-right'
     = f.button fa_icon('save', text: 'Save & add new'), value: 'new', class: 'btn btn-default pull-right'
     = f.button fa_icon('plus', text: 'Save & stay edit'), value: 'edit', class: 'btn btn-default pull-right'
-    = link_to fa_icon('trash-o', text: 'Delete this product'), dashboards_product_path(@product.id), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default pull-left' if @product.id?
+    = link_to fa_icon('trash-o', text: 'Delete this product'), dashboard_product_path(@product.id), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default pull-left' if @product.id?

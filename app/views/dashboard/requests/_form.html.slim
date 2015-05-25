@@ -1,4 +1,4 @@
-= form_tag reply_dashboards_request_path do
+= form_tag reply_dashboard_request_path do
   = hidden_field :request, 'subject', value: conversation.subject
   = hidden_field :request, 'conversation', value: conversation.conversation
   = hidden_field :request, 'receiver_id', value: (conversation.sender_id == current_user.id ? conversation.receiver_id : conversation.sender_id)

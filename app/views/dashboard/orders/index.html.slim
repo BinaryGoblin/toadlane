@@ -2,12 +2,12 @@
 
 .wrap-sm
   .table-options
-    = link_to 'All', dashboards_orders_path, class: 'btn btn-default pull-right'
-    = link 'Sold', dashboards_orders_path(bought_or_sold: 'sold'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-    = link 'Bought', dashboards_orders_path(bought_or_sold: 'bought'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
+    = link_to 'All', dashboard_orders_path, class: 'btn btn-default pull-right'
+    = link 'Sold', dashboard_orders_path(bought_or_sold: 'sold'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
+    = link 'Bought', dashboard_orders_path(bought_or_sold: 'bought'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
     .selected-labels
       span Selected:
-      = link_to 'Delete', delete_cascade_dashboards_orders_path, method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'label label-red'
+      = link_to 'Delete', delete_cascade_dashboard_orders_path, method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'label label-red'
 
   table.table data-behavior="TableCheckbox" data-options='{"paramName":"orders_ids"}'
     thead

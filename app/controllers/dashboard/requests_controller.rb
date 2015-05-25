@@ -3,7 +3,7 @@ class Dashboard::RequestsController < DashboardController
     box = params[:box] || 'inbox'
 
     unless params[:box]
-      redirect_to dashboards_requests_path(box: 'inbox')
+      redirect_to dashboard_requests_path(box: 'inbox')
     end
 
     if box == 'inbox'
