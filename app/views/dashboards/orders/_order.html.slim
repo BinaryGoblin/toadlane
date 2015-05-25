@@ -1,4 +1,4 @@
-.modal.modal-lg.fade tabindex="-1" role="dialog" id="modal_order_#{modal.id.to_s}"
+.modal.modal-lg.fade tabindex="-1" role="dialog" id="modal_order_#{order.id.to_s}"
   .modal-dialog: .modal-content
     .modal-header
       .pull-right data-dismiss="modal"= fa_icon 'close'
@@ -19,26 +19,26 @@
             td colspan="2" width="50%" valign="top"
               dl
                 dt Name:
-                dd= modal.product.user.name
+                dd= order.product.user.name
 
                 dt Address:
-                dd= modal.product.user.address
+                dd= order.product.user.address
 
                 dt Postal-Code:
-                dd= modal.product.user.postal_code
+                dd= order.product.user.postal_code
 
                 dt City:
-                dd= modal.product.user.city
+                dd= order.product.user.city
 
                 dt State:
-                dd= modal.product.user.state
+                dd= order.product.user.state
 
                 dt Country:
-                dd = modal.product.user.country
+                dd = order.product.user.country
 
             td colspan="2" valign="top" align="right"
-              h4.text-uppercase order ##{modal.id}
-              div Date: #{modal.created_at.strftime('%d-%m-%Y')}
+              h4.text-uppercase order ##{order.id}
+              div Date: #{order.created_at.strftime('%d-%m-%Y')}
 
           tr
             td colspan="2" valign="top"
@@ -70,9 +70,9 @@
               h4.text-uppercase For:
               br
               div Deals
-              div 
+              div
                 | [P.O. #]
-          
+
       table.table-checkout
         thead
           tr
@@ -80,21 +80,21 @@
             th qty
             th price
             th amount
-          
+
         tbody
           tr
-            td= modal.product.name
-            td= modal.count
-            td $ #{number_with_precision(modal.unit_price, precision: 2, delimiter: '')}
-            td $ #{number_with_precision(modal.count * modal.unit_price, precision: 2, delimiter: '')}
+            td= order.product.name
+            td= order.count
+            td $ #{number_with_precision(order.unit_price, precision: 2, delimiter: '')}
+            td $ #{number_with_precision(order.count * order.unit_price, precision: 2, delimiter: '')}
 
           tr
-            td colspan="3" #{number_with_precision(modal.rebate_percent, precision: 2, delimiter: '')}% rebate for purchasing #{modal.count} pcs
-            td $ -#{number_with_precision(modal.rebate_price, precision: 2, delimiter: '')}
+            td colspan="3" #{number_with_precision(order.rebate_percent, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
+            td $ -#{number_with_precision(order.rebate_price, precision: 2, delimiter: '')}
 
           tr
-            td colspan="3" Taxes (#{modal.product.tax.try(:value)}%) for non-resalers
-            td $ #{number_with_precision(modal.taxes_price, precision: 2, delimiter: '')}
+            td colspan="3" Taxes (#{order.product.tax.try(:value)}%) for non-resalers
+            td $ #{number_with_precision(order.taxes_price, precision: 2, delimiter: '')}
 
           / tr
           /   td colspan="3" Flat shipping
@@ -103,4 +103,4 @@
           tr
             td.no-border colspan="2"
             td.text-center: b.text-uppercase Total:
-            td: b $ #{number_with_precision(modal.amount, precision: 2, delimiter: '')}
+            td: b $ #{number_with_precision(order.amount, precision: 2, delimiter: '')}
