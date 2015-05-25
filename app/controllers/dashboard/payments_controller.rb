@@ -1,13 +1,12 @@
-class Dashboards::PaymentsController < ApplicationController
+class Dashboard::PaymentsController < DashboardController
 	before_action :set_user, only: [:show, :update]
-	layout 'user_dashboard'
 
 	def index
 		@user = current_user
 	end
 
 	def update
-		if user_params[:certificate].present? 
+		if user_params[:certificate].present?
       if @user.certificate
         @user.certificate.update(uploaded_file: user_params[:certificate])
       else
@@ -15,7 +14,7 @@ class Dashboards::PaymentsController < ApplicationController
         certificate.uploaded_file = user_params[:certificate]
         @user.certificate = certificate
       end
-      
+
       user_params.delete(:certificate)
     end
 
@@ -25,7 +24,7 @@ class Dashboards::PaymentsController < ApplicationController
     end
 
     respond_to do |format|
-      if @user.update(user_params)      
+      if @user.update(user_params)
         format.html { redirect_to dashboards_payments_path }
       else
         format.html { render action: 'show' }

@@ -10,7 +10,7 @@ Toad::Application.routes.draw do
   get 'payment_info' => 'static_pages#payment_info'
   root 'static_pages#home'
 
-  namespace :dashboards, path: 'dashboard' do
+  namespace :dashboard do
     resource :profile, only: [:update, :show]
 
     resources :payments

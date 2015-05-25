@@ -1,4 +1,4 @@
-class Dashboards::RequestsController < ::DashboardsController
+class Dashboard::RequestsController < DashboardController
   def index
     box = params[:box] || 'inbox'
 

@@ -1,4 +1,4 @@
-class Dashboards::ProfilesController < ::DashboardsController
+class Dashboard::ProfilesController < DashboardController
   before_action :set_user, only: [:show, :update]
 
   def show
@@ -21,7 +21,7 @@ class Dashboards::ProfilesController < ::DashboardsController
       user_params.delete(:delete_asset)
     end
 
-    if user_params[:certificate].present? 
+    if user_params[:certificate].present?
       if @user.certificate
         @user.certificate.update(uploaded_file: user_params[:certificate])
       else
@@ -29,7 +29,7 @@ class Dashboards::ProfilesController < ::DashboardsController
         certificate.uploaded_file = user_params[:certificate]
         @user.certificate = certificate
       end
-      
+
       user_params.delete(:certificate)
     end
 
@@ -39,7 +39,7 @@ class Dashboards::ProfilesController < ::DashboardsController
     end
 
     respond_to do |format|
-      if @user.update(user_params)      
+      if @user.update(user_params)
         format.html { redirect_to dashboards_profile_path }
       else
         format.html { render action: 'show' }

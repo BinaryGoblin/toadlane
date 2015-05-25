@@ -1,4 +1,4 @@
-class Dashboards::OrdersController < ::DashboardsController
+class Dashboard::OrdersController < DashboardController
   # before_action :get_order_status, only: [:index]
 
   def index

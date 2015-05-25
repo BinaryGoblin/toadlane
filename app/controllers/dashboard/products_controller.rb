@@ -1,4 +1,4 @@
-class Dashboards::ProductsController < ::DashboardsController
+class Dashboard::ProductsController < DashboardController
   before_action :set_product, only: [:show, :edit, :update, :destroy]
 
   def index
