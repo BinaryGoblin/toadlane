@@ -29,11 +29,17 @@ Toad::Application.routes.draw do
       end
     end
 
-    resources :shipments, only: [:index]
+    resources :messages do
+      member do
+        post :reply
+        post :trash
+        post :untrash
+      end
+    end
 
+    resources :shipments, only: [:index]
     root 'profiles#show'
   end
-
 
   resources :categories do
     member do
