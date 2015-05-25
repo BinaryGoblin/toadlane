@@ -12,7 +12,10 @@ class StaticPagesController < ApplicationController
   def faq;end
 
   def home
-    redirect_to products_path if current_user
-    render 'static_pages/home', layout: 'application'
+    if current_user
+      redirect_to products_path
+    else
+      render 'static_pages/home', layout: 'application'
+    end
   end
 end
