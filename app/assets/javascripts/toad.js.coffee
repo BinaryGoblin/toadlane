@@ -25,7 +25,6 @@ $(document).ready ->
   $("#user_state").autocomplete({
     source: ["Alabama",
     "Alaska",
-    "American Samoa",
     "Arizona",
     "Arkansas",
     "California",
