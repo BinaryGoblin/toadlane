@@ -1,0 +1,36 @@
+= render '/shared/tabs'
+
+= form_for @user, url: dashboard_profile_path, :html => { autocomplete: "off", data: { behavior: 'Validations', options: '{"rules":{"user[armor_bank_account_attributes][account_routing]":{"routing":true}}}'} } do |f|
+  .wrap-sm
+    - unless @user.armor_api_account_persisted?
+      .error-explanation Please fill out your profile details. Until your profile is complete, you will not be able to create orders.
+
+    - if @user.errors.any?
+      .error-explanation
+        h5= "#{pluralize(@user.errors.count, "error")} data from being saved:"
+        ul
+          - @user.errors.full_messages.each do |message|
+            li = message
+
+    table.profile-table.last
+      tr
+        td: h4 Payment<br>settings:
+
+        td
+          .form-group
+            label Resale certificate:
+            .form-upload-file data-behavior="UploadFile" data-options='{"deleteBtn":"#btn_delete_file"}'
+              = f.file_field :certificate, accept: ".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif"
+              input.form-control type="text" value="#{@user.certificate.filename if @user.certificate}"
+              .hide: input type="checkbox" name="user[certificate_delete]" value="#{@user.certificate.id if @user.certificate}"
+              a.btn.btn-primary.pull-right Upload
+            a#btn_delete_file.btn.btn-black.btn-remove= fa_icon 'trash-o'
+            span Supported extensions: jpg, png, gif, PDF, DOC, DOCX, XLS.<br>Max. upload file size 2MB.
+
+        td
+          .form-group
+            = f.label :ein_tax, 'EIN Tax #:'
+            = f.text_field :ein_tax, class: 'form-control'
+
+  .footer-actions: .fa-container: .wrap-sm.text-center
+    button.btn.btn-success.submit type="submit"= fa_icon 'check', text: 'SAVE CHANGES'

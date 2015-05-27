@@ -48,7 +48,6 @@
               .fb-link= link_to 'Facebook profile', @product.user.facebook, class: 'link link-ulined link-sm text-uppercase', target: '_blank'
 
         a.vp-title href="#" data-toggle="modal" data-target="#form_message" Send a message <i class="fa fa-plus-square pull-right"></i>
-        a.vp-title href="#" data-toggle="modal" data-target="#form_request" Send a request <i class="fa fa-plus-square pull-right"></i>
 
       - if @product.amount.present?
         - sold_out = (@product.sold_out.present? ? @product.sold_out : 0)

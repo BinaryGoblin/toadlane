@@ -1,5 +1,5 @@
 #form_message.modal.fade tabindex="-1" role="dialog"
-  = form_tag messages_path
+  = form_tag dashboard_messages_path
     = hidden_field_tag 'message[user_id]', product.user.id
 
     .modal-dialog: .modal-content
@@ -17,28 +17,6 @@
           = text_area_tag 'message[body]', nil, class: 'form-control'
 
       .modal-footer= button_tag 'Send', class: 'btn btn-warning', data: { disable_with: 'Please wait...' }
-
-
-#form_request.modal.fade tabindex="-1" role="dialog"
-  = form_tag requests_path
-    = hidden_field_tag 'request[user_id]', product.user.id
-
-    .modal-dialog: .modal-content
-      .modal-header
-        .pull-right data-dismiss="modal"= fa_icon 'close'
-        h4.modal-title Send a request
-
-      .modal-body
-        .form-group
-          = label_tag 'request_subject', 'Subject:'
-          = text_field_tag 'request[subject]', nil, class: 'form-control'
-
-        .form-group
-          = label_tag 'request_body', 'Your request:'
-          = text_area_tag 'request[body]', nil, class: 'form-control'
-
-      .modal-footer= button_tag 'Send', class: 'btn btn-warning', data: { disable_with: 'Please wait...' }
-
 
 #form_checkout.modal.modal-lg.fade tabindex="-1" role="dialog"
   .modal-dialog: .modal-content

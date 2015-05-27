@@ -1,0 +1,32 @@
+= render '/shared/tabs'
+
+.wrap-sm
+  .table-options
+    = link 'Trash', dashboard_messages_path(box: 'trash'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
+    = link 'Sent', dashboard_messages_path(box: 'sent'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
+    = link 'Inbox', dashboard_messages_path(box: 'inbox'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
+
+  table.table data-behavior="TableCheckbox"
+    thead
+      tr
+        th Subject:
+        th Date:
+        th
+
+    tbody
+      - @conversations.each do |conversation|
+        tr
+          td= link_to conversation.subject, dashboard_message_path(conversation)
+          td= conversation.updated_at.to_formatted_s(:long_ordinal)
+          td.text-right
+            - if params[:box] == 'trash'
+              = link_to 'Untrash', untrash_dashboard_message_path(conversation), method: :post, class: 'view'
+              |  |
+              = link_to  'Delete', trash_dashboard_message_path(conversation), method: :post, data: { confirm: 'Are you sure?' }, class: 'view view-red'
+            - else
+              = link_to 'Reply', dashboard_message_path(conversation), class: 'view'
+              |  |
+              = link_to  'Move to trash', trash_dashboard_message_path(conversation), method: :post, class: 'view view-red'
+
+.footer-actions: .fa-container: .wrap-sm
+  = will_paginate @conversations

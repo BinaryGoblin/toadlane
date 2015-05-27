@@ -41,7 +41,7 @@ class ArmorOrdersController < ApplicationController
 
         @armor_order.create_armor_api_order(current_user.armor_account_id, api_armor_order_params)
 
-        format.html { redirect_to dashboards_orders_path, notice: 'Armor Order was successfully created.' }
+        format.html { redirect_to dashboard_orders_path, notice: 'Armor Order was successfully created.' }
         format.json { render :show, status: :created, location: @armor_order }
       else
         format.html { render :new }

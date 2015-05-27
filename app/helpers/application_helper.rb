@@ -36,7 +36,7 @@ module ApplicationHelper
       content_tag :div do
         categories.each_with_index do |category, index|
           concat ', ' if index > 0
-          concat link_to category.name, search_index_path(cat_id: category.id, count: 16)
+          concat link_to category.name, search_path(cat_id: category.id, count: 16)
         end
       end
     end

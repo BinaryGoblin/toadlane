@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
       if current_user.has_role?(:superadmin) || current_user.has_role?(:admin)
         admin_root_path
       else
-        dashboards_profile_path
+        dashboard_profile_path
       end
     else
       super
