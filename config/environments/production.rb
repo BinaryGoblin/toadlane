@@ -85,10 +85,10 @@ Toad::Application.configure do
   routes.default_url_options = { host: 'toadlane.com' }
 
   ActionMailer::Base.smtp_settings = {
-    address: "mail.toadlane.com",
+    address: "smtp.gmail.com",
     port: 587,
     authentication: "plain",
-    enable_starttls_auto: false,
+    enable_starttls_auto: true,
     user_name: ENV['WELCOME_EMAIL'],
     password: ENV['WELCOME_EMAIL_PASSWORD']
   }
