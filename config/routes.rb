@@ -9,6 +9,9 @@ Toad::Application.routes.draw do
   get 'contact_info' => 'static_pages#contact_info'
   get 'payment_info' => 'static_pages#payment_info'
   root 'static_pages#home'
+  
+  get 'admin' => 'layouts#admin_dashboard'
+  admin_root 'layouts#admin_dashboard'
 
   namespace :dashboard do
     resource :profile, only: [:update, :show]
