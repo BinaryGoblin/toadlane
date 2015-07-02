@@ -11,7 +11,7 @@ Toad::Application.routes.draw do
   root 'static_pages#home'
   
   get 'admin' => 'layouts#admin_dashboard'
-  admin_root 'layouts#admin_dashboard'
+  admin_root_path 'layouts#admin_dashboard'
 
   namespace :dashboard do
     resource :profile, only: [:update, :show]
