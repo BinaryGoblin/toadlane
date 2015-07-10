@@ -18,4 +18,7 @@ class StaticPagesController < ApplicationController
       render 'static_pages/home', layout: 'application'
     end
   end
+
+  def terms_of_service
+  end
 end

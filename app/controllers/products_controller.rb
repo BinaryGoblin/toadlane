@@ -4,6 +4,7 @@ class ProductsController < ApplicationController
   before_action :set_product, only: [:show]
 
   before_filter :authenticate_user!, except: [:index]
+  before_action :check_terms_of_service
 
   def index
     if current_user.present?
