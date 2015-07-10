@@ -16,6 +16,9 @@ $checkbox-bd-color: #aeb5c1;
   @include transition(border .2s);
 }
 
+.label_terms .icheckbox {
+  float: left;
+}
 .icheckbox {
   border-radius: 3px;
 

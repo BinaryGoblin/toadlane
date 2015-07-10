@@ -5,6 +5,11 @@
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
     <%= devise_error_messages! %>
 
+    <div>
+      <%= f.check_box :terms_of_service %> I agree to the <a href="/terms_of_service" target="_blank">Terms of Service</a>
+    </div>
+    <div><%= f.hidden_field :terms_accepted_at, :value=> Time.now %></div>
+    <br>
     <div><%= f.label :email %>
     <%= f.email_field :email, autofocus: true, class: 'form-control' %></div>
     <br>

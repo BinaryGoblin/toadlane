@@ -9,6 +9,7 @@ Toad::Application.routes.draw do
   get 'contact_info' => 'static_pages#contact_info'
   get 'payment_info' => 'static_pages#payment_info'
   root 'static_pages#home'
+  get 'terms_of_service' => 'static_pages#terms_of_service'
   
   namespace :dashboard do
     resource :profile, only: [:update, :show]
@@ -38,6 +39,12 @@ Toad::Application.routes.draw do
     end
 
     resources :shipments, only: [:index]
+
+    resources :terms_of_services, only: [:index] do
+      collection do
+        put 'update_terms'
+      end
+    end
     root 'profiles#show'
   end
 
