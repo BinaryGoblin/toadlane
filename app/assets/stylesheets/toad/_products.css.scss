@@ -8,6 +8,13 @@ $product-carousel-height: $product-height + 54px;
   float: left;
 }
 
+.orange_border{
+  border: 1px solid #FF8724 !important;
+}
+.green_border{
+  border: 1px solid #5c8f10 !important;
+}
+
 .product {
   float: left;
   width: $product-width;
@@ -21,8 +28,13 @@ $product-carousel-height: $product-height + 54px;
 
   .img {
     display: block;
-    margin: (-$product-offset) 0 8px (-$product-offset);
+    margin: (-$product-offset) (-$product-offset) 8px (-$product-offset);
     height: 224px;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
 
   .price {
@@ -185,7 +197,7 @@ $product-carousel-height: $product-height + 54px;
 
   .products & {
     position: relative;
-    margin: 0 20px;
+    margin: 0 20px 10px;
     width: $wrap-width-small;
   }
 

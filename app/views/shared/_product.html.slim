@@ -1,4 +1,4 @@
-.product
+.product class="#{product_border_color(product)}"
   .img
     - if product.images.first.present?
       = image_tag product.images.first.image(:medium)

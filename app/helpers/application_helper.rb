@@ -233,4 +233,10 @@ module ApplicationHelper
       Tax.where.not(value: 0).order(:value)
     end
   end
+
+  def product_border_color(product)
+    if product.present?
+      product.status_characteristic == "sell" ? "green_border" : "orange_border"
+    end
+  end
 end
