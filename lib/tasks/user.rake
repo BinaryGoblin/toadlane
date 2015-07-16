@@ -10,9 +10,10 @@ namespace :db do
         user = User.new(
           email:                 "user#{data}@example.com",
           password:              '12345678',
+		  terms_of_service:      false
         )
         user.skip_confirmation!
-        user.save
+		user.save
         user.add_role role.name
         puts "---> added user #{user.email}"
       end
