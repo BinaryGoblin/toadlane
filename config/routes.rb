@@ -47,6 +47,8 @@ Toad::Application.routes.draw do
     end
     root 'profiles#show'
   end
+  
+  resources :messages, only: [:create]
 
   resources :categories do
     member do
