@@ -2,10 +2,19 @@ $product-width: 240px;
 $product-height: 400px;
 $product-offset: 6px;
 $product-carousel-height: $product-height + 54px;
+$buy-color: #5c8f10;
+$sell-color: #FF8724;
 
 .products {
   margin: 20px -30px -12px;
   float: left;
+}
+
+.orange_border{
+  border: 3px solid $sell-color !important;
+}
+.green_border{
+  border: 3px solid $buy-color !important;
 }
 
 .product {
@@ -21,8 +30,13 @@ $product-carousel-height: $product-height + 54px;
 
   .img {
     display: block;
-    margin: (-$product-offset) 0 8px (-$product-offset);
+    margin: (-$product-offset) (-$product-offset) 8px (-$product-offset);
     height: 224px;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
 
   .price {
@@ -51,8 +65,16 @@ $product-carousel-height: $product-height + 54px;
     padding-top: 40px;
     @include opacity(0);
     @include transition(opacity .2s);
+	
+	.buy{
+	  color: $buy-color;
+	}
+	
+	.sell{
+	  color: $sell-color;
+	}
   }
-
+  
   .btn {
     margin-top: 15px;
   }
@@ -129,7 +151,7 @@ $product-carousel-height: $product-height + 54px;
     span {
       font-weight: 800;
       font-size: 16px;
-      color: #5c8f10;
+      color: $buy-color;
     }
 
     .lbl {
@@ -185,7 +207,7 @@ $product-carousel-height: $product-height + 54px;
 
   .products & {
     position: relative;
-    margin: 0 20px;
+    margin: 0 20px 10px;
     width: $wrap-width-small;
   }
 
@@ -219,14 +241,14 @@ $product-carousel-height: $product-height + 54px;
     vertical-align: middle;
     color: #3b3e42;
     display: inline-block;
-  }
+  }	
 
   h2 {
     font-size: 48px;
 
     &:after {
       content: '';
-      border-left: 4px solid #5c8f10;
+      border-left: 4px solid $buy-color;
       float: right;
       height: 53px;
       margin: 0 0 0 15px;
@@ -235,7 +257,7 @@ $product-carousel-height: $product-height + 54px;
 
   h3 {
     font-size: 28px;
-    border-bottom: 4px solid #5c8f10;
+    border-bottom: 4px solid $buy-color;
   }
 
   .ui-selectmenu-button {
@@ -274,7 +296,7 @@ $product-carousel-height: $product-height + 54px;
         left: 7px;
         right: 7px;
         bottom: 0;
-        border-bottom: 4px solid #ff8724;
+        border-bottom: 4px solid $buy-color;
       }
     }
 
@@ -381,7 +403,7 @@ $product-carousel-height: $product-height + 54px;
     .checkbox {
       float: left;
       padding: 8px 6px;
-      background: #5c8f10;
+      background: $buy-color;
       border-radius: 5px;
       color: white;
       font-size: 16px;
@@ -487,7 +509,7 @@ $product-carousel-height: $product-height + 54px;
   }
 
   .add-pricebreak {
-    border-color: #5c8f10;
+    border-color: $buy-color;
     text-align: center;
     font-size: 14px;
     text-transform: uppercase;
@@ -496,7 +518,7 @@ $product-carousel-height: $product-height + 54px;
     cursor: pointer;
 
     .fa {
-      color: #5c8f10;
+      color: $buy-color;
     }
   }
 

@@ -113,6 +113,28 @@
   }
 }
 
+.btn-success-sell {
+  color: white;
+  border: 1px solid transparent;
+  border-bottom-color: #e67a20;
+  border-top-color: #ff933a;
+  text-shadow: 0 1px 0 #e67a20;
+  padding: 7px $padding-base-horizontal+1px 5px;
+  @include gradient-vertical(#ff933a, #ff8724);
+
+  &:hover,
+  &:focus,
+  &:active,
+  &.active {
+    color: white;
+    @include gradient-vertical(#ff933a, #ff8724);
+  }
+
+  .win & {
+    padding: 6px $padding-base-horizontal+1px;
+  }
+}
+
 .btn-info {
   @include button-variant($btn-info-color, $btn-info-bg, $btn-info-border);
 }

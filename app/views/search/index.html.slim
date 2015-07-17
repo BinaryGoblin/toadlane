@@ -12,6 +12,10 @@
     b Sort by:
     = select_tag :count, options_for_select([['new deals first', 1], ['low to high price', 2], ['high to low price', 3], ['feature products', 4]], params[:sort_by]), class: 'dd-small-list', data: { behavior: 'CustomSelect', select_query: 'sort_by' }
 
+  .act.type
+    b Type:
+    = select_tag :type, options_for_select(["all", "sell", "buy"], params[:type]), class: 'dd-small-list', data: { behavior: 'CustomSelect', select_query: 'type' }
+
   .act.count-item
     b Show items:
     = select_tag :count, options_for_select([['16', 16], ['24', 24], ['48', 48], ['96', 96]], params[:count]), class: 'dd-small-list', data: { behavior: 'CustomSelect', select_query: 'count' }
