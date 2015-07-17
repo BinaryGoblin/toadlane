@@ -1,25 +1,25 @@
 .product class="#{product_border_color(product)}"
-  .img
-    - if product.images.first.present?
-      = image_tag product.images.first.image(:medium)
-    - else
-      = image_tag 'product-missing.png'
-
-  .show-time= fa_icon 'clock-o'
-
-  .price #{number_to_currency(product.unit_price, precision: 0, unit: '$')}/Unit
-
-  .name= link_to product.name, product_path(product, cat_id: product.main_category)
-
-  .desc= truncate strip_tags(product.description), length: 110
-
-  .time-left
-    h3 time left:
-    = time_left product.end_date
-    - display_text = if product.status_characteristic && product.status_characteristic == 'sell' then 'buy' else 'sell' end
-    = link_to "#{display_text} now!", product_path(product, cat_id: product.main_category), class: 'btn btn-success'
-
-  - if product.pricebreaks.present?
-    = slider_pricebreaks product.pricebreaks, number_with_precision(product.unit_price, precision: 0, delimiter: '')
-  - else
-    .quantity.text-center style="margin-top:20px": .lbl No pricebreaks
+   .img
+     - if product.images.first.present?
+       = image_tag product.images.first.image(:medium)
+     - else
+       = image_tag 'product-missing.png'
+ 
+   .show-time= fa_icon 'clock-o'
+ 
+   .price #{number_to_currency(product.unit_price, precision: 0, unit: '$')}/Unit
+ 
+   .name= link_to product.name, product_path(product, cat_id: product.main_category)
+ 
+   .desc= truncate strip_tags(product.description), length: 110
+ 
+   .time-left
+     - display_text = if product.status_characteristic && product.status_characteristic == 'sell' then 'buy' else 'sell' end
+     h3 class=(display_text) time left:
+     = time_left product.end_date
+     = link_to "#{display_text} now!", product_path(product, cat_id: product.main_category), class: "#{product_button_color(product)}"
+ 
+   - if product.pricebreaks.present?
+     = slider_pricebreaks product.pricebreaks, number_with_precision(product.unit_price, precision: 0, delimiter: '')
+   - else
+     .quantity.text-center style="margin-top:20px": .lbl No pricebreaks
