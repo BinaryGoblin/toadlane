@@ -32,12 +32,20 @@
             /     span.star
           td
             .status.text-uppercase
-              b Status:
-              span.text-green Verified
+              - if @product.user.is_reseller
+                b Status:
+                span.text-green 
+                  |
+                    Verified
+              - else
+                b Status:
+                span.text-red 
+                  |
+                    Unverified              
 
             .name
               b= @product.user.name
-              span TX 75601
+              span =@product.user.country
 
             - if @product.user.benefits.reject{ |e| e.empty? }.present?
               .sell
