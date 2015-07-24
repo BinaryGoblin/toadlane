@@ -1,8 +1,8 @@
 .wrap
   .carousel-product-title
-    h3 Recommended
+    h3 Recommended listings
     .actions
-      = link_to 'See all products', all_products_path, class: 'btn btn-success pull-right'
+      = link_to 'See all listings', all_products_path, class: 'btn btn-success pull-right'
       = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
 
   #products_first.carousel.product-carousel.slide data-ride="carousel"
@@ -12,25 +12,25 @@
     a.right.carousel-control href="#products_first" role="button" data-slide="next"
 
   .carousel-product-title
-    h3 Best offers
+    h3 Products for sale
     .actions
-      = link_to 'See all offers', offers_products_path, class: 'btn btn-default pull-right'
+      = link_to 'See all sales', for_sale_products_path, class: 'btn btn-success pull-right'
       = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
 
   #products_second.carousel.product-carousel.slide data-ride="carousel"
-    = products_carousel_items @products_best
+    = products_carousel_items @products_for_sale
 
     a.left.carousel-control href="#products_second" role="button" data-slide="prev"
     a.right.carousel-control href="#products_second" role="button" data-slide="next"
 
-  .carousel-product-title
-    h3 New deals
+  .carousel-product-title-sell
+    h3 Requested products
     .actions
-      = link_to 'See all deals', '#', class: 'btn btn-default pull-right'
+      = link_to 'See all requests', requested_products_path, class: 'btn btn-success-sell pull-right'
       = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
 
   #products_third.carousel.product-carousel.slide data-ride="carousel"
-    = products_carousel_items @products_new_deals
+    = products_carousel_items @products_requested
 
     a.left.carousel-control href="#products_third" role="button" data-slide="prev"
     a.right.carousel-control href="#products_third" role="button" data-slide="next"

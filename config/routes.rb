@@ -59,7 +59,8 @@ Toad::Application.routes.draw do
   resources :products, only: [:index, :show] do
     collection do
       get 'all' => 'products#products'
-      get :offers
+      get :for_sale
+      get :requested
       get :deals
     end
   end
