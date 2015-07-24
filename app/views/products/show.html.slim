@@ -163,7 +163,10 @@
       .white-panel.wp-table
         - if @product.pricebreaks.any?
           .vp-title Pricebreaks:
-          = pricebreak_table @product.pricebreaks, @product.unit_price, available
+          - if @product.characteristic_status == 'sell'
+            = pricebreak_table @product.pricebreaks, @product.unit_price, available
+          - else
+            = pricebreak_table @product.pricebreaks, @product.unit_price, desired
 
         - if current_user.present?
           - if current_user.armor_api_account_persisted?
