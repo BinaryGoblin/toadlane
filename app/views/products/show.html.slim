@@ -183,7 +183,10 @@
 
   - if @related_products.any?
     .wrap
-      .carousel-product-title: h3 Related products
+      -if @product.status_characteristic == 'sell'
+        .carousel-product-title: h3 Related products
+      -else
+        .carousel-product-title-sell: h3 Related products
 
       #related_products.carousel.product-carousel.slide data-ride="carousel"
         = products_carousel_items @related_products
