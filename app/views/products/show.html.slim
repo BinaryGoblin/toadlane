@@ -18,7 +18,10 @@
         = time_left @product.end_date
 
       .vp-seller: .white-panel
-        .vp-title User
+        - if @product.status_characteristic == 'sell'
+          .vp-title Seller
+        - else
+          .vp-title Buyer
         table: tr
           td
             .img= image_tag @product.user.asset(:small) if @product.user.asset?
@@ -45,7 +48,7 @@
 
             .name
               b= @product.user.name
-              span =@product.user.country
+              span = @product.user.country
 
             - if @product.user.benefits.reject{ |e| e.empty? }.present?
               .sell
@@ -58,24 +61,68 @@
         a.vp-title href="#" data-toggle="modal" data-target="#form_message" Send a message <i class="fa fa-plus-square pull-right"></i>
 
       - if @product.amount.present?
-        - sold_out = (@product.sold_out.present? ? @product.sold_out : 0)
-        - available = @product.amount - sold_out
-        - maxoptions = ',"max":' + available.to_s
+        - if @product.status_characteristic == 'sell'
+          - sold_out = (@product.sold_out.present? ? @product.sold_out : 0)
+          - available = @product.amount - sold_out
+          - maxoptions = ',"max":' + available.to_s
+        - else
+          - purchased = (@product.sold_out.present? ? @product.sold_out : 0)
+          - desired = @product.amount - purchased
+          - maxoptions = ',"max":' + desired.to_s
 
-      .white-panel.vp-calculation data-behavior="CalculationProduct" data-options='{"pricebreaks":#{@product.pricebreaks.collect { |p| { quantity: p.quantity, price: p.price } }.to_json},"maxquantity":#{available.present? ? available.to_s : '"Infinity"'}}'
+      .white-panel.vp-share
+        b.text-uppercase.pull-left Share:
+        .addthis_sharing_toolbox.pull-right
+        = javascript_include_tag '//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51a8787656fab455'
 
-        .progress: i style="width:#{100-sold_out*100/@product.amount}%"
+    .vp-left-col
+      - if @product.images.any?
+        #slider.vp-carousel.carousel.slide data-ride="carousel"
+          ol.carousel-indicators
+            - if @product.images.count > 1
+              - @product.images.each_with_index do |item, index|
+                li class="#{'active' if index == 0}" data-target="#slider" data-slide-to="#{index}"
 
-        table: tr
-          td
-            span For sale:
-            b= @product.amount
-          td
-            span Sold out:
-            b= sold_out
-          td
-            span Available to buy:
-            b.text-green= available
+          .carousel-inner
+            - @product.images.each_with_index do |item, index|
+              .item class="#{'active' if index == 0}"= image_tag item.image(:big)
+
+          - if @product.images.count > 1
+            a.left.carousel-control href="#slider" role="button" data-slide="prev"
+            a.right.carousel-control href="#slider" role="button" data-slide="next"
+	  
+      - if @product.description.present?
+        .white-panel= simple_format @product.description
+	  
+	  .white-panel.vp-calculation data-behavior="CalculationProduct" data-options='{"pricebreaks":#{@product.pricebreaks.collect { |p| { quantity: p.quantity, price: p.price } }.to_json},"maxquantity":#{available.present? ? available.to_s : '"Infinity"'}}'
+
+        - if @product.status_characteristic == 'sell'
+          .progress: i style="width:#{100-(sold_out*100/@product.amount)}%"
+        - else
+          .progress: i style="width:#{100-(desired*100/@product.amount)}%"
+
+		- if @product.status_characteristic == 'sell'
+          table: tr
+            td
+              span For sale:
+              b= @product.amount
+            td
+              span Sold:
+              b= sold_out
+            td
+              span Available to buy:
+              b.text-green= available
+        - else
+          table: tr
+            td
+              span Total Sought:
+              b= @product.amount
+            td
+              span Units Purchased:
+              b= purchased
+            td
+              span Units Still Desired:
+              b.text-orange= desired;
 
         hr
 
@@ -104,46 +151,35 @@
           li
             span Cart Subtotal:
             b.pull-right.calc-cart 0.00
-          li.text-green
-            b Cart Total:
-            b.pull-right.calc-cart 0.00
-
-      .white-panel.vp-share
-        b.text-uppercase.pull-left Share:
-        .addthis_sharing_toolbox.pull-right
-        = javascript_include_tag '//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51a8787656fab455'
-
-    .vp-left-col
-      - if @product.images.any?
-        #slider.vp-carousel.carousel.slide data-ride="carousel"
-          ol.carousel-indicators
-            - if @product.images.count > 1
-              - @product.images.each_with_index do |item, index|
-                li class="#{'active' if index == 0}" data-target="#slider" data-slide-to="#{index}"
-
-          .carousel-inner
-            - @product.images.each_with_index do |item, index|
-              .item class="#{'active' if index == 0}"= image_tag item.image(:big)
-
-          - if @product.images.count > 1
-            a.left.carousel-control href="#slider" role="button" data-slide="prev"
-            a.right.carousel-control href="#slider" role="button" data-slide="next"
-
+          - if @product.status_characteristic == 'sell'
+            li.text-green
+              b Cart Total:
+              b.pull-right.calc-cart 0.00
+          - else
+            li.text-orange
+              b Cart Total
+              b.pull-right.calc-cart 0.00
+            
       .white-panel.wp-table
         - if @product.pricebreaks.any?
           .vp-title Pricebreaks:
           = pricebreak_table @product.pricebreaks, @product.unit_price, available
 
-        - if current_user.armor_api_account_persisted?
-          .text-center= link_to 'Proceed to checkout', '#', class: 'btn btn-success btn-lg checkout', data: {  toggle: 'modal', target: '#form_checkout' }
+        - if current_user.present?
+          - if current_user.armor_api_account_persisted?
+            -if @product.status_characteristic == 'sell'
+              .text-center= link_to 'Proceed to checkout', '#', class: 'btn btn-success btn-lg checkout', data: {  toggle: 'modal', target: '#form_checkout' }
+            -else
+              .text-center= link_to 'Make Sale', '#', class: 'btn btn-success-sell btn-lg checkout', data: {  toggle: 'modal', target: '#form_checkout'  }
+          - else
+            .wrong.text-center
+              |
+                Please fill out your profile details. <br>
+                Until your profile is complete, you will not be able to create orders.
         - else
           .wrong.text-center
             |
-              Please fill out your profile details. <br>
-              Until your profile is complete, you will not be able to create orders.
-
-      - if @product.description.present?
-        .white-panel= simple_format @product.description
+              Please sign in to place an order.
 
   - if @related_products.any?
     .wrap
