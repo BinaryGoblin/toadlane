@@ -3,18 +3,14 @@ class ProductsController < ApplicationController
 
   before_action :set_product, only: [:show]
 
-  before_filter :authenticate_user!, except: [:index]
+  before_filter :authenticate_user!, except: [:index, :products, :show]
   before_action :check_terms_of_service
 
   def index
-    if current_user.present?
-      @products_recommended = Product.unexpired.where(status_action: 'recommended').order(:created_at).limit(16)
-      @products_best = Product.unexpired.where(status_action: 'best').order(:created_at).limit(16)
-      @products_new_deals = Product.unexpired.order(:created_at).limit(16)
-      @featured_sellers = User.limit(16)
-    else
-      redirect_to root_path
-    end
+    @products_recommended = Product.unexpired.where(status_action: 'recommended').order(:created_at).limit(16)
+    @products_best = Product.unexpired.where(status_action: 'best').order(:created_at).limit(16)
+    @products_new_deals = Product.unexpired.order(:created_at).limit(16)
+    @featured_sellers = User.limit(16)
   end
 
   def show
