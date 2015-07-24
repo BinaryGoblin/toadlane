@@ -163,7 +163,7 @@
       .white-panel.wp-table
         - if @product.pricebreaks.any?
           .vp-title Pricebreaks:
-          - if @product.characteristic_status == 'sell'
+          - if @product.status_characteristic == 'sell'
             = pricebreak_table @product.pricebreaks, @product.unit_price, available
           - else
             = pricebreak_table @product.pricebreaks, @product.unit_price, desired
