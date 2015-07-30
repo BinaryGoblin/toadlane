@@ -13,6 +13,24 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+  
+  def get_user_notifications
+    notifications = get_user_unread_message_notifications
+    # TODO
+    # notifications += get_user_new_orders
+    
+    notifications
+  end
+  
+  def get_user_unread_message_notifications
+    unread_receipts ||= current_user.mailbox.receipts.where(is_read: 'false')
+    
+    if unread_receipts
+      unread_receipts.count
+    else
+      0
+    end
+  end
 
   def after_sign_in_path_for resource
 
@@ -23,7 +41,17 @@ class ApplicationController < ActionController::Base
         if current_user.terms_of_service != true
           dashboard_terms_of_services_path
         else
-          dashboard_profile_path
+          if get_user_notifications > 0
+            if get_user_unread_message_notifications > 0
+              dashboard_messages_path
+            else
+              # TODO
+              # get_user_new_order_notifications
+              products_path
+            end
+          else
+            products_path
+          end
         end
       end
     else

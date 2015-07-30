@@ -1,6 +1,8 @@
 #form_message.modal.fade tabindex="-1" role="dialog"
   = form_tag messages_path
     = hidden_field_tag 'message[user_id]', product.user.id
+    - subject = "RE: " + product.name
+    = hidden_field_tag 'message[subject]', subject
 
     .modal-dialog: .modal-content
       .modal-header
@@ -8,10 +10,6 @@
         h4.modal-title Send a message
 
       .modal-body
-        .form-group
-          = label_tag 'message_subject', 'Subject:'
-          = text_field_tag 'message[subject]', nil, class: 'form-control'
-
         .form-group
           = label_tag 'message_body', 'Your message:'
           = text_area_tag 'message[body]', nil, class: 'form-control'

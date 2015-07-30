@@ -241,8 +241,26 @@ module ApplicationHelper
   end
   
   def product_button_color(product)
-	if product.present?
-	  product.status_characteristic == "sell" ? "btn btn-success" : "btn btn-success-sell"
-	end
+	  if product.present?
+	    product.status_characteristic == "sell" ? "btn btn-success" : "btn btn-success-sell"
+	  end
+  end
+  
+  def get_user_notifications
+    notifications = get_user_unread_message_notifications
+    # TODO
+    # notifications += get_user_new_order_notifications
+    
+    notifications
+  end
+  
+  def get_user_unread_message_notifications
+    unread_receipts ||= current_user.mailbox.receipts.where(is_read: 'false')
+    
+    if unread_receipts
+      unread_receipts.count
+    else
+      0
+    end
   end
 end
