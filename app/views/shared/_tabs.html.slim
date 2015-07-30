@@ -6,5 +6,5 @@
     li= tab_link_to 'My products', dashboard_products_path, is: 'products'
     li= tab_link_to 'Orders', dashboard_orders_path(type_order: 'buy'), is: 'orders', disabled: !current_user.armor_api_account_persisted?
     li= tab_link_to 'Terms of Service', dashboard_terms_of_services_path, is: 'terms_of_services'
-    li= tab_link_to 'Messages', dashboard_messages_path(box: 'inbox'), is: 'messages'
+    li= tab_link_to "Messages (#{get_user_unread_message_notifications})", dashboard_messages_path(box: 'inbox'), is: 'messages'
     li= link_to fa_icon('power-off', text: 'Logout'), destroy_user_session_path, class: 'btn btn-default'
