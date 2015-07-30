@@ -10,6 +10,11 @@ class Dashboard::MessagesController < DashboardController
 
     @conversations = conversations.paginate(page: params[:page], per_page: params[:count])
   end
+  
+  def show
+    conversation
+    conversation.mark_as_read(current_user)
+  end
 
   def reply
     current_user.reply_to_conversation(conversation, conversation_params[:body], conversation_params[:subject])
