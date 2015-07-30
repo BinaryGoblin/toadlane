@@ -1,13 +1,12 @@
-= form_for :conversation, url: reply_dashboard_message_path(conversation) do |f|
-  / .form-group
-  /   = f.label :subject, 'Subject:'
-  /   = f.text_field :subject, class: 'form-control'
+= form_tag reply_dashboard_message_path(conversation) do
+  = hidden_field :conversation, 'subject', value: conversation.subject
+  = hidden_field :conversation, 'conversation', value: conversation
 
   .form-group
-    = f.label :body, 'Body:'
-    = f.text_area :body, class: 'form-control'
+    = label_tag 'body', 'Body:'
+    = text_area_tag 'conversation[body]', '', class: 'form-control'
 
   .form-group
-    = f.button :submit, data: { disable_with: 'Please wait...' }, class: 'btn btn-primary'
+    = button_tag :submit, data: { disable_with: 'Please wait...' }, class: 'btn btn-primary'
 
   br
