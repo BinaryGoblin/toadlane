@@ -19,6 +19,22 @@ $table-cell-offset: 10px;
       padding-right: 0;
     }
   }
+  
+  .new_message {
+    td {
+      background: #59af0c;
+      color: lightgray;
+    }
+    
+    &:nth-child(even) td {
+      background: #3d6411;
+      color: gray;
+    }
+  }
+  
+  .message_preview {
+    font-style: italic;
+  }
 
   td {
     padding: $table-cell-offset;
@@ -57,6 +73,16 @@ $table-cell-offset: 10px;
   .view-red {
     color: #b90012;
     border-bottom-color: #b90012;
+  }
+  
+  .view-orange {
+    color: #FF8724;
+    border-bottom-color: #FF8724;
+  }
+  
+  .view-new {
+    color: white;
+    border-bottom-color: white;
   }
 
   .date {
