@@ -55,3 +55,21 @@
   box-shadow: 0 0 5px #aaa;
   border-radius: 3px;
 }
+
+.ui-menu {
+	opacity: 1.0;
+	background-color: white;
+	border: 2px solid black;
+	list-style: none;
+	cursor: pointer;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  z-index: 1;
+}
+
+.ui-state-focus {
+	border: 1px solid #999999;
+	background: #dadada url("images/ui-bg_glass_75_dadada_1x400.png") 50% 50% repeat-x;
+	font-weight: normal;
+}
