@@ -1,6 +1,8 @@
 Toad::Application.routes.draw do
 
-  resources :armor_orders, except: [:update, :edit]
+  resources :armor_orders, except: [:update, :edit, :new] 
+  
+  get 'print/invoice.:id', to: 'print#invoice', as: 'print/invoice'
 
   get 'search/autocomplete'
   get 'search/index', as: :search
