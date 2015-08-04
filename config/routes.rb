@@ -1,6 +1,6 @@
 Toad::Application.routes.draw do
 
-  resources :armor_orders, except: [:update, :edit]
+  resources :armor_orders, except: [:update, :edit, :new]
 
   get 'search/autocomplete'
   get 'search/index', as: :search
