@@ -18,13 +18,23 @@ class ArmorOrdersController < ApplicationController
   def create
     product = Product.unexpired.find(armor_order_params[:product_id])
 
-    additional_params = {
-      buyer_id: current_user.id,
-      seller_id: product.user.id,
-      product_id: product.id,
-      status_change: DateTime.now,
-      account_id: current_user.armor_account_id
-    }
+    if product.status_characteristic == 'sell'
+      additional_params = {
+        buyer_id: current_user.id,
+        seller_id: product.user.id,
+        product_id: product.id,
+        status_change: DateTime.now,
+        account_id: current_user.armor_account_id
+      }
+    else
+      additional_params = {
+        buyer_id: product.user.id,
+        seller_id: current_user.id,
+        product_id: product.id,
+        status_change: DateTime.now,
+        account_id: current_user.armor_account_id
+      }
+    end
 
     @armor_order = ArmorOrder.new(armor_order_params.merge(additional_params))
 
