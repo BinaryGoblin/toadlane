@@ -16,22 +16,30 @@ html
     - if flash[:notice]
       .main-notice data-behavior="FlashMessages"= flash[:notice]
 
-    header.header: .wrap
-      = link_to image_tag('logo-header.png'), admin_categories_path, class: 'logo'
-
-      ul.header-nav.pull-left
-        = nav_link 'Categories', admin_categories_path
-        = nav_link 'Taxes', admin_taxes_path
-        = nav_link 'Resellers', admin_resellers_path
-        = nav_link 'Products', admin_products_path
-        = nav_link 'Mailers', admin_mailers_path
-
-      .header-user.pull-right
-        - if current_admin
-          = link_to fa_icon('power-off', text: 'Logout'), destroy_admin_session_path, class: 'btn btn-success'
-        - else
-          = link_to 'Login', new_admin_session_path, class: 'btn btn-success'
-
+    header.header: .wrap      
+      - if current_admin
+        = link_to fa_icon('power-off', text: 'Logout'), destroy_admin_session_path, class: 'btn btn-success pull-right'
+      - else
+        = link_to 'Login', new_admin_session_path, class: 'btn btn-success pull-right'
+          
+      table align= "center"
+        tbody 
+          tr
+            td align= "bottom"
+              ul.header-nav.pull-right
+                = nav_link 'Taxes', admin_taxes_path
+                = nav_link 'Resellers', admin_resellers_path
+                = nav_link 'Mailers', admin_mailers_path
+                
+            td align= "top"
+              = link_to image_tag('logo-header.png'), admin_categories_path, class: 'logo'
+      
+            td align= "bottom"
+              ul.header-nav.pull-left
+                = nav_link 'Categories', admin_categories_path
+                = nav_link 'Products', admin_products_path
+                = nav_link 'Orders', admin_orders_path
+                
     == yield
 
     footer.footer: .wrap
@@ -40,12 +48,5 @@ html
       .copy.pull-left
         div <span>© 2014</span>, Toad.la
         div All rights reserved!!!
-
-      ul.footer-nav.pull-right
-        = nav_link 'Categories', admin_categories_path
-        = nav_link 'Taxes', admin_taxes_path
-        = nav_link 'Resellers', admin_resellers_path
-        = nav_link 'Products', admin_products_path
-        = nav_link 'Mailers', admin_mailers_path
 
     = javascript_include_tag 'admin'

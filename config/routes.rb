@@ -80,6 +80,11 @@ Toad::Application.routes.draw do
        end
      end
      resources :products, only: [:index, :update]
+     resources :orders, only: [:index, :update] do
+       collection do
+         delete :delete_cascade
+       end
+     end
      resources :mailers, only: [:index] do
        collection do
          post :services
