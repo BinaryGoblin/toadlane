@@ -15,17 +15,15 @@ html
   body
     - if flash[:notice]
       .main-notice data-behavior="FlashMessages"= flash[:notice]
-
-    header.header: .wrap      
-      - if current_admin
-        = link_to fa_icon('power-off', text: 'Logout'), destroy_admin_session_path, class: 'btn btn-success pull-right'
-      - else
-        = link_to 'Login', new_admin_session_path, class: 'btn btn-success pull-right'
-          
+      
+    header.header: .wrap     
       table align= "center"
         tbody 
           tr
-            td align= "bottom"
+            td.sign-button
+            
+            td.nav-menu align= "bottom"
+              br
               ul.header-nav.pull-right
                 = nav_link 'Taxes', admin_taxes_path
                 = nav_link 'Resellers', admin_resellers_path
@@ -34,12 +32,21 @@ html
             td align= "top"
               = link_to image_tag('logo-header.png'), admin_categories_path, class: 'logo'
       
-            td align= "bottom"
+            td.nav-menu align= "bottom"
+              br
               ul.header-nav.pull-left
                 = nav_link 'Categories', admin_categories_path
                 = nav_link 'Products', admin_products_path
                 = nav_link 'Orders', admin_orders_path
                 
+            td.sign-button
+              br
+              .header-user.pull-right      
+                - if current_admin
+                  = link_to fa_icon('power-off', text: 'Logout'), destroy_admin_session_path, class: 'btn btn-success pull-right'
+                - else
+                  = link_to 'Login', new_admin_session_path, class: 'btn btn-success pull-right' 
+        
     == yield
 
     footer.footer: .wrap

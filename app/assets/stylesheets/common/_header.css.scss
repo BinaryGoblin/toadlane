@@ -2,7 +2,7 @@
 
 .header {
   background: white;
-  height: 105px;
+  height: 95px;
 
   .wrap {
     padding-top: 30px;
@@ -10,7 +10,7 @@
   }
 
   .logo {
-    position: relative;
+    position: absolute;
     width: 230px;
     height: 122px;
     top: 10px;
@@ -53,7 +53,7 @@
 
 .header-user {
   white-space: nowrap;
-  width: 75px;
+  width: 405px;
   text-align: right;
 
   .btn {
