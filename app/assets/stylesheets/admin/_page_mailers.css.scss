@@ -23,6 +23,7 @@
     text-align: center;
     color: #cccfd3;
     text-transform: uppercase;
+    margin-top: 30px;
     margin-bottom: 30px;
     position: absolute;
     width: 45%;
@@ -54,7 +55,7 @@
   > div {
     position: absolute;
     z-index: 10000;
-    top: 43px;
+    top:90px;
     bottom: 0;
     width: 45%;
     overflow: scroll;
@@ -65,10 +66,12 @@
   }
 
   .mtitle-products {
+    margin-top: 30px;
     left: 0;
   }
 
   .mtitle-users {
+    margin-top: 30px;
     right: 0;
   }
 

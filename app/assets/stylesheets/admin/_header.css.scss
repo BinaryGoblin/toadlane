@@ -1,13 +1,80 @@
 .header {
+  background: white;
+  height: 110px;
   margin-bottom: 27px;
 
   .logo {
-    width: 180px;
-    height: 95px;
-    top: 0px;
+    position: relative;
+    width: 230px;
+    height: 130px;
+    top: 10px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 100;
+  }
 
-    img {
-      height: 95px;
+  .wrap {
+    padding-bottom: 30px;
+  }
+  
+  .sign-button {
+    width: 135px;
+  }
+  
+  .nav-menu {
+    width: 280px;
+  }
+}
+
+.header-nav {
+  list-style: none;
+  margin: 0;
+  padding: 5px 0 0;
+
+  li {
+    float: left;
+    margin-left: 20px;
+
+    &:first-child {
+      margin-left: 0;
     }
+  }
+
+  a {
+    color: black;
+    font-size: 16px;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding-bottom: 3px;
+    border-bottom: 3px solid #cccfd3;
+    @include transition(border .3s);
+
+    &.active,
+    &:hover {
+      border-bottom-color: #5c8f10;
+    }
+  }
+}
+
+.header-user {
+  white-space: nowrap;
+  text-align: right;
+
+  .btn {
+    text-transform: uppercase;
+    margin-left: 10px;
+  }
+
+  .want-sell-buy {
+    position: relative;
+    color: #ff8724;
+    float: left;
+    text-align: center;
+    padding-right: 20px;
+    margin-right: 10px;
+    line-height: 1;
+    font-size: 18px;
+    font-family: 'Segoe', sans-serif;
   }
 }

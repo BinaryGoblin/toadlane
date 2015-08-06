@@ -10,7 +10,6 @@
 @import "common/normalize";
 @import "common/helpers";
 @import "common/basic";
-@import "common/header";
 @import "common/footer";
 @import "common/typeahead";
 @import "common/forms";
@@ -37,3 +36,4 @@
 @import "admin/page_mailers";
 @import "admin/page_taxes";
 
+@import "toad/page_view_product";
