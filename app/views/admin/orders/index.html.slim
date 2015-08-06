@@ -18,7 +18,7 @@
           td= order.id
           td= link_to order.product.name.truncate(30), product_path(order.product), class: 'link link-ulined', target: '_blank'
           td= number_to_currency(order.amount, :unit => "$ ", precision: 2)
-          td #{order.created_at.strftime('%d-%m-%Y')}
+          td #{order.created_at.strftime('%m-%d-%Y')}
           td= order.seller.name
           td= order.seller.company
           td= order.buyer.name
