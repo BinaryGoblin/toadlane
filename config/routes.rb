@@ -11,6 +11,7 @@ Toad::Application.routes.draw do
   get 'contact_info' => 'static_pages#contact_info'
   get 'payment_info' => 'static_pages#payment_info'
   get 'terms_of_service' => 'static_pages#terms_of_service'
+  get 'account_deactivated' => 'static_pages#account_deactivated'
   root 'static_pages#home'
   
   namespace :dashboard do
@@ -71,26 +72,39 @@ Toad::Application.routes.draw do
   
   devise_for :admin, class_name: 'User', controllers: { sessions: 'admin/sessions', confirmations: 'admin/confirmations' }
 
-   namespace :admin do
-     resources :categories
-     resources :taxes
-     resources :resellers, only: [:index, :update, :destroy] do
-       member do
-         get :get_certificate
-       end
-     end
-     resources :products, only: [:index, :update]
-     resources :orders, only: [:index, :update] do
-       collection do
-         delete :delete_cascade
-       end
-     end
-     resources :mailers, only: [:index] do
-       collection do
-         post :services
-       end
-     end
-     resources :importers, only: [:index, :create]
-     root 'categories#index'
-   end  
+  namespace :admin do
+    resources :categories
+    resources :taxes
+    resources :products, only: [:index, :update]
+    resources :orders, only: [:index, :update] do
+      collection do
+        delete :delete_cascade
+      end
+    end
+    resources :mailers, only: [:index] do
+      collection do
+        post :services
+      end
+    end
+    resources :importers, only: [:index, :create]
+    root 'categories#index'
+
+    namespace :users do
+      resources :verifications, only: [:index, :update, :destroy] do
+        member do
+          get :get_certificate
+        end
+      end
+     
+      resources :managements, only: [:index] do
+        collection do
+          put :activate
+          put :deactivate
+          put :promote
+          put :demote
+        end
+      end
+      resources :communications, only: [:index]
+    end
+  end  
 end

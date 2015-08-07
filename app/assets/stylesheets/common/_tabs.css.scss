@@ -20,3 +20,15 @@
     }
   }
 }
+
+.admin-tabs{
+  @extend .tabs;
+  
+  background: #f4f6f8;
+  
+  li{
+    &:last-child{
+      float: left;
+    }
+  }
+}
