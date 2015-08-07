@@ -71,26 +71,31 @@ Toad::Application.routes.draw do
   
   devise_for :admin, class_name: 'User', controllers: { sessions: 'admin/sessions', confirmations: 'admin/confirmations' }
 
-   namespace :admin do
-     resources :categories
-     resources :taxes
-     resources :resellers, only: [:index, :update, :destroy] do
-       member do
-         get :get_certificate
-       end
-     end
-     resources :products, only: [:index, :update]
-     resources :orders, only: [:index, :update] do
-       collection do
-         delete :delete_cascade
-       end
-     end
-     resources :mailers, only: [:index] do
-       collection do
-         post :services
-       end
-     end
-     resources :importers, only: [:index, :create]
-     root 'categories#index'
-   end  
+  namespace :admin do
+    resources :categories
+    resources :taxes
+    resources :products, only: [:index, :update]
+    resources :orders, only: [:index, :update] do
+      collection do
+        delete :delete_cascade
+      end
+    end
+    resources :mailers, only: [:index] do
+      collection do
+        post :services
+      end
+    end
+    resources :importers, only: [:index, :create]
+    root 'categories#index'
+
+    namespace :users do
+      resources :verifications, only: [:index, :update, :destroy] do
+        member do
+          get :get_certificate
+        end
+      end
+     
+      resources :managements, only: [:index]
+    end
+  end  
 end

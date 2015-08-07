@@ -1,0 +1,48 @@
+= render 'admin/users/tabs'
+
+.wrap-sm
+  table.table
+    thead
+      tr
+        th ID
+        th Name
+        th Company
+        th Location
+        th Email
+        th Last Sign-In
+        th Terms Accepted
+        th Message
+
+    tbody
+      - @users.each do |user|
+        tr
+          td = user.id
+          td = user.name
+          td = user.company
+          - if user.country
+            - if user.state
+              td = user.state + ", " + user.country
+            -else
+              td = user.country
+          -else 
+            td Unknown
+          td = mail_to user.email
+          -if user.last_sign_in_at
+            td #{user.last_sign_in_at.strftime('%m-%d-%Y')}
+          -else
+            td Never
+          -if user.terms_accepted_at
+            td #{user.terms_accepted_at.strftime('%m-%d-%Y')}
+          -else
+            td Never
+          td.text-center=link_to 'Message', '#modal_message_' + user.id.to_s, class: 'view', data: { toggle: 'modal' }
+          
+.footer-actions: .fa-container: .wrap-sm
+  .show_all style="font-size:14px;padding-top:8px"
+    | #{@users.count} Users 
+    - unless params[:count].present? || @users.count < 20
+      = link_to 'Show all', admin_users_verifications_path(count: @users.count), class: 'link link-ulined'
+
+  = will_paginate @users
+
+= render partial: 'user', collection: @users
