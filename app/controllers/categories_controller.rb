@@ -1,6 +1,7 @@
 class CategoriesController < ApplicationController
   before_action :set_category, only: [:show, :edit, :update, :destroy]
   before_action :check_terms_of_service
+  before_action :check_if_user_active
 
   def index
     @categories = Category.all

@@ -21,4 +21,8 @@ class StaticPagesController < ApplicationController
 
   def terms_of_service
   end
+  
+  def account_deactivated
+    render 'static_pages/account_deactivated'
+  end
 end
