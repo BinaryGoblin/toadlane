@@ -11,6 +11,7 @@ Toad::Application.routes.draw do
   get 'contact_info' => 'static_pages#contact_info'
   get 'payment_info' => 'static_pages#payment_info'
   get 'terms_of_service' => 'static_pages#terms_of_service'
+  get 'account_deactivated' => 'static_pages#account_deactivated'
   root 'static_pages#home'
   
   namespace :dashboard do
@@ -95,7 +96,15 @@ Toad::Application.routes.draw do
         end
       end
      
-      resources :managements, only: [:index]
+      resources :managements, only: [:index] do
+        collection do
+          put :activate
+          put :deactivate
+          put :promote
+          put :demote
+        end
+      end
+      resources :communications, only: [:index]
     end
   end  
 end

@@ -2,7 +2,7 @@ class Admin::Users::VerificationsController < Admin::UsersController
   before_action :set_user, only: [:update, :destroy, :get_certificate]
 
   def index
-    @users = Role.find_by(name: :user).users.paginate(page: params[:page], per_page: params[:count]).order('id ASC')
+    @users = User.paginate(page: params[:page], per_page: params[:count]).order('id ASC')
   end
 
   def update

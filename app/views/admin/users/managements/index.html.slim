@@ -1,17 +1,23 @@
 = render 'admin/users/tabs'
 
 .wrap-sm
+  
+  h4.warning
+    |
+      ***Warning! These are global level user permissions. Adjust with caution.
+  br
+  
   table.table
     thead
       tr
         th ID
         th Name
         th Company
-        th Location
-        th Email
+        th Sign-Ins
         th Last Sign-In
         th Terms Accepted
-        th Message
+        th User Role
+        th 
 
     tbody
       - @users.each do |user|
@@ -19,14 +25,7 @@
           td = user.id
           td = user.name
           td = user.company
-          - if user.country
-            - if user.state
-              td = user.state + ", " + user.country
-            -else
-              td = user.country
-          -else 
-            td Unknown
-          td = mail_to user.email
+          td = user.sign_in_count
           -if user.last_sign_in_at
             td #{user.last_sign_in_at.strftime('%m-%d-%Y')}
           -else
@@ -35,14 +34,36 @@
             td #{user.terms_accepted_at.strftime('%m-%d-%Y')}
           -else
             td Never
-          td.text-center=link_to 'Message', '#modal_message_' + user.id.to_s, class: 'view', data: { toggle: 'modal' }
+          - if user.has_role? :superadmin
+            td Super Admin
+          - else 
+            -if user.has_role? :admin
+              td Admin
+            - else
+              - if user.has_role? :user
+                td User
+              - else
+                td Deactivated
+          td
+            - if user.has_role? :admin
+              = link_to 'Promote', promote_admin_users_managements_path(id: user.id), method: 'put', data: { confirm: 'Are you sure? This will grant global administrative access.' }
+            - else
+              = link_to 'Promote', promote_admin_users_managements_path(id: user.id), method: 'put', data: { confirm: 'Are you sure? This will grant the user access to the administrative interface.' }
+            |  | 
+            - if user.has_role? :superadmin
+              = link_to 'Demote', demote_admin_users_managements_path(id: user.id), method: 'put', data: { confirm: 'Are you sure? This will remove global administrative access.' }
+            - else
+              = link_to 'Demote', demote_admin_users_managements_path(id: user.id), method: 'put', data: { confirm: 'Are you sure? This will remove all access to the administrative interface.' }
+            |  | 
+            - if user.has_role? :user
+              = link_to 'Deactivate', deactivate_admin_users_managements_path(id: user.id), method: 'put', data: { confirm: 'Are you sure? This will prevent the user from making purchases, posting listings, and sending messages.' }
+            - else
+              = link_to 'Activate', activate_admin_users_managements_path(id: user.id), method: 'put', data: { confirm: 'Are you sure? This will allow the user to make purchases, post listings, and send messages.' }
           
 .footer-actions: .fa-container: .wrap-sm
   .show_all style="font-size:14px;padding-top:8px"
     | #{@users.count} Users 
     - unless params[:count].present? || @users.count < 20
-      = link_to 'Show all', admin_users_verifications_path(count: @users.count), class: 'link link-ulined'
+      = link_to 'Show all', admin_users_managements_path(count: @users.count), class: 'link link-ulined'
 
   = will_paginate @users
-
-= render partial: 'user', collection: @users
