@@ -11,6 +11,10 @@
         ul
           - @user.errors.full_messages.each do |message|
             li = message
+    - if params[:saved?]
+      .success-explanation
+        h5 User account saved successfully.
+        br
 
     table.profile-table: tr
       td

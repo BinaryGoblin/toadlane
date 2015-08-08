@@ -40,7 +40,7 @@ class Dashboard::ProfilesController < DashboardController
 
     respond_to do |format|
       if @user.update(user_params)
-        format.html { redirect_to dashboard_profile_path }
+        format.html { redirect_to dashboard_profile_path(saved?: true) }
       else
         format.html { render action: 'show' }
       end
