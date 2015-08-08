@@ -1,5 +1,6 @@
 class MessagesController < ApplicationController
   before_filter :authenticate_user!
+  before_action :check_if_user_active
 
   def create
     user = User.find message_params[:user_id]

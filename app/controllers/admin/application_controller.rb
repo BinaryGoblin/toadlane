@@ -7,7 +7,7 @@ class Admin::ApplicationController < ApplicationController
 
  private
   def allow_admin_resources
-    unless current_admin.is_admin?
+    unless current_user.is_admin?
       flash[:alert] = 'access denied'
       redirect_to request.referrer
     end
