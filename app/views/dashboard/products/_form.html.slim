@@ -47,7 +47,7 @@
 
           .status_action
             = f.label :status_characteristic, 'I am:', class: 'required'
-            = f.select :status_characteristic, [['Buying', 'buy'], ['Selling', 'sell']], {}, data: { behavior: 'Select' }
+            = f.select :status_characteristic, [['Selling', 'sell'], ['Buying', 'buy']], {}, data: { behavior: 'Select' }
 
           .status
             = f.label :status, 'Product status:'
