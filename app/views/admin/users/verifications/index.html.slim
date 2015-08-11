@@ -22,11 +22,11 @@
           td = link_to 'Get certificate', get_certificate_admin_users_verification_path(user.id) if user.certificate.present?
           - if user.is_reseller
             td.text-center: span.label.label-green Yes
-            td.text-right= link_to 'Unverify', admin_users_verifications_path(user), method: :delete, data: { confirm: 'Are you sure?' }, class: 'view view-red'
+            td.text-right= link_to 'Unverify', admin_users_verification_path(user), method: :delete, data: { confirm: 'Are you sure?' }, class: 'view view-red'
           - else
             td.text-center: span.label.label-red No
             - if user.certificate.present?
-              td.text-right= link_to 'Verify', admin_users_verifications_path(user), method: :put, data: { confirm: 'Are you sure?' }, class: 'view'
+              td.text-right= link_to 'Verify', admin_users_verification_path(user), method: :put, data: { confirm: 'Are you sure?' }, class: 'view'
             - else
               td.text-right No certificate
               
