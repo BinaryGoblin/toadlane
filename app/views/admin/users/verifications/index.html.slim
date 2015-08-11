@@ -19,10 +19,10 @@
           td = user.name
           td = user.company
           td = user.email	
-          td = link_to 'Get certificate', get_certificate_admin_users_verifications_path(user.id) if user.certificate.present?
+          td = link_to 'Get certificate', get_certificate_admin_users_verification_path(user.id) if user.certificate.present?
           - if user.is_reseller
             td.text-center: span.label.label-green Yes
-            td.text-right= link_to 'None reseller', admin_users_verifications_path(user), method: :delete, data: { confirm: 'Are you sure?' }, class: 'view view-red'
+            td.text-right= link_to 'Unverify', admin_users_verifications_path(user), method: :delete, data: { confirm: 'Are you sure?' }, class: 'view view-red'
           - else
             td.text-center: span.label.label-red No
             - if user.certificate.present?
