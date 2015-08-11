@@ -19,7 +19,7 @@ class Admin::Users::VerificationsController < Admin::UsersController
     set_user
     respond_to do |format|
       if @user.update(is_reseller: false)
-        format.html { redirect_to admin_users_verificationss_path, notice: 'User verification removed.' }
+        format.html { redirect_to admin_users_verifications_path, notice: 'User verification removed.' }
       else
         format.html { render action: 'index' }
       end
