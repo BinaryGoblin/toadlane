@@ -1,11 +1,11 @@
 class Admin::Users::VerificationsController < Admin::UsersController
-  before_action :set_user, only: [:update, :destroy, :get_certificate]
 
   def index
     @users = User.paginate(page: params[:page], per_page: params[:count]).order('id ASC')
   end
 
   def update
+    set_user
     respond_to do |format|
       if @user.update(is_reseller: true)
         format.html { redirect_to admin_users_verifications_path, notice: 'User was successfully verified.' }
@@ -16,6 +16,7 @@ class Admin::Users::VerificationsController < Admin::UsersController
   end
 
   def destroy
+    set_user
     respond_to do |format|
       if @user.update(is_reseller: false)
         format.html { redirect_to admin_users_verificationss_path, notice: 'User verification removed.' }
@@ -26,6 +27,12 @@ class Admin::Users::VerificationsController < Admin::UsersController
   end
   
   def get_certificate
+    set_user
     send_data @user.certificate.data, :filename => @user.certificate.filename, :type => @user.certificate.content_type
   end
+  
+  private
+    def set_user
+      @user = User.find(params[:id])
+    end
 end
