@@ -1,7 +1,7 @@
 .tabs: .wrap-sm
   ul
     li= tab_link_to 'My profile', dashboard_profile_path, is: 'profiles'
-    li: a.btn.btn-default.disabled My groups
+    li= tab_link_to 'Finances', dashboard_finances_path, is: 'finances'
     li= tab_link_to 'Payments', dashboard_payments_path, is: 'payments'
     li= tab_link_to 'My products', dashboard_products_path, is: 'products'
     li= tab_link_to 'Orders', dashboard_orders_path(type_order: 'buy'), is: 'orders', disabled: !current_user.armor_api_account_persisted?
