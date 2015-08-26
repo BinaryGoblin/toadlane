@@ -222,11 +222,52 @@
   }
 }
 
-.groups-table {
+.finances-table {
+  width: 100%;
+  font-size: 12px;
+
+  &.last tr:last-child td {
+    padding-top: 30px;
+  }
+
   td {
-    &:nth-child(2) {
-      width: 80%;
+    vertical-align: top;
+
+    &:first-child {
+      width: 240px;
     }
+
+    &:last-child:not([colspan]) {
+      width: 450px;
+    }
+  }
+
+  h4 {
+    line-height: 1;
+    font-size: 20px;
+    color: #cccfd3;
+    text-transform: uppercase;
+  }
+
+  .checkbox {
+    font-size: 14px;
+    margin-top: 10px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  .icheckbox {
+    margin: -3px 5px 0 0;
+  }
+  
+  input {
+    width: 300px;
+  }
+
+  input[disabled] {
+    background: #eee;
   }
 }
 

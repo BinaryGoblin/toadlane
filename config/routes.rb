@@ -18,6 +18,8 @@ Toad::Application.routes.draw do
     resource :profile, only: [:update, :show]
 
     resources :payments
+    
+    resource :finances, only: [:create, :show]
 
     resources :products, except: :show do
       collection do
