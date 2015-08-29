@@ -4,7 +4,7 @@ class Dashboard::FinancesController < DashboardController
   end
   
   def create
-    if params[:accept].present? && params[:accept] == 1    
+    if params[:accept].present? && params[:accept] == "1"
       respond_to do |format|
         if params[:loan_amount].present? && params[:business_years].present? && params[:monthly_revenue].present?
           FinancesMailer.multivision_application_email(current_user, params[:loan_amount], params[:business_years], params[:monthly_revenue]).deliver
