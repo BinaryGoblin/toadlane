@@ -6,6 +6,6 @@ class FinancesMailer < ActionMailer::Base
     @loan_amount = loan_amount
     @business_years = business_years
     @monthly_revenue = monthly_revenue
-    mail to: 'admin@multivisionfinancial.com', subject: 'New loan request from Toadlane'
+    mail to: 'johnb@toadlane.com', subject: 'New loan request from Toadlane'
   end
 end
