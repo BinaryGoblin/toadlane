@@ -41,6 +41,8 @@ gem 'delayed_job_active_record', '~> 4.0.3'
 
 gem 'stripe'
 
+gem 'nokogiri'
+
 # Dev - debugging group
 group :development do
   gem 'pry-rails'
