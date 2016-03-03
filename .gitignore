@@ -37,3 +37,4 @@ logfile
 .metadata
 .project
 /.gitignore
+/Gemfile.lock
