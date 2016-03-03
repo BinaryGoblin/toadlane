@@ -415,6 +415,7 @@ DEPENDENCIES
   jquery-ui-rails (~> 5.0.3)
   kaminari (~> 0.16.3)
   mailboxer!
+  nokogiri
   paper_trail (~> 3.0.7)
   paperclip (~> 4.2.1)
   pg (~> 0.18.1)
