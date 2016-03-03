@@ -30,6 +30,7 @@ logfile
 # Ignore Windows Hackery
 /.env
 /Procfile.dev
+/Gemfile.lock
 /config/database.yml
 /config/puma.rb
 /db/schema.rb
@@ -37,4 +38,3 @@ logfile
 .metadata
 .project
 /.gitignore
-/Gemfile.lock
