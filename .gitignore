@@ -28,3 +28,13 @@ logfile
 **/.DS_Store
 
 /Gemfile.lock
+
+# Ignore Windows Hackery
+/.env
+/config/database.yml
+/config/puma.rb
+/db/schema.rb
+/vendor/postgresql
+.metadata
+.project
+/.gitignore
