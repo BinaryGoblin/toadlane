@@ -26,3 +26,5 @@ logfile
 # Ignore Mac OS X garbage files
 .DS_Store
 **/.DS_Store
+
+/Gemfile.lock
