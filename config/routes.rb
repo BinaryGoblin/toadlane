@@ -8,8 +8,6 @@ Toad::Application.routes.draw do
   get 'search/index', as: :search
 
   get 'faq' => 'static_pages#faq', as: :faq
-  get 'contact_info' => 'static_pages#contact_info'
-  get 'payment_info' => 'static_pages#payment_info'
   get 'terms_of_service' => 'static_pages#terms_of_service'
   get 'account_deactivated' => 'static_pages#account_deactivated'
   root 'static_pages#home'
