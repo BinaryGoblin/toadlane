@@ -39,6 +39,8 @@ gem 'searchkick', '~> 0.8.7'
 gem 'kaminari', '~> 0.16.3'
 gem 'delayed_job_active_record', '~> 4.0.3'
 
+gem 'stripe'
+
 # Dev - debugging group
 group :development do
   gem 'pry-rails'
