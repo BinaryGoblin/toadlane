@@ -11,10 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150513020424) do
+ActiveRecord::Schema.define(version: 20160311150748) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "addresses", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.string   "line1"
+    t.string   "line2"
+    t.string   "zip"
+    t.string   "city"
+    t.string   "state"
+    t.string   "country"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "addresses", ["user_id"], name: "index_addresses_on_user_id", using: :btree
 
   create_table "armor_invoices", force: :cascade do |t|
     t.integer  "buyer_id"
@@ -257,11 +272,6 @@ ActiveRecord::Schema.define(version: 20150513020424) do
     t.string   "name"
     t.string   "phone"
     t.string   "company"
-    t.string   "address"
-    t.string   "postal_code"
-    t.string   "city"
-    t.string   "state"
-    t.string   "country"
     t.string   "facebook"
     t.string   "ein_tax"
     t.boolean  "receive_private_info",             default: true
@@ -301,6 +311,7 @@ ActiveRecord::Schema.define(version: 20150513020424) do
 
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
 
+  add_foreign_key "addresses", "users"
   add_foreign_key "mailboxer_conversation_opt_outs", "mailboxer_conversations", column: "conversation_id", name: "mb_opt_outs_on_conversations_id"
   add_foreign_key "mailboxer_notifications", "mailboxer_conversations", column: "conversation_id", name: "notifications_on_conversation_id"
   add_foreign_key "mailboxer_receipts", "mailboxer_notifications", column: "notification_id", name: "receipts_on_notification_id"
