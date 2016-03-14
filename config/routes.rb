@@ -15,7 +15,7 @@ Toad::Application.routes.draw do
   namespace :dashboard do
     resource :profile, only: [:update, :show]
 
-    resources :payments
+    resources :accounts
     
     resource :finances, only: [:create, :show]
 
@@ -43,11 +43,8 @@ Toad::Application.routes.draw do
 
     resources :shipments, only: [:index]
 
-    resources :terms_of_services, only: [:index] do
-      collection do
-        put 'update_terms'
-      end
-    end
+    resources :forms
+    
     root 'profiles#show'
   end
   
@@ -68,7 +65,7 @@ Toad::Application.routes.draw do
     end
   end
 
-  devise_for :users, :controllers => { :registrations => "registrations", confirmations: 'confirmations' }
+  devise_for :users, :controllers => { :registrations => "registrations", confirmations: 'confirmations', :omniauth_callbacks => "omniauth_callbacks" }
   
   devise_for :admin, class_name: 'User', controllers: { sessions: 'admin/sessions', confirmations: 'admin/confirmations' }
 
