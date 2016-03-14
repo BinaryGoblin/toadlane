@@ -44,7 +44,7 @@ class User < ActiveRecord::Base
   after_update :update_armor_api_account, if: :armor_api_account_changed?
   
   def profile_complete?
-    !self.addresses.nil? && !self.name.nil? && !self.email.nil? && !self.phone?
+    !self.addresses.nil? && !self.name.nil? && !self.email.nil? && !self.phone.nil?
   end
 
   def armor_orders(type=nil)
