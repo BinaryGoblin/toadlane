@@ -169,7 +169,7 @@
             = pricebreak_table @product.pricebreaks, @product.unit_price, desired
 
         - if current_user.present?
-          - if current_user.armor_api_account_persisted?
+          - if current_user.profile_complete?
             -if @product.status_characteristic == 'sell'
               .text-center= link_to 'Proceed to checkout', '#', class: 'btn btn-success btn-lg checkout', data: {  toggle: 'modal', target: '#form_checkout' }
             -else

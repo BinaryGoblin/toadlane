@@ -11,7 +11,7 @@ class Dashboard::ProductsController < DashboardController
   end
 
   def new
-    if current_user.armor_api_account_persisted?
+    if current_user.profile_complete? && !user.stripe_profile.nil?
       @product = Product.new
     else
       redirect_to dashboard_profile_path
@@ -19,8 +19,7 @@ class Dashboard::ProductsController < DashboardController
   end
 
   def create
-
-    return if !current_user.armor_api_account_persisted?
+    return if !current_user.profile_complete? && !user.stripe_profile.nil?
 
     start_date = DateTime.new(product_params["start_date(1i)"].to_i, product_params["start_date(2i)"].to_i, product_params["start_date(3i)"].to_i, product_params["start_date(4i)"].to_i, product_params["start_date(5i)"].to_i)
     end_date = DateTime.new(product_params["end_date(1i)"].to_i, product_params["end_date(2i)"].to_i, product_params["end_date(3i)"].to_i, product_params["end_date(4i)"].to_i, product_params["end_date(5i)"].to_i)

@@ -2,7 +2,7 @@
 
 = form_for setup_user(@user), url: dashboard_profile_path, :html => { autocomplete: "off", data: { behavior: 'Validations', options: '{"rules":{"user[armor_bank_account_attributes][account_routing]":{"routing":true}}}'} } do |f|
   .wrap-sm
-    - if @user.addresses.nil?
+    - if !@user.profile_complete?
       .error-explanation Please fill out your profile details. Until your profile is complete, you will not be able to create orders.
 
     - if @user.errors.any?
