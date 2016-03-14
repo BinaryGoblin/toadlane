@@ -1,4 +1,4 @@
-class Dashboard::PaymentsController < DashboardController
+class Dashboard::FormsController < DashboardController
 	before_action :set_user, only: [:show, :update]
 
 	def index
