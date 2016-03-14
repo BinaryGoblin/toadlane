@@ -1,11 +1,10 @@
 class Dashboard::FormsController < DashboardController
-	before_action :set_user, only: [:show, :update]
-
 	def index
-		@user = current_user
+		set_user
 	end
 
 	def update
+	  set_user
 		if user_params[:certificate].present?
       if @user.certificate
         @user.certificate.update(uploaded_file: user_params[:certificate])

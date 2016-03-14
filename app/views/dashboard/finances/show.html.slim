@@ -24,8 +24,8 @@
             In order to provide this service you are also authorizing Toadlane to share the following information with Multivision Financial.
             Multivision Financial will not sell your information in accordance with their <a title="MVF Privacy Policy" href="https://www.multivisionfinancial.com/privacy-policy/" target="_blank">Privacy Policy</a>
         
-        - if @user.armor_api_account_persisted?
-          - if @user.country == 'US'
+        - if !@user.addresses.empty?
+          - if @user.addresses.where(country: 'US')
 			.form-group
 			  = label_tag 'name', 'Name:', class: 'required'
 			  br= text_field_tag 'name', @user.name, class: 'form-control', required: true, disabled: true
@@ -44,7 +44,7 @@
 			  
 			.form-group  
 			  = label_tag 'state', 'State:', class: 'required'
-			  br= text_field_tag 'state', @user.state, class: 'form-control', required: true, disabled: true
+			  br= text_field_tag 'state', @user.addresses.where(country: 'US')[0].state, class: 'form-control', required: true, disabled: true
 			  
 			.form-group
 			  = label_tag 'loan_amount', 'Desired Loan Amount ($4,000 - $10,000,000):', class: 'required'

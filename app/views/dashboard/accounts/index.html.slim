@@ -1,0 +1,28 @@
+= render '/shared/tabs'
+
+.wrap-sm
+  table.account-table: tr
+    td
+      h4 Connected<br />Accounts:
+    td
+      table.account-list-table
+        tr
+          td
+            h4 Stripe:
+            p Stripe is one of the most trusted and popular payment gateways online. Toadlane has connected with
+              Stripe in order to provide safe and reliable payment processing. Connect with a Stripe account in order
+              to accept credit card, ACH, and Bitcoin payments in the Toadlane marketplace.
+            - if @user.stripe_profile.nil?
+              p <b>Status:</b> <span class="warning">You are not connected to Stripe.</span>
+            - else
+              p <b>Status:</b> <span class="success">You are connected to Stripe.</span>
+          td
+            - if @user.stripe_profile.nil?
+              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect)
+            - else
+              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect, 
+                                                                                           :stripe_landing => "login")
+        tr
+          td colspan=2
+            hr
+        

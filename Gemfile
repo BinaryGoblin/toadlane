@@ -40,6 +40,7 @@ gem 'kaminari', '~> 0.16.3'
 gem 'delayed_job_active_record', '~> 4.0.3'
 
 gem 'stripe'
+gem 'omniauth-stripe-connect'
 
 gem 'nokogiri'
 

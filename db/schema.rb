@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160311150748) do
+ActiveRecord::Schema.define(version: 20160314045213) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -247,6 +247,17 @@ ActiveRecord::Schema.define(version: 20160311150748) do
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
   add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
 
+  create_table "stripe_profiles", force: :cascade do |t|
+    t.string   "stripe_publishable_key"
+    t.string   "stripe_uid"
+    t.string   "stripe_access_code"
+    t.integer  "user_id"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  add_index "stripe_profiles", ["user_id"], name: "index_stripe_profiles_on_user_id", using: :btree
+
   create_table "taxes", force: :cascade do |t|
     t.string   "name"
     t.decimal  "value",      precision: 5, scale: 2
@@ -315,4 +326,5 @@ ActiveRecord::Schema.define(version: 20160311150748) do
   add_foreign_key "mailboxer_conversation_opt_outs", "mailboxer_conversations", column: "conversation_id", name: "mb_opt_outs_on_conversations_id"
   add_foreign_key "mailboxer_notifications", "mailboxer_conversations", column: "conversation_id", name: "notifications_on_conversation_id"
   add_foreign_key "mailboxer_receipts", "mailboxer_notifications", column: "notification_id", name: "receipts_on_notification_id"
+  add_foreign_key "stripe_profiles", "users"
 end
