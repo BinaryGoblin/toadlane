@@ -66,7 +66,9 @@
       td: h4 Addresses
       td colspan="2"
         = f.fields_for :addresses do |ff|
-          table.profile-table: hr
+          h4 Address ##{ff.index + 1}
+          br
+          table.profile-table
             tr
               td
                 .form-group
@@ -102,6 +104,9 @@
                 .form-group
                   = ff.label :country, 'Country:', class: 'required'
                   = ff.country_select 'country', [ 'US', 'GB' ], { iso_codes: true }, { class: 'form-control' }
+          hr
+        .text-right
+          button.btn.btn-success.submit type="submit"= fa_icon 'plus', text: 'ADD ADDRESS'
           
     hr
 
