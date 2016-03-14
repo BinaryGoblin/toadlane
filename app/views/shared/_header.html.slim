@@ -2,9 +2,8 @@ header.header: .wrap
   = link_to image_tag('logo-header.png'), '/', class: 'logo'
 
   ul.header-nav.pull-left
-    li= nav_link 'why toad?', faq_path(anchor: 'whytoad')
-    li= nav_link 'Sellers', faq_path(anchor: 'sellers')
     li= nav_link 'faq', faq_path
+    li= nav_link 'Terms of Service', terms_of_service_path
     li= link_to 'Blog', "http://toadchat.blogspot.com/"
 
   .header-user.pull-right

@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   def check_terms_of_service
     if current_user.present? && current_user.has_role?(:user)
       if current_user.terms_of_service != true
-        redirect_to dashboard_terms_of_services_path
+        redirect_to terms_of_service_path
       end
     end
   end
@@ -45,7 +45,7 @@ class ApplicationController < ActionController::Base
       else
         if current_user.has_role? :user
           if current_user.terms_of_service != true
-            dashboard_terms_of_services_path
+            terms_of_service_path
           else
             if get_user_notifications > 0
               if get_user_unread_message_notifications > 0
