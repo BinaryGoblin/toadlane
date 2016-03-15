@@ -4,7 +4,11 @@ class Admin::OrdersController < Admin::ApplicationController
   before_action :set_product, only: [:update]
 
   def index
-    @orders = ArmorOrder.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    @armor_orders = ArmorOrder.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    
+    @stripe_orders = StripeOrder.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    
+    @orders = @armor_orders.merge(@stripe_orders)
   end
 
   def update

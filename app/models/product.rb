@@ -6,6 +6,7 @@ class Product < ActiveRecord::Base
 
   has_paper_trail
 
+  has_many :stripe_orders
   has_many :product_categories
   has_many :categories, through: :product_categories, dependent: :destroy
   has_many :images
