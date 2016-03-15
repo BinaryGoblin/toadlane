@@ -2,9 +2,11 @@ class Dashboard::OrdersController < DashboardController
   # before_action :get_order_status, only: [:index]
 
   def index
-    @orders = current_user
-      .armor_orders(params[:bought_or_sold])
-      .for_dashboard(params[:page], params[:per_page])
+    @armor_orders = current_user.armor_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page])
+      
+    @stripe_orders = current_user.stripe_orders.for_dashboard(params[:page], params[:per_page])
+    
+    @orders = @armor_orders.merge(@stripe_orders)
   end
 
   def delete_cascade

@@ -1,0 +1,89 @@
+.pull-left
+  h4.text-uppercase Toadlane llc.
+  div Best deals in town!
+
+.text-center style="padding:0 200px 10px"= image_tag 'logo-header.png'
+
+table.table-checkout style="margin-bottom:0"
+  tbody
+    tr
+      td colspan="4" valign="top" alrign="left"
+        h4.text-uppercase order ##{order.id}
+        div Date: #{order.created_at.strftime('%m-%d-%Y')}
+        p
+          div 
+           |
+             To complete order log into your <a href="//www.Armorpayments.com/Toadlane" target="_blank">Armorpayments.com/Toadlane</a> account. <br />
+             If this is your first order with Toadlane, you will need to reset your password.
+
+    tr
+      td colspan="2" valign="top"
+        h4.text-uppercase Buyer Information:
+        br
+        dl
+          dt Name:
+          dd= order.buyer.name
+           
+          - if !order.buyer.addresses[0].nil?
+            dt Address:
+            dd= order.buyer.addresses[0].line1 + order.buyer.addresses[0].line2
+
+            dt Postal-Code:
+            dd= order.buyer.addresses[0].zip
+
+            dt City:
+            dd= order.buyer.addresses[0].city
+
+            dt State:
+            dd= order.buyer.addresses[0].state
+
+            dt Country:
+            dd= order.buyer.addresses[0].country
+
+          dt Phone:
+          dd= order.buyer.phone
+
+      td colspan="2" valign="top"
+        h4.text-uppercase Seller Information
+        br
+        dl
+          dt Name:
+          dd= order.seller.name
+           
+          - if !order.seller.addresses[0].nil?
+            dt Country:
+            dd= order.seller.addresses[0].country
+           
+          dt Phone:
+          dd= order.seller.phone
+
+table.table-checkout
+  thead
+    tr
+      th description
+      th qty
+      th price
+      th amount
+  tbody
+    tr
+      td= order.product.name
+      td= order.count
+      td $ #{number_with_precision(order.unit_price, precision: 2, delimiter: '')}
+      td $ #{number_with_precision(order.count * order.unit_price, precision: 2, delimiter: '')}
+
+    tr
+      td colspan="3" #{number_with_precision(order.rebate_percent, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
+      td -$ #{number_with_precision(order.rebate_price, precision: 2, delimiter: '')}
+
+    tr
+      td colspan="3" Fees (0%) for non-resalers
+      td $ #{number_with_precision(order.taxes_price, precision: 2, delimiter: '')}
+
+    / tr
+    /   td colspan="3" Flat shipping
+    /   td $ 0.00
+
+    tr
+      td.no-border colspan="2"
+      td.text-center: b.text-uppercase Total:
+      td: b $ #{number_with_precision(order.amount, precision: 2, delimiter: '')}
