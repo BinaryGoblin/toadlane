@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160314045213) do
+ActiveRecord::Schema.define(version: 20160314175633) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -117,6 +117,13 @@ ActiveRecord::Schema.define(version: 20160314045213) do
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
+  create_table "fees", force: :cascade do |t|
+    t.string   "module_name"
+    t.decimal  "value",       precision: 5, scale: 3
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+  end
+
   create_table "images", force: :cascade do |t|
     t.integer  "product_id"
     t.string   "image_file_name"
@@ -219,11 +226,9 @@ ActiveRecord::Schema.define(version: 20160314045213) do
     t.string   "dimension_depth"
     t.string   "dimension_weight"
     t.integer  "main_category"
-    t.integer  "tax_id"
     t.integer  "type",                  default: 0
   end
 
-  add_index "products", ["tax_id"], name: "index_products_on_tax_id", using: :btree
   add_index "products", ["user_id"], name: "index_products_on_user_id", using: :btree
 
   create_table "requests", force: :cascade do |t|
@@ -257,13 +262,6 @@ ActiveRecord::Schema.define(version: 20160314045213) do
   end
 
   add_index "stripe_profiles", ["user_id"], name: "index_stripe_profiles_on_user_id", using: :btree
-
-  create_table "taxes", force: :cascade do |t|
-    t.string   "name"
-    t.decimal  "value",      precision: 5, scale: 2
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                            default: "",    null: false
