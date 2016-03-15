@@ -18,15 +18,15 @@
           td = user.id
           td = user.name
           td = user.company
-          - if user.country
-            - if user.state
-              td = user.address.to_s + " " + user.city.to_s + ", " + user.state.to_s + " " + user.postal_code.to_s
+          - if user.addresses[0]
+            td 
+              = user.addresses[0].line1
+              - if user.addresses[0].line2.nil?
+              - else
                 br
-                user.country
-            -else
-              td = user.address.to_s + " " + user.city.to_s + " " + user.postal_code.to_s
-                br
-                user.country
+                = user.addresses[0].line2
+              br
+              = user.addresses[0].city + ", " + user.addresses[0].state + " " + user.addresses[0].zip + ", " + user.addresses[0].country
           -else 
             td Unknown
           td = mail_to user.email

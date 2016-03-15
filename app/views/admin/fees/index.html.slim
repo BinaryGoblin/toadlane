@@ -1,0 +1,21 @@
+.wrap-sm
+  .table-options= link_to fa_icon('plus', text: 'Create New Fee'), new_admin_fee_path, class: 'btn btn-default pull-right'
+
+  table.table
+    thead
+      tr
+        th ID
+        th Name
+        th Value
+        th
+
+    tbody
+      - @fees.each do |fee|
+        tr
+          td = fee.id
+          td = fee.module_name
+          td #{fee.value} %
+          td.text-right
+            = link_to 'Edit', edit_admin_fee_path(fee), class: 'view'
+            |  | 
+            = link_to 'Delete', admin_fee_path(fee), method: :delete, data: { confirm: 'Are you sure?' }, class: 'view view-red'
