@@ -67,6 +67,8 @@
       td colspan="2"
         = f.fields_for :addresses do |ff|
           h4 Address ##{ff.index + 1}
+          - if ff.index == 0
+            i Default Address
           br
           table.profile-table
             tr

@@ -14,6 +14,7 @@ class ProductsController < ApplicationController
   end
 
   def show
+    @fee = Fee.all()[0].value
     @related_products = Product.unexpired.where(main_category: @product.main_category).where.not(id: @product.id)
   end
 

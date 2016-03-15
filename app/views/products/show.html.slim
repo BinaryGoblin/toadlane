@@ -48,7 +48,7 @@
 
             .name
               b= @product.user.name
-              span = @product.user.country
+              span = @product.user.addresses[0].country
 
             - if @product.user.benefits.reject{ |e| e.empty? }.present?
               .sell
@@ -143,8 +143,8 @@
             span <span class="calc-rebate">0.00</span>% rebate for purchasing <span class="calc-pcs">0</span> pcs:
             b.pull-right.calc-rebate-price 0.00
           li
-            span Taxes (<span class="calc-taxes">#{@product.tax.try(:value)}</span>%) for non-resalers:
-            b.pull-right.calc-taxes-price 0.00
+            span Toadlane Fee (<span class="calc-fees">#{@fee}</span>%):
+            b.pull-right.calc-fees-price 0.00
           li
             span Line Total:
             b.pull-right.calc-cart 0.00

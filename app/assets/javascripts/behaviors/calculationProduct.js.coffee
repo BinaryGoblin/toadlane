@@ -8,21 +8,21 @@ class Behavior.CalculationProduct
     @$rebate   = $el.find '.calc-rebate'
     @$pcs      = $el.find '.calc-pcs'
     @$rebPrice = $el.find '.calc-rebate-price'
-    @$taxPrice = $el.find '.calc-taxes-price'
+    @$feePrice = $el.find '.calc-fees-price'
 
-    @taxes     = parseInt $el.find('.calc-taxes').text(), 10
+    @fees     = parseFloat $el.find('.calc-fees').text(), 10
     @unitPrice = $el.find('[data-unit-price]').data 'unit-price'
 
     @$armorQuantity    = $ '.armor-quantity'
     @$armorTotal       = $ '.armor-total'
     @$armorUnitTotal   = $ '.armor-unit-total'
     @$armorRebate      = $ '.armor-rebate'
-    @$armorTaxes       = $ '.armor-taxes-price'
+    @$armorFees        = $ '.armor-fees-price'
     @$armorRabetePrice = $ '.armor-rabete-price'
 
     @$armorAmount        = $ '[name="armor_order[amount]"]'
     @$armorCount         = $ '[name="armor_order[count]"]'
-    @$armorTaxesPrice    = $ '[name="armor_order[taxes_price]"]'
+    @$armorFeesPrice     = $ '[name="armor_order[fees_price]"]'
     @$armorRebatePrice   = $ '[name="armor_order[rebate_price]"]'
     @$armorRebatePercent = $ '[name="armor_order[rebate_percent]"]'
 
@@ -61,11 +61,11 @@ class Behavior.CalculationProduct
       else
         total = quantity * @unitPrice
 
-    taxes   = total * (@taxes || 0) / 100
-    cart    = total + taxes
+    fees   = total * (@fees || 0) / 100
+    cart    = total + fees
     rebatep = (rebate * 100) / (@unitPrice * quantity)
 
-    if total > 10
+    if total > 1
       @$checkout.removeClass 'disabled'
     else
       @$checkout.addClass 'disabled'
@@ -73,7 +73,7 @@ class Behavior.CalculationProduct
 
     @$rebate.text @fixed rebatep
     @$pcs.text quantity
-    @$taxPrice.text @fixed taxes
+    @$feePrice.text @fixed fees
     @$rebPrice.text @fixed rebate
     @$cart.text @fixed cart
 
@@ -81,11 +81,11 @@ class Behavior.CalculationProduct
     @$armorTotal.text @fixed cart
     @$armorUnitTotal.text @fixed @unitPrice * quantity
     @$armorRebate.text @fixed rebatep
-    @$armorTaxes.text @fixed taxes
+    @$armorFees.text @fixed fees
     @$armorRabetePrice.text @fixed rebate
 
     @$armorAmount.val cart.toFixed 2
     @$armorCount.val quantity
-    @$armorTaxesPrice.val taxes.toFixed 2
+    @$armorFeesPrice.val fees.toFixed 2
     @$armorRebatePrice.val rebate.toFixed 2
     @$armorRebatePercent.val rebatep.toFixed 2

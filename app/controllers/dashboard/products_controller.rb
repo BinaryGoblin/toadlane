@@ -172,8 +172,8 @@ class Dashboard::ProductsController < DashboardController
     end
 
     def product_params
-      params.require(:product).permit!
-      # (:ids, :name, :description, :start_date, :end_date, :user_id, :unit_price, :tax_level, :status_action, :status, :start_date, :end_date, :button, :amount, :sold_out, :dimension_width, :dimension_height, :dimension_depth, :dimension_weight, :main_category, :images => [])
+      params.require(:product).permit(:id, :name, :description, :user_id, :unit_price, :status_action, :status, :status_characteristic, :start_date, :end_date,  
+                                      :amount, :sold_out, :dimension_width, :dimension_height, :dimension_depth, :dimension_weight, :main_category, :images => [])
     end
 
     def parse_categories categories

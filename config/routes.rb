@@ -71,7 +71,7 @@ Toad::Application.routes.draw do
 
   namespace :admin do
     resources :categories
-    resources :taxes
+    resources :fees
     resources :products, only: [:index, :update]
     resources :orders, only: [:index, :update] do
       collection do

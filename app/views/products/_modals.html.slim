@@ -42,8 +42,8 @@
           td $ -<span class="armor-rebate-price">0.00</span>
 
         tr
-          td colspan="3" Taxes (#{product.tax.try(:value)}%) for non-resalers
-          td $ <span class="armor-taxes-price">0.00</span>
+          td colspan="3" Toadlane Fee (#{@fee}%)
+          td $ <span class="armor-fees-price">0.00</span>
 
         / tr
         /   td colspan="3" Flat shipping
@@ -63,7 +63,7 @@
         = hidden_field_tag 'armor_order[summary]', 'products to ' + product.status_characteristic
         = hidden_field_tag 'armor_order[description]', strip_tags(product.description)
 
-        = hidden_field_tag 'armor_order[taxes_price]', '0'
+        = hidden_field_tag 'armor_order[fees_price]', '0'
         = hidden_field_tag 'armor_order[rebate_price]', '0'
         = hidden_field_tag 'armor_order[rebate_percent]', '0'
 

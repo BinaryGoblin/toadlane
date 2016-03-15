@@ -11,7 +11,6 @@ class Product < ActiveRecord::Base
   has_many :images
   has_many :pricebreaks, autosave: true
   belongs_to :category, class_name: "Category", foreign_key: :main_category
-  belongs_to :tax
 
   accepts_nested_attributes_for :product_categories
   accepts_nested_attributes_for :pricebreaks, :reject_if => :all_blank
