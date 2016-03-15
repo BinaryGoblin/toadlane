@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
          :omniauthable
 
   has_one :stripe_profile
+  has_many :stripe_orders
   has_many :products
   has_many :addresses
   accepts_nested_attributes_for :addresses,
