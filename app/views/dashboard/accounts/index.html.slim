@@ -18,10 +18,19 @@
               p <b>Status:</b> <span class="success">You are connected to Stripe.</span>
           td
             - if @user.stripe_profile.nil?
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect)
+              - if Rails.env.development?
+                = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
+                                                                                             :redirect_uri => "http://localhost:3000/users/auth/stripe_connect/callback")
+              - else
+                = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect)
             - else
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect, 
-                                                                                           :stripe_landing => "login")
+              - if Rails.env.development?
+                = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect, 
+                                                                                             :stripe_landing => "login",
+                                                                                             :redirect_uri => "http://localhost:3000/users/auth/stripe_connect/callback")
+              - else 
+                = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect, 
+                                                                                             :stripe_landing => "login")
         tr
           td colspan=2
             hr

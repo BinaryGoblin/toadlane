@@ -41,10 +41,6 @@
             = f.label :unit_price, 'Retail price:', class: 'required'
             = f.number_field :unit_price, class: 'form-control'
 
-          .tax
-            = f.label :tax_id, 'Tax level:', class: 'required'
-            = f.select :tax_id, options_from_collection_for_select(taxes, :id, :value, @product.tax_id), {}, data: { behavior: 'Select' }
-
           .status_action
             = f.label :status_characteristic, 'I am:', class: 'required'
             = f.select :status_characteristic, [['Selling', 'sell'], ['Buying', 'buy']], {}, data: { behavior: 'Select' }
