@@ -22,18 +22,18 @@
         th.text-center Details
 
     tbody
-      - @orders.each do |order|
+      - @armor_orders.each do |armor_order|
         tr
-          td: input type="checkbox" value="#{order.id}"
-          td= order.id
+          td: input type="checkbox" value="#{armor_order.id}"
+          td= armor_order.id
           /td.text-orange =Constants::Order::STATES.detect { |p| p[:key] == order.status }[:description]
-          td= link_to order.product.name, product_path(order.product, cat_id: order.product.main_category), class: 'link link-ulined', target: '_blank'
-          td= number_to_currency(order.unit_price, :unit => "$", precision: 2)
-          td= order.count
-          td= number_to_currency(order.amount, :unit => "$", precision: 2)
-          td.text-center= link_to 'View', '#modal_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
+          td= link_to armor_order.product.name, product_path(armor_order.product, cat_id: armor_order.product.main_category), class: 'link link-ulined', target: '_blank'
+          td= number_to_currency(armor_order.unit_price, :unit => "$", precision: 2)
+          td= armor_order.count
+          td= number_to_currency(armor_order.amount, :unit => "$", precision: 2)
+          td.text-center= link_to 'View', '#modal_order_' + armor_order.id.to_s, class: 'view', data: { toggle: 'modal' }
 
 .footer-actions: .fa-container: .wrap-sm
-  = will_paginate @orders
+  = will_paginate @armor_orders
 
-= render partial: 'order', collection: @orders
+= render partial: '/shared/order', collection: @armor_orders
