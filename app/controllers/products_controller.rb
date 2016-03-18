@@ -14,6 +14,7 @@ class ProductsController < ApplicationController
   end
 
   def show
+    @stripe_order = StripeOrder.new
     @fee = Fee.find_by(:module_name => "Stripe").value
     @related_products = Product.unexpired.where(main_category: @product.main_category).where.not(id: @product.id)
   end

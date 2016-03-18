@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160315074954) do
+ActiveRecord::Schema.define(version: 20160317101635) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -273,6 +273,11 @@ ActiveRecord::Schema.define(version: 20160315074954) do
     t.datetime "created_at",                               null: false
     t.datetime "updated_at",                               null: false
     t.float    "shipping_cost"
+    t.string   "address_name"
+    t.string   "address_city"
+    t.string   "address_state"
+    t.string   "address_zip"
+    t.string   "address_country"
   end
 
   create_table "stripe_profiles", force: :cascade do |t|
@@ -282,6 +287,7 @@ ActiveRecord::Schema.define(version: 20160315074954) do
     t.integer  "user_id"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+    t.string   "stripe_customer_id"
   end
 
   add_index "stripe_profiles", ["user_id"], name: "index_stripe_profiles_on_user_id", using: :btree
