@@ -69,3 +69,67 @@
 
         button.btn.btn-default type="button" data-dismiss="modal" Cancel
         button.btn.btn-primary type="submit" data-disable_with="Please wait..." Ok
+
+#stripe_form_checkout.modal.modal-lg.fade tabindex="-1" role="dialog"
+  .modal-dialog: .modal-content
+    .modal-header
+      .pull-right data-dismiss="modal"= fa_icon 'close'
+      h4.modal-title Checkout
+
+    .modal-body: table.table-checkout
+      thead
+        tr
+          th description
+          th qty
+          th price
+          th amount
+        
+      tbody
+        tr
+          td= product.name
+          td.stripe-quantity 1
+          td $ #{number_with_precision(product.unit_price, precision: 2, delimiter: '')}
+          td $ <span class="stripe-unit-total">#{number_with_precision(product.unit_price, precision: 2, delimiter: '')}</span>
+
+        tr
+          td colspan="3" <span class="stripe-rebate">0.00</span>% rebate for purchasing <span class="stripe-quantity">1</span> pcs
+          td $ -<span class="stripe-rebate-price">0.00</span>
+
+        tr
+          td colspan="3" Toadlane Fee (#{@fee}%)
+          td $ <span class="stripe-fees-price">0.00</span>
+
+        / tr
+        /   td colspan="3" Flat shipping
+        /   td $ <span class="stripe-flat">0.00</span>
+
+        tr
+          td.no-border colspan="2"
+          td.text-center: b.text-uppercase Total:
+          td: b $ <span class="stripe-total">#{number_with_precision(product.unit_price, precision: 2, delimiter: '')}</span>
+        
+    .modal-footer.text-right
+      = form_for @stripe_order, url: purchase_stripe_orders_path do |f|
+        = hidden_field_tag 'stripe_order[product_id]', product.id
+        = hidden_field_tag 'stripe_order[unit_price]', number_with_precision(product.unit_price, precision: 2, delimiter: '')
+        = hidden_field_tag 'stripe_order[total]', number_with_precision(product.unit_price, precision: 2, delimiter: '')
+        = hidden_field_tag 'stripe_order[count]', '1'
+        = hidden_field_tag 'stripe_order[summary]', 'products to ' + product.status_characteristic
+        = hidden_field_tag 'stripe_order[description]', strip_tags(product.description)
+
+        = hidden_field_tag 'stripe_order[fee]', '0'
+        = hidden_field_tag 'stripe_order[rebate]', '0'
+        = hidden_field_tag 'stripe_order[rebate_percent]', '0'
+
+        button.btn.btn-default type="button" data-dismiss="modal" Cancel
+        script.stripe-button[src="https://checkout.stripe.com/checkout.js"
+          data-key="#{ product.user.stripe_profile.stripe_publishable_key }"
+          data-name="Toadlane.com"
+          data-amount=0
+          data-locale="auto"
+          data-panel-label="Place Order"
+          data-label="Pay #{ number_to_currency product.unit_price }"
+          data-zip-code="true"
+          data-billing-address="true"
+          data-shipping-address="true"
+          data-email="#{ current_user.email }"]
