@@ -252,6 +252,7 @@ ActiveRecord::Schema.define(version: 20160318073631) do
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
   add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
 
+<<<<<<< HEAD
   create_table "stripe_customers", force: :cascade do |t|
     t.integer  "stripe_profile_id"
     t.integer  "user_id"
@@ -260,6 +261,8 @@ ActiveRecord::Schema.define(version: 20160318073631) do
     t.datetime "updated_at",         null: false
   end
 
+=======
+>>>>>>> db76b8d60611beb569d08090b8178cae9cbe27fa
   create_table "stripe_orders", force: :cascade do |t|
     t.integer  "buyer_id"
     t.integer  "seller_id"
@@ -281,11 +284,14 @@ ActiveRecord::Schema.define(version: 20160318073631) do
     t.datetime "created_at",                               null: false
     t.datetime "updated_at",                               null: false
     t.float    "shipping_cost"
+<<<<<<< HEAD
     t.string   "address_name"
     t.string   "address_city"
     t.string   "address_state"
     t.string   "address_zip"
     t.string   "address_country"
+=======
+>>>>>>> db76b8d60611beb569d08090b8178cae9cbe27fa
   end
 
   create_table "stripe_profiles", force: :cascade do |t|
