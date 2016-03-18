@@ -1,6 +1,11 @@
 Toad::Application.routes.draw do
 
-  resources :armor_orders, except: [:update, :edit, :new] 
+  resources :armor_orders, except: [:update, :edit, :new]
+  resources :stripe_orders do
+    collection do
+      post :purchase
+    end
+  end
   
   get 'print/invoice.:id', to: 'print#invoice', as: 'print/invoice'
 

@@ -48,7 +48,8 @@
 
             .name
               b= @product.user.name
-              span = @product.user.addresses[0].country
+              - if !@product.user.addresses[0].nil?
+              	span = @product.user.addresses[0].country
 
             - if @product.user.benefits.reject{ |e| e.empty? }.present?
               .sell
@@ -171,9 +172,9 @@
         - if current_user.present?
           - if current_user.profile_complete?
             -if @product.status_characteristic == 'sell'
-              .text-center= link_to 'Proceed to checkout', '#', class: 'btn btn-success btn-lg checkout', data: {  toggle: 'modal', target: '#form_checkout' }
+              .text-center= link_to 'Proceed to checkout', '#', class: 'btn btn-success btn-lg checkout', data: {  toggle: 'modal', target: '#stripe_form_checkout' }
             -else
-              .text-center= link_to 'Make Sale', '#', class: 'btn btn-success-sell btn-lg checkout', data: {  toggle: 'modal', target: '#form_checkout'  }
+              .text-center= link_to 'Make Sale', '#', class: 'btn btn-success-sell btn-lg checkout', data: {  toggle: 'modal', target: '#stripe_form_checkout'  }
           - else
             .wrong.text-center
               |

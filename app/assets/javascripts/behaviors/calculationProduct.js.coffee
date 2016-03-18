@@ -13,18 +13,19 @@ class Behavior.CalculationProduct
     @fees     = parseFloat $el.find('.calc-fees').text(), 10
     @unitPrice = $el.find('[data-unit-price]').data 'unit-price'
 
-    @$armorQuantity    = $ '.armor-quantity'
-    @$armorTotal       = $ '.armor-total'
-    @$armorUnitTotal   = $ '.armor-unit-total'
-    @$armorRebate      = $ '.armor-rebate'
-    @$armorFees        = $ '.armor-fees-price'
-    @$armorRabetePrice = $ '.armor-rabete-price'
+    @$stripeQuantity    = $ '.stripe-quantity'
+    @$stripeTotal       = $ '.stripe-total'
+    @$stripeUnitTotal   = $ '.stripe-unit-total'
+    @$stripeRebate      = $ '.stripe-rebate'
+    @$stripeFees        = $ '.stripe-fees-price'
+    @$stripeRabetePrice = $ '.stripe-rabete-price'
+    @$stripeButton      = $ '.stripe-button'
 
-    @$armorAmount        = $ '[name="armor_order[amount]"]'
-    @$armorCount         = $ '[name="armor_order[count]"]'
-    @$armorFeesPrice     = $ '[name="armor_order[fees_price]"]'
-    @$armorRebatePrice   = $ '[name="armor_order[rebate_price]"]'
-    @$armorRebatePercent = $ '[name="armor_order[rebate_percent]"]'
+    @$stripeAmount        = $ '[name="stripe_order[total]"]'
+    @$stripeCount         = $ '[name="stripe_order[count]"]'
+    @$stripeFeesPrice     = $ '[name="stripe_order[fee]"]'
+    @$stripeRebatePrice   = $ '[name="stripe_order[rebate]"]'
+    @$stripeRebatePercent = $ '[name="stripe_order[rebate_percent]"]'
 
     @$checkout = $ '.checkout'
 
@@ -77,15 +78,18 @@ class Behavior.CalculationProduct
     @$rebPrice.text @fixed rebate
     @$cart.text @fixed cart
 
-    @$armorQuantity.text quantity
-    @$armorTotal.text @fixed cart
-    @$armorUnitTotal.text @fixed @unitPrice * quantity
-    @$armorRebate.text @fixed rebatep
-    @$armorFees.text @fixed fees
-    @$armorRabetePrice.text @fixed rebate
+    @$stripeQuantity.text quantity
+    @$stripeTotal.text @fixed cart
+    @$stripeUnitTotal.text @fixed @unitPrice * quantity
+    @$stripeRebate.text @fixed rebatep
+    @$stripeFees.text @fixed fees
+    @$stripeRabetePrice.text @fixed rebate
 
-    @$armorAmount.val cart.toFixed 2
-    @$armorCount.val quantity
-    @$armorFeesPrice.val fees.toFixed 2
-    @$armorRebatePrice.val rebate.toFixed 2
-    @$armorRebatePercent.val rebatep.toFixed 2
+    @$stripeAmount.val cart.toFixed 2
+    @$stripeCount.val quantity
+    @$stripeFeesPrice.val fees.toFixed 2
+    @$stripeRebatePrice.val rebate.toFixed 2
+    @$stripeRebatePercent.val rebatep.toFixed 2
+    
+    @$stripeButton.attr 'data-amount', cart.toFixed 2
+    @$stripeButton.attr 'data-label', "Pay $" + cart.to_s
