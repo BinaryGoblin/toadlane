@@ -1,6 +1,10 @@
 Toad::Application.routes.draw do
 
+  match "/404", :to => "errors#not_found", :via => :all
+  match "/500", :to => "errors#internal_server_error", :via => :all
+
   resources :armor_orders, except: [:update, :edit, :new]
+  
   resources :stripe_orders do
     collection do
       post :purchase
