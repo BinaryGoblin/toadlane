@@ -13,13 +13,14 @@ class Behavior.CalculationProduct
     @fees     = parseFloat $el.find('.calc-fees').text(), 10
     @unitPrice = $el.find('[data-unit-price]').data 'unit-price'
 
-    @$stripeQuantity    = $ '.stripe-quantity'
-    @$stripeTotal       = $ '.stripe-total'
-    @$stripeUnitTotal   = $ '.stripe-unit-total'
-    @$stripeRebate      = $ '.stripe-rebate'
-    @$stripeFees        = $ '.stripe-fees-price'
-    @$stripeRabetePrice = $ '.stripe-rabete-price'
-    @$stripeButton      = $ '.stripe-button'
+    @$stripeQuantity      = $ '.stripe-quantity'
+    @$stripeTotal         = $ '.stripe-total'
+    @$stripeUnitTotal     = $ '.stripe-unit-total'
+    @$stripeRebate        = $ '.stripe-rebate'
+    @$stripeFees          = $ '.stripe-fees-price'
+    @$stripeRabetePrice   = $ '.stripe-rabete-price'
+    @$stripeButtonScript  = $ '.stripe-button'
+    @$stripeButton        = $ '.stripe-button-el'
 
     @$stripeAmount        = $ '[name="stripe_order[total]"]'
     @$stripeCount         = $ '[name="stripe_order[count]"]'
@@ -91,5 +92,4 @@ class Behavior.CalculationProduct
     @$stripeRebatePrice.val rebate.toFixed 2
     @$stripeRebatePercent.val rebatep.toFixed 2
     
-    @$stripeButton.attr 'data-amount', cart.toFixed 2
-    @$stripeButton.attr 'data-label', "Pay $" + cart.to_s
+    @$stripeButtonScript.attr 'data-amount', cart.toFixed 2    
