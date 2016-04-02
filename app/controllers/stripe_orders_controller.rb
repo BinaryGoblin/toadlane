@@ -2,6 +2,13 @@ class StripeOrdersController < ApplicationController
   def show
     @stripe_order = StripeOrder.find(params[:id])
   end
+ 
+  def create
+    @stripe_order = StripeOrder.new(stripe_order_params)
+    @stripe_order.save
+    @stripe_order.start_stripe_order(stripe_params["stripeToken"])
+    redirect_to @stripe_order, notice: "Your order was succesfully placed."
+  end
   
   def purchase
     @stripe_order = StripeOrder.new
@@ -25,7 +32,7 @@ class StripeOrdersController < ApplicationController
   
   private
     def stripe_order_params
-      params.require(:stripe_order).permit(:id, :buyer, :seller, :product_id, :stripe_charge_id, :status, :unit_price, :count, :fee, :rebate, :total, :summary,
+      params.require(:stripe_order).permit(:id, :buyer_id, :seller_id, :product_id, :stripe_charge_id, :status, :unit_price, :count, :fee, :rebate, :total, :summary,
                                            :description, :shipping_address, :shipping_request, :shipping_details, :tracking_number, :deleted, :shipping_cost,
                                            :address_name, :address_city, :address_state, :address_country, :address_zip)
     end
