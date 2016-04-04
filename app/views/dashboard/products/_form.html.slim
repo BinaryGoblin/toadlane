@@ -1,4 +1,4 @@
-= form_for [:dashboard, @product], :html => { multipart: true } do |f|
+= form_for [:dashboard, setup_product(@product)], :html => { multipart: true } do |f|
   .wrap-sm: .product-form
     - if @product.errors.any?
       .error-explanation
@@ -189,6 +189,39 @@
           input.form-control type="number" name="product[pricebreaks_attributes][][quantity]"
 
         span.btn.btn-default.remove= fa_icon 'trash-o'
+        
+    hr
+    label.lg Shipping Estimates:
+    ul.estimates
+      = f.fields_for :shipping_estimates do |ff|
+        li.estimate
+          .index = ff.index+1
+          .estimate-cost
+            = ff.label :cost, 'Price Per Unit:'
+            = ff.text_field :cost, class: 'form-control'
+
+          .estimate-description
+            = ff.label :description, 'Description:'
+            = ff.text_field :description, class: 'form-control'
+
+          span.btn.btn-default.remove= fa_icon 'trash-o'
+          = ff.hidden_field :_destroy, class: 'delete'
+
+      li.add-estimate data-behavior="ShippingEstimates"= fa_icon 'plus', text: 'Add another shipping estimate'
+
+    script#template-shippingestimate type="text/template"
+      li.estimate
+        .index 2
+        .estimate-cost
+          label Price Per Unit:
+          input.form-control.cost type="text" name="product[shipping_estimates_attributes][][cost]"
+
+        .estimate-description
+          label Description:
+          input.form-control.description type="text" name="product[shipping_estimates_attributes][][description]"
+
+        span.btn.btn-default.remove= fa_icon 'trash-o'
+        input.form-control.delete type="hidden" name="product[shipping_estimates_attributes][][_destroy]" id="shipping_estimates_attributes__destroy" value="0"
 
   .footer-actions: .fa-container: .wrap-sm
     = f.button fa_icon('check', text: 'Save & close'), value: 'close', class: 'btn btn-success pull-right'
