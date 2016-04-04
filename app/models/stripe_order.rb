@@ -3,6 +3,7 @@ class StripeOrder < ActiveRecord::Base
   belongs_to :seller, class_name: "User"
   belongs_to :product
   belongs_to :stripe_card
+  belongs_to :shipping_estimate
 
   scope :for_dashboard, -> (page, per_page) do
     where(deleted: false).order('created_at DESC').paginate(page: page, per_page: per_page)
