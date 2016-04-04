@@ -11,6 +11,10 @@ class Product < ActiveRecord::Base
   has_many :categories, through: :product_categories, dependent: :destroy
   has_many :images
   has_many :pricebreaks, autosave: true
+  has_many :shipping_estimates
+  accepts_nested_attributes_for :shipping_estimates,
+    :allow_destroy => true,
+    :reject_if => lambda { |a| (a[:cost].blank? && a[:description].blank?) }
   belongs_to :category, class_name: "Category", foreign_key: :main_category
 
   accepts_nested_attributes_for :product_categories
