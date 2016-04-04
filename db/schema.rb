@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160318073631) do
+ActiveRecord::Schema.define(version: 20160404004952) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -252,47 +252,61 @@ ActiveRecord::Schema.define(version: 20160318073631) do
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
   add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
 
-<<<<<<< HEAD
+  create_table "shipping_estimates", force: :cascade do |t|
+    t.integer  "product_id"
+    t.float    "cost"
+    t.text     "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "shipping_estimates", ["product_id"], name: "index_shipping_estimates_on_product_id", using: :btree
+
+  create_table "stripe_cards", force: :cascade do |t|
+    t.integer  "stripe_customer_id"
+    t.string   "stripe_card_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
   create_table "stripe_customers", force: :cascade do |t|
-    t.integer  "stripe_profile_id"
     t.integer  "user_id"
     t.string   "stripe_customer_id"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
   end
 
-=======
->>>>>>> db76b8d60611beb569d08090b8178cae9cbe27fa
   create_table "stripe_orders", force: :cascade do |t|
     t.integer  "buyer_id"
     t.integer  "seller_id"
     t.integer  "product_id"
     t.string   "stripe_charge_id"
-    t.integer  "status",                       default: 0
+    t.integer  "status",                           default: 0
     t.float    "unit_price"
     t.integer  "count"
     t.float    "fee"
     t.float    "rebate"
     t.float    "total"
-    t.string   "summary",          limit: 100
+    t.string   "summary",              limit: 100
     t.text     "description"
-    t.text     "shipping_address"
-    t.text     "shipping_request"
-    t.text     "shipping_details"
     t.string   "tracking_number"
     t.boolean  "deleted"
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
     t.float    "shipping_cost"
-<<<<<<< HEAD
     t.string   "address_name"
     t.string   "address_city"
     t.string   "address_state"
     t.string   "address_zip"
     t.string   "address_country"
-=======
->>>>>>> db76b8d60611beb569d08090b8178cae9cbe27fa
+    t.integer  "stripe_card_id"
+    t.integer  "shipping_estimate_id"
+    t.integer  "address_id"
   end
+
+  add_index "stripe_orders", ["address_id"], name: "index_stripe_orders_on_address_id", using: :btree
+  add_index "stripe_orders", ["shipping_estimate_id"], name: "index_stripe_orders_on_shipping_estimate_id", using: :btree
+  add_index "stripe_orders", ["stripe_card_id"], name: "index_stripe_orders_on_stripe_card_id", using: :btree
 
   create_table "stripe_profiles", force: :cascade do |t|
     t.string   "stripe_publishable_key"
@@ -366,5 +380,9 @@ ActiveRecord::Schema.define(version: 20160318073631) do
   add_foreign_key "mailboxer_conversation_opt_outs", "mailboxer_conversations", column: "conversation_id", name: "mb_opt_outs_on_conversations_id"
   add_foreign_key "mailboxer_notifications", "mailboxer_conversations", column: "conversation_id", name: "notifications_on_conversation_id"
   add_foreign_key "mailboxer_receipts", "mailboxer_notifications", column: "notification_id", name: "receipts_on_notification_id"
+  add_foreign_key "shipping_estimates", "products"
+  add_foreign_key "stripe_orders", "addresses"
+  add_foreign_key "stripe_orders", "shipping_estimates"
+  add_foreign_key "stripe_orders", "stripe_cards"
   add_foreign_key "stripe_profiles", "users"
 end

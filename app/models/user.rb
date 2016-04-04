@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
          :omniauthable
 
   has_one :stripe_profile
+  has_one :stripe_customer
   has_many :stripe_orders
   has_many :products
   has_many :addresses
@@ -37,12 +38,12 @@ class User < ActiveRecord::Base
 
   serialize :benefits, Array
 
-  after_create :associate_api_user
-  after_update :create_armor_api_account,
-    if: -> { self.name && self.phone },
-    unless: :armor_api_account_persisted?
-  after_update :update_armor_api_user, if: :armor_api_user_changed?
-  after_update :update_armor_api_account, if: :armor_api_account_changed?
+  # after_create :associate_api_user
+  # after_update :create_armor_api_account,
+  #  if: -> { self.name && self.phone },
+  #  unless: :armor_api_account_persisted?
+  # after_update :update_armor_api_user, if: :armor_api_user_changed?
+  # after_update :update_armor_api_account, if: :armor_api_account_changed?
   
   def profile_complete?
     !self.addresses.nil? && !self.name.nil? && !self.email.nil? && !self.phone.nil?
