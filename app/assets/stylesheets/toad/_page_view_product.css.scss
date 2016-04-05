@@ -393,6 +393,7 @@
   line-height: 1;
   margin: -5px;
   float: right;
+  padding: 6px 0 4px;
 
   th {
     font-size: 16px;
@@ -403,6 +404,92 @@
 
   td {
     border: 1px solid #cccfd3;
+    padding: 6px 5px 4px;
+    font-size: 14px;
+    
+    &:last-child {
+      text-align: right;
+    }
+  }
+
+  dl {
+    margin: -5px 0;
+  }
+
+  dt {
+    width: 90px;
+    float: left;
+    clear: both;
+  }
+
+  dd {
+    font-weight: 800;
+    margin: 5px 0;
+    display: block;
+  }
+  
+  .no-border {
+    border: none !important;
+  }
+}
+
+.table-shipping-address {
+  width: 101.5%;
+  border-spacing: 5px;
+  line-height: 1;
+  margin: -5px;
+  float: right;
+  padding: 6px 0 4px;
+
+  th {
+    font-size: 16px;
+    text-transform: uppercase;
+    padding: 6px 0 4px;
+    border: 1px solid #cccfd3;
+  }
+
+  td {
+    padding: 6px 5px 4px;
+    font-size: 14px;
+  }
+
+  dl {
+    margin: -5px 0;
+  }
+
+  dt {
+    width: 90px;
+    float: left;
+    clear: both;
+  }
+
+  dd {
+    font-weight: 800;
+    margin: 5px 0;
+    display: block;
+  }
+  
+  .no-border {
+    border: none !important;
+  }
+}
+
+.table-shipping-estimate {
+  width: 101.5%;
+  border-spacing: 5px;
+  line-height: 1;
+  margin: -5px;
+  float: right;
+  padding: 6px 0 4px;
+
+  th {
+    font-size: 16px;
+    text-transform: uppercase;
+    padding: 6px 0 4px;
+    border: 1px solid #cccfd3;
+  }
+
+  td {
     padding: 6px 5px 4px;
     font-size: 14px;
   }
