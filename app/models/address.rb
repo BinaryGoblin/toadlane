@@ -1,5 +1,6 @@
 class Address < ActiveRecord::Base
   belongs_to :user
+  has_many :stripe_orders
   
   validates_presence_of :name, :line1, :city, :state, :zip, :country
   

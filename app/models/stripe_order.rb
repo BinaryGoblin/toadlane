@@ -4,9 +4,14 @@ class StripeOrder < ActiveRecord::Base
   belongs_to :product
   belongs_to :stripe_card
   belongs_to :shipping_estimate
+  accepts_nested_attributes_for :shipping_estimate
+  belongs_to :address
+  accepts_nested_attributes_for :address
 
   scope :for_dashboard, -> (page, per_page) do
-    where(deleted: false).order('created_at DESC').paginate(page: page, per_page: per_page)
+    where(deleted: false)
+    .order('created_at DESC')
+    .paginate(page: page, per_page: per_page)
   end
 
   # not_started must be first (ie. at index 0) for the default value to be correct
@@ -38,6 +43,7 @@ class StripeOrder < ActiveRecord::Base
     if self.product.sold_out.nil?
       self.product.sold_out = 0
     end
+    
     self.product.sold_out += self.count
     raise "There is not enough stock left to make this purchase." unless self.product.valid?
     
@@ -45,42 +51,34 @@ class StripeOrder < ActiveRecord::Base
     raise "Failed to save order." unless self.save
   end
   
-  def process_payment(card_token)
-    if buyer.stripe_profile.nil?
-      if !buyer.stripe_profile.stripe_customer_id.nil?
-        customer = Stripe::Customer.retrieve(buyer.stripe_profile.stripe_customer_id)
-      else
-        customer = Stripe::Customer.create({ :source => card_token }, { :stripe_account => seller.stripe_profile.stripe_uid })
-        
-        buyer.stripe_profile.stripe_customer_id = customer.id
-        buyer.save
-      end
-    else
-      customer = Stripe::Customer.create({ :source => card_token }, { :stripe_account => seller.stripe_profile.stripe_uid })
-      
-      buyer.stripe_profile = StripeProfile.new                                         
-      buyer.stripe_profile.stripe_customer_id = customer.id
-      buyer.save
-    end
+  def process_payment()
+    customer = Stripe::Customer.retrieve(buyer.stripe_customer.stripe_customer_id)
+    
+    token = Stripe::Token.create(
+      {:customer => customer, :card => stripe_card.stripe_card_id },
+      {:stripe_account => seller.stripe_profile.stripe_uid } # id of the connected account
+    )
+    
     charge = Stripe::Charge.create({
-        :customer => customer.id,
         :amount => (total * 100).to_i,
-        :description => "Toadlane Purchase",
+        :application_fee => (fee * 100).to_i,
+        :description => "Purchase on Toadlane.com",
         :currency => "usd",
-        :application_fee => (fee * 100).to_i
+        :source => token
       },
       { :stripe_account => seller.stripe_profile.stripe_uid }
     )
                                    
-    self.stripe_charge_id = charge.id
+    stripe_charge_id = charge.id
     
     if self.product.sold_out.nil?
       self.product.sold_out = 0
     end
+      
     self.product.sold_out += self.count
     raise "There is not enough stock left to make this purchase." unless self.product.valid?
     
-    self.started!
+    self.placed!
     self.save
   end
 end
