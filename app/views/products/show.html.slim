@@ -147,18 +147,15 @@
             span Toadlane Fee (<span class="calc-fees">#{@fee}</span>%):
             b.pull-right.calc-fees-price 0.00
           li
-            span Line Total:
-            b.pull-right.calc-cart 0.00
-          li
-            span Cart Subtotal:
-            b.pull-right.calc-cart 0.00
+            span Shipping Estimate ($<span class="calc-shipping">0.00</span>/unit):
+            b.pull-right.calc-shipping-price 0.00
           - if @product.status_characteristic == 'sell'
             li.text-green
-              b Cart Total:
+              b Cart Subtotal:
               b.pull-right.calc-cart 0.00
           - else
             li.text-orange
-              b Cart Total
+              b Cart Subtotal
               b.pull-right.calc-cart 0.00
             
       .white-panel.wp-table

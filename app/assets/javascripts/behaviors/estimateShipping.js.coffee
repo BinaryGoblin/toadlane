@@ -1,7 +1,9 @@
-App.registerBehavior 'CalculationProduct'
+App.registerBehavior 'EstimateShipping'
 
-class Behavior.CalculationProduct
+class Behavior.EstimateShipping
   constructor: ($el) ->
+    estimate_identifier    = "shipping_estimate_cost_" + $el.attr('value')
+    @$shippingEstimateCost =  $ document.getElementById(estimate_identifier)
     @$shippingEstimate     =  $ '.calc-shipping'
     @$calculationPanel     =  $ '.vp-calculation'
     
@@ -37,43 +39,26 @@ class Behavior.CalculationProduct
 
     @$checkout = $ '.checkout'
 
-    do @calculation
-    @$quantity.on 'change:quantity keyup', => do @calculation
-
+    $el.click => do @updateShippingEstimate
+    
+  updateShippingEstimate: =>
+    @$shippingEstimate.text @fixed parseFloat @$shippingEstimateCost.val(), 2
+    @calculation()
+    return true
+    
   fixed: (number) =>
     number.toFixed(2).toString()
-
+    
   calculation: =>
     total  = 0
     rebate = 0
     quantity = parseInt @$quantity.val(), 10
     quantity = 1 unless quantity
-    
-    if quantity <= @options.maxquantity
-      if @options.pricebreaks.length > 0
-        for pricebreak, i in @options.pricebreaks
-          prevQuantity = if i > 0 then @options.pricebreaks[i-1].quantity else 0
-
-          if i is 0
-            total  = quantity * @unitPrice
-
-          else if prevQuantity < quantity <= pricebreak.quantity
-            total  = quantity * @options.pricebreaks[i-1].price
-            rebate = quantity * (@unitPrice - @options.pricebreaks[i-1].price)
-
-        lastPricebreak = @options.pricebreaks[@options.pricebreaks.length-1]
-
-        if lastPricebreak.quantity < quantity <= @options.maxquantity
-          total  = quantity * lastPricebreak.price
-          rebate = quantity * (@unitPrice - lastPricebreak.price)
-
-      else
-        total = quantity * @unitPrice
 
     total = quantity * @unitPrice
 
     fees              = total * (@fees || 0) / 100
-    shipping_per_unit = parseFloat @$shippingEstimate.text(), 2
+    shipping_per_unit = parseFloat @$shippingEstimateCost.val(), 2
     shipping_cost     = shipping_per_unit * quantity
     cart              = total + fees + shipping_cost
     rebatep           = (rebate * 100) / (@unitPrice * quantity)
