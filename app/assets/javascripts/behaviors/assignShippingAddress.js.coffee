@@ -1,13 +1,13 @@
-App.registerBehavior 'AssignShipping'
+App.registerBehavior 'AssignShippingAddress'
 
-class Behavior.AssignShipping
+class Behavior.AssignShippingAddress
   constructor: ($el) ->
     @$radioButton         = $el
     @$stripeButtonScript  = $ '.stripe-button'
 
-    @$radioButton.click => do @assignShippingAddress
+    @$radioButton.click => do @assign
     
-  assignShippingAddress: =>
+  assign: =>
     if @$radioButton.val() >= 0
       @$stripeButtonScript.attr 'data-shipping-address', false
     else

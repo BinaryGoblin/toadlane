@@ -34,6 +34,8 @@ class Behavior.CalculationProduct
     @$stripeShippingCost  = $ '[name="stripe_order[shipping_cost]"]'
     @$stripeRebatePrice   = $ '[name="stripe_order[rebate]"]'
     @$stripeRebatePercent = $ '[name="stripe_order[rebate_percent]"]'
+    
+    @$footer = $ '.modal-footer'
 
     @$checkout = $ '.checkout'
 
@@ -83,6 +85,10 @@ class Behavior.CalculationProduct
     else
       @$checkout.addClass 'disabled'
 
+    if shipping_cost > 0
+      @$footer.show()
+    else
+      @$footer.hide()
 
     @$rebate.text @fixed rebatep
     @$pcs.text quantity
@@ -107,4 +113,4 @@ class Behavior.CalculationProduct
     @$stripeRebatePrice.val rebate.toFixed 2
     @$stripeRebatePercent.val rebatep.toFixed 2
     
-    @$stripeButtonScript.attr 'data-amount', cart.toFixed 2    
+    @$stripeButtonScript.attr 'data-amount', cart.toFixed 2
