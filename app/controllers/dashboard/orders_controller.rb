@@ -6,7 +6,7 @@ class Dashboard::OrdersController < DashboardController
     when 'armor'
       @orders = current_user.armor_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page])
     when 'stripe'
-      @orders = StripeOrder.all()
+      @orders = current_user.stripe_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page])
     else
       @orders = current_user.stripe_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page])
     end

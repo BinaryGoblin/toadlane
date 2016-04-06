@@ -23,18 +23,18 @@
     a.left.carousel-control href="#products_second" role="button" data-slide="prev"
     a.right.carousel-control href="#products_second" role="button" data-slide="next"
 
-  .carousel-product-title-sell
-    h3 Requested products
-    .actions
-      = link_to 'See all requests', requested_products_path, class: 'btn btn-success-sell pull-right'
-      = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
-
-  #products_third.carousel.product-carousel.slide data-ride="carousel"
-    = products_carousel_items @products_requested
-
-    a.left.carousel-control href="#products_third" role="button" data-slide="prev"
-    a.right.carousel-control href="#products_third" role="button" data-slide="next"
-
+/  .carousel-product-title-sell
+/    h3 Requested products
+/    .actions
+/      = link_to 'See all requests', requested_products_path, class: 'btn btn-success-sell pull-right'
+/      = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
+/
+/  #products_third.carousel.product-carousel.slide data-ride="carousel"
+/    = products_carousel_items @products_requested
+/
+/    a.left.carousel-control href="#products_third" role="button" data-slide="prev"
+/    a.right.carousel-control href="#products_third" role="button" data-slide="next"
+/
 / .featured-sellers: .wrap
 /   .carousel-product-title
 /     h3 Featured sellers
@@ -47,10 +47,3 @@
 /     a.right.carousel-control href="#sellers" role="button" data-slide="next"
 
 .few: .wrap
-  span here are a few of our partners that make the TOAD experience more secure and profitable
-
-  .brands-logo
-    = link_to image_tag('img-brand-1.png'), '#'
-    = link_to image_tag('img-brand-2.gif'), '#'
-    = link_to image_tag('img-brand-3.png'), '#'
-    = link_to image_tag('img-brand-5.jpg'), '#'
