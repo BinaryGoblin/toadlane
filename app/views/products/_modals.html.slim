@@ -84,15 +84,16 @@
               tr
                 th shipping address
             tbody
-              - current_user.addresses.each do |address|
+              = f.fields_for :address_id do |ff|
+                - current_user.addresses.each do |address|
+                  tr
+                    td
+                      = ff.radio_button :address_id, address.id, 'data-behavior' => "AssignShipping"
+                      = ff.label :address_id, " " + address.get_inline_address
                 tr
                   td
-                    = f.radio_button :address_id, address.id, 'data-behavior' => "AssignShipping"
-                    = f.label :address_id, " " + address.get_inline_address
-              tr
-                td
-                  = f.radio_button :address_id, -1, 'data-behavior' => "AssignShipping"
-                  = f.label :address_id, " Enter new address"
+                    = ff.radio_button :address_id, -1, 'data-behavior' => "AssignShipping"
+                    = ff.label :address_id, " Enter new address"
     
         table.table-shipping-estimate 
           - if !product.shipping_estimates.nil?
@@ -103,9 +104,10 @@
               - product.shipping_estimates.each do |estimate|
                 tr
                   td
-                    = f.radio_button :shipping_estimate_id, estimate.id, 'data-behavior' => "EstimateShipping"
-                    = f.label :shipping_estimate_id, " " + number_to_currency(estimate.cost) + "/unit" + " " + estimate.description
-                    = hidden_field_tag "shipping_estimate_cost_" + estimate.id.to_s, estimate.cost
+                    = f.fields_for :shipping_estimate_id do |ff|
+                      = ff.radio_button :shipping_estimate_id, estimate.id, 'data-behavior' => "EstimateShipping"
+                      = ff.label :shipping_estimate_id, " " + number_to_currency(estimate.cost) + "/unit" + " " + estimate.description
+                      = hidden_field_tag "shipping_estimate_cost_" + estimate.id.to_s, estimate.cost
      
         table.table-checkout
           thead

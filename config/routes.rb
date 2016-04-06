@@ -36,7 +36,7 @@ Toad::Application.routes.draw do
       end
     end
 
-    resources :orders, only: [:index] do
+    resources :orders, only: [:index, :show] do
       collection do
         delete :delete_cascade
       end
