@@ -84,16 +84,14 @@
               tr
                 th shipping address
             tbody
-              = f.fields_for :address_id do |ff|
-                - current_user.addresses.each do |address|
-                  tr
-                    td
-                      = ff.radio_button :address_id, address.id, 'data-behavior' => "AssignShipping"
-                      = ff.label :address_id, " " + address.get_inline_address
+              = f.collection_radio_buttons(:address_id, Address.where(:user => current_user).order('created_at'), :id, :get_inline_address) do |b|
                 tr
                   td
-                    = ff.radio_button :address_id, -1, 'data-behavior' => "AssignShipping"
-                    = ff.label :address_id, " Enter new address"
+                    = b.label { b.radio_button(:"data-behavior" => "AssignShipping") + b.text }
+              tr
+                td
+                  = radio_button @stripe_order, :address_id, "-1", default: true, 'data-behavior' => "AssignShipping"
+                  = label :address, " Enter new address"
     
         table.table-shipping-estimate 
           - if !product.shipping_estimates.nil?
@@ -101,13 +99,11 @@
               tr
                 th shipping method
             tbody
-              - product.shipping_estimates.each do |estimate|
+              = f.collection_radio_buttons(:shipping_estimate_id, ShippingEstimate.where(:product => product).order('created_at'), :id, :get_label) do |b|
                 tr
                   td
-                    = f.fields_for :shipping_estimate_id do |ff|
-                      = ff.radio_button :shipping_estimate_id, estimate.id, 'data-behavior' => "EstimateShipping"
-                      = ff.label :shipping_estimate_id, " " + number_to_currency(estimate.cost) + "/unit" + " " + estimate.description
-                      = hidden_field_tag "shipping_estimate_cost_" + estimate.id.to_s, estimate.cost
+                    = b.label { b.radio_button(:"data-behavior" => "EstimateShipping") + b.text }
+                    = hidden_field_tag "shipping_estimate_cost_" + b.object.id.to_s, b.object.cost
      
         table.table-checkout
           thead
