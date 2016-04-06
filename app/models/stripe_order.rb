@@ -4,14 +4,10 @@ class StripeOrder < ActiveRecord::Base
   belongs_to :product
   belongs_to :stripe_card
   belongs_to :shipping_estimate
-  accepts_nested_attributes_for :shipping_estimate
   belongs_to :address
-  accepts_nested_attributes_for :address
 
   scope :for_dashboard, -> (page, per_page) do
-    where(deleted: false)
-    .order('created_at DESC')
-    .paginate(page: page, per_page: per_page)
+    where(deleted: false).order('created_at DESC').paginate(page: page, per_page: per_page)
   end
 
   # not_started must be first (ie. at index 0) for the default value to be correct
@@ -21,7 +17,7 @@ class StripeOrder < ActiveRecord::Base
     stripe_customer = StripeCustomer.find_by(:user => buyer)
     
     if stripe_customer.nil?
-      customer = Stripe::Customer.create( :source => card_token )
+      customer = Stripe::Customer.create(:source => card_token)
       raise "Failed to create Stripe Customer." if customer.nil?
       
       stripe_customer = StripeCustomer.new({ :user => buyer, :stripe_customer_id => customer.id })
@@ -29,8 +25,8 @@ class StripeOrder < ActiveRecord::Base
       
       card = customer.sources.first
     else
-      customer = Stripe::Customer.retrieve( stripe_customer.stripe_customer_id )
-      card = customer.sources.create( :source => card_token )
+      customer = Stripe::Customer.retrieve(stripe_customer.stripe_customer_id)
+      card = customer.sources.create(:source => card_token)
     end
       
     
@@ -40,15 +36,11 @@ class StripeOrder < ActiveRecord::Base
     self.stripe_card = stripe_card
     raise "Failed to attach card to order." unless self.save
     
-    if product.sold_out.nil?
-      product.sold_out = 0
-    end
-    
     product.sold_out += count
-    raise "There is not enough stock left to make this purchase." unless self.product.valid?
+    self.product.save
     
     self.started!
-    raise "Failed to save order." unless self.save
+    self.save
   end
   
   def process_payment()

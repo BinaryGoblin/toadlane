@@ -1,6 +1,8 @@
 class ArmorOrdersController < ApplicationController
   before_action :check_if_user_active
   before_action :set_armor_order, only: [:show, :edit, :update, :destroy]
+  before_filter :authenticate_user!
+  before_action :check_terms_of_service
 
   def index
     @armor_orders = ArmorOrder.all

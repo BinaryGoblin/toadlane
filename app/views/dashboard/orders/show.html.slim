@@ -4,10 +4,6 @@
   .table-options
     table width="100%"
       tr
-        td
-          = link 'Stripe Orders', dashboard_orders_path(bought_or_sold: params['bought_or_sold'], type: 'stripe'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-          = link 'Armor Payments Orders', dashboard_orders_path(bought_or_sold: params['bought_or_sold'], type: 'armor'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-      tr
         td    
           = link_to 'All', dashboard_orders_path(type: params['type']), class: 'btn btn-default pull-right', _class_active: 'btn-success'
           = link 'Sold', dashboard_orders_path(bought_or_sold: 'sold', type: params['type']), _class: 'btn btn-default pull-right', _class_active: 'btn-success'

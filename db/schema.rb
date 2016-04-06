@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160404004952) do
+ActiveRecord::Schema.define(version: 20160406093418) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -213,20 +213,20 @@ ActiveRecord::Schema.define(version: 20160404004952) do
     t.datetime "start_date"
     t.datetime "end_date"
     t.float    "unit_price"
-    t.boolean  "status",                default: true
+    t.boolean  "status",                          default: true
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "status_action"
     t.string   "status_characteristic"
     t.integer  "amount"
-    t.integer  "sold_out"
+    t.integer  "sold_out",              limit: 8, default: 0,    null: false
     t.string   "dimension_width"
     t.string   "dimension_height"
     t.string   "dimension_depth"
     t.string   "dimension_weight"
     t.integer  "main_category"
-    t.integer  "type",                  default: 0
+    t.integer  "type",                            default: 0
   end
 
   add_index "products", ["user_id"], name: "index_products_on_user_id", using: :btree
@@ -290,9 +290,9 @@ ActiveRecord::Schema.define(version: 20160404004952) do
     t.string   "summary",              limit: 100
     t.text     "description"
     t.string   "tracking_number"
-    t.boolean  "deleted"
-    t.datetime "created_at",                                   null: false
-    t.datetime "updated_at",                                   null: false
+    t.boolean  "deleted",                          default: false, null: false
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
     t.float    "shipping_cost"
     t.string   "address_name"
     t.string   "address_city"

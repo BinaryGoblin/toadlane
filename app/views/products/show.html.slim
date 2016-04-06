@@ -98,9 +98,9 @@
 	  .white-panel.vp-calculation data-behavior="CalculationProduct" data-options='{"pricebreaks":#{@product.pricebreaks.collect { |p| { quantity: p.quantity, price: p.price } }.to_json},"maxquantity":#{available.present? ? available.to_s : '"Infinity"'}}'
 
         - if @product.status_characteristic == 'sell'
-          .progress: i style="width:#{100-(sold_out*100/@product.amount)}%"
+          .progress: i style="width:#{100-((sold_out/@product.amount)*100)}%"
         - else
-          .progress: i style="width:#{100-(desired*100/@product.amount)}%"
+          .progress: i style="width:#{100-((desired/@product.amount)*100)}%"
 
 		- if @product.status_characteristic == 'sell'
           table: tr
