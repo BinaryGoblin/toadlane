@@ -3,13 +3,15 @@ class ProductsController < ApplicationController
 
   before_action :set_product, only: [:show]
 
-  before_filter :authenticate_user!, except: [:index, :products, :show, :for_sale, :requested]
+  before_filter :authenticate_user!
   before_action :check_terms_of_service
 
-  def index
-    @products_recommended = Product.unexpired.where(status_action: 'recommended').order(:created_at).limit(16)
+  def index    
+    # TODO Disabling this during Stripe integration by calling for 'buy' only
+    @products_recommended = Product.unexpired.where(status_characteristic: 'sell', status_action: 'recommended').order(:created_at).limit(16)
     @products_for_sale = Product.unexpired.where(status_characteristic: 'sell').order(:created_at).limit(16)
-    @products_requested = Product.unexpired.where(status_characteristic: 'buy').order(:created_at).limit(16)
+    # TODO Disabling this during Stripe integration by calling for 'buy' instead of 'sell'
+    @products_requested = Product.unexpired.where(status_characteristic: 'sell').order(:created_at).limit(16)
     @featured_sellers = User.limit(16)
   end
 
@@ -20,7 +22,7 @@ class ProductsController < ApplicationController
   end
 
   def products
-    @products = Product.unexpired.order('updated_at DESC').paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    @products = Product.unexpired.where(status_characteristic: 'sell').order('updated_at DESC').paginate(page: params[:page], per_page: params[:count]).order('id DESC')
   end
 
   def deals
@@ -33,6 +35,7 @@ class ProductsController < ApplicationController
   end
   
   def requested
+    # TODO Disabling this during Stripe integration by calling for 'buy' instead of 'sell'
     @products = Product.unexpired.where(status_characteristic: 'buy').paginate(page: params[:page], per_page: params[:count]).order('id DESC')
     render 'products/products'
   end

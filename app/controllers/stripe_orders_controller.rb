@@ -1,4 +1,7 @@
 class StripeOrdersController < ApplicationController
+  before_filter :authenticate_user!
+  before_action :check_terms_of_service
+  
   def show
     @stripe_order = StripeOrder.find(params[:id])
   end
@@ -8,7 +11,7 @@ class StripeOrdersController < ApplicationController
     @stripe_order.save
     @stripe_order.start_stripe_order(stripe_params["stripeToken"])
     
-    if params[ :address_id ] = -1
+    if stripe_order_params[:address_id] == "-1"
       address = Address.new
       address.name = stripe_params["stripeShippingName"]
       address.line1 = stripe_params["stripeShippingAddressLine1"]
@@ -30,8 +33,7 @@ class StripeOrdersController < ApplicationController
     def stripe_order_params
       params.require(:stripe_order).permit(:id, :buyer_id, :seller_id, :product_id, :stripe_charge_id, :status, :unit_price, :count, :fee, :rebate, :total, :summary,
                                            :description, :shipping_address, :shipping_request, :shipping_details, :tracking_number, :deleted, :shipping_cost,
-                                           :address_name, :address_city, :address_state, :address_country, :address_zip, :shipping_estimate_attributes => [ :id, 
-                                           :cost, :description, :product_id, :_destroy ], :address_attributes => [ :id, :line1, :line2, :city, :state, :country, :zip ])
+                                           :address_name, :address_city, :address_state, :address_country, :address_zip, :address_id, :shipping_estimate_id)
     end
     
     def stripe_params
