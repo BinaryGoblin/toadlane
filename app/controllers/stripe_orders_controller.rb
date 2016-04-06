@@ -8,7 +8,7 @@ class StripeOrdersController < ApplicationController
     @stripe_order.save
     @stripe_order.start_stripe_order(stripe_params["stripeToken"])
     
-    if @stripe_order.address_id = -1
+    if params[ :address_id ] = -1
       address = Address.new
       address.name = stripe_params["stripeShippingName"]
       address.line1 = stripe_params["stripeShippingAddressLine1"]
@@ -20,11 +20,10 @@ class StripeOrdersController < ApplicationController
       address.user = @stripe_order.buyer
       
       @stripe_order.address = address
-      @stripe_order.shipping_estimate!
     end
       
     @stripe_order.process_payment()
-    redirect_to @stripe_order, notice: "Your order was succesfully placed."
+    redirect_to dashboard_order_path(@stripe_order, :type => "stripe"), notice: "Your order was succesfully placed."
   end
   
   private

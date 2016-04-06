@@ -1,6 +1,6 @@
 class StripeOrder < ActiveRecord::Base
-  belongs_to :buyer, class_name: "User"
-  belongs_to :seller, class_name: "User"
+  belongs_to :buyer, class_name: 'User', foreign_key: 'buyer_id'
+  belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'
   belongs_to :product
   belongs_to :stripe_card
   belongs_to :shipping_estimate
@@ -40,11 +40,11 @@ class StripeOrder < ActiveRecord::Base
     self.stripe_card = stripe_card
     raise "Failed to attach card to order." unless self.save
     
-    if self.product.sold_out.nil?
-      self.product.sold_out = 0
+    if product.sold_out.nil?
+      product.sold_out = 0
     end
     
-    self.product.sold_out += self.count
+    product.sold_out += count
     raise "There is not enough stock left to make this purchase." unless self.product.valid?
     
     self.started!
@@ -69,14 +69,7 @@ class StripeOrder < ActiveRecord::Base
       { :stripe_account => seller.stripe_profile.stripe_uid }
     )
                                    
-    stripe_charge_id = charge.id
-    
-    if self.product.sold_out.nil?
-      self.product.sold_out = 0
-    end
-      
-    self.product.sold_out += self.count
-    raise "There is not enough stock left to make this purchase." unless self.product.valid?
+    self.stripe_charge_id = charge.id
     
     self.placed!
     self.save

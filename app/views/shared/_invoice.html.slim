@@ -11,10 +11,12 @@ table.table-checkout style="margin-bottom:0"
         h4.text-uppercase order ##{order.id}
         div Date: #{order.created_at.strftime('%m-%d-%Y')}
         p
-          div 
-           |
-             To complete order log into your <a href="//www.Armorpayments.com/Toadlane" target="_blank">Armorpayments.com/Toadlane</a> account. <br />
-             If this is your first order with Toadlane, you will need to reset your password.
+          - if order.instance_of? StripeOrder
+          - if order.instance_of? ArmorOrder
+            div 
+             |
+               To complete order log into your <a href="//www.Armorpayments.com/Toadlane" target="_blank">Armorpayments.com/Toadlane</a> account. <br />
+               If this is your first order with Toadlane, you will need to reset your password.
 
     tr
       td colspan="2" valign="top"
@@ -26,7 +28,7 @@ table.table-checkout style="margin-bottom:0"
            
           - if !order.buyer.addresses[0].nil?
             dt Address:
-            dd= order.buyer.addresses[0].line1 + order.buyer.addresses[0].line2
+            dd= order.buyer.addresses[0].line1 + (order.buyer.addresses[0].line2 || "")
 
             dt Postal-Code:
             dd= order.buyer.addresses[0].zip
@@ -72,18 +74,29 @@ table.table-checkout
       td $ #{number_with_precision(order.count * order.unit_price, precision: 2, delimiter: '')}
 
     tr
-      td colspan="3" #{number_with_precision(order.rebate_percent, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
-      td -$ #{number_with_precision(order.rebate_price, precision: 2, delimiter: '')}
+      - if order.instance_of? StripeOrder
+        td colspan="3" #{number_with_precision(order.rebate, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
+        td -$ #{number_with_precision(order.rebate, precision: 2, delimiter: '')}
+      - if order.instance_of? ArmorOrder
+        td colspan="3" #{number_with_precision(order.rebate_percent, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
+        td -$ #{number_with_precision(order.rebate_price, precision: 2, delimiter: '')}      
 
     tr
-      td colspan="3" Fees (0%) for non-resalers
-      td $ #{number_with_precision(order.taxes_price, precision: 2, delimiter: '')}
+      td colspan="3" Fees
+      - if order.instance_of? StripeOrder
+        td $ #{number_with_precision(order.fee, precision: 2, delimiter: '')}
+      - if order.instance_of? ArmorOrder
+        td $ #{number_with_precision(order.taxes_price, precision: 2, delimiter: '')}
 
-    / tr
-    /   td colspan="3" Flat shipping
-    /   td $ 0.00
+    - if order.instance_of? StripeOrder
+      tr
+        td colspan="3" Shipping
+        td $ #{number_with_precision(order.shipping_cost, precision: 2, delimiter: '')}
 
     tr
       td.no-border colspan="2"
       td.text-center: b.text-uppercase Total:
-      td: b $ #{number_with_precision(order.amount, precision: 2, delimiter: '')}
+      - if order.instance_of? StripeOrder
+        td: b $ #{number_with_precision(order.total, precision: 2, delimiter: '')}
+      - if order.instance_of? ArmorOrder
+        td: b $ #{number_with_precision(order.amount, precision: 2, delimiter: '')}

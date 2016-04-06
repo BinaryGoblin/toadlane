@@ -2,12 +2,21 @@
 
 .wrap-sm
   .table-options
-    = link_to 'All', dashboard_orders_path, class: 'btn btn-default pull-right'
-    = link 'Sold', dashboard_orders_path(bought_or_sold: 'sold'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-    = link 'Bought', dashboard_orders_path(bought_or_sold: 'bought'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-    .selected-labels
-      span Selected:
-      = link_to 'Delete', delete_cascade_dashboard_orders_path, method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'label label-red'
+    table width="100%"
+      tr
+        td
+        td
+          = link 'Stripe Orders', dashboard_orders_path(bought_or_sold: params['bought_or_sold'], type: 'stripe'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
+          = link 'Armor Payments Orders', dashboard_orders_path(bought_or_sold: params['bought_or_sold'], type: 'armor'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
+      tr
+        td
+          .selected-labels
+            span Selected:
+            = link_to 'Delete', delete_cascade_dashboard_orders_path, method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'label label-red'
+        td    
+          = link_to 'All', dashboard_orders_path(type: params['type']), class: 'btn btn-default pull-right', _class_active: 'btn-success'
+          = link 'Sold', dashboard_orders_path(bought_or_sold: 'sold', type: params['type']), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
+          = link 'Bought', dashboard_orders_path(bought_or_sold: 'bought', type: params['type']), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
 
   table.table data-behavior="TableCheckbox" data-options='{"paramName":"orders_ids"}'
     thead
@@ -22,18 +31,20 @@
         th.text-center Details
 
     tbody
-      - @armor_orders.each do |armor_order|
+      - @orders.each do |order|
         tr
-          td: input type="checkbox" value="#{armor_order.id}"
-          td= armor_order.id
+          td: input type="checkbox" value="#{order.id}"
+          td= order.id
           /td.text-orange =Constants::Order::STATES.detect { |p| p[:key] == order.status }[:description]
-          td= link_to armor_order.product.name, product_path(armor_order.product, cat_id: armor_order.product.main_category), class: 'link link-ulined', target: '_blank'
-          td= number_to_currency(armor_order.unit_price, :unit => "$", precision: 2)
-          td= armor_order.count
-          td= number_to_currency(armor_order.amount, :unit => "$", precision: 2)
-          td.text-center= link_to 'View', '#modal_order_' + armor_order.id.to_s, class: 'view', data: { toggle: 'modal' }
+          td= link_to order.product.name, product_path(order.product, cat_id: order.product.main_category), class: 'link link-ulined', target: '_blank'
+          td= number_to_currency(order.unit_price, :unit => "$", precision: 2)
+          td= order.count
+          -if order.instance_of? StripeOrder
+            td= number_to_currency(order.total, :unit => "$", precision: 2)
+          -if order.instance_of? ArmorOrder
+            td= number_to_currency(order.amount, :unit => "$", precision: 2)
+          td.text-center= link_to 'View', '#modal_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
 
 .footer-actions: .fa-container: .wrap-sm
-  = will_paginate @armor_orders
 
-= render partial: '/shared/order', collection: @armor_orders
+= render partial: '/shared/order', collection: @orders

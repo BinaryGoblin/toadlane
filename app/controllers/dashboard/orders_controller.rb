@@ -2,11 +2,25 @@ class Dashboard::OrdersController < DashboardController
   # before_action :get_order_status, only: [:index]
 
   def index
-    @armor_orders = current_user.armor_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page])
-      
-    @stripe_orders = current_user.stripe_orders.for_dashboard(params[:page], params[:per_page])
-    
-    @orders = @armor_orders.merge(@stripe_orders)
+    case params[:type]
+    when 'armor'
+      @orders = current_user.armor_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page])
+    when 'stripe'
+      @orders = StripeOrder.all()
+    else
+      @orders = current_user.stripe_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page])
+    end
+  end
+  
+  def show
+    case params[:type]
+    when 'stripe'
+      @order = StripeOrder.find(params[:id])
+    when 'armor'
+      @order = ArmorOrder.find(params[:id])
+    else
+      @order = StripeOrder.find(params[:id])
+    end
   end
 
   def delete_cascade

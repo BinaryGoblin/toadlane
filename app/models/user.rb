@@ -10,7 +10,6 @@ class User < ActiveRecord::Base
 
   has_one :stripe_profile
   has_one :stripe_customer
-  has_many :stripe_orders
   has_many :products
   has_many :addresses
   accepts_nested_attributes_for :addresses,
@@ -56,6 +55,16 @@ class User < ActiveRecord::Base
       ArmorOrder.where(seller_id: self.id)
     else
       ArmorOrder.where('buyer_id = ? OR seller_id = ?', self.id, self.id)
+    end
+  end
+  
+  def stripe_orders(type=nil)
+    if type == 'bought'
+      StripeOrder.where(buyer_id: self.id)
+    elsif type == 'sold'
+      StripeOrder.where(seller_id: self.id)
+    else
+      StripeOrder.where('buyer_id = ? OR seller_id = ?', self.id, self.id)
     end
   end
 
