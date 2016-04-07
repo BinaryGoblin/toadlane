@@ -54,7 +54,7 @@ Toad::Application.routes.draw do
 
     resources :forms
     
-    resources :terms_of_services, only: [] do
+    resources :terms_of_services, only: [:index] do
       collection do
         put 'update_terms'
       end

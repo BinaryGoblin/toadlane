@@ -1,11 +1,13 @@
 class Dashboard::TermsOfServicesController < DashboardController
   skip_before_action :check_terms_of_service
+  before_action :authenticate_user!
 
   def index
     @user = current_user
   end
 
   def update_terms
+    @user = current_user
     respond_to do |format|
       if @user.update_attributes(user_term_params)
         format.html { redirect_to products_path }
