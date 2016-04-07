@@ -54,6 +54,12 @@ Toad::Application.routes.draw do
 
     resources :forms
     
+    resources :terms_of_services, only: [] do
+      collection do
+        put 'update_terms'
+      end
+    end
+    
     root 'profiles#show'
   end
   
