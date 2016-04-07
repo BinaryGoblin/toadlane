@@ -22,6 +22,7 @@ class Product < ActiveRecord::Base
 
   validates_numericality_of :unit_price, :amount, only_integer: false
   validates_presence_of :end_date, :status_characteristic
+  validates_presence_of :shipping_estimates
 
   searchkick autocomplete: ['name'], fields: [:name, :main_category]
 
