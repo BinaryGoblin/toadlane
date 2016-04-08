@@ -1,6 +1,10 @@
 = render '/shared/tabs'
 
 .wrap-sm
+  - if !flash[:error].nil?
+    .error-explanation
+      = flash[:error]
+      
   table.account-table: tr
     td
       h4 Connected<br />Accounts:

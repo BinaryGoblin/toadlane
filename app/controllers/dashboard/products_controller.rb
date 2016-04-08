@@ -14,7 +14,11 @@ class Dashboard::ProductsController < DashboardController
     if current_user.profile_complete? && !current_user.stripe_profile.nil?
       @product = Product.new
     else
-      redirect_to dashboard_profile_path
+      if current_user.stripe_profile.nil?
+        redirect_to dashboard_accounts_path, :flash => { :error => "You must create or link a Stripe account in order to accept payments."}
+      else
+        redirect_to dashboard_profile_path, :flash => { :error => "You must complete your profile before you can create product listings." }
+      end
     end
   end
 

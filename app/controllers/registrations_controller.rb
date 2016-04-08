@@ -1,4 +1,4 @@
-class RegistrationsController < Devise::RegistrationsController
+class RegistrationsController < Devise::RegistrationsController  
   def create
     build_resource(sign_up_params)
 
@@ -33,7 +33,11 @@ class RegistrationsController < Devise::RegistrationsController
       if @validatable
         @minimum_password_length = resource_class.password_length.min
       end
-      respond_with resource
+      if !resource.validate(:email)
+        redirect_to new_user_password_path(resource)
+      else
+        respond_with resource
+      end
     end
   end
 
