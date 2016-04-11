@@ -28,7 +28,6 @@ class StripeOrder < ActiveRecord::Base
       customer = Stripe::Customer.retrieve(stripe_customer.stripe_customer_id)
       card = customer.sources.create(:source => card_token)
     end
-      
     
     stripe_card = stripe_customer.stripe_cards.new({ :stripe_card_id => card.id })
     raise "Failed to save Stripe Card." unless stripe_card.save
@@ -40,6 +39,21 @@ class StripeOrder < ActiveRecord::Base
     self.product.save
     
     self.started!
+    self.save
+  end
+  
+  def calculate_shipping()
+    if !shipping_estimate.nil?
+      cost = self.shipping_cost
+      shipping_estimate.calculate_shipping(self)
+      if cost != self.shipping_cost
+        raise "Shipping estimate mismatch."
+      end
+    else
+      raise "No shipping estimate."
+    end
+    
+    self.shipping_estimate!
     self.save
   end
   

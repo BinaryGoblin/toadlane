@@ -33,6 +33,9 @@ module Toad
     end
 
     config.autoload_paths += %W(#{config.root}/lib)
+    
+    # Single Table Inheritance autoloads
+    config.autoload_paths += %W(#{config.root}/app/models/shipping_estimates)
 
     I18n.enforce_available_locales = false
 
