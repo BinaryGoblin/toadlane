@@ -196,8 +196,12 @@
       = f.fields_for :shipping_estimates do |ff|
         li.estimate
           .index = ff.index+1
-          .estimate-cost
-            = ff.label :cost, 'Price Per Unit:'
+          .estimate-type
+            = ff.label :type, 'Shipping Type:'
+            = ff.select :type, ShippingEstimate.select_options, {}, class: 'form-control'
+            
+          .estimate-cost 
+            = ff.label :cost, 'Cost (USD):'
             = ff.text_field :cost, class: 'form-control'
 
           .estimate-description

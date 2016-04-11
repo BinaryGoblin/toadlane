@@ -24,6 +24,8 @@ class StripeOrdersController < ApplicationController
       
       @stripe_order.address = address
     end
+    
+    @stripe_order.calculate_shipping()
       
     @stripe_order.process_payment()
     redirect_to dashboard_order_path(@stripe_order, :type => "stripe"), notice: "Your order was succesfully placed."

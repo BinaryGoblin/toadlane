@@ -147,7 +147,7 @@
             span Toadlane Fee (<span class="calc-fees">#{@fee}</span>%):
             b.pull-right.calc-fees-price 0.00
           li
-            span Shipping Estimate ($<span class="calc-shipping">0.00</span>/unit):
+            span Shipping Estimate ($<span class="calc-shipping" data-type="PerUnit">0.00</span>/unit):
             b.pull-right.calc-shipping-price 0.00
           - if @product.status_characteristic == 'sell'
             li.text-green
