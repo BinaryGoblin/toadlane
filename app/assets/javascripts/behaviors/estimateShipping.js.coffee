@@ -2,8 +2,8 @@ App.registerBehavior 'EstimateShipping'
 
 class Behavior.EstimateShipping
   constructor: ($el) ->
-    estimate_identifier    = "shipping_estimate_cost_" + $el.attr('value')
-    @$shippingEstimateCost =  $ document.getElementById(estimate_identifier)
+    @$shippingEstimateCost =  $el.data 'cost'
+    @$shippingEstimateType =  $el.data 'type'
     @$shippingEstimate     =  $ '.calc-shipping'
     @$calculationPanel     =  $ '.vp-calculation'
     
@@ -44,7 +44,8 @@ class Behavior.EstimateShipping
     $el.click => do @updateShippingEstimate
     
   updateShippingEstimate: =>
-    @$shippingEstimate.text @fixed parseFloat @$shippingEstimateCost.val(), 2
+    @$shippingEstimate.text @$shippingEstimateCost
+    @$shippingEstimate.data 'type', @$shippingEstimateType
     @calculation()
     return true
     
@@ -81,8 +82,14 @@ class Behavior.EstimateShipping
     total = quantity * @unitPrice
 
     fees              = total * (@fees || 0) / 100
-    shipping_per_unit = parseFloat @$shippingEstimate.text(), 2
-    shipping_cost     = shipping_per_unit * quantity
+    if @$shippingEstimateType == 'PerUnit' 
+      shipping_per_unit = parseFloat @$shippingEstimateCost
+      shipping_cost     = shipping_per_unit * quantity
+    else 
+      if @$shippingEstimateType == 'FlatRate' 
+        shipping_cost = parseFloat @$shippingEstimateCost
+      else
+        shipping_cost = 0
     cart              = total + fees + shipping_cost
     rebatep           = (rebate * 100) / (@unitPrice * quantity)
 

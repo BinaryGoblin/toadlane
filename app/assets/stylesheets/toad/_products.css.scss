@@ -635,9 +635,19 @@ $sell-color: #FF8724;
       }
     }
 
-    .estimate-cost {
+    .estimate-type {
       float: left;
       width: 9%;
+      margin: 0 20px 0 0;
+
+      label {
+        margin: 0;
+      }
+    }
+
+    .estimate-cost {
+      float: left;
+      width: 6%;
       margin: 0 20px 0 0;
 
       label {
@@ -647,7 +657,7 @@ $sell-color: #FF8724;
     
     .estimate-description {
       float: left;
-      width: 75%;
+      width: 70%;
       margin: 0 20px 0 0;
       
       label {
