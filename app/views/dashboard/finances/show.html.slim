@@ -43,8 +43,8 @@
 			  br= text_field_tag 'company', @user.company, class: 'form-control', required: true, disabled: true
 			  
 			.form-group  
-			  = label_tag 'state', 'State:', class: 'required'
-			  br= text_field_tag 'state', @user.addresses.where(country: 'US')[0].state, class: 'form-control', required: true, disabled: true
+			  = label_tag 'address', 'Address (United States Addresses Only):', class: 'required'
+			  br= select_tag 'address', options_for_select(@user.addresses.where(country: 'US').collect{ |u| [u.get_inline_address, u.id] }), class: 'form-control', required: true
 			  
 			.form-group
 			  = label_tag 'loan_amount', 'Desired Loan Amount ($4,000 - $10,000,000):', class: 'required'
@@ -55,7 +55,7 @@
 			  br= text_field_tag 'business_years', '', class: 'form-control', required: true
 			  
 			.form-group
-			  = label_tag 'monthly_revenue', 'Monthly Business Revenue:', class: 'required'
+			  = label_tag 'monthly_revenue', 'Monthly Business Revenue (USD):', class: 'required'
 			  br= text_field_tag 'monthly_revenue', '', class: 'form-control', required: true
 			  
 			.form-group
