@@ -7,7 +7,8 @@ class Dashboard::FinancesController < DashboardController
     if params[:accept].present? && params[:accept] == "1"
       respond_to do |format|
         if params[:loan_amount].present? && params[:business_years].present? && params[:monthly_revenue].present?
-          FinancesMailer.multivision_application_email(current_user, params[:loan_amount], params[:business_years], params[:monthly_revenue]).deliver
+          FinancesMailer.multivision_application_email(current_user, params[:address], params[:loan_amount], params[:business_years], 
+            params[:monthly_revenue]).deliver
           
           format.html { redirect_to dashboard_finances_path(success?: '1') }
         else
