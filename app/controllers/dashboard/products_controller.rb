@@ -40,10 +40,9 @@ class Dashboard::ProductsController < DashboardController
 
     if product_params[:images_attributes].present?
       images = product_params.extract!(:images_attributes)
-      product_params.except!(:images_attributes)
     end
 
-    @product = current_user.products.new(product_params.merge!(start_date: start_date).merge!(end_date: end_date))
+    @product = current_user.products.new(product_params.merge!(start_date: start_date).merge!(end_date: end_date).except(:images_attributes))
 
     respond_to do |format|
       if @product.save
@@ -86,17 +85,14 @@ class Dashboard::ProductsController < DashboardController
 
     if product_params[:images_attributes].present?
       images = product_params.extract!(:images_attributes)
-      params.except!(product_params[:images_attributes])
     end
 
     if product_params[:images_attributes_delete].present?
       for_delete = product_params.extract!(:images_attributes_delete)
-      params.except!(product_params[:images_attributes_delete])
     end
 
     if product_params[:pricebreaks_delete].present?
       pricebreak_for_delete = product_params.extract!(:pricebreaks_delete)
-      params.except!(product_params[:pricebreaks_delete])
     end
 
     respond_to do |format|
