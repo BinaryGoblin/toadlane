@@ -352,6 +352,8 @@ ActiveRecord::Schema.define(version: 20160411034447) do
     t.boolean  "is_reseller",                      default: false
     t.integer  "armor_account_id",       limit: 8
     t.integer  "armor_user_id",          limit: 8
+    t.boolean  "terms_of_service"
+    t.datetime "terms_accepted_at"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
