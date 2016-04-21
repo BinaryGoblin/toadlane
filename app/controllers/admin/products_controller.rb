@@ -138,7 +138,7 @@ class Admin::ProductsController < Admin::ApplicationController
 
   private
     def set_product
-      @product = Product.unexpired.find(params[:id])
+      @product = Product.find(params[:id])
     end
 
     def product_params
