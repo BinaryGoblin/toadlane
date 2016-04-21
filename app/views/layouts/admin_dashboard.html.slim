@@ -46,10 +46,11 @@ html
                   = link_to fa_icon('power-off', text: 'Logout'), destroy_admin_session_path, class: 'btn btn-success pull-right'
                 - else
                   = link_to 'Login', new_admin_session_path, class: 'btn btn-success pull-right' 
+                  
+    br
         
     == yield
 
-    footer.footer: .wrap
-      = link_to image_tag('logo-footer.png'), '/', class: 'logo'
+    = render 'shared/footer'
 
     = javascript_include_tag 'admin'

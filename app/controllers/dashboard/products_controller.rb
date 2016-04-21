@@ -1,12 +1,11 @@
 class Dashboard::ProductsController < DashboardController
-  before_action :set_product, only: [:show, :edit, :update, :destroy]
-
   def index
     @products = Product.where(user_id: current_user.id).paginate(page: params[:page], per_page: params[:count]).order('id DESC')
     @products_count = @products.count
   end
 
   def edit
+    set_product
     @history = PaperTrail::Version.where(item_id: @product.id).order('created_at DESC')
   end
 
@@ -70,6 +69,8 @@ class Dashboard::ProductsController < DashboardController
   end
 
   def update
+    set_product
+    
     start_date = DateTime.new(product_params["start_date(1i)"].to_i, product_params["start_date(2i)"].to_i, product_params["start_date(3i)"].to_i, product_params["start_date(4i)"].to_i, product_params["start_date(5i)"].to_i)
     end_date = DateTime.new(product_params["end_date(1i)"].to_i, product_params["end_date(2i)"].to_i, product_params["end_date(3i)"].to_i, product_params["end_date(4i)"].to_i, product_params["end_date(5i)"].to_i)
 
@@ -135,6 +136,8 @@ class Dashboard::ProductsController < DashboardController
   end
 
   def destroy
+    set_product
+    
     @product.destroy
     respond_to do |format|
       format.html { redirect_to dashboard_products_path }
