@@ -1,4 +1,6 @@
 .wrap-sm
+  .table-options= link_to fa_icon('plus', text: 'Create New Product'), new_admin_product_path, class: 'btn btn-default pull-right'
+
   table.table
     thead
       tr
@@ -7,8 +9,7 @@
         th Unit price
         th Valid from
         th Valid until
-        th
-        th
+        th Actions
 
     tbody
       - @products.each do |product|
@@ -22,9 +23,7 @@
           td
             small.date= product.end_date.strftime('%d-%m-%Y')
             small.time= product.end_date.strftime('%T')
-          td.text-green.text-right width="100px": .saved.hide Saved!
-          td width="150px"
-            = select_tag product.status_action, options_for_select(@status_actions, product.status_action), include_blank: true, data: { behavior: 'Select', url: admin_product_path(product) }, class: 'status'
+          td= link_to "Edit", edit_admin_product_path(product), class: 'link link-ulined'
 
 .footer-actions: .fa-container: .wrap-sm
   .show_all style="font-size:14px;padding-top:8px"
