@@ -86,19 +86,31 @@ Toad::Application.routes.draw do
 
   namespace :admin do
     resources :categories
+    
     resources :fees
-    resources :products, only: [:index, :update]
+    
+    resources :products, except: :show do
+      collection do
+        delete :delete_cascade
+        post :active_cascade
+        post :inactive_cascade
+      end
+    end
+    
     resources :orders, only: [:index, :update] do
       collection do
         delete :delete_cascade
       end
     end
+    
     resources :mailers, only: [:index] do
       collection do
         post :services
       end
     end
+    
     resources :importers, only: [:index, :create]
+    
     root 'categories#index'
 
     namespace :users do
