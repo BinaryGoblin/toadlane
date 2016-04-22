@@ -1,13 +1,13 @@
 .wrap {
   margin: auto;
-  width: $wrap-width-default;
+  max-width: $wrap-width-default;
   padding: 0 10px;
   position: relative;
   @include clearfix;
 }
 
 .wrap-sm {
-  width: $wrap-width-small;
+  max-width: $wrap-width-small;
   @extend .wrap;
 }
 
