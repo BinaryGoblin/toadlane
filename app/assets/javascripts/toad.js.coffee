@@ -11,6 +11,7 @@
 #= require bootstrap/transition
 #= require bootstrap/carousel
 #= require bootstrap/modal
+#= require bootstrap
 
 #= require elemental
 

@@ -1,20 +1,26 @@
-header.header: .wrap
+header.header.navbar-default: .wrap
   = link_to image_tag('logo-header.png'), '/', class: 'logo'
+  button.navbar-toggle.collapsed aria-expanded="false" data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button" 
+    span.sr-only Toggle navigation
+    span.icon-bar
+    span.icon-bar
+    span.icon-bar
+  
+  .collapse.navbar-collapse#bs-example-navbar-collapse-1
+    ul.header-nav.pull-left
+      li= nav_link 'faq', faq_path
+      li= nav_link 'Terms of Service', terms_of_service_path
+      li= link_to 'Blog', "http://toadchat.blogspot.com/"
 
-  ul.header-nav.pull-left
-    li= nav_link 'faq', faq_path
-    li= nav_link 'Terms of Service', terms_of_service_path
-    li= link_to 'Blog', "http://toadchat.blogspot.com/"
-
-  .header-user.pull-right
-    - if current_user
-      .want-sell-buy Want to sell or buy?<br>Then press me
-      = link_to 'WTS / WTB', new_dashboard_product_path, class: 'btn btn-default'
-      - notifications = get_user_notifications
-      - if notifications > 0
-        = link_to "My Profile (#{notifications})", dashboard_messages_path, class: 'btn btn-success'
+    .header-user.pull-right
+      - if current_user
+        .want-sell-buy Want to sell or buy?<br>Then press me
+        = link_to 'WTS / WTB', new_dashboard_product_path, class: 'btn btn-default'
+        - notifications = get_user_notifications
+        - if notifications > 0
+          = link_to "My Profile (#{notifications})", dashboard_messages_path, class: 'btn btn-success'
+        - else
+          = link_to "My Profile", dashboard_profile_path, class: 'btn btn-success'
       - else
-        = link_to "My Profile", dashboard_profile_path, class: 'btn btn-success'
-    - else
-      = link_to 'Login', new_user_session_path, class: 'btn btn-default'
-      = link_to 'Sign Up', new_user_registration_path, class: 'btn btn-success'
+        = link_to 'Login', new_user_session_path, class: 'btn btn-default'
+        = link_to 'Sign Up', new_user_registration_path, class: 'btn btn-success'
