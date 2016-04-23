@@ -37,7 +37,7 @@ class Behavior.EstimateShipping
     @$stripeRebatePrice   = $ '[name="stripe_order[rebate]"]'
     @$stripeRebatePercent = $ '[name="stripe_order[rebate_percent]"]'
     
-    @$footer = $ '.modal-footer'    
+    @$footer = $ '.payment-button'    
 
     @$checkout = $ '.checkout'
 
