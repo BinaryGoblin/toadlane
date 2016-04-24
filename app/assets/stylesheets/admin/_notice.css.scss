@@ -15,3 +15,21 @@
   @include animation-duration(3s);
   @include animation-delay(3s);
 }
+
+.main-alert {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 100;
+  background: orange;
+  color: white;
+  font-size: 20px;
+  padding: 15px 25px;
+  text-align: center;
+  box-shadow: 0 0 15px orange;
+  z-index: 1000;
+  @include animation-name(alert);
+  @include animation-duration(5s);
+  @include animation-delay(5s);
+}
