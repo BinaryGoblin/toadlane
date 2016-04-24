@@ -16,8 +16,11 @@
   .buy-sell .wrap div:last-child, .buy-sell .wrap-sm div:last-child{
     margin-right: 2.5%;
   }
+  .fe-search{
+    width: 100%;
+  }
 }
-@media (max-width:768px) {
+@media (max-width:767px) {
   .navbar-toggle{
     margin: 0;
   }
@@ -40,7 +43,7 @@
   .navbar-default .navbar-collapse{
     position: absolute;
     top: 54px;
-    z-index: 10;
+    z-index: 1000;
     background: #f5f5f5;
     width: 100%;
     left: 0;
@@ -70,6 +73,10 @@
   .footer .logo{
     left: auto;
     right: 10px;
+  }
+  .find-and-explore{
+    height: auto;
+    padding: 35px 0;
   }
 }
 
