@@ -1,3 +1,10 @@
+.navbar-default .navbar-toggle{
+  border-color: #2C2E30;
+  border-radius: 0;
+}
+.navbar-default .navbar-toggle .icon-bar{
+  background-color: #2C2E30;
+}
 @media (max-width:1200px) {
   /* some think */
 }
@@ -59,6 +66,10 @@
   }
   .few img{
     margin-bottom: 10px;
+  }
+  .footer .logo{
+    left: auto;
+    right: 10px;
   }
 }
 
