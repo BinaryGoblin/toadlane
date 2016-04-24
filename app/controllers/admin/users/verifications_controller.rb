@@ -1,7 +1,10 @@
 class Admin::Users::VerificationsController < Admin::UsersController
-
   def index
     @users = User.paginate(page: params[:page], per_page: params[:count]).order('id ASC')
+  end
+  
+  def edit
+    set_user
   end
 
   def update
