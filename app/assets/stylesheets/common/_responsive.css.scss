@@ -5,6 +5,10 @@
 .navbar-default .navbar-toggle .icon-bar{
   background-color: #2C2E30;
 }
+.navbar-default .navbar-collapse, .navbar-default .navbar-form{
+  padding-left: 0;
+  padding-right: 0;
+}
 @media (max-width:1200px) {
   /* some think */
 }
