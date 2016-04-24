@@ -30,14 +30,15 @@ $height-carousel-default: 670px;
     height: $height-carousel-default;
     display: none;
     position: relative;
+    overflow: hidden;
     @include transition(.6s ease-in-out left);
 
     > img,
     > a > img {
-      @include img-responsive();
       line-height: 1;
       height: $height-carousel-default;
-      width: 100%;
+      min-width: 100%;
+      max-width: none;
       position: relative;
       z-index: -1;
     }
