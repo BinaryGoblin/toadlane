@@ -12,25 +12,27 @@
           - @user.errors.full_messages.each do |message|
             li = message
 
-    table.profile-table.last
-      tr
-        td: h4 Forms:
+    .row.profile-table.last
+      .col-md-3
+        h4 Forms:
 
-        td
-          .form-group
-            label Resale certificate:
-            .form-upload-file data-behavior="UploadFile" data-options='{"deleteBtn":"#btn_delete_file"}'
-              = f.file_field :certificate, accept: ".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif"
-              input.form-control type="text" value="#{@user.certificate.filename if @user.certificate}"
-              .hide: input type="checkbox" name="user[certificate_delete]" value="#{@user.certificate.id if @user.certificate}"
-              a.btn.btn-primary.pull-right Upload
-            a#btn_delete_file.btn.btn-black.btn-remove= fa_icon 'trash-o'
-            span Supported extensions: jpg, png, gif, PDF, DOC, DOCX, XLS.<br>Max. upload file size 2MB.
+      .col-md-9
+        .row
+          .col-md-6
+            .form-group
+              label Resale certificate:
+              .form-upload-file data-behavior="UploadFile" data-options='{"deleteBtn":"#btn_delete_file"}'
+                = f.file_field :certificate, accept: ".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif"
+                input.form-control type="text" value="#{@user.certificate.filename if @user.certificate}"
+                .hide: input type="checkbox" name="user[certificate_delete]" value="#{@user.certificate.id if @user.certificate}"
+                a.btn.btn-primary.pull-right Upload
+              a#btn_delete_file.btn.btn-black.btn-remove= fa_icon 'trash-o'
+              span Supported extensions: jpg, png, gif, PDF, DOC, DOCX, XLS.<br>Max. upload file size 2MB.
 
-        td
-          .form-group
-            = f.label :ein_tax, 'EIN Tax #:'
-            = f.text_field :ein_tax, class: 'form-control'
+          .col-md-6
+            .form-group
+              = f.label :ein_tax, 'EIN Tax #:'
+              = f.text_field :ein_tax, class: 'form-control'
 
   .footer-actions: .fa-container: .wrap-sm.text-center
     button.btn.btn-success.submit type="submit"= fa_icon 'check', text: 'SAVE CHANGES'

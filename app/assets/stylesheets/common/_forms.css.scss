@@ -97,7 +97,7 @@ select[data-behavior=Select] {
   position: relative;
   overflow: hidden;
   border-radius: $form-control-border-radius;
-
+  margin-right: 40px;
   [type=file] {
     position: absolute;
     left: -10px;
@@ -123,7 +123,6 @@ select[data-behavior=Select] {
   + .btn-remove {
     float: right;
     margin-top: -32px;
-    margin-right: -40px;
     padding: 5px 10px !important;
 
     .fa {
