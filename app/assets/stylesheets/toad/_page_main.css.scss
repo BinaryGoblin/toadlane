@@ -1,7 +1,7 @@
 .buy-sell {
-  height: 280px;
   text-align: center;
   background: white image-url('buy-sell.png') 50% 50% no-repeat;
+  padding: 30px 0;
 
   h2 {
     line-height: 1;
@@ -51,11 +51,10 @@
 }
 
 .few {
-  height: 155px;
   background: white;
   text-align: center;
   padding-top: 27px;
-
+  padding-bottom: 20px;
   span {
     color: #cccfd3;
     font-size: 28px;
@@ -84,7 +83,7 @@
   left: 0;
   right: 0;
   top: 0;
-  z-index: 100;
+  z-index: 1002;
   background: $brand-success;
   color: white;
   font-size: 20px;

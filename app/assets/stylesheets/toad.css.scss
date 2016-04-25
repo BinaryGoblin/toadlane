@@ -1,4 +1,5 @@
 @import "compass/css3";
+@import "bootstrap";
 @import "bootstrap/variables";
 @import "bootstrap/mixins";
 @import "bootstrap/utilities";
@@ -43,6 +44,8 @@
 @import "toad/page_result";
 @import "toad/page_dashboard";
 @import "toad/page_view_product";
+
+@import "common/responsive";
 
 .search-tooltip {
   background-color: white;
