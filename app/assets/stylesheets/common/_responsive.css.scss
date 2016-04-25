@@ -23,6 +23,12 @@
   .fe-search{
     width: 100%;
   }
+  .carousel-product-title{
+    text-align: left;
+  }
+  .carousel-product-title .actions{
+    right: 0;
+  }
 }
 @media (max-width:767px) {
   .navbar-toggle{
@@ -99,10 +105,36 @@
       top: auto;
     }
   }
+  .product-carousel .product{
+    width: 44%;
+    margin: 20px 3% 0;
+  }
 }
 
 @media (max-width:480px) {
   .buy-sell h2{
     font-size: 46px;
+  }
+  .product-carousel .product{
+    width: 88%;
+    margin: 20px 6% 0;
+  }
+  .product-carousel .carousel-inner{
+    margin: 0 30px;
+  }
+  .carousel-control.left{
+    left: 0;
+  }
+  .carousel-control.right{
+    right: 0;
+  }
+  .carousel-product-title .actions{
+    position: relative;
+    top: 0;
+    display: block;
+    margin-top: 10px;
+  }
+  .carousel-product-title .ui-selectmenu-button{
+    margin-left: 0;
   }
 }

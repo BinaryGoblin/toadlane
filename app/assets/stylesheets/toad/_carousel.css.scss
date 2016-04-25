@@ -127,6 +127,7 @@ $height-carousel-default: 670px;
   &.left {
     left: 10px;
     background-image: image-url('slide-left-btn.png');
+    background-repeat: no-repeat;
 
     &:before {
       background-image: image-url('slide-left-btn.png');
@@ -136,6 +137,7 @@ $height-carousel-default: 670px;
   &.right {
     right: 10px;
     background-image: image-url('slide-right-btn.png');
+    background-repeat: no-repeat;
 
     &:before {
       background-image: image-url('slide-right-btn.png');
