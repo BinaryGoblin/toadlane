@@ -31,7 +31,6 @@ $height-carousel-default: 670px;
     display: none;
     position: relative;
     overflow: hidden;
-    @include transition(.6s ease-in-out left);
 
     > img,
     > a > img {
@@ -127,6 +126,7 @@ $height-carousel-default: 670px;
   &.left {
     left: 10px;
     background-image: image-url('slide-left-btn.png');
+    background-repeat: no-repeat;
 
     &:before {
       background-image: image-url('slide-left-btn.png');
@@ -136,6 +136,7 @@ $height-carousel-default: 670px;
   &.right {
     right: 10px;
     background-image: image-url('slide-right-btn.png');
+    background-repeat: no-repeat;
 
     &:before {
       background-image: image-url('slide-right-btn.png');

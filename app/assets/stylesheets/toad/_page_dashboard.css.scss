@@ -1,5 +1,4 @@
 .profile-table {
-  width: 100%;
   font-size: 12px;
 
   &.last tr:last-child td {
@@ -45,8 +44,6 @@
 }
 
 .account-table {
-  height: 100%;
-  width: 100%;
   font-size: 12px;
 
   td {
@@ -71,8 +68,6 @@
 }
 
 .account-list-table {
-  width: 100%;
-  height: 100%;
   font-size: 12px;
 
   td {
@@ -423,5 +418,11 @@
 
   input {
     margin-right: 5px;
+  }
+}
+
+.notification-settings{
+  .radio label, .checkbox label{
+    padding-left: 0;
   }
 }

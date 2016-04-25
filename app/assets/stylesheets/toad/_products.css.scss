@@ -385,10 +385,12 @@ $sell-color: #FF8724;
 }
 
 .product-carousel {
-  max-height: $product-carousel-height;
-
+  &.carousel{
+    height: auto;
+    padding-bottom: 30px;    
+  }
   .carousel-inner {
-    height: $product-carousel-height;
+    height: auto;
     width: auto;
     margin: 0 56px;
     padding: 0 4px;
@@ -402,14 +404,15 @@ $sell-color: #FF8724;
       bottom: 0;
       border-bottom: 4px solid #cccfd3;
     }
+
+    & > .item {
+      margin: 0 -20px;
+      height: auto;
+    }
   }
   
   .product {
-    margin: 20px 0 0 40px;
-
-    &:first-child {
-      margin-left: 0 !important;
-    }
+    margin: 20px 20px 0;
   }
 }
 

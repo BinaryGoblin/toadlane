@@ -13,39 +13,40 @@
       = link_to 'Active', active_cascade_dashboard_products_path, method: :post, remote: true, data: { confirm: 'Are you sure?' }, class: 'label label-green'
       = link_to 'Inactive', inactive_cascade_dashboard_products_path, method: :post, remote: true, data: { confirm: 'Are you sure?' }, class: 'label label-orange'
 
-  table.table.products-table data-behavior="TableCheckbox"
-    thead
-      tr
-        th: input type="checkbox"
-        th Status:
-        th Product name:
-        th Unit price:
-        th Valid from:
-        th Valid until:
-        th
-
-    tbody
-      - @products.each do |product|
+  .table-responsive
+    table.table.products-table data-behavior="TableCheckbox"
+      thead
         tr
-          td: input type="checkbox" value="#{product.id}"
-          td
-            - if product.status
-              .text-green Active
-            - else
-              .text-orange Inactive
+          th: input type="checkbox"
+          th Status:
+          th Product name:
+          th Unit price:
+          th Valid from:
+          th Valid until:
+          th
 
-          td= link_to product.name, product_path(product, cat_id: product.main_category), class: 'link link-ulined', target: '_blank'
-          td= number_to_currency(product.unit_price, :unit => "$", precision: 2)
-          td
-            small.date= product.start_date.strftime('%d-%m-%Y')
-            small.time= product.start_date.strftime('%T')
-          td
-            small.date= product.end_date.strftime('%d-%m-%Y')
-            small.time= product.end_date.strftime('%T')
-          td
-            = link_to 'Edit', edit_dashboard_product_path(product), class: 'view'
-            |  |
-            = link_to 'Delete', dashboard_product_path(product), method: :delete, data: { confirm: 'Are you sure?' }, class: 'view view-red'
+      tbody
+        - @products.each do |product|
+          tr
+            td: input type="checkbox" value="#{product.id}"
+            td
+              - if product.status
+                .text-green Active
+              - else
+                .text-orange Inactive
+
+            td= link_to product.name, product_path(product, cat_id: product.main_category), class: 'link link-ulined', target: '_blank'
+            td= number_to_currency(product.unit_price, :unit => "$", precision: 2)
+            td
+              small.date= product.start_date.strftime('%d-%m-%Y')
+              small.time= product.start_date.strftime('%T')
+            td
+              small.date= product.end_date.strftime('%d-%m-%Y')
+              small.time= product.end_date.strftime('%T')
+            td
+              = link_to 'Edit', edit_dashboard_product_path(product), class: 'view'
+              |  |
+              = link_to 'Delete', dashboard_product_path(product), method: :delete, data: { confirm: 'Are you sure?' }, class: 'view view-red'
 
 .footer-actions: .fa-container: .wrap-sm
   .show-all
