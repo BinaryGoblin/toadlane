@@ -109,6 +109,16 @@
     width: 44%;
     margin: 20px 3% 0;
   }
+  .tabs li, .admin-tabs li{
+    margin: 0 0.5% 5px;
+    width: 32.33%;
+    a.btn{
+      display: block;
+    }
+  }
+  .tabs li:last-child, .admin-tabs li:last-child{
+    margin-right: 0.5%;
+  }
 }
 
 @media (max-width:480px) {
