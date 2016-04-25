@@ -31,7 +31,6 @@ $height-carousel-default: 670px;
     display: none;
     position: relative;
     overflow: hidden;
-    @include transition(.6s ease-in-out left);
 
     > img,
     > a > img {

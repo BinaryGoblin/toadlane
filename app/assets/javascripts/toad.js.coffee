@@ -8,9 +8,6 @@
 #= require ./plugins/jquery.validate
 #= require_tree ./plugins
 
-#= require bootstrap/transition
-#= require bootstrap/carousel
-#= require bootstrap/modal
 #= require bootstrap
 
 #= require elemental
