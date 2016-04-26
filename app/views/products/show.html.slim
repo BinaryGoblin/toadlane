@@ -12,176 +12,176 @@
 
 .view-product
   .wrap-sm
-    .vp-right-col
-      .time-left
-        h3 time left:
-        = time_left @product.end_date
+    .row
+      .col-md-7
+        - if @product.amount.present?
+          - if @product.status_characteristic == 'sell'
+            - sold_out = (@product.sold_out.present? ? @product.sold_out : 0)
+            - available = @product.amount - sold_out
+            - maxoptions = ',"max":' + available.to_s
+          - else
+            - purchased = (@product.sold_out.present? ? @product.sold_out : 0)
+            - desired = @product.amount - purchased
+            - maxoptions = ',"max":' + desired.to_s
+        .vp-left-col
+          - if @product.images.any?
+            #slider.vp-carousel.carousel.slide data-ride="carousel"
+              ol.carousel-indicators
+                - if @product.images.count > 1
+                  - @product.images.each_with_index do |item, index|
+                    li class="#{'active' if index == 0}" data-target="#slider" data-slide-to="#{index}"
 
-      .vp-seller: .white-panel
-        - if @product.status_characteristic == 'sell'
-          .vp-title Seller
-        - else
-          .vp-title Buyer
-        table: tr
-          td
-            .img= image_tag @product.user.asset(:small) if @product.user.asset?
-            / .rating
-            /   | Rating:
-            /   div
-            /     span.star
-            /     span.star
-            /     span.star.active
-            /     span.star
-            /     span.star
-          td
-            .status.text-uppercase
-              - if @product.user.is_reseller
-                b Status:
-                span.text-green 
-                  |
-                    Verified
+              .carousel-inner
+                - @product.images.each_with_index do |item, index|
+                  .item class="#{'active' if index == 0}"= image_tag item.image(:big)
+
+              - if @product.images.count > 1
+                a.left.carousel-control href="#slider" role="button" data-slide="prev"
+                a.right.carousel-control href="#slider" role="button" data-slide="next"
+    	  
+          - if @product.description.present?
+            .white-panel= simple_format @product.description
+    	  
+    	  .white-panel.vp-calculation data-behavior="CalculationProduct" data-options='{"pricebreaks":#{@product.pricebreaks.collect { |p| { quantity: p.quantity, price: p.price } }.to_json},"maxquantity":#{available.present? ? available.to_s : '"Infinity"'}}'
+
+            - if @product.status_characteristic == 'sell'
+              .progress: i style="width:#{100-((sold_out/@product.amount)*100)}%"
+            - else
+              .progress: i style="width:#{100-((desired/@product.amount)*100)}%"
+
+    		- if @product.status_characteristic == 'sell'
+              table: tr
+                td
+                  span For sale:
+                  b= @product.amount
+                td
+                  span Sold:
+                  b= sold_out
+                td
+                  span Available to buy:
+                  b.text-green= available
+            - else
+              table: tr
+                td
+                  span Total Sought:
+                  b= @product.amount
+                td
+                  span Units Purchased:
+                  b= purchased
+                td
+                  span Units Still Desired:
+                  b.text-orange= desired;
+
+            hr
+
+            .quantity
+              .pull-left
+                span.text-left Select quantity:
+                .form-control-number data-behavior="FieldQuantity" data-options='{"min":1#{maxoptions}}'
+                  .minus= fa_icon 'minus'
+                  .plus= fa_icon 'plus'
+                  input.calc-quantity.form-control.text-center type="text" value="1"
+
+              .pull-right
+                span.text-right Totals:
+                .price data-unit-price="#{number_with_precision(@product.unit_price, precision: 0, delimiter: '')}" #{number_to_currency(@product.unit_price, :unit => "$", precision: 0)}/Unit
+
+            ul
+              li
+                span <span class="calc-rebate">0.00</span>% rebate for purchasing <span class="calc-pcs">0</span> pcs:
+                b.pull-right.calc-rebate-price 0.00
+              li
+                span Toadlane Fee (<span class="calc-fees">#{@fee}</span>%):
+                b.pull-right.calc-fees-price 0.00
+              li
+                span Shipping Estimate ($<span class="calc-shipping" data-type="PerUnit">0.00</span>/unit):
+                b.pull-right.calc-shipping-price 0.00
+              - if @product.status_characteristic == 'sell'
+                li.text-green
+                  b Cart Subtotal:
+                  b.pull-right.calc-cart 0.00
               - else
-                b Status:
-                span.text-red 
+                li.text-orange
+                  b Cart Subtotal
+                  b.pull-right.calc-cart 0.00
+                
+          .white-panel.wp-table
+            - if @product.pricebreaks.any?
+              .vp-title Pricebreaks:
+              - if @product.status_characteristic == 'sell'
+                = pricebreak_table @product.pricebreaks, @product.unit_price, available
+              - else
+                = pricebreak_table @product.pricebreaks, @product.unit_price, desired
+
+            - if current_user.present?
+              - if current_user.profile_complete?
+                -if @product.status_characteristic == 'sell'
+                  .text-center= link_to 'Proceed to checkout', '#', class: 'btn btn-success btn-lg checkout', data: {  toggle: 'modal', target: '#stripe_form_checkout' }
+                -else
+                  .text-center= link_to 'Make Sale', '#', class: 'btn btn-success-sell btn-lg checkout', data: {  toggle: 'modal', target: '#stripe_form_checkout'  }
+              - else
+                .wrong.text-center
                   |
-                    Unverified              
+                    Please fill out your profile details. <br>
+                    Until your profile is complete, you will not be able to create orders.
+            - else
+              .wrong.text-center
+                |
+                  Please sign in to place an order.
+      .col-md-5
+        .vp-right-col
+          .time-left
+            h3 time left:
+            = time_left @product.end_date
 
-            .name
-              b= @product.user.name
-              - if !@product.user.addresses[0].nil?
-              	span = @product.user.addresses[0].country
+          .vp-seller: .white-panel
+            - if @product.status_characteristic == 'sell'
+              .vp-title Seller
+            - else
+              .vp-title Buyer
+            table: tr
+              td
+                .img= image_tag @product.user.asset(:small) if @product.user.asset?
+                / .rating
+                /   | Rating:
+                /   div
+                /     span.star
+                /     span.star
+                /     span.star.active
+                /     span.star
+                /     span.star
+              td
+                .status.text-uppercase
+                  - if @product.user.is_reseller
+                    b Status:
+                    span.text-green 
+                      |
+                        Verified
+                  - else
+                    b Status:
+                    span.text-red 
+                      |
+                        Unverified              
 
-            - if @product.user.benefits.reject{ |e| e.empty? }.present?
-              .sell
-                b SELL:
-                .sell-list= @product.user.benefits.reject{ |e| e.empty? }.join(', ')
+                .name
+                  b= @product.user.name
+                  - if !@product.user.addresses[0].nil?
+                    span = @product.user.addresses[0].country
 
-            - if @product.user.facebook.present?
-              .fb-link= link_to 'Facebook profile', @product.user.facebook, class: 'link link-ulined link-sm text-uppercase', target: '_blank'
+                - if @product.user.benefits.reject{ |e| e.empty? }.present?
+                  .sell
+                    b SELL:
+                    .sell-list= @product.user.benefits.reject{ |e| e.empty? }.join(', ')
 
-        a.vp-title href="#" data-toggle="modal" data-target="#form_message" Send a message <i class="fa fa-plus-square pull-right"></i>
+                - if @product.user.facebook.present?
+                  .fb-link= link_to 'Facebook profile', @product.user.facebook, class: 'link link-ulined link-sm text-uppercase', target: '_blank'
 
-      - if @product.amount.present?
-        - if @product.status_characteristic == 'sell'
-          - sold_out = (@product.sold_out.present? ? @product.sold_out : 0)
-          - available = @product.amount - sold_out
-          - maxoptions = ',"max":' + available.to_s
-        - else
-          - purchased = (@product.sold_out.present? ? @product.sold_out : 0)
-          - desired = @product.amount - purchased
-          - maxoptions = ',"max":' + desired.to_s
+            a.vp-title href="#" data-toggle="modal" data-target="#form_message" Send a message <i class="fa fa-plus-square pull-right"></i>
 
-      .white-panel.vp-share
-        b.text-uppercase.pull-left Share:
-        .addthis_sharing_toolbox.pull-right
-        = javascript_include_tag '//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51a8787656fab455'
-
-    .vp-left-col
-      - if @product.images.any?
-        #slider.vp-carousel.carousel.slide data-ride="carousel"
-          ol.carousel-indicators
-            - if @product.images.count > 1
-              - @product.images.each_with_index do |item, index|
-                li class="#{'active' if index == 0}" data-target="#slider" data-slide-to="#{index}"
-
-          .carousel-inner
-            - @product.images.each_with_index do |item, index|
-              .item class="#{'active' if index == 0}"= image_tag item.image(:big)
-
-          - if @product.images.count > 1
-            a.left.carousel-control href="#slider" role="button" data-slide="prev"
-            a.right.carousel-control href="#slider" role="button" data-slide="next"
-	  
-      - if @product.description.present?
-        .white-panel= simple_format @product.description
-	  
-	  .white-panel.vp-calculation data-behavior="CalculationProduct" data-options='{"pricebreaks":#{@product.pricebreaks.collect { |p| { quantity: p.quantity, price: p.price } }.to_json},"maxquantity":#{available.present? ? available.to_s : '"Infinity"'}}'
-
-        - if @product.status_characteristic == 'sell'
-          .progress: i style="width:#{100-((sold_out/@product.amount)*100)}%"
-        - else
-          .progress: i style="width:#{100-((desired/@product.amount)*100)}%"
-
-		- if @product.status_characteristic == 'sell'
-          table: tr
-            td
-              span For sale:
-              b= @product.amount
-            td
-              span Sold:
-              b= sold_out
-            td
-              span Available to buy:
-              b.text-green= available
-        - else
-          table: tr
-            td
-              span Total Sought:
-              b= @product.amount
-            td
-              span Units Purchased:
-              b= purchased
-            td
-              span Units Still Desired:
-              b.text-orange= desired;
-
-        hr
-
-        .quantity
-          .pull-left
-            span.text-left Select quantity:
-            .form-control-number data-behavior="FieldQuantity" data-options='{"min":1#{maxoptions}}'
-              .minus= fa_icon 'minus'
-              .plus= fa_icon 'plus'
-              input.calc-quantity.form-control.text-center type="text" value="1"
-
-          .pull-right
-            span.text-right Totals:
-            .price data-unit-price="#{number_with_precision(@product.unit_price, precision: 0, delimiter: '')}" #{number_to_currency(@product.unit_price, :unit => "$", precision: 0)}/Unit
-
-        ul
-          li
-            span <span class="calc-rebate">0.00</span>% rebate for purchasing <span class="calc-pcs">0</span> pcs:
-            b.pull-right.calc-rebate-price 0.00
-          li
-            span Toadlane Fee (<span class="calc-fees">#{@fee}</span>%):
-            b.pull-right.calc-fees-price 0.00
-          li
-            span Shipping Estimate ($<span class="calc-shipping" data-type="PerUnit">0.00</span>/unit):
-            b.pull-right.calc-shipping-price 0.00
-          - if @product.status_characteristic == 'sell'
-            li.text-green
-              b Cart Subtotal:
-              b.pull-right.calc-cart 0.00
-          - else
-            li.text-orange
-              b Cart Subtotal
-              b.pull-right.calc-cart 0.00
-            
-      .white-panel.wp-table
-        - if @product.pricebreaks.any?
-          .vp-title Pricebreaks:
-          - if @product.status_characteristic == 'sell'
-            = pricebreak_table @product.pricebreaks, @product.unit_price, available
-          - else
-            = pricebreak_table @product.pricebreaks, @product.unit_price, desired
-
-        - if current_user.present?
-          - if current_user.profile_complete?
-            -if @product.status_characteristic == 'sell'
-              .text-center= link_to 'Proceed to checkout', '#', class: 'btn btn-success btn-lg checkout', data: {  toggle: 'modal', target: '#stripe_form_checkout' }
-            -else
-              .text-center= link_to 'Make Sale', '#', class: 'btn btn-success-sell btn-lg checkout', data: {  toggle: 'modal', target: '#stripe_form_checkout'  }
-          - else
-            .wrong.text-center
-              |
-                Please fill out your profile details. <br>
-                Until your profile is complete, you will not be able to create orders.
-        - else
-          .wrong.text-center
-            |
-              Please sign in to place an order.
-
+          .white-panel.vp-share
+            b.text-uppercase.pull-left Share:
+            .addthis_sharing_toolbox.pull-right
+            = javascript_include_tag '//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51a8787656fab455'
   - if @related_products.any?
     .wrap
       -if @product.status_characteristic == 'sell'
