@@ -135,17 +135,17 @@
   .buy-sell h2{
     font-size: 46px;
   }
-  .product, .product-carousel .product{
+  .product, .product-carousel .product, .view-product .product-carousel .product{
     width: 88%;
     margin: 20px 6% 0;
   }
-  .product-carousel .carousel-inner{
+  .product-carousel .carousel-inner, .view-product .product-carousel .carousel-inner{
     margin: 0 30px;
   }
-  .carousel-control.left{
+  .carousel-control.left, .view-product .product-carousel .carousel-control.left{
     left: 0;
   }
-  .carousel-control.right{
+  .carousel-control.right, .view-product .product-carousel .carousel-control.right{
     right: 0;
   }
   .carousel-product-title .actions{

@@ -32,7 +32,7 @@ $zindex-modal-background: 0;
 
 .modal-dialog {
   position: relative;
-  width: 500px;
+  max-width: 500px;
   margin: 30px auto;
 
   .modal-lg & { width: 800px; }
