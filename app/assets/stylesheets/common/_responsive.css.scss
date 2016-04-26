@@ -112,7 +112,7 @@
       top: auto;
     }
   }
-  .product-carousel .product{
+  .product{
     width: 44%;
     margin: 20px 3% 0;
   }
@@ -126,13 +126,16 @@
   .tabs li:last-child, .admin-tabs li:last-child{
     margin-right: 0.5%;
   }
+  .products{
+    margin: 20px 5px -12px;
+  }
 }
 
 @media (max-width:480px) {
   .buy-sell h2{
     font-size: 46px;
   }
-  .product-carousel .product{
+  .product, .product-carousel .product{
     width: 88%;
     margin: 20px 6% 0;
   }
@@ -153,5 +156,8 @@
   }
   .carousel-product-title .ui-selectmenu-button{
     margin-left: 0;
+  }
+  .products{
+    margin: 10px -15px -12px;
   }
 }
