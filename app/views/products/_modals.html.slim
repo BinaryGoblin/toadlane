@@ -169,8 +169,8 @@
 	        data-email="#{ current_user.email }"]
 	        
         - else
-          = f.hidden_field :seller_id, current_user.id
-          = f.hidden_field :buyer_id, product.user.id
+          = f.hidden_field :seller_id, value: current_user.id
+          = f.hidden_field :buyer_id, value: product.user.id
 
 	      button.btn.btn-default type="button" data-dismiss="modal" Cancel
 	      script.stripe-button[src="https://checkout.stripe.com/checkout.js"
