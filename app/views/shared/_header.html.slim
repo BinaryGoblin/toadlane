@@ -14,8 +14,8 @@ header.header.navbar-default: .wrap
 
     .header-user.pull-right
       - if current_user
-        .want-sell-buy Want to sell or buy?<br>Then press me
-        = link_to 'WTS / WTB', new_dashboard_product_path, class: 'btn btn-default'
+        .want-sell-buy Want to sell?<br>Then press me
+        = link_to 'WTS', new_dashboard_product_path, class: 'btn btn-default'
         - notifications = get_user_notifications
         - if notifications > 0
           = link_to "My Profile (#{notifications})", dashboard_messages_path, class: 'btn btn-success'
