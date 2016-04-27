@@ -50,19 +50,14 @@
 
       td
         .clearfix
-          .unit
-            = f.label :unit_price, 'Retail price:', class: 'required'
-            = f.number_field :unit_price, class: 'form-control'
-
-          .status_action
-            = f.label :status_characteristic, 'I am:', class: 'required'
-            = f.select :status_characteristic, [['Selling', 'sell'], ['Buying', 'buy']], {}, data: { behavior: 'Select' }
-
           .status
             = f.label :status, 'Product status:'
             .checkbox: label
               = f.check_box :status
               | Is Active
+          
+          .status_action
+            = f.hidden_field :status_characteristic, :value => 'sell'
 
         label Photos:
         .product-form-photos data-behavior="UploadImages" data-options='{"template":"#template-select-image","btnAdd":"#add_photo","deleteImage":".delete-image"}'
@@ -105,56 +100,42 @@
 
     hr
 
-    table: tr
-      td
-        .offer-item
-          label.lg.required OFFER valid from:
+    .offer-from-until
+      .offer-item
+        label.lg.required OFFER valid from:
 
-          .offer-date
-            label Date:
-            = date_select :product, :start_date, { order: [:day, :month, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+        .offer-date
+          label Date:
+          = date_select :product, :start_date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
 
-          .offer-time
-            label Time:
-            = time_select :product, :start_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+        .offer-time
+          label Time:
+          = time_select :product, :start_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
 
-        .offer-item
-          label.lg.required OFFER valid until:
+      .offer-item
+        label.lg.required OFFER valid until:
 
-          .offer-date
-            label Date:
-            = date_select :product, :end_date, { order: [:day, :month, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+        .offer-date
+          label Date:
+          = date_select :product, :end_date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
 
-          .offer-time
-            label Time:
-            = time_select :product, :end_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
-
-      td
-        .amount-soldout
-          = f.label :amount, 'Amount:', class: 'lg required'
-          = f.text_field :amount, class: 'form-control'
-
-        .amount-soldout
-          = f.label :sold_out, 'Bought:', class: 'lg'
-          = f.text_field :sold_out, class: 'form-control'
-
-        .dimensions
-          label.lg dimensions:
-          .dimensions-fields
-            div
-              = f.label :dimension_width, 'Width:'
-              = f.text_field :dimension_width, class: 'form-control'
-            div
-              = f.label :dimension_height, 'Height:'
-              = f.text_field :dimension_height, class: 'form-control'
-            div
-              = f.label :dimension_depth, 'Depth:'
-              = f.text_field :dimension_depth, class: 'form-control'
-            div
-              = f.label :dimension_weight, 'Weight:'
-              = f.text_field :dimension_weight, class: 'form-control'
+        .offer-time
+          label Time:
+          = time_select :product, :end_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
 
     hr
+    .price-stock
+      .unit
+        = f.label :unit_price, 'Base unit price (USD):', class: 'required lg'
+        = f.number_field :unit_price, in: 0...1000000, step: "any", class: 'form-control'
+       
+      .amount-stock
+        = f.label :amount, 'Amount in Stock:', class: 'lg required'
+        = f.text_field :amount, class: 'form-control'
+      
+      .amount-soldout
+        = f.label :sold_out, 'Number Purchased:', class: 'lg'
+        = f.text_field :sold_out, class: 'form-control'
 
     label.lg Pricebreaks:
     ul.pricebreaks
@@ -204,6 +185,23 @@
         span.btn.btn-default.remove= fa_icon 'trash-o'
         
     hr
+      .dimensions
+        .dimensions-label
+          label.lg Shipping Dimensions:
+        .dimensions-fields
+          div
+            = f.label :dimension_width, 'Width (inches):'
+            = f.text_field :dimension_width, class: 'form-control'
+          div
+            = f.label :dimension_height, 'Height (inches):'
+            = f.text_field :dimension_height, class: 'form-control'
+          div
+            = f.label :dimension_depth, 'Depth (inches):'
+            = f.text_field :dimension_depth, class: 'form-control'
+          div
+            = f.label :dimension_weight, 'Weight (lbs):'
+            = f.text_field :dimension_weight, class: 'form-control'
+    
     label.lg Shipping Estimates:
     ul.estimates
       = f.fields_for :shipping_estimates do |ff|
