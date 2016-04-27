@@ -462,8 +462,12 @@ $sell-color: #FF8724;
 
   .unit {
     float: left;
-    width: 90px;
+    width: 100%;
     margin: 0 20px 22px 0;
+    
+    input {
+      width: 100px;
+    }
   }
 
   .tax {
@@ -474,12 +478,12 @@ $sell-color: #FF8724;
   .status_action {
     width: 120px;
     float: left;
-    margin-left: 20px;
+    margin: 0 20px 22px 0;
   }
 
   .status {
     float: left;
-    margin-left: 20px;
+    margin: 0 20px 22px 0;
 
     .checkbox {
       float: left;

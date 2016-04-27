@@ -20,7 +20,7 @@ class Admin::ProductsController < Admin::ApplicationController
   end
   
   def create
-    endstart_date = DateTime.new(product_params["start_date(1i)"].to_i, product_params["start_date(2i)"].to_i, product_params["start_date(3i)"].to_i, product_params["start_date(4i)"].to_i, product_params["start_date(5i)"].to_i)
+    start_date = DateTime.new(product_params["start_date(1i)"].to_i, product_params["start_date(2i)"].to_i, product_params["start_date(3i)"].to_i, product_params["start_date(4i)"].to_i, product_params["start_date(5i)"].to_i)
     end_date = DateTime.new(product_params["end_date(1i)"].to_i, product_params["end_date(2i)"].to_i, product_params["end_date(3i)"].to_i, product_params["end_date(4i)"].to_i, product_params["end_date(5i)"].to_i)
 
     if product_params[:pricebreaks_attributes].present?
@@ -51,11 +51,11 @@ class Admin::ProductsController < Admin::ApplicationController
         end
 
         if params[:button] == 'new'
-          path = new_dashboard_product_path
+          path = new_admin_product_path
         elsif params[:button] == 'edit'
-          path = edit_dashboard_product_path(@product)
+          path = edit_admin_product_path(@product)
         else
-          path = dashboard_products_path
+          path = admin_products_path
         end
 
         format.html { redirect_to path }
