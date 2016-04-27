@@ -460,16 +460,6 @@ $sell-color: #FF8724;
     margin-left: 10px;
   }
 
-  .unit {
-    float: left;
-    width: 100%;
-    margin: 0 20px 22px 0;
-    
-    input {
-      width: 100px;
-    }
-  }
-
   .tax {
     float: left;
     width: 120px;
@@ -542,6 +532,7 @@ $sell-color: #FF8724;
     margin: 0 0 -29px -3%;
     display: block;
     @include clearfix;
+    width: 100%;
 
     li {
       border-width: 1px;
@@ -743,23 +734,37 @@ $sell-color: #FF8724;
     }
   }
 
-  .amount-soldout {
-    float: left;
-    margin: 13px 20px 30px 0;
-
-    > div {
-      display: inline;
-    }
-
-    label {
+  .price-stock {
+    width: 100%;
+  
+    .unit {
       float: left;
-      margin-top: 9px;
+      width: 30.333%;
+      margin: 0 20px 22px 0;
+      
+      input {
+        width: 100px;
+      }
     }
-
-    .form-control {
+    
+    .amount-soldout {
       float: left;
-      margin-left: 10px;
-      width: 100px;
+      width: 30.333%;
+      margin: 0 20px 22px 0;
+      
+      input {
+        width: 100px;
+      }
+    }
+    
+    .amount-stock {
+      float: left;
+      width: 30.333%;
+      margin: 0 20px 22px 0;
+      
+      input {
+        width: 100px;
+      }
     }
   }
 
@@ -770,6 +775,10 @@ $sell-color: #FF8724;
     > label {
       float: left;
       margin-top: 25px;
+    }
+    
+    .dimensions-label {
+      width: 100%;
     }
   }
 
@@ -885,6 +894,10 @@ $sell-color: #FF8724;
     background-position: 50% 30%;
     @include background-size(cover);
   }
+}
+
+.offer-from-until {
+  width: 100%;
 }
 
 .offer-item {
