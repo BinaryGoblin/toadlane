@@ -186,4 +186,41 @@
   .search-result .product-list .desc{
     clear: both;
   }
+  .find-and-explore .ui-selectmenu-button{
+    float: none;
+    display: block;
+    margin: 0;
+    border-right: none;
+    border-bottom: 2px solid #cccfd3;
+    background: #f5f5f5;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-topright: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+  .fe-search{
+    height: auto;
+    box-shadow: none;
+    .query-container{
+      margin-left: 5px;
+      margin-right: 50px;
+    }
+    .fe-btn.btn-warning{
+      background: #ff8724 image-url("search-icon.png") no-repeat center center;
+      text-indent: -2000px;
+      overflow: hidden;
+      width: 50px;
+      margin: 0;
+      border-radius: 0;
+      -webkit-border-bottom-right-radius: 3px;
+      -moz-border-radius-bottomright: 3px;
+      border-bottom-right-radius: 3px;
+      border-left: 1px solid #DC7017;
+      &:hover{
+        background-color: #7a4124;
+      }
+    }
+  }
 }
