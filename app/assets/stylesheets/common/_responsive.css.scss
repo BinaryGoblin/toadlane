@@ -13,6 +13,22 @@
   /* some think */
 }
 
+@media (max-width:1080px) {
+  .search-result{
+    .products{
+      margin-left: -15px;
+      margin-right: -15px;
+      float: none;
+      .product-list{
+        margin-left: 15px;
+        margin-right: 15px;
+        float: none;
+        width: auto;
+      }
+    }
+  }
+}
+
 @media (max-width:992px) {
   .buy-sell .wrap div:first-child, .buy-sell .wrap-sm div:first-child{
     margin-left: 2.5%;
@@ -38,6 +54,9 @@
   }
 }
 @media (max-width:767px) {
+  body{
+    padding-bottom: 0;
+  }
   .navbar-toggle{
     margin: 0;
   }
@@ -64,14 +83,14 @@
     background: #f5f5f5;
     width: 100%;
     left: 0;
-    padding: 20px 0 0 0;
+    padding: 0;
   }
   .header-nav.pull-left{
     float: right !important;
   }
   .header-user{
     width: 100%;
-    margin: 13px 0;
+    margin: 20px 0;
     a.btn {
       width: 45%;
       margin: 2%;
@@ -87,9 +106,19 @@
   .few img{
     margin-bottom: 10px;
   }
-  .footer .logo{
-    left: auto;
-    right: 10px;
+  .footer{
+    position: relative;
+    .pull-left, .pull-right{
+      float: none !important;
+    }
+    .logo{
+      position: static;
+      display: block;
+      margin: 10px auto;
+    }
+    .copy{
+      text-align: center;
+    }
   }
   .find-and-explore{
     height: auto;
@@ -112,7 +141,7 @@
       top: auto;
     }
   }
-  .product-carousel .product{
+  .product{
     width: 44%;
     margin: 20px 3% 0;
   }
@@ -126,23 +155,26 @@
   .tabs li:last-child, .admin-tabs li:last-child{
     margin-right: 0.5%;
   }
+  .products{
+    margin: 20px 5px -12px;
+  }
 }
 
 @media (max-width:480px) {
   .buy-sell h2{
     font-size: 46px;
   }
-  .product-carousel .product{
+  .product, .product-carousel .product, .view-product .product-carousel .product{
     width: 88%;
     margin: 20px 6% 0;
   }
-  .product-carousel .carousel-inner{
+  .product-carousel .carousel-inner, .view-product .product-carousel .carousel-inner{
     margin: 0 30px;
   }
-  .carousel-control.left{
+  .carousel-control.left, .view-product .product-carousel .carousel-control.left{
     left: 0;
   }
-  .carousel-control.right{
+  .carousel-control.right, .view-product .product-carousel .carousel-control.right{
     right: 0;
   }
   .carousel-product-title .actions{
@@ -153,5 +185,55 @@
   }
   .carousel-product-title .ui-selectmenu-button{
     margin-left: 0;
+  }
+  .products{
+    margin: 10px -15px -12px;
+  }
+  .result-action {
+    padding: 15px;
+    .act{
+      width: 100% !important;
+      margin: 5px 0;
+    }
+  }
+  .search-result .product-list .desc{
+    clear: both;
+  }
+  .find-and-explore .ui-selectmenu-button{
+    float: none;
+    display: block;
+    margin: 0;
+    border-right: none;
+    border-bottom: 2px solid #cccfd3;
+    background: #f5f5f5;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-topright: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+  .fe-search{
+    height: auto;
+    box-shadow: none;
+    .query-container{
+      margin-left: 5px;
+      margin-right: 50px;
+    }
+    .fe-btn.btn-warning{
+      background: #ff8724 image-url("search-icon.png") no-repeat center center;
+      text-indent: -2000px;
+      overflow: hidden;
+      width: 50px;
+      margin: 0;
+      border-radius: 0;
+      -webkit-border-bottom-right-radius: 3px;
+      -moz-border-radius-bottomright: 3px;
+      border-bottom-right-radius: 3px;
+      border-left: 1px solid #DC7017;
+      &:hover{
+        background-color: #7a4124;
+      }
+    }
   }
 }

@@ -23,13 +23,6 @@
   }
 
   .product-carousel {
-    .carousel-inner {
-      margin: 0 68px;
-    }
-
-    .product {
-      margin: 20px 0 0 32px;
-    }
 
     .carousel-control {
       &.left { left: 20px; }
@@ -134,9 +127,6 @@
 }
 
 .vp-right-col {
-  float: right;
-  width: 400px;
-  margin-left: 40px;
 
   > div {
     margin-top: 20px;
@@ -306,6 +296,7 @@
   li {
     font-size: 14px;
     margin-top: 12px;
+    clear: both;
     padding-top: 2px;
 
     .pull-right {

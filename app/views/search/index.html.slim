@@ -20,7 +20,7 @@
     b Show items:
     = select_tag :count, options_for_select([['16', 16], ['24', 24], ['48', 48], ['96', 96]], params[:count]), class: 'dd-small-list', data: { behavior: 'CustomSelect', select_query: 'count' }
 
-.wrap-sm: .products
+.wrap-sm.search-result: .products
   - if cookies[:view] == 'list'
     = render partial: '/shared/product_list', collection: @products
   - else

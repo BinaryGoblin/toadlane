@@ -6,7 +6,7 @@ $buy-color: #5c8f10;
 $sell-color: #FF8724;
 
 .products {
-  margin: 20px -30px -12px;
+  margin: 20px -35px -12px;
   float: left;
 }
 
@@ -208,7 +208,7 @@ $sell-color: #FF8724;
   .products & {
     position: relative;
     margin: 0 20px 10px;
-    width: $wrap-width-small;
+    max-width: $wrap-width-small;
   }
 
   .name {
@@ -412,7 +412,7 @@ $sell-color: #FF8724;
   }
   
   .product {
-    margin: 20px 20px 0;
+    margin: 20px 18px 0;
   }
 }
 

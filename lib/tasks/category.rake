@@ -33,5 +33,21 @@ namespace :db do
     Category.delete_all
     puts '---> delete data from Category'
   end
+
+  desc 'Add and setup all category'
+  task setup_all_category: :environment do
+    category = nil
+    unless Category.find_by_name('all')
+      category = Category.new(
+        name: 'all'
+        )
+      category.save!
+      puts "---> added category 'all'"
+    end
+    Product.all.each do |p|
+      p.categories << category
+    end
+    puts '---> All products added to all category'
+  end
 end
 
