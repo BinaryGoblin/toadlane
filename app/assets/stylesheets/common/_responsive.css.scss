@@ -13,6 +13,22 @@
   /* some think */
 }
 
+@media (max-width:1080px) {
+  .search-result{
+    .products{
+      margin-left: -15px;
+      margin-right: -15px;
+      float: none;
+      .product-list{
+        margin-left: 15px;
+        margin-right: 15px;
+        float: none;
+        width: auto;
+      }
+    }
+  }
+}
+
 @media (max-width:992px) {
   .buy-sell .wrap div:first-child, .buy-sell .wrap-sm div:first-child{
     margin-left: 2.5%;
@@ -166,5 +182,8 @@
       width: 100% !important;
       margin: 5px 0;
     }
+  }
+  .search-result .product-list .desc{
+    clear: both;
   }
 }
