@@ -36,7 +36,7 @@
   }
 
   a {
-    color: black;
+    color: #dddddd;
     font-size: 16px;
     font-weight: 800;
     text-transform: uppercase;
@@ -46,6 +46,7 @@
 
     &.active,
     &:hover {
+      color: #ffffff;
       border-bottom-color: #5c8f10;
     }
   }
