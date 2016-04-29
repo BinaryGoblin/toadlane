@@ -226,6 +226,10 @@ module ApplicationHelper
     Category.where(parent_id: nil).order(:id)
   end
 
+  def all_category
+    Category.where(name: "all").last
+  end
+
   def taxes
     if current_user.is_reseller
       Tax.all.order(:value)

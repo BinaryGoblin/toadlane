@@ -12,7 +12,10 @@ class SearchController < ApplicationController
     orders[:unit_price] = 'desc' if params[:sort_by].present? && params[:sort_by] == '3'      # hight to low price
 
     conditions[:status_characteristic] = params[:type] if params[:type].present? && params[:type] != "all"        # sell and buy status_characteristic
-    conditions[:main_category] = params[:cat_id]
+    selected_category = Category.where(id: params[:cat_id]).last
+    if selected_category.present? && selected_category.name != "all"
+      conditions[:main_category] = params[:cat_id]
+    end
     conditions[:start_date] = {lt: Time.now}
     conditions[:end_date] = {gt: Time.now}
 
