@@ -110,6 +110,11 @@
     position: relative;
     .pull-left, .pull-right{
       float: none !important;
+      text-align: center;
+    }
+    .header-nav li{
+      float: none;
+      display: inline-block;
     }
     .logo{
       position: static;
