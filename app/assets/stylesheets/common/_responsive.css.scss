@@ -163,6 +163,9 @@
   .products{
     margin: 20px 5px -12px;
   }
+  .vp-carousel .carousel-inner>.item, .vp-carousel .carousel-inner>.item>img, .vp-carousel .carousel-inner>.item>a>img, .vp-carousel .carousel-inner, .vp-carousel{
+    height: auto;
+  }
 }
 
 @media (max-width:480px) {
@@ -239,6 +242,14 @@
       &:hover{
         background-color: #7a4124;
       }
+    }
+  }
+  .vp-seller .img{
+    width: 100px;
+    height: 100px;
+    img{
+      width: 100%;
+      height: auto;
     }
   }
 }
