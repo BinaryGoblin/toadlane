@@ -225,6 +225,7 @@
     -moz-border-radius-topright: 3px;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
+    width: 100% !important;
   }
   .fe-search{
     height: auto;
@@ -235,6 +236,7 @@
     }
     .fe-btn.btn-warning{
       background: #ff8724 image-url("search-icon.png") no-repeat center center;
+      background-size: 32px 32px;
       text-indent: -2000px;
       overflow: hidden;
       width: 50px;
