@@ -22,37 +22,39 @@
       .pull-right data-dismiss="modal"= fa_icon 'close'
       h4.modal-title Checkout
 
-    .modal-body: table.table-checkout
-      thead
-        tr
-          th description
-          th qty
-          th price
-          th amount
-        
-      tbody
-        tr
-          td= product.name
-          td.armor-quantity 1
-          td $ #{number_with_precision(product.unit_price, precision: 2, delimiter: '')}
-          td $ <span class="armor-unit-total">#{number_with_precision(product.unit_price, precision: 2, delimiter: '')}</span>
+    .modal-body: 
+      .table-responsive
+        table.table-checkout
+          thead
+            tr
+              th description
+              th qty
+              th price
+              th amount
+            
+          tbody
+            tr
+              td= product.name
+              td.armor-quantity 1
+              td $ #{number_with_precision(product.unit_price, precision: 2, delimiter: '')}
+              td $ <span class="armor-unit-total">#{number_with_precision(product.unit_price, precision: 2, delimiter: '')}</span>
 
-        tr
-          td colspan="3" <span class="armor-rebate">0.00</span>% rebate for purchasing <span class="armor-quantity">1</span> pcs
-          td - $ <span class="armor-rebate-price">0.00</span>
+            tr
+              td colspan="3" <span class="armor-rebate">0.00</span>% rebate for purchasing <span class="armor-quantity">1</span> pcs
+              td - $ <span class="armor-rebate-price">0.00</span>
 
-        tr
-          td colspan="3" Toadlane Fee (#{@fee}%)
-          td $ <span class="armor-fees-price">0.00</span>
+            tr
+              td colspan="3" Toadlane Fee (#{@fee}%)
+              td $ <span class="armor-fees-price">0.00</span>
 
-        / tr
-        /   td colspan="3" Flat shipping
-        /   td $ <span class="armor-flat">0.00</span>
+            / tr
+            /   td colspan="3" Flat shipping
+            /   td $ <span class="armor-flat">0.00</span>
 
-        tr
-          td.no-border colspan="2"
-          td.text-center: b.text-uppercase Total:
-          td: b $ <span class="armor-total">#{number_with_precision(product.unit_price, precision: 2, delimiter: '')}</span>
+            tr
+              td.no-border colspan="2"
+              td.text-center: b.text-uppercase Total:
+              td: b $ <span class="armor-total">#{number_with_precision(product.unit_price, precision: 2, delimiter: '')}</span>
         
     .modal-footer.text-right
       = form_tag armor_orders_path
