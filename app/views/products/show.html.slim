@@ -3,10 +3,10 @@
   / = link_to 'Previous', '#', class: 'btn btn-default pull-right'
   / = link_to 'Back to explore', '#', class: 'btn btn-default pull-right'
 
-  - if sub_categories_of_product(@product.id).present?
+  - if all_categories_of_product(@product.id).present?
     h4
       span Categories:
-      = sub_categories_of_product @product.id
+      = all_categories_of_product @product.id
 
   h1= @product.name
 

@@ -29,13 +29,14 @@ module ApplicationHelper
     link_to link_text, link_path, class: class_name, role: 'button', disabled: disabled
   end
 
-  def sub_categories_of_product id
-    categories = Product.find(id).categories
+  def all_categories_of_product id
+    product = Product.find(id)
 
-    if categories.present?
-      content_tag :div do
-        categories.each_with_index do |category, index|
-          concat ', ' if index > 0
+    content_tag :div do
+      concat link_to product.category.name, search_path(cat_id: product.category.id, count: 16)
+      if product.categories.present?
+        product.categories.each do |category|
+          concat ', '
           concat link_to category.name, search_path(cat_id: category.id, count: 16)
         end
       end
