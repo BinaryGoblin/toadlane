@@ -33,11 +33,7 @@ class RegistrationsController < Devise::RegistrationsController
       if @validatable
         @minimum_password_length = resource_class.password_length.min
       end
-      if !resource.validate(:email)
-        redirect_to new_user_password_path(resource)
-      else
-        respond_with resource
-      end
+      respond_with resource
     end
   end
 
