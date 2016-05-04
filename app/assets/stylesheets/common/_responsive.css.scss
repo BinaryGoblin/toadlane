@@ -187,6 +187,12 @@
       margin-bottom: 10px;
     }
   }
+  .footer-actions{
+    padding-bottom: 0;
+    .fa-container{
+      position: static;
+    }
+  }
 }
 
 @media (max-width:480px) {
