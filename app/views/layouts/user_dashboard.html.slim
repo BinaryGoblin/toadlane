@@ -23,7 +23,7 @@ html
 
           = form_tag search_path, method: :get do
 
-            = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'fe-categories', data: { behavior: 'CustomSelect' }
+            = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id] || all_category.try(:id)), class: 'fe-categories', data: { behavior: 'CustomSelect' }
 
             = submit_tag 'Find now', class: 'btn btn-warning fe-btn'
 
