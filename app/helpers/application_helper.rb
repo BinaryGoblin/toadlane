@@ -226,7 +226,7 @@ module ApplicationHelper
   end
 
   def main_categories
-    Category.where(parent_id: nil).order(:id)
+    Category.where(parent_id: nil).order(:name)
   end
 
   def all_category
