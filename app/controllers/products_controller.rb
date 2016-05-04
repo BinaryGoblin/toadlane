@@ -1,9 +1,6 @@
 class ProductsController < ApplicationController
   layout 'user_dashboard'
 
-  before_action :set_product, only: [:show]
-
-  before_filter :authenticate_user!
   before_action :check_terms_of_service
 
   def index    
@@ -16,6 +13,7 @@ class ProductsController < ApplicationController
   end
 
   def show
+    set_product
     @stripe_order = StripeOrder.new
     @fee = Fee.find_by(:module_name => "Stripe").value
     @related_products = Product.unexpired.where(main_category: @product.main_category).where.not(id: @product.id)
