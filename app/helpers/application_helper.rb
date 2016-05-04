@@ -36,8 +36,10 @@ module ApplicationHelper
       concat link_to product.category.name, search_path(cat_id: product.category.id, count: 16)
       if product.categories.present?
         product.categories.each do |category|
-          concat ', '
-          concat link_to category.name, search_path(cat_id: category.id, count: 16)
+          unless category.name == "all"
+            concat ', '
+            concat link_to category.name, search_path(cat_id: category.id, count: 16)
+          end
         end
       end
     end
