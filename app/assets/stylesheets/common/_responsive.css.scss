@@ -172,6 +172,17 @@
   .vp-carousel .carousel-inner>.item, .vp-carousel .carousel-inner>.item>img, .vp-carousel .carousel-inner>.item>a>img, .vp-carousel .carousel-inner, .vp-carousel{
     height: auto;
   }
+  .actions-panel-product{
+    height: auto;
+    padding: 20px 0;
+    h1{
+      position: static;
+    }
+    h4{
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+  }
 }
 
 @media (max-width:480px) {
