@@ -5,6 +5,8 @@
 #= require jquery-ui/tooltip
 #= require jquery-ui/autocomplete
 
+#= require jquery.bxslider.min
+
 #= require ./plugins/jquery.validate
 #= require_tree ./plugins
 
