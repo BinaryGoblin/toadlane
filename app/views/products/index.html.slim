@@ -17,11 +17,11 @@
       = link_to 'See all sales', for_sale_products_path, class: 'btn btn-success pull-right'
       = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
 
-  #products_second.carousel.product-carousel.slide data-ride="carousel"
-    = products_carousel_items @products_for_sale
-
-    a.left.carousel-control href="#products_second" role="button" data-slide="prev"
-    a.right.carousel-control href="#products_second" role="button" data-slide="next"
+  #products_second.product-carousel.slide
+    ul.bxslider
+      - @products_for_sale.each do |product|
+        li
+          = render partial: '/shared/product', locals: { product: product }
 
 /  .carousel-product-title-sell
 /    h3 Requested products

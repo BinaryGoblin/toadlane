@@ -22,6 +22,7 @@ $(document).ready ->
   Elemental.addNamespace App
   Elemental.load document
   $(".fe-toggle").tooltip({tooltipClass: "search-tooltip"})
+  $('.bxslider').bxSlider()
   $("#user_state").autocomplete({
     source: ["Alabama",
     "Alaska",
