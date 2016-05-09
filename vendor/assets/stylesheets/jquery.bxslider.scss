@@ -29,20 +29,8 @@
 /** THEME
 ===================================*/
 
-.bx-wrapper .bx-viewport {
-	-moz-box-shadow: 0 0 5px #ccc;
-	-webkit-box-shadow: 0 0 5px #ccc;
-	box-shadow: 0 0 5px #ccc;
-	border:  5px solid #fff;
-	left: -5px;
-	background: #fff;
-	
-	/*fix other elements on the page moving (on Chrome)*/
-	-webkit-transform: translatez(0);
-	-moz-transform: translatez(0);
-    	-ms-transform: translatez(0);
-    	-o-transform: translatez(0);
-    	transform: translatez(0);
+ul.bxslider{
+	margin: 0;
 }
 
 .bx-wrapper .bx-pager,
@@ -104,21 +92,13 @@
 /* DIRECTION CONTROLS (NEXT / PREV) */
 
 .bx-wrapper .bx-prev {
-	left: 10px;
-	background: image-url('controls.png') no-repeat 0 -32px;
+	left: -40px;
+	background: image-url('slide-left-btn.png') no-repeat;
 }
 
 .bx-wrapper .bx-next {
-	right: 10px;
-	background: image-url('controls.png') no-repeat -43px -32px;
-}
-
-.bx-wrapper .bx-prev:hover {
-	background-position: 0 0;
-}
-
-.bx-wrapper .bx-next:hover {
-	background-position: -43px 0;
+	right: -40px;
+	background: image-url('slide-right-btn.png') no-repeat;
 }
 
 .bx-wrapper .bx-controls-direction a {
@@ -126,10 +106,13 @@
 	top: 50%;
 	margin-top: -16px;
 	outline: 0;
-	width: 32px;
-	height: 32px;
+	width: 30px;
+	height: 88px;
 	text-indent: -9999px;
 	z-index: 9999;
+	&:hover{
+		background-position: bottom left;
+	}
 }
 
 .bx-wrapper .bx-controls-direction a.disabled {
