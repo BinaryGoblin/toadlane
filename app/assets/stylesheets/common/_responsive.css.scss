@@ -60,6 +60,10 @@
   .md-mid{
     text-align: center;
   }
+  .bx-wrapper{
+    margin-left: 30px;
+    margin-right: 30px;
+  }
 }
 @media (max-width:767px) {
   body{
@@ -154,10 +158,6 @@
       top: auto;
     }
   }
-  .product{
-    width: 44%;
-    margin: 20px 3% 0;
-  }
   .tabs li, .admin-tabs li{
     margin: 0 0.5% 5px;
     width: 32.33%;
@@ -200,8 +200,7 @@
     font-size: 46px;
   }
   .product, .product-carousel .product, .view-product .product-carousel .product{
-    width: 88%;
-    margin: 20px 6% 0;
+    width: 100%;
   }
   .product-carousel .carousel-inner, .view-product .product-carousel .carousel-inner{
     margin: 0 30px;
