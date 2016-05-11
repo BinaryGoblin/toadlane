@@ -12,6 +12,12 @@ class Admin::ProductsController < Admin::ApplicationController
   
   def edit
     set_product
+    @status_actions = [
+      ['', ''],
+      ['Futured', 'futured'],
+      ['Recommended', 'recommended'],
+      ['Best', 'best']
+    ]
     @history = PaperTrail::Version.where(item_id: @product.id).order('created_at DESC')
   end
   

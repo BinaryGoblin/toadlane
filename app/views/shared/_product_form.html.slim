@@ -8,17 +8,30 @@
             li = message
             
     - if current_user.has_role?(:admin) or current_user.has_role?(:superadmin)
-      - assignable_users = StripeProfile.all.map{ |profile| profile.user }.compact
-      - if StripeOrder.where(:product_id => @product.id).empty?
+      - if @status_actions
         .form-group
-          = f.label :user_id, 'Product owner:', class: 'required'
-          = f.select :user_id, options_from_collection_for_select(assignable_users, 'id', 'name', @product.user_id || 0), {}, data: { behavior: 'Select' }
+          = f.label :status_action, 'Status Action:', class: 'required'
+          = f.select :status_action, @status_actions, {}, data: { behavior: 'Select' }
+          
+          - assignable_users = StripeProfile.all.map{ |profile| profile.user }.compact
+          - if StripeOrder.where(:product_id => @product.id).empty?
+            = f.label :user_id, 'Product owner:', class: 'required'
+            = f.select :user_id, options_from_collection_for_select(assignable_users, 'id', 'name', @product.user_id || 0), {}, data: { behavior: 'Select' }
+          - else
+            = f.label :user_id, 'Product owner (locked after first sale):', class: 'required'
+            = f.select :user_id, options_from_collection_for_select(assignable_users, 'id', 'name', @product.user_id || 0), {}, {disabled: true, data: { behavior: 'Select' }}
       - else
         .form-group
-          = f.label :user_id, 'Product owner (locked after first sale):', class: 'required'
-          = f.select :user_id, options_from_collection_for_select(assignable_users, 'id', 'name', @product.user_id || 0), {}, {disabled: true, data: { behavior: 'Select' }}
+          - assignable_users = StripeProfile.all.map{ |profile| profile.user }.compact
+          - if StripeOrder.where(:product_id => @product.id).empty?
+            = f.label :user_id, 'Product owner:', class: 'required'
+            = f.select :user_id, options_from_collection_for_select(assignable_users, 'id', 'name', @product.user_id || 0), {}, data: { behavior: 'Select' }
+          - else
+            = f.label :user_id, 'Product owner (locked after first sale):', class: 'required'
+            = f.select :user_id, options_from_collection_for_select(assignable_users, 'id', 'name', @product.user_id || 0), {}, {disabled: true, data: { behavior: 'Select' }}
             
       br
+      hr
 
     table: tr
       td
