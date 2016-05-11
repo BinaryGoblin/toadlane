@@ -189,12 +189,11 @@
       -else
         .carousel-product-title-sell: h3 Related products
 
-      #related_products.carousel.product-carousel.slide data-ride="carousel"
-        = products_carousel_items @related_products
-
-        - if @related_products.count > 4
-          a.left.carousel-control href="#related_products" role="button" data-slide="prev"
-          a.right.carousel-control href="#related_products" role="button" data-slide="next"
+      #related_products.product-carousel.slide
+        ul.bxslider
+          - @related_products.each do |product|
+            li
+              = render partial: '/shared/product', locals: { product: product }
 
       .text-center= link_to 'See all related products', '#', class: 'btn btn-success'
 

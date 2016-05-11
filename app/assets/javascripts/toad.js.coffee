@@ -5,6 +5,8 @@
 #= require jquery-ui/tooltip
 #= require jquery-ui/autocomplete
 
+#= require jquery.bxslider.min
+
 #= require ./plugins/jquery.validate
 #= require_tree ./plugins
 
@@ -20,6 +22,12 @@ $(document).ready ->
   Elemental.addNamespace App
   Elemental.load document
   $(".fe-toggle").tooltip({tooltipClass: "search-tooltip"})
+  $('.bxslider').bxSlider
+    slideWidth: 240
+    minSlides: 1
+    maxSlides: 4
+    slideMargin: 38
+    moveSlides: 1
   $("#user_state").autocomplete({
     source: ["Alabama",
     "Alaska",
