@@ -4,7 +4,7 @@
     li= tab_link_to 'Accounts', dashboard_accounts_path, is: 'accounts'
     li= tab_link_to 'My products', dashboard_products_path, is: 'products'
     li= tab_link_to 'Orders', dashboard_orders_path(bought_or_sold: 'bought', type: 'stripe'), is: 'orders'
-    li= tab_link_to 'Forms', dashboard_forms_path, is: 'forms'
+    li= tab_link_to 'Verify', dashboard_forms_path, is: 'forms'
     li= tab_link_to 'Financing', dashboard_finances_path, is: 'finances'
     li= tab_link_to "Messages (#{get_user_unread_message_notifications})", dashboard_messages_path(box: 'inbox'), is: 'messages'
     li= link_to fa_icon('power-off', text: 'Logout'), destroy_user_session_path, class: 'btn btn-success'

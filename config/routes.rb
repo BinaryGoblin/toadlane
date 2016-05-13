@@ -52,7 +52,7 @@ Toad::Application.routes.draw do
 
     resources :shipments, only: [:index]
 
-    resources :forms
+    resources :forms, path: "verify"
     
     resources :terms_of_services, only: [:index] do
       collection do
