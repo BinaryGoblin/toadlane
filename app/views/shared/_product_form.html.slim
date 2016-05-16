@@ -33,8 +33,8 @@
       br
       hr
 
-    table: tr
-      td
+    .row
+      .col-md-6
         .form-group
           = f.label :name, 'Product name:', class: 'required'
           = f.text_field :name, class: 'form-control'
@@ -61,7 +61,7 @@
           = f.label :description, 'Description:'
           = f.text_area :description, class: 'form-control', placeholder: 'Write something about your product...', maxlength: '1000'
 
-      td
+      .col-md-6
         .clearfix
           .status
             = f.label :status, 'Product status:'
@@ -137,7 +137,7 @@
           = time_select :product, :end_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
 
     hr
-    .price-stock
+    .price-stock.clearfix
       .unit
         = f.label :unit_price, 'Retail price (USD):', class: 'required lg'
         = f.number_field :unit_price, in: 0...1000000, step: "any", class: 'form-control'

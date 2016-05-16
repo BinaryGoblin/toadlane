@@ -42,4 +42,7 @@ Toad::Application.configure do
   }
   #-----------------------
   config.action_mailer.default_url_options = { :host => "localhost:3000" }
+
+  ENV['STRIPE_CLIENT_ID'] = 'ca_84wji8nX79sEzFhHa9WifOU5d69WNSVs'
+  ENV['STRIPE_API_KEY'] = 'sk_test_Ejq6XT0escvFPGdciJ4DMECe'
 end

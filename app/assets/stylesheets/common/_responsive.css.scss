@@ -191,6 +191,7 @@
     padding-bottom: 0;
     .fa-container{
       position: static;
+      height: auto;
     }
   }
 }
@@ -281,6 +282,77 @@
     img{
       width: 100%;
       height: auto;
+    }
+  }
+  .offer-item > label{
+    margin-top: 0;
+  }
+  .product-form .price-stock{
+    .unit, .amount-stock, .amount-soldout{
+      width: 100%;
+      margin-right: 0;
+      input{
+        width: 100%;
+      }
+    }
+  }
+  .product-form .pricebreaks{
+    margin: 0;
+    li{
+      margin-left: 0;
+      float: none;
+      width: 100%;
+      height: auto;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .pricebreak{
+      position: relative;
+      .btn.remove{
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        margin: 0;
+      }
+    }
+    .index{
+      margin: 0;
+      float: none;
+    }
+    .form-group{
+      float: none;
+      width: auto;
+      margin: 0;
+    }
+  }
+  .product-form .dimensions-fields > div{
+    width: 100%;
+    padding: 0;
+  }
+  .product-form .estimates{
+    margin: 0;
+    li{
+      margin: 0 0 10px 0;
+      padding: 10px;
+      height: auto;
+    }
+    .estimate, .estimate-delete{
+      position: relative;
+      .btn.remove{
+        margin: 0;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+      }
+    }
+    .index{
+      float: none;
+      margin: 0;
+    }
+    .estimate-type, .estimate-cost, .estimate-description{
+      float: none;
+      width: 100%;
+      margin: 0;
     }
   }
 }

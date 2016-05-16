@@ -799,7 +799,7 @@ $sell-color: #FF8724;
   border: 1px dashed #cccfd3;
   padding: 8px;
   margin-bottom: 10px;
-  width: 498px;
+  max-width: 498px;
   @include clearfix;
 
   a {
