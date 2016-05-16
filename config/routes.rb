@@ -81,8 +81,6 @@ Toad::Application.routes.draw do
   end
 
   devise_for :users, :controllers => { :registrations => "registrations", confirmations: 'confirmations', :omniauth_callbacks => "omniauth_callbacks" }
-  
-  devise_for :admin, class_name: 'User', controllers: { sessions: 'admin/sessions', confirmations: 'admin/confirmations' }
 
   namespace :admin do
     resources :categories

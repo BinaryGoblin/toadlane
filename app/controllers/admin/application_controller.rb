@@ -3,7 +3,6 @@ class Admin::ApplicationController < ApplicationController
 
   before_filter :authenticate_user!
   before_filter :allow_admin_resources
-  before_action :check_if_user_active
   before_action :check_terms_of_service
 
   private
