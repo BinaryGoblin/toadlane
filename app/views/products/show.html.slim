@@ -176,7 +176,8 @@
                 - if @product.user.facebook.present?
                   .fb-link= link_to 'Facebook profile', @product.user.facebook, class: 'link link-ulined link-sm text-uppercase', target: '_blank'
 
-            a.vp-title href="#" data-toggle="modal" data-target="#form_message" Send a message <i class="fa fa-plus-square pull-right"></i>
+            - unless current_user == @product.user
+              a.vp-title href="#" data-toggle="modal" data-target="#form_message" Send a message <i class="fa fa-plus-square pull-right"></i>
 
           .white-panel.vp-share
             b.text-uppercase.pull-left Share:
