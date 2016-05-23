@@ -31,7 +31,8 @@ html
 
             .query-container
                 = text_field_tag :query, params[:query], placeholder: 'e.g. Iphone 5s black edition LA'
-
+            - if @related_searches.present?
+                = render partial: "/shared/related_searches", locals: { related_searches: @related_searches } 
     == yield
 
     = render '/shared/footer'

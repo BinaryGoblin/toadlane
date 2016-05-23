@@ -1,0 +1,6 @@
+.related_searches.text-left
+  h4
+    | Related Searches: 
+  - related_searches.each do |rs|
+    a href="#"
+      = rs["normalized_query"]
