@@ -36,6 +36,7 @@ gem 'elementaljs-rails', '~> 0.0.11'
 gem 'paperclip', '~> 4.2.1'
 gem 'aws-sdk', '< 2.0'
 gem 'searchkick', '~> 0.8.7'
+gem 'searchjoy'
 gem 'kaminari', '~> 0.16.3'
 gem 'delayed_job_active_record', '~> 4.0.3'
 
