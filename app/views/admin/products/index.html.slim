@@ -1,29 +1,30 @@
 .wrap-sm
   .table-options= link_to fa_icon('plus', text: 'Create New Product'), new_admin_product_path, class: 'btn btn-default pull-right'
 
-  table.table
-    thead
-      tr
-        th ID
-        th Product name
-        th Unit price
-        th Valid from
-        th Valid until
-        th Actions
-
-    tbody
-      - @products.each do |product|
+  .table-responsive
+    table.table
+      thead
         tr
-          td= product.id
-          td= link_to product.name, product_path(product, cat_id: product.main_category), class: 'link link-ulined', target: '_blank'
-          td= number_to_currency(product.unit_price, :unit => "$ ", precision: 2)
-          td
-            small.date= product.start_date.strftime('%d-%m-%Y')
-            small.time= product.start_date.strftime('%T')
-          td
-            small.date= product.end_date.strftime('%d-%m-%Y')
-            small.time= product.end_date.strftime('%T')
-          td= link_to "Edit", edit_admin_product_path(product), class: 'link link-ulined'
+          th ID
+          th Product name
+          th Unit price
+          th Valid from
+          th Valid until
+          th Actions
+
+      tbody
+        - @products.each do |product|
+          tr
+            td= product.id
+            td= link_to product.name, product_path(product, cat_id: product.main_category), class: 'link link-ulined', target: '_blank'
+            td= number_to_currency(product.unit_price, :unit => "$ ", precision: 2)
+            td
+              small.date= product.start_date.strftime('%d-%m-%Y')
+              small.time= product.start_date.strftime('%T')
+            td
+              small.date= product.end_date.strftime('%d-%m-%Y')
+              small.time= product.end_date.strftime('%T')
+            td= link_to "Edit", edit_admin_product_path(product), class: 'link link-ulined'
 
 .footer-actions: .fa-container: .wrap-sm
   .show_all style="font-size:14px;padding-top:8px"
