@@ -1,11 +1,12 @@
 class MessageMailer < ActionMailer::Base
-  default from: "aphtekas.storage@gmail.com"
+  default from: "hello@toadlane.com"
 
-  def send_new_message(user, token)
-#    email = user.email
-#    @token = token
-#    @user = user
-#    mail to: email , subject: "New event - Add User Account"
+  def new_message(user, message, subject, sender)
+    @user = user
+    @message = message
+    @subject = subject
+    @sender = sender
+    mail to: @user.email , subject: "New Message from #{@sender.name} in Toadlane"
   end
 end
 

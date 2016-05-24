@@ -1,0 +1,12 @@
+p
+  | Hello #{@user.name},
+br
+br
+p
+  | You just received a new message from #{@sender.name}.
+p
+  | Subject: #{@subject}
+p
+  | Message Body: #{@message}
+p
+  = link_to "Check Message Now", dashboard_messages_url
