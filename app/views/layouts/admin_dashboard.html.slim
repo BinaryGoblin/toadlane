@@ -16,9 +16,7 @@ html
     - if flash[:notice]
       .main-notice data-behavior="FlashMessages"= flash[:notice]
       
-    = render '/shared/admin_header' 
-                  
-    br
+    = render '/shared/admin_header'
         
     == yield
 
