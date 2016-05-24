@@ -108,6 +108,17 @@
       margin: 2%;
     }
   }
+  .admin_dashboard {
+    .header-user{
+      margin-bottom: 0;
+    }
+    .header .header-nav{
+      float: none !important;
+      display: inline-block;
+      clear: both;
+      margin: 0 10px 5px;
+    }
+  }
   .buy-sell .wrap div, .buy-sell .wrap-sm div{
     width: 90%;
     margin: 7% 5% !important;

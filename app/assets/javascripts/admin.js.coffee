@@ -11,7 +11,7 @@
 #= require_tree ./behaviors/
 #= require_tree ./admin/
 
-#= require bootstrap/modal
+#= require bootstrap
 
 $(document).ready ->
   Elemental.addNamespace App

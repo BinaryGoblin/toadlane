@@ -1,0 +1,21 @@
+header.header.navbar-default: .wrap     
+  = link_to image_tag('logo-header.png'), admin_categories_path, class: 'logo'
+  button.navbar-toggle.collapsed aria-expanded="false" data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button" 
+    span.sr-only Toggle navigation
+    span.icon-bar
+    span.icon-bar
+    span.icon-bar
+  .collapse.navbar-collapse#bs-example-navbar-collapse-1
+    .header-user.pull-right      
+      - if current_user
+        = link_to fa_icon('power-off', text: 'Logout'), destroy_user_session_path, class: 'btn btn-success'
+      - else
+        = link_to 'Login', new_user_session_path, class: 'btn btn-success'
+    ul.header-nav.pull-right
+      = nav_link 'Fees', admin_fees_path
+      = nav_link 'Users', admin_users_communications_path
+      = nav_link 'Mailers', admin_mailers_path
+    ul.header-nav.pull-left
+      = nav_link 'Categories', admin_categories_path
+      = nav_link 'Products', admin_products_path
+      = nav_link 'Orders', admin_orders_path
