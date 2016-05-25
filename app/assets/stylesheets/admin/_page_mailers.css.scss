@@ -1,11 +1,4 @@
 .mailers {
-  position: absolute;  
-  top: 95px;
-  bottom: 135px;
-  left: 50%;
-  margin-left: $wrap-width-small / -2;
-  width: 100%;
-
   > .fa {
     position: absolute;
     top: 50%;
@@ -18,6 +11,10 @@
     text-align: center;
   }
 
+  a {
+    font-size: 16px;
+  }
+
   h3 {
     line-height: 1;
     font-size: 28px;
@@ -25,18 +22,17 @@
     color: #cccfd3;
     text-transform: uppercase;
     margin-top: 30px;
-    margin-bottom: 30px;
-    position: absolute;
-    width: 45%;
-    top: 0;
+    margin-bottom: 1  0px;
     padding: 10px 0;
     text-shadow: 0 0 1px white;
   }
 
-  ul {
+  ul.list-container {
     list-style: none;
-    margin: 0;
+    margin: 0 20px 20px;
     padding: 0;
+    overflow-y: scroll;
+    max-height: 400px;
   }
   
   li {
@@ -51,24 +47,6 @@
   label {
     padding: 8px 2px 6px 10px;
     display: block;
-  }
-
-  > div {
-    position: absolute;
-    z-index: 10000;
-    top:90px;
-    bottom: 0;
-    width: 45%;
-    overflow: scroll;
-
-    a {
-      font-size: 16px;
-    }
-  }
-
-  .mtitle-products {
-    margin-top: 30px;
-    left: 0;
   }
 
   .mtitle-users {
