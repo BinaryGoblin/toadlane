@@ -31,7 +31,7 @@ class User < ActiveRecord::Base
                                 small: '155x155#',
                                 medium: '240x225#'
                               },
-                              default_url: '/avatar/:style/missing.png'
+                              default_url: '/assets/avatar/:style/missing.png'
   do_not_validate_attachment_file_type :asset
 
   before_destroy { roles.clear }
