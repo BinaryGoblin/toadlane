@@ -1,7 +1,5 @@
 @import "compass/css3";
-@import "bootstrap/variables";
-@import "bootstrap/mixins";
-@import "bootstrap/utilities";
+@import "bootstrap";
 @import "font-awesome";
 
 @import "common/variables";
@@ -28,7 +26,7 @@
 @import "common/devise";
 @import "common/intl_tel_input";
 
-@import "admin/header";
+@import "common/header";
 @import "admin/tables";
 @import "admin/notice";
 
@@ -46,3 +44,5 @@
 @import "toad/custom_select";
 @import "toad/find_and_explore";
 @import "toad/page_view_product";
+
+@import "common/responsive";
