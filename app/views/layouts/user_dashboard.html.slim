@@ -21,7 +21,7 @@ html
       .wrap
         .fe-search
 
-          = form_tag search_path, method: :get do
+          = form_tag search_path, method: :get, id: "search_form" do
 
             = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, all_category.try(:id) || params[:cat_id] ), class: 'fe-categories', data: { behavior: 'CustomSelect' }
 
@@ -31,7 +31,9 @@ html
 
             .query-container
                 = text_field_tag :query, params[:query], placeholder: 'e.g. Iphone 5s black edition LA'
-
+            - if @related_searches.present?
+                - unless @related_searches.count == 1 && @related_searches.last["normalized_query"] == params[:query]
+                    = render partial: "/shared/related_searches", locals: { related_searches: @related_searches, query: params[:query] } 
     == yield
 
     = render '/shared/footer'

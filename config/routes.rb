@@ -129,4 +129,8 @@ Toad::Application.routes.draw do
       resources :communications, only: [:index]
     end
   end  
+
+  authenticate :user, lambda{|user| user.has_role?(:admin) } do
+    mount Searchjoy::Engine, at: "admin/searchjoy"
+  end
 end

@@ -1,0 +1,16 @@
+.related_searches{
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.8);
+  margin-top: 5px;
+  h4{
+    display: inline-block;
+    color: #fff;
+  }
+  a{
+    color: #fff;
+    margin-left: 10px;
+    display: inline-block;
+    &:hover{
+      text-decoration: underline;
+    }
+  }
+}

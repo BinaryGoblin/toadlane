@@ -18,7 +18,12 @@ class SearchController < ApplicationController
     conditions[:start_date] = {lt: Time.now}
     conditions[:end_date] = {gt: Time.now}
 
-    @products = Product.search query, operator: "or", fields: [{name: :word }, {description: :word}], where: conditions, order: orders, page: params[:page], per_page: params[:count]
+    @products = Product.search query, operator: "or", fields: [{name: :word }, {description: :word}], where: conditions, order: orders, page: params[:page], per_page: params[:count], track: {user_id: current_user.try(:id)}
+
+    unless query == '*'
+      query_arr_with_percentage = query.split(" ").map {|val| "%#{val}%" }
+      @related_searches = Searchjoy::Search.connection.select_all(Searchjoy::Search.select("normalized_query, COUNT(*) as searches_count, AVG(results_count) as avg_results_count").where("normalized_query ILIKE ANY ( array[?] )", query_arr_with_percentage).group("normalized_query").order("searches_count desc, normalized_query asc").limit(5).to_sql).to_a  
+    end
   end
 
   def autocomplete

@@ -83,3 +83,9 @@ $(document).ready ->
     ],
     autocomplete: true
   });
+  $('.related_searches a').click (event) ->
+    event.preventDefault()
+    rs = $(this).html()
+    $('input#query').val(rs)
+    $('form#search_form').submit()
+    return
