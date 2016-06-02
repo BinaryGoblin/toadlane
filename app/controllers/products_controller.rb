@@ -16,6 +16,7 @@ class ProductsController < ApplicationController
     set_product
     @stripe_order = StripeOrder.new
     @fee = Fee.find_by(:module_name => "Stripe").value
+    commontator_thread_show(@product)
     @related_products = Product.unexpired.where(main_category: @product.main_category).where.not(id: @product.id)
   end
 

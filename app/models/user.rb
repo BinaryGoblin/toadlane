@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   rolify
   acts_as_messageable
+  acts_as_commontator
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable

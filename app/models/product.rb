@@ -1,4 +1,6 @@
 class Product < ActiveRecord::Base
+  acts_as_commontable
+  
   belongs_to :user
 
   self.inheritance_column = nil # So that the :type enum doesn't complain about Single Table Inheritance
