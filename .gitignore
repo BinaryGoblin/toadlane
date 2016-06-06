@@ -36,3 +36,4 @@ logfile
 /vendor/postgresql
 .metadata
 .project
+.idea/

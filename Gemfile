@@ -82,7 +82,6 @@ gem 'armor_payments', '~> 0.1.0', github: 'Armor-Payments/armor_payments_ruby', 
 gem 'will_paginate', '~> 3.0.7'
 
 gem 'mailboxer', github: 'lacco/mailboxer'
-gem 'acts-as-messageable', '~> 0.4.10'
 
 gem 'paper_trail', '~> 3.0.7'
 gem 'puma', '~> 2.11.1'

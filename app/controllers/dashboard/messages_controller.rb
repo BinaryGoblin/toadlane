@@ -13,6 +13,7 @@ class Dashboard::MessagesController < DashboardController
   
   def show
     conversation
+    conversation.receipts_for(current_user).last.touch
     conversation.mark_as_read(current_user)
   end
 

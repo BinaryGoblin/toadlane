@@ -3,6 +3,15 @@
 .conversation: .wrap-sm
   h3= conversation.subject
 
+  - other_user = (conversation.recipients - [current_user]).last
+  p.text-muted
+    i
+      - if other_user.present? && conversation.is_read?(other_user)
+        | #{other_user.try(:name)} viewed this conversation&nbsp;
+        = time_ago_in_words conversation.receipts_for(other_user).last.updated_at
+        | .
+      - else
+        | #{other_user.try(:name)} hasn't viewed your latest message yet.
   .form-conversation.pull-right= render partial: 'form', locals: { conversation: conversation }
 
   ul.messages-list
