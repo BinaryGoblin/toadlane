@@ -1,3 +1,5 @@
+// *= require commontator/application
+
 @import "compass/css3";
 @import "bootstrap";
 @import "font-awesome";
@@ -44,6 +46,7 @@
 @import "toad/page_result";
 @import "toad/page_dashboard";
 @import "toad/page_view_product";
+@import "toad/comment_styled";
 
 @import "common/responsive";
 

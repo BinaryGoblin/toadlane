@@ -10,6 +10,7 @@ html
     meta name="google-site-verification" content="cIwuaMOr9UNAguTJwHKlX_JFlfUJRUH6VQq8Ro-NzYo"
 
     = stylesheet_link_tag 'toad', :media => 'all'
+    = javascript_include_tag 'toad'
     = csrf_meta_tags
 
   body
@@ -37,5 +38,3 @@ html
     == yield
 
     = render '/shared/footer'
-
-    = javascript_include_tag 'toad'

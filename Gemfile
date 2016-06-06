@@ -45,6 +45,9 @@ gem 'omniauth-stripe-connect'
 
 gem 'nokogiri'
 
+# Commenting Engine
+gem 'commontator', '~> 4.11.1'
+
 # Dev - debugging group
 group :development do
   gem 'pry-rails'
