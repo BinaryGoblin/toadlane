@@ -139,7 +139,7 @@
     hr
     .price-stock.clearfix
       .unit
-        = f.label :unit_price, 'Retail price (USD):', class: 'required lg'
+        = f.label :unit_price, 'Base unit price (USD):', class: 'required lg'
         = f.number_field :unit_price, in: 0...1000000, step: "any", class: 'form-control'
        
       .amount-stock
