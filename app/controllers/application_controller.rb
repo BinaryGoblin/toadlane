@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   end
   
   def check_if_user_active
-    if current_user.present? && ! (current_user.has_role? :user)
+    if current_user.present? && ! (current_user.has_role? :user) && ! (current_user.has_role? :admin)
       redirect_to account_deactivated_path
     end
   end
