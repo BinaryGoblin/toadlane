@@ -88,6 +88,9 @@
 
             ul
               li
+                b Subtotal
+                b.pull-right.subTotal 0.00
+              li
                 span <span class="calc-rebate">0.00</span>% rebate for purchasing <span class="calc-pcs">0</span> pcs:
                 b.pull-right.calc-rebate-price 0.00
               li
@@ -96,6 +99,7 @@
               li
                 span Shipping Estimate ($<span class="calc-shipping" data-type="PerUnit">0.00</span>/unit):
                 b.pull-right.calc-shipping-price 0.00
+              hr
               - if @product.status_characteristic == 'sell'
                 li.text-green
                   b Cart Subtotal:
@@ -104,7 +108,6 @@
                 li.text-orange
                   b Cart Subtotal
                   b.pull-right.calc-cart 0.00
-                
           .white-panel.wp-table
             - if @product.pricebreaks.any?
               .vp-title Pricebreaks:
