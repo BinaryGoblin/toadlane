@@ -7,6 +7,7 @@ class Behavior.CalculationProduct
     
     @options        = @$calculationPanel.data 'options'
     @$cart          = @$calculationPanel.find '.calc-cart'
+    @$subTotal      = @$calculationPanel.find '.subTotal'
     @$quantity      = @$calculationPanel.find '.calc-quantity'
     @$rebate        = @$calculationPanel.find '.calc-rebate'
     @$pcs           = @$calculationPanel.find '.calc-pcs'
@@ -17,14 +18,14 @@ class Behavior.CalculationProduct
     @fees       = parseFloat @$calculationPanel.find('.calc-fees').text(), 10
     @unitPrice  = @$calculationPanel.find('[data-unit-price]').data 'unit-price'
 
-    @$stripeQuantity      = $ '.stripe-quantity'
+    @$stripeQuantity      = $ '.stripe_quantity'
     @$stripeTotal         = $ '.stripe-total'
     @$stripeUnitTotal     = $ '.stripe-unit-total'
     @$stripeRebate        = $ '.stripe-rebate'
     @$stripeFees          = $ '.stripe-fees-price'
     @$stripeShipping      = $ '.stripe-shipping'
     @$stripeShippingPrice = $ '.stripe-shipping-price'
-    @$stripeRabetePrice   = $ '.stripe-rabete-price'
+    @$stripeRabetePrice   = $ '.stripe-rebate-price'
     @$stripeButtonScript  = $ '.stripe-button'
     @$stripeButton        = $ '.stripe-button-el'
 
@@ -83,8 +84,8 @@ class Behavior.CalculationProduct
         shipping_cost = parseFloat @$shippingEstimate.text(), 2
       else 
         shipping_cost = 0
-    cart              = total + fees + shipping_cost
     rebatep           = (rebate * 100) / (@unitPrice * quantity)
+    cart              = total + fees + shipping_cost - rebate
 
     if total > 1
       @$checkout.removeClass 'disabled'
@@ -102,6 +103,7 @@ class Behavior.CalculationProduct
     @$shippingPrice.text @fixed shipping_cost
     @$rebPrice.text @fixed rebate
     @$cart.text @fixed cart
+    @$subTotal.text @fixed total
 
     @$stripeQuantity.text quantity
     @$stripeTotal.text @fixed cart

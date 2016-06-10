@@ -90,8 +90,8 @@ class Behavior.EstimateShipping
         shipping_cost = parseFloat @$shippingEstimateCost
       else
         shipping_cost = 0
-    cart              = total + fees + shipping_cost
     rebatep           = (rebate * 100) / (@unitPrice * quantity)
+    cart              = total + fees + shipping_cost - rebate
 
     if total > 1
       @$checkout.removeClass 'disabled'

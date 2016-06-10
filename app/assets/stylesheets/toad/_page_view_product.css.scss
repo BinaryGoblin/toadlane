@@ -306,6 +306,10 @@
       &:before {
         content: '$';
       }
+
+      &.calc-rebate-price:before{
+        content: '-$';
+      }
     }
   }
 
