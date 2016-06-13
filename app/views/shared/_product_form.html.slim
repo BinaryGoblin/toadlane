@@ -240,8 +240,11 @@
     script#template-shippingestimate type="text/template"
       li.estimate
         .index 2
+        .estimate-type
+          label Shipping Type:
+          = select_tag "product[shipping_estimates_attributes][][type]", options_for_select(ShippingEstimate.select_options), class: 'form-control shippingType'
         .estimate-cost
-          label Price Per Unit:
+          label Cost (USD):
           input.form-control.cost type="text" name="product[shipping_estimates_attributes][][cost]"
 
         .estimate-description
