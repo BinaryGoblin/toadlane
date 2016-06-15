@@ -208,7 +208,7 @@ Commontator.configure do |config|
   #   :m (manual subscriptions only)
   #   :b (both automatic, when commenting, and manual)
   # Default: :n
-  config.thread_subscription = :n
+  config.thread_subscription = :a
 
   # email_from_proc
   # Type: Proc
