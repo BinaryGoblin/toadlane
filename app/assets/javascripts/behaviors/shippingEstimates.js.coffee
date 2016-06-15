@@ -11,6 +11,8 @@ class Behavior.ShippingEstimates
 
   addShippingEstimate: ->
     tmpl = @$template.clone()
+    tmpl.find('.shippingType').attr('name', "product[shipping_estimates_attributes][" + (@count - 1) + "][type]")
+    tmpl.find('.shippingType').attr('id', "product_shipping_estimates_attributes_" + (@count - 1) + "_type")
     tmpl.find('.cost').attr('name', "product[shipping_estimates_attributes][" + (@count - 1) + "][cost]")
     tmpl.find('.cost').attr('id', "product_shipping_estimates_attributes_" + (@count - 1) + "_cost")
     tmpl.find('.description').attr('name', "product[shipping_estimates_attributes][" + (@count - 1) + "][description]")
