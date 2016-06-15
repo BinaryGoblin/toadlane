@@ -11,10 +11,7 @@ module Commontator
       return if recipients.empty?
 
       mail = SubscriptionsMailer.comment_created(comment, recipients)
-      # # This is commented because the mail was set to deliver later
       mail.respond_to?(:deliver_later) ? mail.deliver_later : mail.deliver_now
-      #  Instead used deliver_now
-      # mail.deliver_now
     end
 
     def unread_comments
