@@ -1,8 +1,8 @@
 <p>Dear <%= @comment.thread.commontable.user.name || @comment.thread.commontable.user.email %>,</p>
 <!-- Profile Image of the seller -->
-<%= email_image_tag("#{@comment.thread.commontable.user.asset(:small)}") %>
+<%= email_image_tag(@comment.thread.commontable.user) %>
 <!-- Profile Image of the commentor -->
-<%= email_image_tag("#{@creator.asset(:small)}") %>
+<%= email_image_tag(@creator) %>
 <h4><%= t('commontator.email.comment_created.body',
           :creator_name => @creator.name || @creator.email,
           :commontable_name => @commontable_name) %></h4>
