@@ -2,7 +2,7 @@ module EmailHelper
 
   def email_image_tag(image)
     if image.split("/").include?("missing.png")
-      attachments.inline[image] = File.read(Rails.root.join("app/assets/images/#{image}"))
+      attachments.inline[image] = File.read(Rails.root.join("app/assets/images/avatar/small/missing.png"))
     else
       attachments.inline[image] = File.read(Rails.root.join("public#{image}"))
     end
