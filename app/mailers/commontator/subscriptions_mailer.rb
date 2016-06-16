@@ -1,5 +1,7 @@
 module Commontator
   class SubscriptionsMailer < ActionMailer::Base
+    add_template_helper(EmailHelper)
+    
     def comment_created(comment, recipients)
       setup_variables(comment, recipients)
       message = mail :to => @to,
