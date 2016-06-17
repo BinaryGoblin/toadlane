@@ -37,12 +37,30 @@ Toad::Application.configure do
     port: 587,
     authentication: "plain",
     enable_starttls_auto: true,
-    user_name: ENV['WELCOME_EMAIL'],
-    password: ENV['WELCOME_EMAIL_PASSWORD']
+    user_name: "hello@toadlane.com",
+    password: "W-VvKGN51"
   }
   #-----------------------
   config.action_mailer.default_url_options = { :host => "localhost:3000" }
 
   ENV['STRIPE_CLIENT_ID'] = 'ca_84wji8nX79sEzFhHa9WifOU5d69WNSVs'
   ENV['STRIPE_API_KEY'] = 'sk_test_Ejq6XT0escvFPGdciJ4DMECe'
+
+
+  #config aws for production ENV file storage
+  config.paperclip_defaults = {
+     :storage => :s3,
+     :s3_credentials => {
+        :s3_host_name => 's3-us-west-2.amazonaws.com',
+        :bucket => 'staging-toad',
+        :access_key_id => 'AKIAJBUNG3ZF7WAMUW5A',
+        :secret_access_key => '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'
+     }
+  }
+
+  Paperclip::Attachment.default_options[:url] = ':s3_domain_url'
+  Paperclip::Attachment.default_options[:path] = 'development/:class/:attachment/:id_partition/:style/:filename'
+
+  Paperclip::Attachment.default_options[:s3_host_name] = 's3-us-west-2.amazonaws.com'
+
 end
