@@ -1,11 +1,10 @@
 module Commontator
   class SubscriptionsMailer < ActionMailer::Base
     add_template_helper(EmailHelper)
-    
+
     def comment_created(comment, recipients)
       setup_variables(comment, recipients)
       message = mail :to => @to,
-                     :bcc => @bcc,
                      :from => @from,
                      :subject => t('commontator.email.comment_created.subject',
                                    :creator_name => @creator.name || @creator.email,
@@ -40,7 +39,6 @@ module Commontator
         @to = recipient_emails(recipients)
       else
         @to = recipient_emails(recipients)
-        @bcc = recipient_emails(recipients)
       end
 
       @from = 'Toadlane Notifications'
