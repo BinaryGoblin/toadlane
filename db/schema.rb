@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160602051152) do
+ActiveRecord::Schema.define(version: 20160617095747) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -164,6 +164,14 @@ ActiveRecord::Schema.define(version: 20160602051152) do
     t.decimal  "value",       precision: 5, scale: 3
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
+  end
+
+  create_table "green_profiles", force: :cascade do |t|
+    t.string   "green_client_id"
+    t.string   "green_api_password"
+    t.integer  "user_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
   end
 
   create_table "images", force: :cascade do |t|

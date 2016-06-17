@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
          :omniauthable
 
   has_one :stripe_profile
+  has_one :green_profile
   has_one :stripe_customer
   has_many :products
   has_many :addresses
