@@ -99,7 +99,7 @@
     <div class="email-head" style="margin: 0;padding: 0;font-size: 16px;font-weight: 100;">
       <img class="logo" src="https://www.toadlane.com/assets/logo-header-09ff685e51c99351a07e5332f0996ef2.png" alt="Toadlane Logo" style="margin: 0;padding: 0;height: 100px;">
       <div class="pull-right" style="margin: 0;padding: 0;float: right;margin-top: 25px;">
-        <strong><%= @comment.thread.commontable.user.name || @comment.thread.commontable.user.email %><strong>
+        <strong><%= @comment.thread.commontable.user.name || @comment.thread.commontable.user.email %></strong>
         <%= image_tag get_user_image(@comment.thread.commontable.user.asset(:small)), height: '50', :class => "pro-img", :style => "margin: 0;padding: 5px;height: 30px;vertical-align: middle;margin-right: 15px;border-radius: 5px;border: 1px solid #eaebec;background-color: #fff;margin-left: 10px;" %>
       </div>
     </div>
@@ -107,7 +107,7 @@
       <div class="message-each" style="margin: 0;padding: 0;">
         <div class="message-header" style="margin: 0;padding: 0;vertical-align: middle;font-size: 18px;font-weight: 100;margin-bottom: 20px;">
           <%= image_tag get_user_image(@creator.asset(:small)), :class => "pro-img", :style => "margin: 0;padding: 5px;height: 75px;vertical-align: middle;margin-right: 10px;border-radius: 5px;border: 1px solid #eaebec;" %>
-          <strong><%= @creator.name || @creator.email %></strong> commented on <%= @commontable_name %> 
+          <strong><%= @creator.name || @creator.email %></strong> commented on <%= @commontable_name %>
         </div>
         <div class="message-section" style="margin: 0;padding: 15px;background: #eee;border-radius: 3px;margin-bottom: 20px;">
           <p style="margin: 0;padding: 0;">
