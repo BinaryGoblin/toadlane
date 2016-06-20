@@ -45,6 +45,7 @@ Toad::Application.configure do
 
   ENV['STRIPE_CLIENT_ID'] = 'ca_84wji8nX79sEzFhHa9WifOU5d69WNSVs'
   ENV['STRIPE_API_KEY'] = 'sk_test_Ejq6XT0escvFPGdciJ4DMECe'
+  ENV['STRIPE_PUBLISHABLE_KEY'] = 'pk_test_UpoMrqANqaQo5mx61CDvk9aH'
 
 
   #config aws for production ENV file storage
