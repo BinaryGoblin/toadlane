@@ -32,4 +32,11 @@ class Product < ActiveRecord::Base
   scope :unexpired, -> { where("end_date > ?", DateTime.now).where(status: true) }
 
   self.per_page = 16
+
+  def available_payments
+    ap = []
+    ap << "Credit Card" if user.stripe_profile.present?
+    ap << "eCheck" if user.green_profile.present?
+    ap
+  end
 end

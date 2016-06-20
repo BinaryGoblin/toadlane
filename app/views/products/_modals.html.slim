@@ -105,7 +105,7 @@
                 tr
                   td
                     = b.label { b.radio_button(:"data-behavior" => "EstimateShipping", :"data-cost" => b.object.cost, :"data-type" => b.object.type) + b.text }
-     
+
         table.table-checkout
           thead
             tr
@@ -139,7 +139,75 @@
               td.no-border colspan="2"
               td.text-center: b.text-uppercase Total:
               td: b $ <span class="stripe-total">#{number_with_precision(product.unit_price, precision: 2, delimiter: '')}</span>
-        
+
+        - if @product.available_payments.count > 1
+          table.table-payment-gateway
+            thead
+              tr
+                th Payment Method
+            tbody
+              tr
+                td
+                  = select_tag 'paymentGateway', options_for_select(@product.available_payments), class: 'form-control'
+                  .greenDetails.form-horizontal
+                    h2 Enter your check details below
+                    .form-group
+                      label.control-label.col-sm-4 for="green_order_name" Name
+                      .col-sm-8
+                        input.form-control type="text" name="green_order[name]" id="green_order_name"
+                    .form-group
+                      label.control-label.col-sm-4 for="green_order_address1" Address1
+                      .col-sm-8
+                        input.form-control type="text" name="green_order[address1]" id="green_order_address1"
+                    .form-group
+                      label.control-label.col-sm-4 for="green_order_address2" Address2
+                      .col-sm-8
+                        input.form-control type="text" name="green_order[address2]" id="green_order_address2"
+                    .form-group
+                      label.control-label.col-sm-4 for="green_order_city" City
+                      .col-sm-8
+                        input.form-control type="text" name="green_order[city]" id="green_order_city"
+                    .form-group
+                      label.control-label.col-sm-4 for="green_order_state" State
+                      .col-sm-8
+                        input.form-control type="text" name="green_order[state]" id="green_order_state"
+                    .form-group
+                      label.control-label.col-sm-4 for="green_order_zip" Zip
+                      .col-sm-8
+                        input.form-control type="text" name="green_order[zip]" id="green_order_zip"
+                    .form-group
+                      label.control-label.col-sm-4 for="green_order_country" Country
+                      .col-sm-8
+                        input.form-control type="text" name="green_order[country]" id="green_order_country"
+                    .form-group
+                      label.control-label.col-sm-4 for="green_order_routing_number" RoutingNumber
+                      .col-sm-8
+                        input.form-control type="text" name="green_order[routing_number]" id="green_order_routing_number"
+                    .form-group
+                      label.control-label.col-sm-4 for="green_order_account_number" AccountNumber
+                      .col-sm-8
+                        input.form-control type="text" name="green_order[account_number]" id="green_order_account_number"
+                    .form-group
+                      label.control-label.col-sm-4 for="green_order_bank_name" BankName
+                      .col-sm-8
+                        input.form-control type="text" name="green_order[bank_name]" id="green_order_bank_name"
+                    .form-group
+                      label.control-label.col-sm-4 for="green_order_check_memo" CheckMemo
+                      .col-sm-8
+                        input.form-control type="text" name="green_order[check_memo]" id="green_order_check_memo"
+                    .form-group
+                      label.control-label.col-sm-4 for="green_order_check_amount" CheckAmount
+                      .col-sm-8
+                        input.form-control type="text" name="green_order[check_amount]" id="green_order_check_amount"
+                    .form-group
+                      label.control-label.col-sm-4 for="green_order_check_date" CheckDate
+                      .col-sm-8
+                        input.form-control type="text" name="green_order[check_date]" id="green_order_check_date"
+                    .form-group
+                      label.control-label.col-sm-4 for="green_order_check_number" CheckNumber
+                      .col-sm-8
+                        input.form-control type="text" name="green_order[check_number]" id="green_order_check_number"
+
       .modal-footer.payment-button.text-right
         = f.hidden_field :product_id, :value => product.id
         = f.hidden_field :unit_price, :value => number_with_precision(product.unit_price, precision: 2, delimiter: '')
@@ -157,7 +225,7 @@
           - if product.status_characteristic == 'sell'
             = f.hidden_field :seller_id, :value => product.user.id
             = f.hidden_field :buyer_id, :value => current_user.id || 0
-          
+
 	        button.btn.btn-default type="button" data-dismiss="modal" Cancel
 	        script.stripe-button[src="https://checkout.stripe.com/checkout.js"
 	          data-key="#{ Rails.configuration.stripe[:publishable_key] }"
@@ -170,6 +238,8 @@
 	          data-billing-address="true"
 	          data-shipping-address="true"
 	          data-email="#{ current_user.email }"]
+
+            a#greenSubmit.btn.btn-primary href="#" style="display: none;" Place Order
 	        
           - else
             = f.hidden_field :seller_id, value: current_user.id
