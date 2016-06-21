@@ -17,7 +17,7 @@ html[style="margin: 0;padding: 0;"]
         tbody[style="margin: 0;padding: 0;"]
           tr[style="margin: 0;padding: 0;border-top: none;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
             td.text-right[align="right" colspan="4" valign="top" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: right;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
-              = image_tag get_image("http://staging-toad.s3-us-west-2.amazonaws.com/images/images/000/000/005/small/dress1.jpg"), :class => "pro-img", :style => "background: #fff;border-color: #ccc;float: left;margin: 0;padding: 5px;height: 75px;vertical-align: middle;margin-right: 10px;border-radius: 5px;border: 1px solid #eaebec;"
+              = image_tag get_image(@product.images.first.image(:small)), :class => "pro-img", :style => "background: #fff;border-color: #ccc;float: left;margin: 0;padding: 5px;height: 75px;vertical-align: middle;margin-right: 10px;border-radius: 5px;border: 1px solid #eaebec;"
               h4.text-uppercase[style="margin: 0;padding: 0;"]
                 |  order #
                 = @stripe_order.id
@@ -119,7 +119,7 @@ html[style="margin: 0;padding: 0;"]
               b[style="margin: 0;padding: 0;"]
                 = number_to_currency(@stripe_order.total)
       div[style="text-align: right;margin-top: 20px;margin: 0;padding: 0;"]
-        a.btn[href="#" style="margin: 0;padding: 7px 13px;color: white;border: 1px solid transparent;border-bottom-color: #3d6411;border-top-color: #59af0c;text-decoration: none;background-image: linear-gradient(to bottom, #59af0c 0%, #5c8f10 100%);background-repeat: repeat-x;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF59AF0C', endColorstr='#FF5C8F10', GradientType=0);border-radius: 3px;display: inline-block;"]
+        a.btn[href="#{dashboard_orders_url}" style="margin: 0;padding: 7px 13px;color: white;border: 1px solid transparent;border-bottom-color: #3d6411;border-top-color: #59af0c;text-decoration: none;background-image: linear-gradient(to bottom, #59af0c 0%, #5c8f10 100%);background-repeat: repeat-x;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF59AF0C', endColorstr='#FF5C8F10', GradientType=0);border-radius: 3px;display: inline-block;"]
           | View All Orders
     .text-center[style="margin: 0;padding: 0;text-align: center;"]
       a[href="#{faq_url}" style="margin: 0;padding: 0;color: #5c8f10;"]
