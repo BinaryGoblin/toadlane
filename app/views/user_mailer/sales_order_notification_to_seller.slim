@@ -22,7 +22,7 @@ html[style="margin: 0;padding: 0;"]
           = @product.name
         .message-section[style="margin: 0;padding: 15px;background: #eee;border-radius: 3px;margin-bottom: 20px;"]
           p[style="margin: 0;padding: 0;"]
-            | Your order has been placed for:
+            | You received an order for:
           = image_tag get_user_image(@product.images.first.image(:medium)), :class => "pro-img", :style => "margin: 0;padding: 5px;height: 75px;vertical-align: middle;margin-right: 10px;border-radius: 5px;border: 1px solid #eaebec;"
           | Fee:&nbsp;
           = number_to_currency(@stripe_order.fee)
