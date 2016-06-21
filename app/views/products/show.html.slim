@@ -38,10 +38,10 @@
               - if @product.images.count > 1
                 a.left.carousel-control href="#slider" role="button" data-slide="prev"
                 a.right.carousel-control href="#slider" role="button" data-slide="next"
-    	  
+
           - if @product.description.present?
             .white-panel= simple_format @product.description
-    	  
+
     	  .white-panel.vp-calculation data-behavior="CalculationProduct" data-options='{"pricebreaks":#{@product.pricebreaks.collect { |p| { quantity: (p.quantity - 1), price: p.price } }.to_json},"maxquantity":#{available.present? ? available.to_s : '"Infinity"'}}'
 
             - if @product.status_characteristic == 'sell'
@@ -129,8 +129,9 @@
                     Until your profile is complete, you will not be able to create orders.
             - else
               .wrong.text-center
-                |
-                  Please sign in to place an order.
+                | Please&nbsp;
+                = link_to "sign in", new_user_session_path
+                | &nbsp;to place an order.
         = commontator_thread(@product)
       .col-md-5
         .vp-right-col
@@ -158,14 +159,14 @@
                 .status.text-uppercase
                   - if @product.user.is_reseller
                     b Status:
-                    span.text-green 
+                    span.text-green
                       |
                         Verified
                   - else
                     b Status:
-                    span.text-red 
+                    span.text-red
                       |
-                        Unverified              
+                        Unverified
 
                 .name
                   b= @product.user.name
