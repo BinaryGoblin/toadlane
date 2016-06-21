@@ -21,8 +21,8 @@ class UserMailer < ActionMailer::Base
     @seller = User.find_by_id(@stripe_order.seller_id)
     @buyer = User.find_by_id(@stripe_order.buyer_id)
     @product = Product.find_by_id(@stripe_order.product_id)
-    
-    mail to: @seller.email, subject: 'You have a sales order'
+
+    mail to: @seller.email, subject: 'You have a sales order!!!'
   end
 
   def sales_order_notification_to_buyer(stripe_order)
@@ -31,6 +31,6 @@ class UserMailer < ActionMailer::Base
     @buyer = User.find_by_id(@stripe_order.buyer_id)
     @product = Product.find_by_id(@stripe_order.product_id)
 
-    mail to: @buyer.email, subject: 'Your order has been placed'
+    mail to: @buyer.email, subject: 'Your order has been placed!!!'
   end
 end
