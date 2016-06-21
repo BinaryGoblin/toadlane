@@ -1,0 +1,51 @@
+doctype html
+html[style="margin: 0;padding: 0;"]
+  head[style="margin: 0;padding: 0;"]
+    title[style="margin: 0;padding: 0;"]
+      | Toadlane Email
+    style[style="margin: 0;padding: 0;"]
+      |  *{ margin: 0; padding: 0; } body{ background: #f4f6f8; font-family: Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; padding-bottom: 20px; } .text-center{ text-align: center; } .container{ background: #fff; padding: 15px; margin: 15px; border: 1px solid #eaebec; border-radius: 3px; } a{ color: #5c8f10; } a:hover{ text-decoration: none; } .message-header{ vertical-align: middle; font-size: 18px; font-weight: 100; margin-bottom: 20px; } img.pro-img{ height: 75px; vertical-align: middle; margin-right: 10px; border-radius: 5px; border: 1px solid #eaebec; padding: 5px; } .message-section{ background: #eee; padding: 15px; border-radius: 3px; margin-bottom: 20px; } .btn{ color: white; border: 1px solid transparent; border-bottom-color: #3d6411; border-top-color: #59af0c; text-shadow: 0 1px 0 #3d6411; text-decoration: none; padding: 7px 13px; background-image: -webkit-linear-gradient(top, #59af0c 0%, #5c8f10 100%); background-image: -o-linear-gradient(top, #59af0c 0%, #5c8f10 100%); background-image: linear-gradient(to bottom, #59af0c 0%, #5c8f10 100%); background-repeat: repeat-x; filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF59AF0C', endColorstr='#FF5C8F10', GradientType=0); border-radius: 3px; display: inline-block; } .btn:hover{ color: white; background-image: -webkit-linear-gradient(top, #5c8f10 0%, #59af0c 100%); background-image: -o-linear-gradient(top, #5c8f10 0%, #59af0c 100%); background-image: linear-gradient(to bottom, #5c8f10 0%, #59af0c 100%); background-repeat: repeat-x; filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF5C8F10', endColorstr='#FF59AF0C', GradientType=0); } .pull-right{ float: right; } .email-head{ font-size: 16px; font-weight: 100; } .email-head img.pro-img{ background-color: #fff; margin-right: 15px; margin-left: 10px; height: 30px; } .email-head .pull-right{ margin-top: 25px; } img.logo{ height: 100px; }
+  body[style="margin: 0;padding: 0;background: #f4f6f8;font-family: Helvetica, Arial, sans-serif;font-size: 14px;line-height: 20px;padding-bottom: 20px;"]
+    .email-head[style="margin: 0;padding: 0;font-size: 16px;font-weight: 100;"]
+      img.logo[src="https://www.toadlane.com/assets/logo-header-09ff685e51c99351a07e5332f0996ef2.png" alt="Toadlane Logo" style="margin: 0;padding: 0;height: 100px;"]
+      .pull-right[style="margin: 0;padding: 0;float: right;margin-top: 25px;"]
+        strong
+          = get_email_or_name(@buyer)
+        = image_tag get_user_image(@buyer.asset(:small)), height: '50', :class => "pro-img", :style => "margin: 0;padding: 5px;height: 30px;vertical-align: middle;margin-right: 15px;border-radius: 5px;border: 1px solid #eaebec;background-color: #fff;margin-left: 10px;"
+    .container[style="margin: 15px;padding: 15px;background: #fff;border: 1px solid #eaebec;border-radius: 3px;"]
+      .message-each[style="margin: 0;padding: 0;"]
+        .message-header[style="margin: 0;padding: 0;vertical-align: middle;font-size: 18px;font-weight: 100;margin-bottom: 20px;"]
+          = image_tag get_user_image(@seller.asset(:small)), :class => "pro-img", :style => "margin: 0;padding: 5px;height: 75px;vertical-align: middle;margin-right: 10px;border-radius: 5px;border: 1px solid #eaebec;"
+          strong
+            = get_email_or_name(@seller)
+          |  ordered&nbsp;
+          = @product.name
+        .message-section[style="margin: 0;padding: 15px;background: #eee;border-radius: 3px;margin-bottom: 20px;"]
+          p[style="margin: 0;padding: 0;"]
+            | Your order has been placed for:
+          = image_tag get_user_image(@product.images.first.image(:medium)), :class => "pro-img", :style => "margin: 0;padding: 5px;height: 75px;vertical-align: middle;margin-right: 10px;border-radius: 5px;border: 1px solid #eaebec;"
+          | Fee:&nbsp;
+          = number_to_currency(@stripe_order.fee)
+          br
+          | Unit Price:&nbsp;
+          = number_to_currency(@stripe_order.unit_price)
+          br
+          | Shipping Cost:&nbsp;
+          = number_to_currency(@stripe_order.shipping_cost)
+          br
+          | Total Cost:&nbsp;
+          = number_to_currency(@stripe_order.total)
+          br
+          | Quantity:&nbsp;
+          = @stripe_order.count
+        .message-footer[style="margin: 0;padding: 0;"]
+
+    .text-center[style="margin: 0;padding: 0;text-align: center;"]
+      a[href="https://www.toadlane.com/faq" style="margin: 0;padding: 0;color: #5c8f10;"]
+        | FAQ
+      |  |
+      a[href="https://www.toadlane.com/terms_of_service" style="margin: 0;padding: 0;color: #5c8f10;"]
+        | TERMS OF SERVICES
+      |  |
+      a[href="http://toadchat.blogspot.com/" style="margin: 0;padding: 0;color: #5c8f10;"]
+        | BLOG
