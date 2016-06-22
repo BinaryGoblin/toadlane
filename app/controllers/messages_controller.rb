@@ -7,8 +7,8 @@ class MessagesController < ApplicationController
     user = User.find message_params[:user_id]
     receipt = current_user.send_message user, message_params[:body], message_params[:subject]
     MessageMailer.new_message(user,
-                                conversation_params[:body],
-                                conversation_params[:subject],
+                                message_params[:body],
+                                message_params[:subject],
                                 current_user,
                                 receipt.notification.conversation.id).deliver
     redirect_to :back
