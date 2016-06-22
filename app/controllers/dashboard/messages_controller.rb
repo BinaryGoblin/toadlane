@@ -10,7 +10,7 @@ class Dashboard::MessagesController < DashboardController
 
     @conversations = conversations.paginate(page: params[:page], per_page: params[:count])
   end
-  
+
   def show
     conversation
     conversation.receipts_for(current_user).last.touch
@@ -18,7 +18,12 @@ class Dashboard::MessagesController < DashboardController
   end
 
   def reply
-    current_user.reply_to_conversation(conversation, conversation_params[:body], conversation_params[:subject])
+    receipt = current_user.reply_to_conversation(conversation, conversation_params[:body], conversation_params[:subject])
+    MessageMailer.new_message(user,
+                                conversation_params[:body],
+                                conversation_params[:subject],
+                                current_user,
+                                receipt.notification.conversation.id).deliver
     redirect_to :back
   end
 
