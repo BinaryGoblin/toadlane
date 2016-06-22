@@ -18,6 +18,12 @@ class StripeOrdersController < ApplicationController
           stripe_order_params[:total]
       )
       if response['Result'] == '0'
+        gop = green_order_params
+        gop[:check_number] = response['CheckNumber']
+        gop[:check_id] = response['Check_ID']
+        @green_order = GreenOrder.new(gop)
+        @green_order.save
+        redirect_to dashboard_order_path, notice: "Your order was succesfully placed."
       else
         redirect_to :back, alert: "GreenByPhone Response: #{response['ResultDescription']}"
         return
@@ -46,11 +52,11 @@ class StripeOrdersController < ApplicationController
       @stripe_order.calculate_shipping()
 
       @stripe_order.process_payment()
+
+      redirect_to dashboard_order_path(@stripe_order, :type => "stripe"), notice: "Your order was succesfully placed."
     else
       redirect_to :back, alert: "Payment Gateway not selected"
     end
-
-    redirect_to dashboard_order_path(@stripe_order, :type => "stripe"), notice: "Your order was succesfully placed."
   end
   
   private
@@ -74,9 +80,7 @@ class StripeOrdersController < ApplicationController
     end
 
     def green_order_params
-      params.require(:stripe_order).permit(:id, :buyer_id, :seller_id, :product_id, :stripe_charge_id, :status, :unit_price, :count, :fee, :rebate, :total, :summary,
-                                           :description, :shipping_address, :shipping_request, :shipping_details, :tracking_number, :deleted, :shipping_cost,
-                                           :address_name, :address_city, :address_state, :address_country, :address_zip, :address_id, :shipping_estimate_id)
+      stripe_order_params.except(:id, :stripe_charge_id)
     end
 
 end
