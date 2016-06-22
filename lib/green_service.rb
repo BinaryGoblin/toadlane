@@ -1,6 +1,6 @@
 class GreenService
   include HTTParty
-  base_uri 'GreenByPhone.com/eCheck.asmx'
+  base_uri 'https://www.greenbyphone.com/eCheck.asmx'
 
   attr_accessor :client_id, :api_password
 
@@ -10,14 +10,18 @@ class GreenService
   end
 
   def bill_pay_check(params = {})
-    params["client_id"] = client_id
-    params["apiPassword"] = api_password
-    self.class.post("/BillPayCheck", params)
+    params["Client_ID"] = "#{client_id}"
+    params["ApiPassword"] = "#{api_password}"
+    response = self.class.post("/BillPayCheck", { body: params })
+    response_hash = Hash.from_xml(response.body)
+    response_hash["BillPayCheckResult"]
   end
 
   def bill_pay_check_no_bank_info(params = {})
-    params["client_id"] = client_id
-    params["apiPassword"] = api_password
-    self.class.post("/BillPayCheckNoBankInfo", params)
+    params["Client_ID"] = "#{client_id}"
+    params["ApiPassword"] = "#{api_password}"
+    response = self.class.post("/BillPayCheckNoBankInfo", { body: params })
+    response_hash = Hash.from_xml(response.body)
+    response_hash["BillPayCheckResult"]
   end
 end
