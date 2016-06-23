@@ -17,7 +17,8 @@ html[style="margin: 0;padding: 0;"]
         tbody[style="margin: 0;padding: 0;"]
           tr[style="margin: 0;padding: 0;border-top: none;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
             td.text-right[align="right" colspan="4" valign="top" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: right;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
-              = image_tag get_image(@product.images.first.image(:small)), :class => "pro-img", :style => "background: #fff;border-color: #ccc;float: left;margin: 0;padding: 5px;height: 75px;vertical-align: middle;margin-right: 10px;border-radius: 5px;border: 1px solid #eaebec;"
+              - if @product.images.present? && @product.images.first.image(:small).present?
+                = image_tag get_image(@product.images.first.image(:small)), :class => "pro-img", :style => "background: #fff;border-color: #ccc;float: left;margin: 0;padding: 5px;height: 75px;vertical-align: middle;margin-right: 10px;border-radius: 5px;border: 1px solid #eaebec;"
               h4.text-uppercase[style="margin: 0;padding: 0;"]
                 |  order #
                 = @stripe_order.id
@@ -38,23 +39,23 @@ html[style="margin: 0;padding: 0;"]
                   dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
                     |  Address:
                   dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
-                    = @buyer.name
+                    = @stripe_order.address.name
                   dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
                     |  Postal-Code:
                   dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
-                    = @buyer.zip
+                    = @stripe_order.address.zip
                   dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
                     |  City:
                   dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
-                    = @buyer.city
+                    = @stripe_order.address.city
                   dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
                     |  State:
                   dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
-                    = @buyer.state
+                    = @stripe_order.address.state
                   dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
                     |  Country:
                   dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
-                    = @buyer.country
+                    = @stripe_order.address.country
                   dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
                     |  Phone:
                   dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
