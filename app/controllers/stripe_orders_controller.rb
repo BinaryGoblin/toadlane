@@ -41,7 +41,7 @@ class StripeOrdersController < ApplicationController
         UserMailer.sales_order_notification_to_seller(@green_order).deliver_now
         UserMailer.sales_order_notification_to_buyer(@green_order).deliver_now
 
-        redirect_to dashboard_order_path, notice: "Your order was succesfully placed."
+        redirect_to dashboard_order_path(@green_order, :type => "green"), notice: "Your order was succesfully placed."
       else
         redirect_to :back, alert: "GreenByPhone Response: #{response['ResultDescription']}"
         return
