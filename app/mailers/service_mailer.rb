@@ -1,5 +1,5 @@
 class ServiceMailer < ActionMailer::Base
-  default from: "toad.b2b@gmail.com"
+  default from: "Toadlane Notifications toad.b2b@gmail.com"
 
   def send_new_service_info(user, products)
    email = user.email
@@ -8,4 +8,3 @@ class ServiceMailer < ActionMailer::Base
    mail to: email, subject: 'New products'
   end
 end
-

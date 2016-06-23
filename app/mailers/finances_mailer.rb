@@ -1,5 +1,5 @@
 class FinancesMailer < ActionMailer::Base
-  default from: "hello@toadlane.com"
+  default from: "Toadlane Notifications hello@toadlane.com"
 
   def multivision_application_email(user, address_id, loan_amount, business_years, monthly_revenue)
     @user = user
