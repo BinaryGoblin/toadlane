@@ -5,8 +5,12 @@ class MessagesController < ApplicationController
 
   def create
     user = User.find message_params[:user_id]
-    current_user.send_message user, message_params[:body], message_params[:subject]
-    MessageMailer.new_message(user, message_params[:body], message_params[:subject], current_user).deliver
+    receipt = current_user.send_message user, message_params[:body], message_params[:subject]
+    MessageMailer.new_message(user,
+                                message_params[:body],
+                                message_params[:subject],
+                                current_user,
+                                receipt.notification.conversation.id).deliver
     redirect_to :back
   end
 

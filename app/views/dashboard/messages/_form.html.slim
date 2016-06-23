@@ -1,4 +1,4 @@
-= form_tag reply_dashboard_message_path(conversation) do
+= form_tag reply_dashboard_message_path(conversation, :user_id => other_user_id) do
   = hidden_field :conversation, 'subject', value: conversation.subject
   = hidden_field :conversation, 'conversation', value: conversation
 

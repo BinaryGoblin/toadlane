@@ -1,11 +1,11 @@
 class StripeOrdersController < ApplicationController
   before_filter :authenticate_user!
   before_action :check_terms_of_service
-  
+
   def show
     @stripe_order = StripeOrder.find(params[:id])
   end
- 
+
   def create
     if params['paymentGateway'] == 'eCheck'
       unless green_params_valid?
@@ -53,19 +53,22 @@ class StripeOrdersController < ApplicationController
 
       @stripe_order.process_payment()
 
+      UserMailer.sales_order_notification_to_seller(@stripe_order).deliver
+      UserMailer.sales_order_notification_to_buyer(@stripe_order).deliver
+
       redirect_to dashboard_order_path(@stripe_order, :type => "stripe"), notice: "Your order was succesfully placed."
     else
       redirect_to :back, alert: "Payment Gateway not selected"
     end
   end
-  
+
   private
     def stripe_order_params
       params.require(:stripe_order).permit(:id, :buyer_id, :seller_id, :product_id, :stripe_charge_id, :status, :unit_price, :count, :fee, :rebate, :total, :summary,
                                            :description, :shipping_address, :shipping_request, :shipping_details, :tracking_number, :deleted, :shipping_cost,
                                            :address_name, :address_city, :address_state, :address_country, :address_zip, :address_id, :shipping_estimate_id)
     end
-    
+
     def stripe_params
       params.permit(:stripeToken, :stripeEmail, :stripeShippingName, :stripeShippingAddressLine1, :stripeShippingAddressLine2,
                     :stripeShippingAddressZip, :stripeShippingAddressState, :stripeShippingAddressCity, :stripeShippingAddressCountry)
