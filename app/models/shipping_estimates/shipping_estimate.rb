@@ -1,8 +1,9 @@
 class ShippingEstimate < ActiveRecord::Base
   belongs_to :product
-  
+
   has_many :stripe_orders
-  
+  has_many :green_orders
+
   validates_numericality_of :cost
   
   def self.inherited(child)

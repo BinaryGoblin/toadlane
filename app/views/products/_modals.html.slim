@@ -92,8 +92,8 @@
                     = b.label { b.radio_button(:"data-behavior" => "AssignShipping") + b.text }
               tr
                 td
-                  = radio_button @stripe_order, :address_id, "-1", default: true, 'data-behavior' => "AssignShipping"
-                  = label :address, " Enter new address"
+                  = radio_button 'stripe_order', :address_id, "-1", default: true, 'data-behavior' => "AssignShipping", id: 'stripe_order_address_id__1'
+                  = label :address_id, " Enter new address", for: 'stripe_order_address_id__1'
     
         table.table-shipping-estimate 
           - if !product.shipping_estimates.nil?

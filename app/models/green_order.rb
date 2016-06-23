@@ -43,6 +43,16 @@ class GreenOrder < ActiveRecord::Base
     end
   end
 
+  def place_order
+    product.sold_out += count
+    self.product.save
+    if shipping_estimate.nil?
+      raise "No shipping estimate."
+    end
+    self.placed!
+    self.save
+  end
+
   private_class_method
     def self.has_green_bank_info?(green_params)
       ![green_params[:routing_number], green_params[:account_number], green_params[:bank_name]].any? {|p| p.blank?}
