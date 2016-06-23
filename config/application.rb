@@ -33,7 +33,7 @@ module Toad
     end
 
     config.autoload_paths += %W(#{config.root}/lib)
-    
+
     # Single Table Inheritance autoloads
     config.autoload_paths += %W(#{config.root}/app/models/shipping_estimates)
 
@@ -41,7 +41,10 @@ module Toad
 
     config.active_job.queue_adapter = :delayed_job
     config.active_record.raise_in_transactional_callbacks = true
-    
+
     config.exceptions_app = self.routes
+
+    # config.action_mailer.delivery_method = :postmark
+    # config.action_mailer.postmark_settings = { :api_token => "d01cff98-e1ee-4409-a840-36ccf1c84ec8" }
   end
 end

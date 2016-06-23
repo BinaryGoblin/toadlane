@@ -4,13 +4,13 @@ Toad::Application.routes.draw do
   match "/500", :to => "errors#internal_server_error", :via => :all
 
   resources :armor_orders, except: [:update, :edit, :new]
-  
+
   resources :stripe_orders do
     collection do
       post :purchase
     end
   end
-  
+
   get 'print/invoice.:id', to: 'print#invoice', as: 'print/invoice'
 
   get 'search/autocomplete'
@@ -20,12 +20,12 @@ Toad::Application.routes.draw do
   get 'terms_of_service' => 'static_pages#terms_of_service'
   get 'account_deactivated' => 'static_pages#account_deactivated'
   root 'static_pages#home'
-  
+
   namespace :dashboard do
     resource :profile, only: [:update, :show]
 
     resources :accounts
-    
+
     resource :finances, only: [:create, :show]
 
     resources :products, except: :show do
@@ -53,16 +53,16 @@ Toad::Application.routes.draw do
     resources :shipments, only: [:index]
 
     resources :forms, path: "verify"
-    
+
     resources :terms_of_services, only: [:index] do
       collection do
         put 'update_terms'
       end
     end
-    
+
     root 'profiles#show'
   end
-  
+
   resources :messages, only: [:create]
 
   resources :categories do
@@ -84,9 +84,9 @@ Toad::Application.routes.draw do
 
   namespace :admin do
     resources :categories
-    
+
     resources :fees
-    
+
     resources :products, except: :show do
       collection do
         delete :delete_cascade
@@ -94,21 +94,21 @@ Toad::Application.routes.draw do
         post :inactive_cascade
       end
     end
-    
+
     resources :orders, only: [:index, :update] do
       collection do
         delete :delete_cascade
       end
     end
-    
+
     resources :mailers, only: [:index] do
       collection do
         post :services
       end
     end
-    
+
     resources :importers, only: [:index, :create]
-    
+
     root 'categories#index'
 
     namespace :users do
@@ -117,7 +117,7 @@ Toad::Application.routes.draw do
           get :get_certificate
         end
       end
-     
+
       resources :managements, only: [:index] do
         collection do
           put :activate
@@ -128,11 +128,14 @@ Toad::Application.routes.draw do
       end
       resources :communications, only: [:index]
     end
-  end  
+  end
 
   authenticate :user, lambda{|user| user.has_role?(:admin) } do
     mount Searchjoy::Engine, at: "admin/searchjoy"
   end
 
   mount Commontator::Engine => '/commontator'
+
+  post '/inbound', to: 'messages#inbound'
+
 end

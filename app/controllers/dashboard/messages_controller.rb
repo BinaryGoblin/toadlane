@@ -20,6 +20,7 @@ class Dashboard::MessagesController < DashboardController
   def reply
     receipt = current_user.reply_to_conversation(conversation, conversation_params[:body], conversation_params[:subject])
     user = User.find_by_id(params[:user_id])
+    binding.pry
     MessageMailer.new_message(user,
                                 conversation_params[:body],
                                 conversation_params[:subject],
