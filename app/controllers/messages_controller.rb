@@ -16,17 +16,19 @@ class MessagesController < ApplicationController
 
   def inbound
     if request.post? && params[:message].present?
-      conversation = Mailboxer::Conversation.find_by_id(params["message"]["MailboxHash"].to_i)
-      sender = User.find_by_email(params["message"]["From"])
+      if !params["message"]["FromName"] == "Postmarkapp Support"
+        conversation = Mailboxer::Conversation.find_by_id(params["message"]["MailboxHash"].to_i)
+        sender = User.find_by_email(params["message"]["From"])
 
-      sender.reply_to_conversation(conversation, params["message"]["TextBody"], params["message"]["Subject"])
-      recipient_id = conversation.messages.where.not(sender_id: sender.id).first.sender_id
-      recipient = User.find_by_id(recipient_id)
-      MessageMailer.new_message(recipient,
-                                  params["message"]["TextBody"],
-                                  params["message"]["Subject"],
-                                  sender,
-                                  conversation.id).deliver
+        sender.reply_to_conversation(conversation, params["message"]["TextBody"], params["message"]["Subject"])
+        recipient_id = conversation.messages.where.not(sender_id: sender.id).first.sender_id
+        recipient = User.find_by_id(recipient_id)
+        MessageMailer.new_message(recipient,
+                                    params["message"]["TextBody"],
+                                    params["message"]["Subject"],
+                                    sender,
+                                    conversation.id).deliver
+      end
       render nothing: true, status: 200
     else
       redirect_to root_path
