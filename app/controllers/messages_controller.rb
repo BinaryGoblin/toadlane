@@ -2,6 +2,7 @@ class MessagesController < ApplicationController
   before_filter :authenticate_user!, except: :inbound
   before_action :check_if_user_active
   before_action :check_terms_of_service
+  skip_before_action :verify_authenticity_token, only: :inbound
 
   def create
     user = User.find message_params[:user_id]
