@@ -136,6 +136,6 @@ Toad::Application.routes.draw do
 
   mount Commontator::Engine => '/commontator'
 
-  post '/inbound', to: 'messages#inbound'
+  match '/inbound', to: 'messages#inbound', :via => [:get, :post]
 
 end

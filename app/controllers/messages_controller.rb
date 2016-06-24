@@ -15,18 +15,22 @@ class MessagesController < ApplicationController
   end
 
   def inbound
-    conversation = Mailboxer::Conversation.find_by_id(params["MailboxHash"].to_i)
-    sender = User.find_by_email(params["From"])
+    if request.post? && params[:message].present?
+      conversation = Mailboxer::Conversation.find_by_id(params["message"]["MailboxHash"].to_i)
+      sender = User.find_by_email(params["message"]["From"])
 
-    sender.reply_to_conversation(conversation, params["TextBody"], params["Subject"])
-    recipient_id = conversation.messages.where.not(sender_id: sender.id).first.sender_id
-    recipient = User.find_by_id(recipient_id)
-    MessageMailer.new_message(recipient,
-                                params["TextBody"],
-                                params["Subject"],
-                                sender,
-                                conversation.id).deliver
-    render nothing: true, status: 200
+      sender.reply_to_conversation(conversation, params["message"]["TextBody"], params["message"]["Subject"])
+      recipient_id = conversation.messages.where.not(sender_id: sender.id).first.sender_id
+      recipient = User.find_by_id(recipient_id)
+      MessageMailer.new_message(recipient,
+                                  params["message"]["TextBody"],
+                                  params["message"]["Subject"],
+                                  sender,
+                                  conversation.id).deliver
+      render nothing: true, status: 200
+    else
+      redirect_to root_path
+    end
   end
 
   private
