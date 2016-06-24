@@ -8,6 +8,8 @@ module EmailHelper
     else
       "http://staging-toad.s3-us-west-2.amazonaws.com/users/assets/000/000/031/small/missing.png"
     end
+  rescue
+    "http://staging-toad.s3-us-west-2.amazonaws.com/users/assets/000/000/031/small/missing.png"
   end
 
   def get_email_or_name(user)
