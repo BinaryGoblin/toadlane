@@ -2,12 +2,10 @@ module EmailHelper
   include Rails.application.routes.url_helpers
 
   def get_image(image_path)
-    if !image_path.split("/").include?("missing.png")
-      attachments.inline[image_path] = open(image_path).read
-      attachments[image_path].url
-    else
-      "http://staging-toad.s3-us-west-2.amazonaws.com/users/assets/000/000/031/small/missing.png"
-    end
+    attachments.inline[image_path] = open(image_path).read
+    attachments[image_path].url
+  rescue
+    "http://staging-toad.s3-us-west-2.amazonaws.com/users/assets/000/000/031/small/missing.png"
   end
 
   def get_email_or_name(user)
