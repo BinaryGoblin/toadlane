@@ -19,14 +19,14 @@ class MessagesController < ApplicationController
     sender = User.find_by_email(params["From"])
 
     sender.reply_to_conversation(conversation, params["TextBody"], params["Subject"])
-    recipient_id = conversation.messages.where.not(sender_id: message.sender_id).first.sender_id
+    recipient_id = conversation.messages.where.not(sender_id: sender.id).first.sender_id
     recipient = User.find_by_id(recipient_id)
     MessageMailer.new_message(recipient,
                                 params["TextBody"],
                                 params["Subject"],
                                 sender,
                                 conversation.id).deliver
-
+    render nothing: true, status: 200
   end
 
   private
