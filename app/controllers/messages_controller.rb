@@ -15,17 +15,17 @@ class MessagesController < ApplicationController
   end
 
   def inbound
-    binding.pry
-    response = params
-    conversation_id = response["MailboxHash"].to_i
-    conversation = Mailboxer::Conversation.find_by_id(conversation_id)
-    sender = User.find_by_email(response["From"])
-    reply_dashboard_message_path(conversation.messages.last)
-    # conversation.messages.create(type: 'Mailboxer::Message',
-    #                               subject: response["Subject"],
-    #                               sender_type: 'User',
-    #                               sender_id: sender.id
-    #                               body: response["TextBody"] )
+    conversation = Mailboxer::Conversation.find_by_id(params["MailboxHash"].to_i)
+    sender = User.find_by_email(params["From"])
+
+    sender.reply_to_conversation(conversation, params["TextBody"], params["Subject"])
+    recipient_id = conversation.messages.where.not(sender_id: message.sender_id).first.sender_id
+    recipient = User.find_by_id(recipient_id)
+    MessageMailer.new_message(recipient,
+                                params["TextBody"],
+                                params["Subject"],
+                                sender,
+                                conversation.id).deliver
 
   end
 
