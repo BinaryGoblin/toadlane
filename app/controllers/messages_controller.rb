@@ -17,7 +17,7 @@ class MessagesController < ApplicationController
 
   def inbound
     if request.post? && params[:message].present?
-      if !params["message"]["FromName"] == "Postmarkapp Support"
+      if params["message"]["FromName"] != "Postmarkapp Support"
         conversation = Mailboxer::Conversation.find_by_id(params["message"]["MailboxHash"].to_i)
         sender = User.find_by_email(params["message"]["From"])
 
