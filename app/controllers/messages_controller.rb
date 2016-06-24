@@ -29,7 +29,7 @@ class MessagesController < ApplicationController
                                   conversation.id).deliver
       render nothing: true, status: 200
     else
-      redirect_to root_path, status: :ok
+      redirect_to root_path
     end
   end
 
