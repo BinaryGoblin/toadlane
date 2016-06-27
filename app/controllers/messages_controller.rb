@@ -5,13 +5,13 @@ class MessagesController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :inbound
 
   def create
-    user = User.find message_params[:user_id]
-    receipt = current_user.send_message user, message_params[:body], message_params[:subject]
-    MessageMailer.new_message(user,
+    receiver = User.find message_params[:user_id]
+    current_user.send_message user, message_params[:body], message_params[:subject]
+    MessageMailer.new_message(receiver,
                                 message_params[:body],
                                 message_params[:subject],
                                 current_user,
-                                receipt.notification.conversation.id).deliver
+                                conversation.id).deliver
     redirect_to :back
   end
 
@@ -20,11 +20,10 @@ class MessagesController < ApplicationController
       if params["message"]["FromName"] != "Postmarkapp Support"
         conversation = Mailboxer::Conversation.find_by_id(params["message"]["MailboxHash"].to_i)
         sender = User.find_by_email(params["message"]["From"])
-
         sender.reply_to_conversation(conversation, params["message"]["TextBody"], params["message"]["Subject"])
-        recipient_id = conversation.messages.where.not(sender_id: sender.id).first.sender_id
-        recipient = User.find_by_id(recipient_id)
-        MessageMailer.new_message(recipient,
+        receiver_id = conversation.messages.where.not(sender_id: sender.id).first.sender_id
+        receiver = User.find_by_id(receiver_id)
+        MessageMailer.new_message(receiver,
                                     params["message"]["TextBody"],
                                     params["message"]["Subject"],
                                     sender,

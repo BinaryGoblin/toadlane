@@ -18,13 +18,13 @@ class Dashboard::MessagesController < DashboardController
   end
 
   def reply
-    receipt = current_user.reply_to_conversation(conversation, conversation_params[:body], conversation_params[:subject])
-    user = User.find_by_id(params[:user_id])
-    MessageMailer.new_message(user,
+    current_user.reply_to_conversation(conversation, conversation_params[:body], conversation_params[:subject])
+    receiver = User.find_by_id(params[:user_id])
+    MessageMailer.new_message(receiver,
                                 conversation_params[:body],
                                 conversation_params[:subject],
                                 current_user,
-                                receipt.notification.conversation.id).deliver
+                                conversation.id).deliver
     redirect_to :back
   end
 
