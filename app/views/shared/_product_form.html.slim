@@ -6,13 +6,13 @@
         ul
           - @product.errors.full_messages.each do |message|
             li = message
-            
+
     - if current_user.has_role?(:admin) or current_user.has_role?(:superadmin)
       - if @status_actions
         .form-group
           = f.label :status_action, 'Status Action:', class: 'required'
           = f.select :status_action, @status_actions, {}, data: { behavior: 'Select' }
-          
+
           - assignable_users = StripeProfile.all.map{ |profile| profile.user }.compact
           - if StripeOrder.where(:product_id => @product.id).empty?
             = f.label :user_id, 'Product owner:', class: 'required'
@@ -29,7 +29,7 @@
           - else
             = f.label :user_id, 'Product owner (locked after first sale):', class: 'required'
             = f.select :user_id, options_from_collection_for_select(assignable_users, 'id', 'name', @product.user_id || 0), {}, {disabled: true, data: { behavior: 'Select' }}
-            
+
       br
       hr
 
@@ -38,10 +38,6 @@
         .form-group
           = f.label :name, 'Product name:', class: 'required'
           = f.text_field :name, class: 'form-control'
-
-        .form-group
-          = f.label :slug, 'Slug:'
-          = f.text_field :slug, class: 'form-control'
 
         .form-group
           = f.label :sku, 'Product sku:'
@@ -68,7 +64,7 @@
             .checkbox: label
               = f.check_box :status
               | Is Active
-          
+
           .status_action
             = f.hidden_field :status_characteristic, :value => 'sell'
 
@@ -141,11 +137,11 @@
       .unit
         = f.label :unit_price, 'Base unit price (USD):', class: 'required lg'
         = f.number_field :unit_price, in: 0...1000000, step: "any", class: 'form-control'
-       
+
       .amount-stock
         = f.label :amount, 'Amount in Stock:', class: 'lg required'
         = f.text_field :amount, class: 'form-control'
-      
+
       .amount-soldout
         = f.label :sold_out, 'Number Purchased:', class: 'lg'
         = f.text_field :sold_out, class: 'form-control'
@@ -196,7 +192,7 @@
           input.form-control type="number" name="product[pricebreaks_attributes][][quantity]"
 
         span.btn.btn-default.remove= fa_icon 'trash-o'
-        
+
     hr
       .dimensions
         .dimensions-label
@@ -214,7 +210,7 @@
           div
             = f.label :dimension_weight, 'Weight (lbs):'
             = f.text_field :dimension_weight, class: 'form-control'
-    
+
     label.lg Shipping Estimates:
     ul.estimates
       = f.fields_for :shipping_estimates do |ff|
@@ -223,8 +219,8 @@
           .estimate-type
             = ff.label :type, 'Shipping Type:'
             = ff.select :type, ShippingEstimate.select_options, {}, class: 'form-control'
-            
-          .estimate-cost 
+
+          .estimate-cost
             = ff.label :cost, 'Cost (USD):'
             = ff.text_field :cost, class: 'form-control'
 
