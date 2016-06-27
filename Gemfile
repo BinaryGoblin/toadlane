@@ -48,6 +48,8 @@ gem 'nokogiri'
 # Commenting Engine
 gem 'commontator', '~> 4.11.1'
 
+gem 'postmark-rails', '>= 0.10.0'
+
 # Dev - debugging group
 group :development do
   gem 'pry-rails'

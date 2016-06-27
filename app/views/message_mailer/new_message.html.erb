@@ -99,8 +99,8 @@
     <div class="email-head" style="margin: 0;padding: 0;font-size: 16px;font-weight: 100;">
       <img class="logo" src="https://www.toadlane.com/assets/logo-header-09ff685e51c99351a07e5332f0996ef2.png" alt="Toadlane Logo" style="margin: 0;padding: 0;height: 100px;">
       <div class="pull-right" style="margin: 0;padding: 0;float: right;margin-top: 25px;">
-        <strong><%= @user.name || @user.email %></strong>
-        <%= image_tag get_image(@user.asset(:small)), height: '50', :class => "pro-img", :style => "margin: 0;padding: 5px;height: 30px;vertical-align: middle;margin-right: 15px;border-radius: 5px;border: 1px solid #eaebec;background-color: #fff;margin-left: 10px;" %>
+        <strong><%= @receiver.name || @receiver.email %></strong>
+        <%= image_tag get_image(@receiver.asset(:small)), height: '50', :class => "pro-img", :style => "margin: 0;padding: 5px;height: 30px;vertical-align: middle;margin-right: 15px;border-radius: 5px;border: 1px solid #eaebec;background-color: #fff;margin-left: 10px;" %>
       </div>
     </div>
     <div class="container" style="margin: 15px;padding: 15px;background: #fff;border: 1px solid #eaebec;border-radius: 3px;">
@@ -117,6 +117,9 @@
         <div class="message-footer" style="margin: 0;padding: 0;">
           <%= link_to "Reply", @message_url,
                 {:style => "margin: 0;padding: 7px 13px;color: white;border: 1px solid transparent;border-bottom-color: #3d6411;border-top-color: #59af0c;text-shadow: 0 1px 0 #3d6411;text-decoration: none;background-image: linear-gradient(to bottom, #59af0c 0%, #5c8f10 100%);background-repeat: repeat-x;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF59AF0C', endColorstr='#FF5C8F10', GradientType=0);border-radius: 3px;display: inline-block;"}%>
+        </div>
+        <div style="margin-top: 20px;padding:10px 0 0;border-top:1px solid #cccccc;line-height:1">
+          Reply to messages through your email.
         </div>
       </div>
     </div>

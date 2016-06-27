@@ -12,12 +12,16 @@
         | .
       - else
         | #{other_user.try(:name)} hasn't viewed your latest message yet.
-  .form-conversation.pull-right= render partial: 'form', locals: { conversation: conversation,  other_user_id: other_user.id}
 
-  ul.messages-list
-    - conversation.receipts_for(current_user).each do |receipt|
-      li
-        - message = receipt.message
-        b= get_user_by_id(message.sender_id).name
-        p= message.body
-        small= time_ago_in_words message.updated_at
+  .row
+    .col-md-8
+      ul.messages-list
+        - conversation.receipts_for(current_user).each do |receipt|
+          li
+            - message = receipt.message
+            b= get_user_by_id(message.sender_id).name
+            p= message.body
+            small= time_ago_in_words message.updated_at
+
+    .col-md-4
+      = render partial: 'form', locals: { conversation: conversation,  other_user_id: other_user.id}
