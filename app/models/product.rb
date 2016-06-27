@@ -40,4 +40,8 @@ class Product < ActiveRecord::Base
     ap << "eCheck" if user.green_profile.present?
     ap
   end
+
+  def green_only_present?
+    user.green_profile.present? && user.stripe_profile.nil?
+  end
 end

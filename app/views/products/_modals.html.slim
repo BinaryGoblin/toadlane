@@ -140,7 +140,7 @@
               td.text-center: b.text-uppercase Total:
               td: b $ <span class="stripe-total">#{number_with_precision(product.unit_price, precision: 2, delimiter: '')}</span>
 
-        - if @product.available_payments.count > 1
+        - if @product.available_payments.count > 1 || @product.green_only_present?
           table.table-payment-gateway
             thead
               tr
@@ -149,7 +149,7 @@
               tr
                 td
                   = select_tag 'paymentGateway', options_for_select(@product.available_payments), class: 'form-control'
-                  .greenDetails.form-horizontal
+                  .greenDetails.form-horizontal class=('show_green' if @product.green_only_present?)
                     h2 Enter your check details below
                     .form-group
                       label.control-label.col-sm-4 for="green_order_name" Name *
@@ -231,37 +231,39 @@
             = f.hidden_field :seller_id, :value => product.user.id
             = f.hidden_field :buyer_id, :value => current_user.id || 0
 
-	        button.btn.btn-default type="button" data-dismiss="modal" Cancel
-	        script.stripe-button[src="https://checkout.stripe.com/checkout.js"
-	          data-key="#{ Rails.configuration.stripe[:publishable_key] }"
-	          data-name="Toadlane.com"
-	          data-amount=0
-              data-locale="auto"
-	          data-panel-label="Place Order"
-	          data-label="Place Order"
-	          data-zip-code="true"
-	          data-billing-address="true"
-	          data-shipping-address="true"
-	          data-email="#{ current_user.email }"]
+  	        button.btn.btn-default type="button" data-dismiss="modal" Cancel
+            - unless @product.green_only_present?
+              script.stripe-button[src="https://checkout.stripe.com/checkout.js"
+    	          data-key="#{ Rails.configuration.stripe[:publishable_key] }"
+    	          data-name="Toadlane.com"
+    	          data-amount=0
+                  data-locale="auto"
+    	          data-panel-label="Place Order"
+    	          data-label="Place Order"
+    	          data-zip-code="true"
+    	          data-billing-address="true"
+    	          data-shipping-address="true"
+    	          data-email="#{ current_user.email }"]
 
-            a#greenSubmit.btn.btn-primary href="#" style="display: none;" Place Order
+            a#greenSubmit.btn.btn-primary href="#" style="display: none;" class=('show_green' if @product.green_only_present?)
+              | Place Order
 	        
           - else
             = f.hidden_field :seller_id, value: current_user.id
             = f.hidden_field :buyer_id, value: product.user.id
 
-	        button.btn.btn-default type="button" data-dismiss="modal" Cancel
-	        script.stripe-button[src="https://checkout.stripe.com/checkout.js"
-	          data-key="#{ Rails.configuration.stripe[:publishable_key] }"
-	          data-name="Toadlane.com"
-	          data-amount=0
-	          data-locale="auto"
-	          data-panel-label="Place Order"
-	          data-label="Place Order"
-	          data-zip-code="true"
-	          data-billing-address="true"
-	          data-shipping-address="true"
-	          data-email="#{ product.user.email }"]
+  	        button.btn.btn-default type="button" data-dismiss="modal" Cancel
+  	        script.stripe-button[src="https://checkout.stripe.com/checkout.js"
+  	          data-key="#{ Rails.configuration.stripe[:publishable_key] }"
+  	          data-name="Toadlane.com"
+  	          data-amount=0
+  	          data-locale="auto"
+  	          data-panel-label="Place Order"
+  	          data-label="Place Order"
+  	          data-zip-code="true"
+  	          data-billing-address="true"
+  	          data-shipping-address="true"
+  	          data-email="#{ product.user.email }"]
 	    - else
 	      button.btn.btn-default type="button" data-dismiss="modal" Cancel
 	      = button_to "Sign In", new_user_session_path, class: "btn btn-default"
