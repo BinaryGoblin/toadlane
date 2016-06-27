@@ -6,8 +6,13 @@ class Dashboard::AccountsController < DashboardController
 
   def create_green_profile
     if green_params.present?
-      current_user.green_profile = GreenProfile.new(green_params)
-      redirect_to dashboard_accounts_path, :flash => { :notice => "Green Profile successfully created." }
+      green_profile = GreenProfile.new(green_params)
+      if green_profile.valid?
+        current_user.green_profile = green_profile
+        redirect_to dashboard_accounts_path, :flash => { :notice => "Green Profile successfully created." }
+      else
+        redirect_to dashboard_accounts_path, :flash => { :alert => "#{green_profile.errors.full_messages.to_sentence}" }
+      end
     else
       redirect_to dashboard_accounts_path, :flash => { :alert => "Green Profile not created, please try again." }
     end
