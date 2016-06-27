@@ -173,6 +173,15 @@
                   - if !@product.user.addresses[0].nil?
                     span = @product.user.addresses[0].country
 
+                .user_accounts
+                  p
+                    b ACTIVE ACCOUNTS:
+                    - if @product.user.green_profile.present?
+                      span.label.label-green
+                        | Green By Phone
+                    - if @product.user.stripe_profile.present?
+                      span.label.label-blue
+                        | Stripe
                 - if @product.user.benefits.reject{ |e| e.empty? }.present?
                   .sell
                     b SELL:
