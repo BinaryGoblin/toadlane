@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception
+  protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json' }
 
   rescue_from CanCan::AccessDenied do |exception|
     flash[:error] = "Access denied."
@@ -13,24 +13,24 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-  
+
   def check_if_user_active
     if current_user.present? && ! (current_user.has_role? :user) && ! (current_user.has_role? :admin)
       redirect_to account_deactivated_path
     end
   end
-  
+
   def get_user_notifications
     notifications = get_user_unread_message_notifications
     # TODO
     # notifications += get_user_new_orders
-    
+
     notifications
   end
-  
+
   def get_user_unread_message_notifications
     unread_receipts ||= current_user.mailbox.receipts.where(is_read: 'false')
-    
+
     if unread_receipts
       unread_receipts.count
     else
@@ -67,12 +67,12 @@ class ApplicationController < ActionController::Base
       super
     end
   end
-  
+
   def check_for_mobile
     session[:mobile_override] = params[:mobile] if params[:mobile]
     prepare_for_mobile if mobile_device?
   end
-  
+
   def mobile_device?
     if session[:mobile_override]
       session[:mobile_override] == "1"
@@ -81,7 +81,7 @@ class ApplicationController < ActionController::Base
     end
   end
   helper_method :mobile_device?
-  
+
   def prepare_for_mobile
     prepend_view_path Rails.root + 'app' + 'views_mobile'
   end
