@@ -9,6 +9,7 @@ class Product < ActiveRecord::Base
   has_paper_trail
 
   has_many :stripe_orders
+  has_many :green_orders
   has_many :product_categories
   has_many :categories, through: :product_categories, dependent: :destroy
   has_many :images
@@ -32,4 +33,15 @@ class Product < ActiveRecord::Base
   scope :unexpired, -> { where("end_date > ?", DateTime.now).where(status: true) }
 
   self.per_page = 16
+
+  def available_payments
+    ap = []
+    ap << "Credit Card" if user.stripe_profile.present?
+    ap << "eCheck" if user.green_profile.present?
+    ap
+  end
+
+  def green_only_present?
+    user.green_profile.present? && user.stripe_profile.nil?
+  end
 end

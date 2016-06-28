@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
          :omniauthable
 
   has_one :stripe_profile
+  has_one :green_profile
   has_one :stripe_customer
   has_many :products
   has_many :addresses
@@ -49,6 +50,11 @@ class User < ActiveRecord::Base
     !self.addresses.nil? && !self.name.nil? && !self.email.nil? && !self.phone.nil?
   end
 
+  # user should have at least one payment method to create products
+  def has_payment_account?
+    self.stripe_profile.present? || self.green_profile.present?
+  end
+
   def armor_orders(type=nil)
     if type == 'bought'
       ArmorOrder.where(buyer_id: self.id)
@@ -66,6 +72,16 @@ class User < ActiveRecord::Base
       StripeOrder.where(seller_id: self.id)
     else
       StripeOrder.where('buyer_id = ? OR seller_id = ?', self.id, self.id)
+    end
+  end
+
+  def green_orders(type=nil)
+    if type == 'bought'
+      GreenOrder.where(buyer_id: self.id)
+    elsif type == 'sold'
+      GreenOrder.where(seller_id: self.id)
+    else
+      GreenOrder.where('buyer_id = ? OR seller_id = ?', self.id, self.id)
     end
   end
 

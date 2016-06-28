@@ -24,8 +24,12 @@ Toad::Application.routes.draw do
   namespace :dashboard do
     resource :profile, only: [:update, :show]
 
-    resources :accounts
-
+    resources :accounts do
+      collection do
+        post :create_green_profile
+      end
+    end
+    
     resource :finances, only: [:create, :show]
 
     resources :products, except: :show do

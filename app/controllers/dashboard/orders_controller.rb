@@ -7,6 +7,8 @@ class Dashboard::OrdersController < DashboardController
       @orders = current_user.armor_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page])
     when 'stripe'
       @orders = current_user.stripe_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page])
+    when 'green'
+      @orders = current_user.green_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page])
     else
       @orders = current_user.stripe_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page])
     end
@@ -18,6 +20,8 @@ class Dashboard::OrdersController < DashboardController
       @order = StripeOrder.find(params[:id])
     when 'armor'
       @order = ArmorOrder.find(params[:id])
+    when 'green'
+      @order = GreenOrder.find(params[:id])
     else
       @order = StripeOrder.find(params[:id])
     end

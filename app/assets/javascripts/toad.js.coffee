@@ -83,9 +83,27 @@ $(document).ready ->
     ],
     autocomplete: true
   });
+
   $('.related_searches a').click (event) ->
     event.preventDefault()
     rs = $(this).html()
     $('input#query').val(rs)
     $('form#search_form').submit()
+    return
+
+  $('#paymentGateway').change ->
+    pg = $(this).val()
+    if pg == "eCheck"
+      $('.greenDetails').slideDown()
+      $('.stripe-button-el').hide()
+      $('#greenSubmit').show()
+    else
+      $('.greenDetails').slideUp()
+      $('.stripe-button-el').show()
+      $('#greenSubmit').hide()
+    return
+
+  $('#greenSubmit').click (event) ->
+    event.preventDefault()
+    $(this).closest('form#new_stripe_order').submit()
     return

@@ -50,6 +50,10 @@
 
 @import "common/responsive";
 
+.modal{
+  z-index: 9999;
+}
+
 .search-tooltip {
   background-color: white;
   opacity: 0.8;
