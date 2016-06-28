@@ -14,7 +14,7 @@ class Product < ActiveRecord::Base
   has_many :categories, through: :product_categories, dependent: :destroy
   has_many :images
   accepts_nested_attributes_for :images
-  has_many :pricebreaks, autosave: true
+  has_many :pricebreaks, -> { order(quantity: :asc) }, autosave: true
   has_many :shipping_estimates
   accepts_nested_attributes_for :shipping_estimates,
     :allow_destroy => true,
