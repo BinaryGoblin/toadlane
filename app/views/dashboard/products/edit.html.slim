@@ -24,18 +24,18 @@
                 .action Action <b>#{h.event}</b>
                 .time= h.created_at.strftime('%a %b %e %T %Y')
               td valign="top"
-                ul 
+                ul
                   - h.changeset.each do |name, value|
                     li
-                      div #{name}: 
+                      div #{name}:
                       span
                         - if name == 'updated_at' || name == 'created_at' || name == 'start_date' || name == 'end_date'
                           - if value[0].present?
                             b= value[0].strftime('%a %b %e %T %Y')
-                            |  to  
+                            |  to
                           b= value[1].strftime('%a %b %e %T %Y')
                         - else
                           - if value[0].present?
                             b= value[0]
-                            |  to  
+                            |  to
                           b= value[1]
