@@ -5,6 +5,8 @@ class GreenOrder < ActiveRecord::Base
   belongs_to :shipping_estimate
   belongs_to :address
 
+  has_one :refund_request
+
   scope :for_dashboard, -> (page, per_page) do
     where(deleted: false).order('created_at DESC').paginate(page: page, per_page: per_page)
   end

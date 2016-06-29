@@ -270,4 +270,8 @@ module ApplicationHelper
       0
     end
   end
+
+  def is_refundable?(order)
+    order.is_a?(GreenOrder) && order.status == "placed" && current_user.id == order.buyer_id && order.refund_request.nil?
+  end
 end

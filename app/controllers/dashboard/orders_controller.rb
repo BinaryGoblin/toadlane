@@ -37,6 +37,27 @@ class Dashboard::OrdersController < DashboardController
     render json: :ok
   end
 
+  def request_refund
+    if params[:id].present?
+      case params[:type]
+      when 'stripe'
+        order = StripeOrder.find(params[:id])
+      when 'armor'
+        order = ArmorOrder.find(params[:id])
+      when 'green'
+        order = GreenOrder.find(params[:id])
+      else
+        order = StripeOrder.find(params[:id])
+      end
+      if order.present? && order.refund_request.nil?
+        refund_request = RefundRequest.new(buyer_id: order.buyer_id, seller_id: order.seller_id)
+        order.refund_request = refund_request
+        order.challenged!
+      end
+    end
+    render json: :ok
+  end
+
   private
    def get_order_status
     @orders = ArmorOrder.where(deleted: false).own_orders(current_user.id)
