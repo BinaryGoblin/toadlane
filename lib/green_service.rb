@@ -24,4 +24,12 @@ class GreenService
     response_hash = Hash.from_xml(response.body)
     response_hash["BillPayCheckResult"]
   end
+
+  def refund_check(params = {})
+    params["Client_ID"] = "#{client_id}"
+    params["ApiPassword"] = "#{api_password}"
+    response = self.class.post("/RefundCheck", { body: params })
+    response_hash = Hash.from_xml(response.body)
+    response_hash["RefundCheckResult"]
+  end
 end

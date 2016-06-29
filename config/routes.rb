@@ -47,6 +47,14 @@ Toad::Application.routes.draw do
       end
     end
 
+    resources :refund_requests, only: [:index] do
+      collection do
+        delete :cancel_refund
+        get :accept_refund
+        get :reject_refund
+      end
+    end
+
     resources :messages do
       member do
         post :reply

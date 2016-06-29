@@ -5,7 +5,7 @@ class GreenOrder < ActiveRecord::Base
   belongs_to :shipping_estimate
   belongs_to :address
 
-  has_one :refund_request
+  has_one :refund_request, -> { where deleted: false }
 
   scope :for_dashboard, -> (page, per_page) do
     where(deleted: false).order('created_at DESC').paginate(page: page, per_page: per_page)
@@ -37,10 +37,10 @@ class GreenOrder < ActiveRecord::Base
       end
     else
       {
-          result: "404",
-          result_description: "Seller not found or invalid Green Profile",
-          check_number: "",
-          check_id: ""
+          "Result" => "404",
+          "ResultDescription" => "Seller not found or invalid Green Profile",
+          "CheckNumber" => "",
+          "CheckId": ""
       }
     end
   end
