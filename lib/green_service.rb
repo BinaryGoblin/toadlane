@@ -28,4 +28,12 @@ class GreenService
     response_hash = Hash.from_xml(response.body)
     response_hash["BillPayCheckResult"]
   end
+
+  def one_time_draft_rtv(params = {})
+    params["Client_ID"] = "#{client_id}"
+    params["ApiPassword"] = "#{api_password}"
+    response = self.class.post("/OneTimeDraftRTV", { body: params })
+    response_hash = Hash.from_xml(response.body)
+    response_hash["DraftResult"]
+  end
 end
