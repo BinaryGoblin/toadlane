@@ -1,6 +1,10 @@
 class GreenService
   include HTTParty
-  base_uri 'https://www.greenbyphone.com/eCheck.asmx'
+  if Rails.env.production?
+    base_uri 'https://www.greenbyphone.com/eCheck.asmx'
+  else
+    base_uri 'https://www.cpsandbox.com/eCheck.asmx'
+  end
 
   attr_accessor :client_id, :api_password
 
