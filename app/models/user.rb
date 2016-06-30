@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
     :allow_destroy => true,
     :reject_if => lambda { |a| (a[:name].empty? && a[:line1].empty? && a[:line2].empty? && a[:city].empty? && a[:state].empty? && a[:zip].empty?) }
   validates :terms_of_service, :inclusion => {:in => [true, false]}
+  validates :name, presence: true, on: :create
   has_many :requests_of_sender, class_name: 'Request', foreign_key: :sender_id
   has_many :requests_of_receiver, class_name: 'Request', foreign_key: :receiver_id
 

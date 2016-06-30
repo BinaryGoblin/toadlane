@@ -10,8 +10,12 @@
     </div>
     <div><%= f.hidden_field :terms_accepted_at, :value=> Time.now %></div>
     <br>
+    <div><%= f.label :name %>
+    <%= f.text_field :name, autofocus: true, class: 'form-control' %></div>
+    <br>
+
     <div><%= f.label :email %>
-    <%= f.email_field :email, autofocus: true, class: 'form-control' %></div>
+    <%= f.email_field :email, class: 'form-control' %></div>
     <br>
 
     <div><%= f.label :password %>
