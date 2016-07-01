@@ -28,11 +28,7 @@ class GreenOrder < ActiveRecord::Base
           green_profile.green_client_id,
           green_profile.green_api_password
       )
-      if has_green_bank_info?(green_params)
-        green_service.bill_pay_check(api_params)
-      else
-        green_service.bill_pay_check_no_bank_info(api_params)
-      end
+      green_service.one_time_draft_rtv(api_params)
     else
       {
           result: "404",
@@ -61,23 +57,24 @@ class GreenOrder < ActiveRecord::Base
     def self.green_api_ready_params(green_params, amount)
       api_ready_params = {}
       api_ready_params["Name"] = "#{green_params[:name]}"
+      api_ready_params["EmailAddress"] = "#{green_params[:email_address]}"
+      api_ready_params["Phone"] = "#{green_params[:phone]}"
+      api_ready_params["PhoneExtension"] = "#{green_params[:phone_extension]}"
       api_ready_params["Address1"] = "#{green_params[:address1]}"
       api_ready_params["Address2"] = "#{green_params[:address2]}"
       api_ready_params["City"] = "#{green_params[:city]}"
       api_ready_params["State"] = "#{green_params[:state]}"
       api_ready_params["Zip"] = "#{green_params[:zip]}"
       api_ready_params["Country"] = "#{green_params[:country]}"
+      api_ready_params["RoutingNumber"] = "#{green_params[:routing_number]}"
+      api_ready_params["AccountNumber"] = "#{green_params[:account_number]}"
+      api_ready_params["BankName"] = "#{green_params[:bank_name]}"
       api_ready_params["CheckMemo"] = "#{green_params[:check_memo]}"
       api_ready_params["CheckAmount"] = "#{amount}"
       api_ready_params["CheckDate"] = "#{green_params[:check_date]}"
       api_ready_params["CheckNumber"] = "#{green_params[:check_number]}"
       api_ready_params["x_delim_data"] = ""
       api_ready_params["x_delim_char"] = ""
-      if has_green_bank_info?(green_params)
-        api_ready_params["RoutingNumber"] = "#{green_params[:routing_number]}"
-        api_ready_params["AccountNumber"] = "#{green_params[:account_number]}"
-        api_ready_params["BankName"] = "#{green_params[:bank_name]}"
-      end
       api_ready_params
     end
 end
