@@ -61,7 +61,7 @@ class GreenOrder < ActiveRecord::Base
       api_ready_params["Name"] = "#{green_params[:name]}"
       api_ready_params["EmailAddress"] = "#{green_params[:email_address]}"
       api_ready_params["Phone"] = "#{green_params[:phone]}"
-      api_ready_params["PhoneExtension"] = "#{green_params[:phone_extension]}"
+      api_ready_params["PhoneExtension"] = ""
       api_ready_params["Address1"] = "#{green_params[:address1]}"
       api_ready_params["Address2"] = "#{green_params[:address2]}"
       api_ready_params["City"] = "#{green_params[:city]}"

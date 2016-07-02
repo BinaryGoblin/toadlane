@@ -164,10 +164,6 @@
                       .col-sm-8
                         input.form-control type="text" name="green_order[phone]" id="green_order_phone" value="#{current_user.try(:formatted_phone)}"
                         p.help-block Your 10-digit phone number in the format 999-999-9999.
-                    .form-group
-                      label.control-label.col-sm-4 for="green_order_phone_extension" Phone Extension
-                      .col-sm-8
-                        input.form-control type="text" name="green_order[phone_extension]" id="green_order_phone_extension" value="#{current_user.try(:phone_extension)}"
                     - green_address = current_user.try(:addresses).try(:last)
                     .form-group
                       label.control-label.col-sm-4 for="green_order_address1" Address1 *
