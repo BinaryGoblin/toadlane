@@ -156,10 +156,9 @@
                       .col-sm-8
                         input.form-control type="text" name="green_order[name]" id="green_order_name" value="#{current_user.try(:name)}"
                     .form-group
-                      label.control-label.col-sm-4 for="green_order_email_address" Email Address
+                      label.control-label.col-sm-4 for="green_order_email_address" Email Address *
                       .col-sm-8
                         input.form-control type="text" name="green_order[email_address]" id="green_order_email_address" value="#{current_user.try(:email)}"
-                        p.help-block If not provided, notification will be made via US Mail at an additional cost.
                     .form-group
                       label.control-label.col-sm-4 for="green_order_phone" Phone *
                       .col-sm-8
@@ -207,23 +206,6 @@
                       label.control-label.col-sm-4 for="green_order_account_number" Account Number *
                       .col-sm-8
                         input.form-control type="text" name="green_order[account_number]" id="green_order_account_number"
-                    .form-group
-                      label.control-label.col-sm-4 for="green_order_bank_name" Bank Name *
-                      .col-sm-8
-                        input.form-control type="text" name="green_order[bank_name]" id="green_order_bank_name"
-                    .form-group
-                      label.control-label.col-sm-4 for="green_order_check_memo" Check Memo
-                      .col-sm-8
-                        input.form-control type="text" name="green_order[check_memo]" id="green_order_check_memo"
-                    .form-group
-                      label.control-label.col-sm-4 for="green_order_check_date" Check Date *
-                      .col-sm-8
-                        input.form-control type="text" name="green_order[check_date]" id="green_order_check_date"
-                        p.help-block Check date in the format mm/dd/yyyy.
-                    .form-group
-                      label.control-label.col-sm-4 for="green_order_check_number" Check Number *
-                      .col-sm-8
-                        input.form-control type="text" name="green_order[check_number]" id="green_order_check_number"
         - else
           = hidden_field_tag 'paymentGateway', 'Credit Card'
 
