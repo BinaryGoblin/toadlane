@@ -21,20 +21,20 @@ class GreenOrder < ActiveRecord::Base
     green_profile = seller.try(:green_profile)
     if seller.present? && green_profile.present?
       api_params = green_api_ready_params(
-          green_params,
-          amount
+        green_params,
+        amount
       )
       green_service = GreenService.new(
-          green_profile.green_client_id,
-          green_profile.green_api_password
+        green_profile.green_client_id,
+        green_profile.green_api_password
       )
       green_service.one_time_draft_rtv(api_params)
     else
       {
-          result: "404",
-          result_description: "Seller not found or invalid Green Profile",
-          check_number: "",
-          check_id: ""
+        result: "404",
+        result_description: "Seller not found or invalid Green Profile",
+        check_number: "",
+        check_id: ""
       }
     end
   end
@@ -69,12 +69,10 @@ class GreenOrder < ActiveRecord::Base
       api_ready_params["RoutingNumber"] = "#{green_params[:routing_number]}"
       api_ready_params["AccountNumber"] = "#{green_params[:account_number]}"
       api_ready_params["BankName"] = "#{green_params[:bank_name]}"
-      api_ready_params["CheckMemo"] = "#{green_params[:check_memo]}"
+      api_ready_params["CheckMemo"] = "p:#{product.id}u:#{buyer.id}"
       api_ready_params["CheckAmount"] = "#{amount}"
-      api_ready_params["CheckDate"] = "#{green_params[:check_date]}"
-      api_ready_params["CheckNumber"] = "#{green_params[:check_number]}"
-      api_ready_params["x_delim_data"] = ""
-      api_ready_params["x_delim_char"] = ""
+      api_ready_params["CheckDate"] = "#{Time.now.strftime("%m/%d/%Y")}"
+      api_ready_params["CheckNumber"] = ""
       api_ready_params
     end
 end
