@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
     :allow_destroy => true,
     :reject_if => lambda { |a| (a[:name].empty? && a[:line1].empty? && a[:line2].empty? && a[:city].empty? && a[:state].empty? && a[:zip].empty?) }
   validates :terms_of_service, :inclusion => {:in => [true, false]}
+  validates :name, presence: true, on: :create
   has_many :requests_of_sender, class_name: 'Request', foreign_key: :sender_id
   has_many :requests_of_receiver, class_name: 'Request', foreign_key: :receiver_id
 
@@ -97,6 +98,21 @@ class User < ActiveRecord::Base
 
   def armor_api_account_persisted?
     self.armor_account_id && self.armor_user_id
+  end
+
+  def formatted_phone
+    if phone.present?
+      phone_number = phone.split(//).last(10).join
+      phone_number.insert(3, '-').insert(-5, '-')
+      phone_number
+    end
+  end
+
+  def phone_extension
+    if phone.present?
+      phone_number = phone.split(//).last(10).join
+      phone_extension = phone.split(phone_number).join
+    end
   end
 
   private

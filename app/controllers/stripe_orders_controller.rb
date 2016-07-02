@@ -15,6 +15,8 @@ class StripeOrdersController < ApplicationController
       response = GreenOrder.make_request(
           green_params,
           stripe_order_params[:seller_id],
+          stripe_order_params[:product_id],
+          stripe_order_params[:buyer_id],
           stripe_order_params[:total]
       )
       if response['Result'] == '0'
@@ -91,11 +93,11 @@ class StripeOrdersController < ApplicationController
     end
 
     def green_params
-      params.require(:green_order).permit(:name, :address1, :address2, :city, :state, :zip, :country, :routing_number, :account_number, :bank_name, :check_memo, :check_date, :check_number)
+      params.require(:green_order).permit(:name, :email_address, :phone, :phone_extension, :address1, :address2, :city, :state, :zip, :country, :routing_number, :account_number)
     end
 
     def green_params_valid?
-      ![green_params[:name], green_params[:address1], green_params[:city], green_params[:state], green_params[:zip], green_params[:zip], green_params[:check_date], green_params[:check_number]].any? {|p| p.blank?}
+      ![green_params[:name], green_params[:email_address], green_params[:phone], green_params[:address1], green_params[:city], green_params[:state], green_params[:zip], green_params[:routing_number], green_params[:account_number]].any? {|p| p.blank?}
     end
 
     def green_order_params
