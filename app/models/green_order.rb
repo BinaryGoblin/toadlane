@@ -16,19 +16,21 @@ class GreenOrder < ActiveRecord::Base
   # seller_id:    Integer is required to pay to their account
   # amount:       Float   is the amount to be transferred from buyer to seller
   # RETURNS:      Hash    includes responses from the API request
-  def self.make_request(green_params = {}, seller_id = nil, amount = 0.0)
+  def self.make_request(green_params = {}, seller_id = nil, product_id = nil, buyer_id = nil, amount = 0.0)
     seller = User.find_by_id(seller_id)
     green_profile = seller.try(:green_profile)
     if seller.present? && green_profile.present?
       api_params = green_api_ready_params(
         green_params,
+        product_id,
+        buyer_id,
         amount
       )
       green_service = GreenService.new(
         green_profile.green_client_id,
         green_profile.green_api_password
       )
-      green_service.one_time_draft_rtv(api_params)
+      green_service.cart_check(api_params)
     else
       {
         result: "404",
@@ -54,7 +56,7 @@ class GreenOrder < ActiveRecord::Base
       ![green_params[:routing_number], green_params[:account_number], green_params[:bank_name]].any? {|p| p.blank?}
     end
 
-    def self.green_api_ready_params(green_params, amount)
+    def self.green_api_ready_params(green_params, product_id, buyer_id, amount)
       api_ready_params = {}
       api_ready_params["Name"] = "#{green_params[:name]}"
       api_ready_params["EmailAddress"] = "#{green_params[:email_address]}"
@@ -69,7 +71,7 @@ class GreenOrder < ActiveRecord::Base
       api_ready_params["RoutingNumber"] = "#{green_params[:routing_number]}"
       api_ready_params["AccountNumber"] = "#{green_params[:account_number]}"
       api_ready_params["BankName"] = "#{green_params[:bank_name]}"
-      api_ready_params["CheckMemo"] = "p:#{product.id}u:#{buyer.id}"
+      api_ready_params["CheckMemo"] = "p:#{product_id}u:#{buyer_id}"
       api_ready_params["CheckAmount"] = "#{amount}"
       api_ready_params["CheckDate"] = "#{Time.now.strftime("%m/%d/%Y")}"
       api_ready_params["CheckNumber"] = ""

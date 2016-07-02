@@ -15,6 +15,8 @@ class StripeOrdersController < ApplicationController
       response = GreenOrder.make_request(
           green_params,
           stripe_order_params[:seller_id],
+          stripe_order_params[:product_id],
+          stripe_order_params[:buyer_id],
           stripe_order_params[:total]
       )
       if response['Result'] == '0'
