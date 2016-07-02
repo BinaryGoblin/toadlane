@@ -93,7 +93,7 @@ class StripeOrdersController < ApplicationController
     end
 
     def green_params
-      params.require(:green_order).permit(:name, :email_address, :phone, :phone_extension, :address1, :address2, :city, :state, :zip, :country, :routing_number, :account_number)
+      params.require(:green_order).permit(:name, :email_address, :phone, :address1, :address2, :city, :state, :zip, :country, :routing_number, :account_number)
     end
 
     def green_params_valid?
