@@ -42,10 +42,8 @@ class RefundRequest < ActiveRecord::Base
   def refund_params
     params = {
       "Check_ID" => "#{green_order.check_id}",
-      "RefundMemo" => "Refund for #{product.name}",
-      "RefundAmount" => "#{total}",
-      "x_delim_data" => "",
-      "x_delim_char" => ""
+      "RefundMemo" => "p:#{product.id}u:#{buyer.id}",
+      "RefundAmount" => "#{total}"
     }
   end
 end

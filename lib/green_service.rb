@@ -49,8 +49,8 @@ class GreenService
   def refund_check(params = {})
     params["Client_ID"] = "#{client_id}"
     params["ApiPassword"] = "#{api_password}"
-    response = self.class.post("/RefundCheck", { body: params })
+    response = self.class.post("/CartCheckRefund", { body: params })
     response_hash = Hash.from_xml(response.body)
-    response_hash["RefundCheckResult"]
+    response_hash["eCartCheckRefundResult"]
   end
 end
