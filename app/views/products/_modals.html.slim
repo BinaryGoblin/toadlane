@@ -155,6 +155,19 @@
                       label.control-label.col-sm-4 for="green_order_name" Name *
                       .col-sm-8
                         input.form-control type="text" name="green_order[name]" id="green_order_name" value="#{current_user.try(:name)}"
+                    .form-group
+                      label.control-label.col-sm-4 for="green_order_email_address" Email Address *
+                      .col-sm-8
+                        input.form-control type="text" name="green_order[email_address]" id="green_order_email_address" value="#{current_user.try(:email)}"
+                    .form-group
+                      label.control-label.col-sm-4 for="green_order_phone" Phone *
+                      .col-sm-8
+                        input.form-control type="text" name="green_order[phone]" id="green_order_phone" value="#{current_user.try(:formatted_phone)}"
+                        p.help-block Your 10-digit phone number in the format 999-999-9999.
+                    .form-group
+                      label.control-label.col-sm-4 for="green_order_phone_extension" Phone Extension
+                      .col-sm-8
+                        input.form-control type="text" name="green_order[phone_extension]" id="green_order_phone_extension" value="#{current_user.try(:phone_extension)}"
                     - green_address = current_user.try(:addresses).try(:last)
                     .form-group
                       label.control-label.col-sm-4 for="green_order_address1" Address1 *
@@ -180,36 +193,19 @@
                     .form-group
                       label.control-label.col-sm-4 for="green_order_country" Country
                       .col-sm-8
-                        input.form-control type="text" name="green_order[country]" id="green_order_country" value="#{green_address.try(:country)}"
+                        select#green_order_country.form-control name="green_order[country]"
+                          option value="US" US
+                          option value="CA" CA
                         p.help-block Your 2-character country code, ex: “US”.
                     .form-group
-                      label.control-label.col-sm-4 for="green_order_routing_number" Routing Number
+                      label.control-label.col-sm-4 for="green_order_routing_number" Routing Number *
                       .col-sm-8
                         input.form-control type="text" name="green_order[routing_number]" id="green_order_routing_number"
-                        p.help-block * Required to deposit check directly from your bank.
+                        p.help-block Your 9-digit bank routing number.
                     .form-group
-                      label.control-label.col-sm-4 for="green_order_account_number" Account Number
+                      label.control-label.col-sm-4 for="green_order_account_number" Account Number *
                       .col-sm-8
                         input.form-control type="text" name="green_order[account_number]" id="green_order_account_number"
-                        p.help-block * Required to deposit check directly from your bank.
-                    .form-group
-                      label.control-label.col-sm-4 for="green_order_bank_name" Bank Name
-                      .col-sm-8
-                        input.form-control type="text" name="green_order[bank_name]" id="green_order_bank_name"
-                        p.help-block * Required to deposit check directly from your bank.
-                    .form-group
-                      label.control-label.col-sm-4 for="green_order_check_memo" Check Memo
-                      .col-sm-8
-                        input.form-control type="text" name="green_order[check_memo]" id="green_order_check_memo"
-                    .form-group
-                      label.control-label.col-sm-4 for="green_order_check_date" Check Date *
-                      .col-sm-8
-                        input.form-control type="text" name="green_order[check_date]" id="green_order_check_date"
-                        p.help-block Check date in the format mm/dd/yyyy.
-                    .form-group
-                      label.control-label.col-sm-4 for="green_order_check_number" Check Number *
-                      .col-sm-8
-                        input.form-control type="text" name="green_order[check_number]" id="green_order_check_number"
         - else
           = hidden_field_tag 'paymentGateway', 'Credit Card'
 

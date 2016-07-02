@@ -90,6 +90,21 @@ class User < ActiveRecord::Base
     self.armor_account_id && self.armor_user_id
   end
 
+  def formatted_phone
+    if phone.present?
+      phone_number = phone.split(//).last(10).join
+      phone_number.insert(3, '-').insert(-5, '-')
+      phone_number
+    end
+  end
+
+  def phone_extension
+    if phone.present?
+      phone_number = phone.split(//).last(10).join
+      phone_extension = phone.split(phone_number).join
+    end
+  end
+
   private
   def associate_api_user
     if armor_api_account_exists?
