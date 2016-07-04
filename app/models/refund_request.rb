@@ -3,7 +3,7 @@ class RefundRequest < ActiveRecord::Base
   belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'
   belongs_to :green_order
 
-  validates_uniqueness_of :green_order_id
+  validates_uniqueness_of :green_order_id, :allow_blank => true, :allow_nil => true
 
   # TODO: the order could be of other types later
   delegate :product, :total, :count, :unit_price, to: :green_order

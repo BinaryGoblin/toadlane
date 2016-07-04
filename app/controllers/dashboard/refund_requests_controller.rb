@@ -11,7 +11,7 @@ class Dashboard::RefundRequestsController < DashboardController
       response = refund_request.refund
       if response['Result'] == '0'
         refund_request.accepted!
-        refund_request.green_order.refunded!
+        refund_request.green_order.cancel_order
         render json: :ok
       else
         render json: :ok, alert: "GreenByPhone Response: #{response['ResultDescription']}"
