@@ -53,6 +53,45 @@ class GreenOrder < ActiveRecord::Base
     self.save
   end
 
+  def cancel_order
+    product.sold_out -= count
+    self.product.save
+    self.cancelled!
+    self.save
+  end
+
+  def check_cancel
+    green_profile = seller.try(:green_profile)
+    if seller.present? && green_profile.present?
+      green_service = GreenService.new(
+        green_profile.green_client_id,
+        green_profile.green_api_password
+      )
+      green_service.cart_check_cancel({ "Check_ID" => "#{self.check_id}" })
+    else
+      {
+        "Result" => "404",
+        "ResultDescription" => "Seller not found or invalid Green Profile"
+      }
+    end
+  end
+
+  def check_status
+    green_profile = seller.try(:green_profile)
+    if seller.present? && green_profile.present?
+      green_service = GreenService.new(
+        green_profile.green_client_id,
+        green_profile.green_api_password
+      )
+      green_service.cart_check_status({ "Check_ID" => "#{self.check_id}" })
+    else
+      {
+        "Result" => "404",
+        "ResultDescription" => "Seller not found or invalid Green Profile"
+      }
+    end
+  end
+
   private_class_method
     def self.has_green_bank_info?(green_params)
       ![green_params[:routing_number], green_params[:account_number], green_params[:bank_name]].any? {|p| p.blank?}

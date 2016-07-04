@@ -37,7 +37,7 @@ class Dashboard::OrdersController < DashboardController
     render json: :ok
   end
 
-  def request_refund
+  def cancel_order
     if params[:id].present?
       case params[:type]
       when 'stripe'
@@ -49,13 +49,30 @@ class Dashboard::OrdersController < DashboardController
       else
         order = StripeOrder.find(params[:id])
       end
-      if order.present? && order.refund_request.nil?
-        refund_request = RefundRequest.new(buyer_id: order.buyer_id, seller_id: order.seller_id)
-        order.refund_request = refund_request
-        order.challenged!
+      if order.present?
+        response = order.check_status
+        if response['Result'] == '0'
+          if response['Processed'] == 'True'
+            if order.refund_request.nil?
+              refund_request = RefundRequest.new(buyer_id: order.buyer_id, seller_id: order.seller_id)
+              order.refund_request = refund_request
+              order.challenged!
+              flash[:notice] = "Refund Request has been created. ##{refund_request.id}"
+            end
+          else
+            cancellation_response = order.check_cancel
+            if cancellation_response['Result'] == '0'
+              order.cancel_order
+              flash[:notice] = "The order has been canceled."
+            else
+              flash[:alert] = "Cancellation Response: #{response['ResultDescription']}"
+            end
+          end 
+        else
+          flash[:alert] = "GreenByPhone Response: #{response['ResultDescription']}"
+        end
       end
     end
-    render json: :ok
   end
 
   private

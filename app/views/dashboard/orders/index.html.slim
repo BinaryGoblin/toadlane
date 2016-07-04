@@ -50,9 +50,9 @@
               td= number_to_currency(order.total, :unit => "$", precision: 2)
             td.text-center
               = link_to 'View', '#modal_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
-              - if is_refundable?(order)
+              - if is_cancellable?(order)
                 | &nbsp;
-                = link_to 'Request Refund', request_refund_dashboard_orders_path(id: order.id, type: params['type']), method: :get, remote: true, data: {confirm: 'Are you sure?'}, class: 'view'
+                = link_to 'Cancel Order', cancel_order_dashboard_orders_path(id: order.id, type: params['type']), method: :get, remote: true, data: {confirm: 'Are you sure?'}, class: 'view'
 
 .footer-actions: .fa-container: .wrap-sm
 

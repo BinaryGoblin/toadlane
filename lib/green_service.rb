@@ -53,4 +53,20 @@ class GreenService
     response_hash = Hash.from_xml(response.body)
     response_hash["eCartCheckRefundResult"]
   end
+
+  def cart_check_status(params = {})
+    params["Client_ID"] = "#{client_id}"
+    params["ApiPassword"] = "#{api_password}"
+    response = self.class.post("/CartCheckStatus", { body: params })
+    response_hash = Hash.from_xml(response.body)
+    response_hash["eCartCheckStatusResult"]
+  end
+
+  def cart_check_cancel(params = {})
+    params["Client_ID"] = "#{client_id}"
+    params["ApiPassword"] = "#{api_password}"
+    response = self.class.post("/CartCheckCancel", { body: params })
+    response_hash = Hash.from_xml(response.body)
+    response_hash["eCartCheckCancelResult"]
+  end
 end

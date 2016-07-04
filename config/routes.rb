@@ -43,7 +43,7 @@ Toad::Application.routes.draw do
     resources :orders, only: [:index, :show] do
       collection do
         delete :delete_cascade
-        get :request_refund
+        get :cancel_order
       end
     end
 
