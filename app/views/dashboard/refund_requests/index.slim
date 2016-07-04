@@ -43,12 +43,12 @@
             td.text-center
               = link_to 'View Invoice', '#modal_order_' + refund_request.green_order_id.to_s, class: 'view', data: { toggle: 'modal' }
               | &nbsp;
-              - if refund_request.acceptable?(current_user.id)
-                - if refund_request.requested?
+              - if refund_request.requested?
+                - if refund_request.acceptable?(current_user.id)
                   = link_to 'Accept', accept_refund_dashboard_refund_requests_path(id: refund_request.id), method: :get, remote: true, data: {confirm: 'Are you sure?'}, class: 'label label-green'
                   = link_to 'Reject', reject_refund_dashboard_refund_requests_path(id: refund_request.id), method: :get, remote: true, data: {confirm: 'Are you sure?'}, class: 'label label-red'
-              - else
-                = link_to 'Cancel', cancel_refund_dashboard_refund_requests_path(id: refund_request.id), method: :delete, remote: true, data: {confirm: 'Are you sure?'}, class: 'label'
+                - else
+                  = link_to 'Cancel', cancel_refund_dashboard_refund_requests_path(id: refund_request.id), method: :delete, remote: true, data: {confirm: 'Are you sure?'}, class: 'label'
 
 .footer-actions: .fa-container: .wrap-sm
 
