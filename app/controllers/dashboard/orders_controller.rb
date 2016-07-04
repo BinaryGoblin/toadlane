@@ -73,6 +73,9 @@ class Dashboard::OrdersController < DashboardController
         end
       end
     end
+    respond_to do |format|
+      format.js { render :template => 'shared/update_flash' }
+    end
   end
 
   private
