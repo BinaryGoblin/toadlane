@@ -12,12 +12,15 @@ class Dashboard::RefundRequestsController < DashboardController
       if response['Result'] == '0'
         refund_request.accepted!
         refund_request.green_order.cancel_order
-        render json: :ok
+        flash[:notice] = "Refund Request has been successfully accepted."
       else
-        render json: :ok, alert: "GreenByPhone Response: #{response['ResultDescription']}"
+        flash[:alert] = "GreenByPhone Response: #{response['ResultDescription']}"
       end
     else
-      render json: :ok, alert: "Refund Request not found."
+      flash[:alert] = "Refund Request not found."
+    end
+    respond_to do |format|
+      format.js { render :template => 'shared/update_flash' }
     end
   end
 
@@ -26,8 +29,11 @@ class Dashboard::RefundRequestsController < DashboardController
     if refund_request.present?
       refund_request.rejected!
       refund_request.green_order.placed!
+      flash[:notice] = "Refund Request has been rejected."
     end
-    render json: :ok
+    respond_to do |format|
+      format.js { render :template => 'shared/update_flash' }
+    end
   end
 
   def cancel_refund
@@ -35,7 +41,10 @@ class Dashboard::RefundRequestsController < DashboardController
     if refund_request.present?
       refund_request.green_order.placed!
       refund_request.update_attributes({ deleted: true, green_order_id: nil })
+      flash[:notice] = "Refund Request has been been canceled."
     end
-    render json: :ok
+    respond_to do |format|
+      format.js { render :template => 'shared/update_flash' }
+    end
   end
 end
