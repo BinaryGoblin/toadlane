@@ -53,6 +53,9 @@
               - if is_cancellable?(order)
                 | &nbsp;
                 = link_to 'Cancel Order', cancel_order_dashboard_orders_path(id: order.id, type: params['type']), method: :get, remote: true, data: {confirm: 'Are you sure?'}, class: 'view'
+              - elsif refund_requested?(order)
+                | &nbsp;
+                = link_to 'Refund Requested', dashboard_refund_requests_path(bought_or_sold: 'bought'), class: 'view'
 
 .footer-actions: .fa-container: .wrap-sm
 
