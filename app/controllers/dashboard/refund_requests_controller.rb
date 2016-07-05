@@ -12,6 +12,7 @@ class Dashboard::RefundRequestsController < DashboardController
       if response['Result'] == '0'
         refund_request.accepted!
         refund_request.green_order.cancel_order
+        UserMailer.refund_request_accepted_notification_to_buyer(refund_request.green_order).deliver_now
         flash[:notice] = "Refund Request has been successfully accepted."
       else
         flash[:alert] = "GreenByPhone Response: #{response['ResultDescription']}"
@@ -29,6 +30,7 @@ class Dashboard::RefundRequestsController < DashboardController
     if refund_request.present?
       refund_request.rejected!
       refund_request.green_order.placed!
+      UserMailer.refund_request_rejected_notification_to_buyer(refund_request.green_order).deliver_now
       flash[:notice] = "Refund Request has been rejected."
     end
     respond_to do |format|
@@ -39,8 +41,10 @@ class Dashboard::RefundRequestsController < DashboardController
   def cancel_refund
     refund_request = RefundRequest.find(params[:id])
     if refund_request.present?
-      refund_request.green_order.placed!
+      green_order = refund_request.green_order
+      green_order.placed!
       refund_request.update_attributes({ deleted: true, green_order_id: nil })
+      UserMailer.refund_request_canceled_notification_to_seller(green_order).deliver_now
       flash[:notice] = "Refund Request has been been canceled."
     end
     respond_to do |format|

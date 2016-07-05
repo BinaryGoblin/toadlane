@@ -13,7 +13,7 @@ class Dashboard::OrdersController < DashboardController
       @orders = current_user.stripe_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page])
     end
   end
-  
+
   def show
     case params[:type]
     when 'stripe'
@@ -57,17 +57,19 @@ class Dashboard::OrdersController < DashboardController
               refund_request = RefundRequest.new(buyer_id: order.buyer_id, seller_id: order.seller_id)
               order.refund_request = refund_request
               order.challenged!
+              UserMailer.refund_request_notification_to_seller(order).deliver_now
               flash[:notice] = "Refund Request has been created. ##{refund_request.id}"
             end
           else
             cancellation_response = order.check_cancel
             if cancellation_response['Result'] == '0'
               order.cancel_order
+              UserMailer.order_canceled_notification_to_seller(order).deliver_now
               flash[:notice] = "The order has been canceled."
             else
               flash[:alert] = "Cancellation Response: #{response['ResultDescription']}"
             end
-          end 
+          end
         else
           flash[:alert] = "GreenByPhone Response: #{response['ResultDescription']}"
         end
