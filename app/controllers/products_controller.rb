@@ -45,8 +45,16 @@ class ProductsController < ApplicationController
 
   def checkout
     return unless current_user.present?
-    @product = Product.find(39)
-    @fee = 1.0
+    @product = Product.find(params[:product_id])
+    @data = {
+      total: params[:total],
+      quantity: params[:count],
+      fee_amount: params[:fee],
+      shipping_cost: params[:shipping_cost],
+      rebate: params[:rebate],
+      rebate_percent: params[:rebate_percent],
+    }
+    @fee = Fee.find_by(:module_name => "Stripe").value
     @stripe_order = StripeOrder.new
   end
 

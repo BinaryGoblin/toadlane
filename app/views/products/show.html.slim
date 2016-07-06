@@ -119,7 +119,14 @@
             - if current_user.present?
               - if current_user.profile_complete?
                 -if @product.status_characteristic == 'sell'
-                  .text-center= link_to 'Proceed to checkout', '#', class: 'btn btn-success btn-lg checkout', data: {  toggle: 'modal', target: '#stripe_form_checkout' }
+                  = form_tag(product_checkout_path(@product), method: :post) do
+                    = hidden_field_tag :total
+                    = hidden_field_tag :count
+                    = hidden_field_tag :fee
+                    = hidden_field_tag :shipping_cost
+                    = hidden_field_tag :rebate
+                    = hidden_field_tag :rebate_percent
+                    input.btn.btn-success.btn-lg.checkout value="Proceed to checkout" type="submit"
                 -else
                   .text-center= link_to 'Make Sale', '#', class: 'btn btn-success-sell btn-lg checkout', data: {  toggle: 'modal', target: '#stripe_form_checkout'  }
               - else

@@ -91,7 +91,7 @@ Toad::Application.routes.draw do
       get :requested
       get :deals
     end
-    get :checkout
+    post :checkout
   end
 
   devise_for :users, :controllers => { :registrations => "registrations", confirmations: 'confirmations', :omniauth_callbacks => "omniauth_callbacks" }
