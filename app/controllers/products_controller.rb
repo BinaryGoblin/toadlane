@@ -48,6 +48,7 @@ class ProductsController < ApplicationController
     @product = Product.find(39)
     @fee = 1.0
     @stripe_order = StripeOrder.new
+    @green_order = GreenOrder.new
   end
 
   private
