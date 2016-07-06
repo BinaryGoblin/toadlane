@@ -16,7 +16,7 @@
             td= @product.name
             td.stripe-quantity =@data[:quantity]
             td $ #{number_with_precision(@product.unit_price, precision: 2, delimiter: '')}
-            td $ <span class="stripe-unit-total">#{number_with_precision(@product.unit_price, precision: 2, delimiter: '')}</span>
+            td $ <span class="stripe-unit-total">#{number_with_precision(get_subtotal(@product.unit_price, @data[:quantity]), precision: 2, delimiter: '')}</span>
 
           tr
             td colspan="3" <span class="stripe-rebate">#{@data[:rebate_percent]}</span>% rebate for purchasing <span class="stripe-quantity">#{@data[:quantity]}</span> pcs
