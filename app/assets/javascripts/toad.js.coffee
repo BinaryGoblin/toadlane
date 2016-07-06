@@ -91,7 +91,7 @@ $(document).ready ->
     $('form#search_form').submit()
     return
 
-  $('#paymentGateway').change ->
+  $('input[name=paymentGateway]:radio').change ->
     pg = $(this).val()
     if pg == "eCheck"
       $('.greenDetails').slideDown()

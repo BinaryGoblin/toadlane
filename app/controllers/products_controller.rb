@@ -44,6 +44,10 @@ class ProductsController < ApplicationController
   end
 
   def checkout
+    return unless current_user.present?
+    @product = Product.find(39)
+    @fee = 1.0
+    @stripe_order = StripeOrder.new
   end
 
   private
