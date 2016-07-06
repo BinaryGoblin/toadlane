@@ -29,7 +29,7 @@ Toad::Application.routes.draw do
         post :create_green_profile
       end
     end
-    
+
     resource :finances, only: [:create, :show]
 
     resources :products, except: :show do
@@ -91,6 +91,7 @@ Toad::Application.routes.draw do
       get :requested
       get :deals
     end
+    get :checkout
   end
 
   devise_for :users, :controllers => { :registrations => "registrations", confirmations: 'confirmations', :omniauth_callbacks => "omniauth_callbacks" }

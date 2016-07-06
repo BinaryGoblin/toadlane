@@ -3,7 +3,7 @@ class ProductsController < ApplicationController
 
   before_action :check_terms_of_service
 
-  def index    
+  def index
     # TODO Disabling this during Stripe integration by calling for 'buy' only
     @products_recommended = Product.unexpired.where(status_characteristic: 'sell', status_action: 'recommended').order(created_at: :desc).limit(16)
     @products_for_sale = Product.unexpired.where(status_characteristic: 'sell').order(created_at: :desc).limit(16)
@@ -31,16 +31,19 @@ class ProductsController < ApplicationController
   def deals
 # TODO
   end
-  
+
   def for_sale
     @products = Product.unexpired.where(status_characteristic: 'sell').paginate(page: params[:page], per_page: params[:count]).order('id DESC')
     render 'products/products'
   end
-  
+
   def requested
     # TODO Disabling this during Stripe integration by calling for 'buy' instead of 'sell'
     @products = Product.unexpired.where(status_characteristic: 'buy').paginate(page: params[:page], per_page: params[:count]).order('id DESC')
     render 'products/products'
+  end
+
+  def checkout
   end
 
   private
