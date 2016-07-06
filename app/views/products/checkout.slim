@@ -14,28 +14,28 @@
         tbody
           tr
             td= @product.name
-            td.stripe-quantity 1
+            td.stripe-quantity =@data[:quantity]
             td $ #{number_with_precision(@product.unit_price, precision: 2, delimiter: '')}
             td $ <span class="stripe-unit-total">#{number_with_precision(@product.unit_price, precision: 2, delimiter: '')}</span>
 
           tr
-            td colspan="3" <span class="stripe-rebate">0.00</span>% rebate for purchasing <span class="stripe-quantity">1</span> pcs
-            td -$ <span class="stripe-rebate-price">0.00</span>
+            td colspan="3" <span class="stripe-rebate">#{@data[:rebate_percent]}</span>% rebate for purchasing <span class="stripe-quantity">#{@data[:quantity]}</span> pcs
+            td -$ <span class="stripe-rebate-price">#{@data[:rebate]}</span>
 
           tr
             td colspan="3" Toadlane Fee (#{@fee}%)
-            td $ <span class="stripe-fees-price">0.00</span>
+            td $ <span class="stripe-fees-price">#{@data[:fee_amount]}</span>
 
           tr
             td Shipping Estimate
-            td.stripe_quantity 1
-            td $ <span class="stripe-shipping">0.00</span>
-            td $ <span class="stripe-shipping-price">0.00</span>
+            td.stripe_quantity =@data[:quantity]
+            td $ <span class="stripe-shipping">#{@data[:shipping_cost]}</span>
+            td $ <span class="stripe-shipping-price">#{number_with_precision(get_shipping_cost(@data[:quantity],@data[:shipping_cost]), precision: 2, delimiter: '')}</span>
 
           tr
             td.no-border colspan="2"
             td.text-center: b.text-uppercase Total:
-            td: b $ <span class="stripe-total">#{number_with_precision(@product.unit_price, precision: 2, delimiter: '')}</span>
+            td: b $ <span class="stripe-total">#{number_with_precision(@data[:total], precision: 2, delimiter: '')}</span>
     .col-md-12.checkout-payment-gateway
       h2
         | Choose a desired Payment Gateway
