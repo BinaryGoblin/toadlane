@@ -22,7 +22,6 @@ class StripeOrdersController < ApplicationController
     end
 
     @stripe_order = StripeOrder.new(stripe_order_params)
-    @stripe_order.address = address
     if @stripe_order.save
       @stripe_order.start_stripe_order(stripe_params["stripeToken"])
 
@@ -34,7 +33,7 @@ class StripeOrdersController < ApplicationController
       UserMailer.sales_order_notification_to_buyer(@stripe_order).deliver_now
       redirect_to dashboard_order_path(@stripe_order, :type => "stripe"), notice: "Your order was succesfully placed."
     else
-      redirect_to :back, alert: "#{@stripe_order.errors.full_messages.to_sentence}"
+      redirect_to product_path(stripe_order_params[:product_id]), alert: "#{@stripe_order.errors.full_messages.to_sentence}"
     end
   end
 
@@ -49,17 +48,4 @@ class StripeOrdersController < ApplicationController
       params.permit(:stripeToken, :stripeEmail, :stripeShippingName, :stripeShippingAddressLine1, :stripeShippingAddressLine2,
                     :stripeShippingAddressZip, :stripeShippingAddressState, :stripeShippingAddressCity, :stripeShippingAddressCountry)
     end
-
-    def green_params
-      params.require(:green_order).permit(:name, :email_address, :phone, :address1, :address2, :city, :state, :zip, :country, :routing_number, :account_number)
-    end
-
-    def green_params_valid?
-      ![green_params[:name], green_params[:email_address], green_params[:phone], green_params[:address1], green_params[:city], green_params[:state], green_params[:zip], green_params[:routing_number], green_params[:account_number]].any? {|p| p.blank?}
-    end
-
-    def green_order_params
-      stripe_order_params.except(:id, :stripe_charge_id)
-    end
-
 end
