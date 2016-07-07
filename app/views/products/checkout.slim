@@ -178,7 +178,7 @@
               .form-group
                 label.control-label.col-sm-4 for="green_order_state" State *
                 .col-sm-8
-                  input.form-control type="text" name="green_order[state]" id="green_order_state" required="true" pattern="[A-Z]{2}"
+                  input.form-control type="text" name="green_order[state]" id="green_order_state" value="#{get_state(green_address.try(:state))}" required="true" pattern="[A-Z]{2}"
                   p.help-block Your TWO DIGIT state abbreviation (ex: GA, NY, FL, CA, etc.)
               .form-group
                 label.control-label.col-sm-4 for="green_order_zip" Zip *
