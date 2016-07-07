@@ -6,7 +6,7 @@ class Behavior.EstimateShipping
     @$shippingEstimateType =  $el.data 'type'
     @$shippingEstimate     =  $ '.calc-shipping'
     @$calculationPanel     =  $ '.vp-calculation'
-    
+    debugger
     @options        = @$calculationPanel.data 'options'
     @$cart          = @$calculationPanel.find '.calc-cart'
     @$quantity      = @$calculationPanel.find '.calc-quantity'
@@ -36,28 +36,28 @@ class Behavior.EstimateShipping
     @$stripeShippingCost  = $ '[name="stripe_order[shipping_cost]"]'
     @$stripeRebatePrice   = $ '[name="stripe_order[rebate]"]'
     @$stripeRebatePercent = $ '[name="stripe_order[rebate_percent]"]'
-    
-    @$footer = $ '.payment-button'    
+
+    @$footer = $ '.payment-button'
 
     @$checkout = $ '.checkout'
 
     $el.click => do @updateShippingEstimate
-    
+
   updateShippingEstimate: =>
     @$shippingEstimate.text @$shippingEstimateCost
     @$shippingEstimate.data 'type', @$shippingEstimateType
     @calculation()
     return true
-    
+
   fixed: (number) =>
     number.toFixed(2).toString()
-    
+
   calculation: =>
     total  = 0
     rebate = 0
     quantity = parseInt @$quantity.val(), 10
     quantity = 1 unless quantity
-    
+
     if quantity <= @options.maxquantity
       if @options.pricebreaks.length > 0
         for pricebreak, i in @options.pricebreaks
@@ -82,11 +82,11 @@ class Behavior.EstimateShipping
     total = quantity * @unitPrice
 
     fees              = total * (@fees || 0) / 100
-    if @$shippingEstimateType == 'PerUnit' 
+    if @$shippingEstimateType == 'PerUnit'
       shipping_per_unit = parseFloat @$shippingEstimateCost
       shipping_cost     = shipping_per_unit * quantity
-    else 
-      if @$shippingEstimateType == 'FlatRate' 
+    else
+      if @$shippingEstimateType == 'FlatRate'
         shipping_cost = parseFloat @$shippingEstimateCost
       else
         shipping_cost = 0
@@ -97,7 +97,7 @@ class Behavior.EstimateShipping
       @$checkout.removeClass 'disabled'
     else
       @$checkout.addClass 'disabled'
-      
+
     if shipping_cost > 0
       @$footer.show()
     else
@@ -126,6 +126,6 @@ class Behavior.EstimateShipping
     @$stripeShippingCost.val shipping_cost.toFixed 2
     @$stripeRebatePrice.val rebate.toFixed 2
     @$stripeRebatePercent.val rebatep.toFixed 2
-    
-    @$stripeButtonScript.attr 'data-amount', cart.toFixed 2    
+
+    @$stripeButtonScript.attr 'data-amount', cart.toFixed 2
     @$stripeButton.disabled = false

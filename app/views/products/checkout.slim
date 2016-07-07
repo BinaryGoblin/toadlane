@@ -11,7 +11,7 @@
             th price
             th amount
 
-        tbody
+        tbody.vp-calculation data-behavior="CalculationProduct" data-options='{"pricebreaks":#{@product.pricebreaks.collect { |p| { quantity: (p.quantity - 1), price: p.price } }.to_json},"maxquantity":#{@data[:available_product].present? ? @data[:available_product].to_s : '"Infinity"'}}'
           tr
             td= @product.name
             td.stripe-quantity =@data[:quantity]
@@ -29,6 +29,8 @@
           tr
             td Shipping Estimate
             td.stripe_quantity =@data[:quantity]
+            span class="calc-shipping" data-type="PerUnit" style="display:none;"
+              | 0.00
             td $ <span class="stripe-shipping">#{@data[:shipping_cost]}</span>
             td $ <span class="stripe-shipping-price">#{number_with_precision(get_shipping_cost(@data[:quantity],@data[:shipping_cost]), precision: 2, delimiter: '')}</span>
 
