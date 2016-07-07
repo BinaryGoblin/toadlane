@@ -11,6 +11,8 @@ Toad::Application.routes.draw do
     end
   end
 
+  resources :green_orders
+
   get 'print/invoice.:id', to: 'print#invoice', as: 'print/invoice'
 
   get 'search/autocomplete'

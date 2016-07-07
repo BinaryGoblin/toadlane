@@ -118,7 +118,7 @@
                     data-shipping-address="true"
                     data-email="#{ @product.user.email }"]
         #green.tab-pane role="tabpanel"
-          = form_for @stripe_order do |f|
+          = form_for @green_order do |f|
             -if current_user && !current_user.addresses.nil?
               table.table data-behavior="assignShippingAddress"
                 thead
