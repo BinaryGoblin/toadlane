@@ -13,7 +13,7 @@ div
           p
             - if order.instance_of? StripeOrder
             - if order.instance_of? ArmorOrder
-              div 
+              div
                |
                  To complete order log into your <a href="//www.Armorpayments.com/Toadlane" target="_blank">Armorpayments.com/Toadlane</a> account. <br />
                  If this is your first order with Toadlane, you will need to reset your password.
@@ -25,7 +25,7 @@ div
           dl
             dt Name:
             dd= order.buyer.name
-             
+
             - if !order.buyer.addresses[0].nil?
               dt Address:
               dd= order.buyer.addresses[0].line1 + (order.buyer.addresses[0].line2 || "")
@@ -51,11 +51,11 @@ div
           dl
             dt Name:
             dd= order.seller.name
-             
+
             - if !order.seller.addresses[0].nil?
               dt Country:
               dd= order.seller.addresses[0].country
-             
+
             dt Phone:
             dd= order.seller.phone
 
@@ -79,7 +79,10 @@ div
           td -$ #{number_with_precision(order.rebate, precision: 2, delimiter: '')}
         - if order.instance_of? ArmorOrder
           td colspan="3" #{number_with_precision(order.rebate_percent, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
-          td -$ #{number_with_precision(order.rebate_price, precision: 2, delimiter: '')}      
+          td -$ #{number_with_precision(order.rebate_price, precision: 2, delimiter: '')}
+        - if order.instance_of? GreenOrder
+          td colspan="3" #{number_with_precision(order.rebate, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
+          td -$ #{number_with_precision(order.rebate, precision: 2, delimiter: '')}
 
       tr
         td colspan="3" Fees
@@ -87,8 +90,14 @@ div
           td $ #{number_with_precision(order.fee, precision: 2, delimiter: '')}
         - if order.instance_of? ArmorOrder
           td $ #{number_with_precision(order.taxes_price, precision: 2, delimiter: '')}
+        - if order.instance_of? GreenOrder
+          td $ #{number_with_precision(order.fee, precision: 2, delimiter: '')}
 
       - if order.instance_of? StripeOrder
+        tr
+          td colspan="3" Shipping
+          td $ #{number_with_precision(order.shipping_cost, precision: 2, delimiter: '')}
+      - if order.instance_of? GreenOrder
         tr
           td colspan="3" Shipping
           td $ #{number_with_precision(order.shipping_cost, precision: 2, delimiter: '')}
@@ -100,3 +109,5 @@ div
           td: b $ #{number_with_precision(order.total, precision: 2, delimiter: '')}
         - if order.instance_of? ArmorOrder
           td: b $ #{number_with_precision(order.amount, precision: 2, delimiter: '')}
+        - if order.instance_of? GreenOrder
+          td: b $ #{number_with_precision(order.total, precision: 2, delimiter: '')}

@@ -95,3 +95,7 @@ $(document).ready ->
   $("#green_order_phone").mask("999-999-9999");
   if $('.vp-calculation-checkout').is(':visible')
     $('input[name="stripe_order[shipping_estimate_id]"]:first').trigger('click');
+
+  $('form#new_green_order').submit ->
+    $(this).find('input[type=submit]').prop 'disabled', true
+    return
