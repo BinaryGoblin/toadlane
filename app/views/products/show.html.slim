@@ -119,7 +119,7 @@
             - if current_user.present?
               - if current_user.profile_complete?
                 -if @product.status_characteristic == 'sell'
-                  = form_tag(product_checkout_path(@product), method: :post) do
+                  = form_tag(product_checkout_path(@product), method: :post, class: 'text-center') do
                     = hidden_field_tag :total
                     = hidden_field_tag :count
                     = hidden_field_tag :fee
