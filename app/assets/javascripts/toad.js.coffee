@@ -8,6 +8,7 @@
 #= require jquery.bxslider.min
 
 #= require ./plugins/jquery.validate
+#= require_tree ../../../vendor/assets/javascripts/.
 #= require_tree ./plugins
 
 #= require bootstrap
@@ -91,19 +92,10 @@ $(document).ready ->
     $('form#search_form').submit()
     return
 
-  $('#paymentGateway').change ->
-    pg = $(this).val()
-    if pg == "eCheck"
-      $('.greenDetails').slideDown()
-      $('.stripe-button-el').hide()
-      $('#greenSubmit').show()
-    else
-      $('.greenDetails').slideUp()
-      $('.stripe-button-el').show()
-      $('#greenSubmit').hide()
-    return
+  $("#green_order_phone").mask("999-999-9999");
+  if $('.vp-calculation-checkout').is(':visible')
+    $('input[name="stripe_order[shipping_estimate_id]"]:first').trigger('click');
 
-  $('#greenSubmit').click (event) ->
-    event.preventDefault()
-    $(this).closest('form#new_stripe_order').submit()
+  $('form#new_green_order').submit ->
+    $(this).find('input[type=submit]').prop 'disabled', true
     return

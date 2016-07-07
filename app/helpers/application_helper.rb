@@ -270,4 +270,12 @@ module ApplicationHelper
       0
     end
   end
+
+  def is_cancellable?(order)
+    order.is_a?(GreenOrder) && order.status == "placed" && current_user.id == order.buyer_id && order.refund_request.nil?
+  end
+
+  def refund_requested?(order)
+    order.is_a?(GreenOrder) && order.status == "challenged" && current_user.id == order.buyer_id && order.refund_request.present?
+  end
 end

@@ -86,6 +86,16 @@ class User < ActiveRecord::Base
     end
   end
 
+  def refund_requests(type=nil)
+    if type == 'bought'
+      RefundRequest.where(buyer_id: self.id)
+    elsif type == 'sold'
+      RefundRequest.where(seller_id: self.id)
+    else
+      RefundRequest.where('buyer_id = ? OR seller_id = ?', self.id, self.id)
+    end
+  end
+
   def armor_api_account_persisted?
     self.armor_account_id && self.armor_user_id
   end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160621111336) do
+ActiveRecord::Schema.define(version: 20160629055824) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -308,6 +308,16 @@ ActiveRecord::Schema.define(version: 20160621111336) do
   end
 
   add_index "products", ["user_id"], name: "index_products_on_user_id", using: :btree
+
+  create_table "refund_requests", force: :cascade do |t|
+    t.integer  "green_order_id"
+    t.integer  "buyer_id"
+    t.integer  "seller_id"
+    t.integer  "status",         default: 0
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.boolean  "deleted",        default: false
+  end
 
   create_table "requests", force: :cascade do |t|
     t.integer  "sender_id"

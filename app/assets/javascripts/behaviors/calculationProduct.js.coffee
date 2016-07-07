@@ -4,7 +4,7 @@ class Behavior.CalculationProduct
   constructor: ($el) ->
     @$shippingEstimate     =  $ '.calc-shipping'
     @$calculationPanel     =  $ '.vp-calculation'
-    
+
     @options        = @$calculationPanel.data 'options'
     @$cart          = @$calculationPanel.find '.calc-cart'
     @$subTotal      = @$calculationPanel.find '.subTotal'
@@ -29,13 +29,13 @@ class Behavior.CalculationProduct
     @$stripeButtonScript  = $ '.stripe-button'
     @$stripeButton        = $ '.stripe-button-el'
 
-    @$stripeAmount        = $ '[name="stripe_order[total]"]'
-    @$stripeCount         = $ '[name="stripe_order[count]"]'
-    @$stripeFeesPrice     = $ '[name="stripe_order[fee]"]'
-    @$stripeShippingCost  = $ '[name="stripe_order[shipping_cost]"]'
-    @$stripeRebatePrice   = $ '[name="stripe_order[rebate]"]'
-    @$stripeRebatePercent = $ '[name="stripe_order[rebate_percent]"]'
-    
+    @$stripeAmount        = $ '[name="total"]'
+    @$stripeCount         = $ '[name="count"]'
+    @$stripeFeesPrice     = $ '[name="fee"]'
+    @$stripeShippingCost  = $ '[name="shipping_cost"]'
+    @$stripeRebatePrice   = $ '[name="rebate"]'
+    @$stripeRebatePercent = $ '[name="rebate_percent"]'
+
     @$footer = $ '.payment-button'
 
     @$checkout = $ '.checkout'
@@ -51,7 +51,7 @@ class Behavior.CalculationProduct
     rebate = 0
     quantity = parseInt @$quantity.val(), 10
     quantity = 1 unless quantity
-    
+
     if quantity <= @options.maxquantity
       if @options.pricebreaks.length > 0
         for pricebreak, i in @options.pricebreaks
@@ -79,10 +79,10 @@ class Behavior.CalculationProduct
     if @$shippingEstimate.data('type') == 'PerUnit'
       shipping_per_unit = parseFloat @$shippingEstimate.text(), 2
       shipping_cost     = shipping_per_unit * quantity
-    else 
-      if @$shippingEstimateType == 'FlatRate' 
+    else
+      if @$shippingEstimateType == 'FlatRate'
         shipping_cost = parseFloat @$shippingEstimate.text(), 2
-      else 
+      else
         shipping_cost = 0
     rebatep           = (rebate * 100) / (@unitPrice * quantity)
     cart              = total + fees + shipping_cost - rebate
@@ -120,5 +120,5 @@ class Behavior.CalculationProduct
     @$stripeShippingCost.val shipping_cost.toFixed 2
     @$stripeRebatePrice.val rebate.toFixed 2
     @$stripeRebatePercent.val rebatep.toFixed 2
-    
+
     @$stripeButtonScript.attr 'data-amount', cart.toFixed 2

@@ -3,7 +3,7 @@ class ProductsController < ApplicationController
 
   before_action :check_terms_of_service
 
-  def index    
+  def index
     # TODO Disabling this during Stripe integration by calling for 'buy' only
     @products_recommended = Product.unexpired.where(status_characteristic: 'sell', status_action: 'recommended').order(created_at: :desc).limit(16)
     @products_for_sale = Product.unexpired.where(status_characteristic: 'sell').order(created_at: :desc).limit(16)
@@ -31,20 +31,42 @@ class ProductsController < ApplicationController
   def deals
 # TODO
   end
-  
+
   def for_sale
     @products = Product.unexpired.where(status_characteristic: 'sell').paginate(page: params[:page], per_page: params[:count]).order('id DESC')
     render 'products/products'
   end
-  
+
   def requested
     # TODO Disabling this during Stripe integration by calling for 'buy' instead of 'sell'
     @products = Product.unexpired.where(status_characteristic: 'buy').paginate(page: params[:page], per_page: params[:count]).order('id DESC')
     render 'products/products'
   end
 
+  def checkout
+    return unless current_user.present?
+    @product = Product.find(params[:product_id])
+    @data = {
+      total: params[:total],
+      quantity: params[:count],
+      fee_amount: params[:fee],
+      shipping_cost: params[:shipping_cost],
+      rebate: params[:rebate],
+      rebate_percent: params[:rebate_percent],
+      available_product: get_available_product(@product)
+    }
+    @fee = Fee.find_by(:module_name => "Stripe").value
+    @stripe_order = StripeOrder.new
+    @green_order = GreenOrder.new
+  end
+
   private
     def set_product
       @product = Product.find(params[:id])
+    end
+
+    def get_available_product(product)
+      sold_out = (product.sold_out.present? ? product.sold_out : 0)
+      product.amount - sold_out
     end
 end

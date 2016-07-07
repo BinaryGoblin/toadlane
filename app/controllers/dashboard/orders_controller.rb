@@ -13,7 +13,7 @@ class Dashboard::OrdersController < DashboardController
       @orders = current_user.stripe_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page])
     end
   end
-  
+
   def show
     case params[:type]
     when 'stripe'
@@ -35,6 +35,49 @@ class Dashboard::OrdersController < DashboardController
     end
 
     render json: :ok
+  end
+
+  def cancel_order
+    if params[:id].present?
+      case params[:type]
+      when 'stripe'
+        order = StripeOrder.find(params[:id])
+      when 'armor'
+        order = ArmorOrder.find(params[:id])
+      when 'green'
+        order = GreenOrder.find(params[:id])
+      else
+        order = StripeOrder.find(params[:id])
+      end
+      if order.present?
+        response = order.check_status
+        if response['Result'] == '0'
+          if response['Processed'] == 'True'
+            if order.refund_request.nil?
+              refund_request = RefundRequest.new(buyer_id: order.buyer_id, seller_id: order.seller_id)
+              order.refund_request = refund_request
+              order.challenged!
+              UserMailer.refund_request_notification_to_seller(order).deliver_now
+              flash[:notice] = "Refund Request has been created. ##{refund_request.id}"
+            end
+          else
+            cancellation_response = order.check_cancel
+            if cancellation_response['Result'] == '0'
+              order.cancel_order
+              UserMailer.order_canceled_notification_to_seller(order).deliver_now
+              flash[:notice] = "The order has been canceled."
+            else
+              flash[:alert] = "Cancellation Response: #{response['ResultDescription']}"
+            end
+          end
+        else
+          flash[:alert] = "GreenByPhone Response: #{response['ResultDescription']}"
+        end
+      end
+    end
+    respond_to do |format|
+      format.js { render :template => 'shared/update_flash' }
+    end
   end
 
   private

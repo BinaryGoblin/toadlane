@@ -36,6 +36,7 @@ module Toad
 
     # Single Table Inheritance autoloads
     config.autoload_paths += %W(#{config.root}/app/models/shipping_estimates)
+    config.assets.paths << Rails.root.join("vendor", "assets")
 
     I18n.enforce_available_locales = false
 

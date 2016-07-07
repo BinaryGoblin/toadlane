@@ -11,6 +11,8 @@ Toad::Application.routes.draw do
     end
   end
 
+  resources :green_orders
+
   get 'print/invoice.:id', to: 'print#invoice', as: 'print/invoice'
 
   get 'search/autocomplete'
@@ -29,7 +31,7 @@ Toad::Application.routes.draw do
         post :create_green_profile
       end
     end
-    
+
     resource :finances, only: [:create, :show]
 
     resources :products, except: :show do
@@ -43,6 +45,15 @@ Toad::Application.routes.draw do
     resources :orders, only: [:index, :show] do
       collection do
         delete :delete_cascade
+        get :cancel_order
+      end
+    end
+
+    resources :refund_requests, only: [:index] do
+      collection do
+        delete :cancel_refund
+        get :accept_refund
+        get :reject_refund
       end
     end
 
@@ -82,6 +93,7 @@ Toad::Application.routes.draw do
       get :requested
       get :deals
     end
+    post :checkout
   end
 
   devise_for :users, :controllers => { :registrations => "registrations", confirmations: 'confirmations', :omniauth_callbacks => "omniauth_callbacks" }
