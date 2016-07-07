@@ -9,7 +9,7 @@ module ProductHelper
   end
 
   def get_state(user_state)
-    selected_state = states.select{ |state| state.first.downcase == user_state }
+    selected_state = states.select{ |state| state.first.downcase == user_state.downcase }
     selected_state.flatten.last
   end
 
@@ -66,7 +66,20 @@ module ProductHelper
       ['Washington', 'WA'],
       ['West Virginia', 'WV'],
       ['Wisconsin', 'WI'],
-      ['Wyoming', 'WY']
+      ['Wyoming', 'WY'],
+      ['British Columbia', 'BC'],
+      ['Ontario', 'ON'],
+      ['Newfoundland and Labrador', 'NL'],
+      ['Nova Scotia', 'NS'],
+      ['Prince Edward Island', 'PE'],
+      ['New Brunswick', 'NB'],
+      ['Quebec', 'QC'],
+      ['Manitoba', 'MB'],
+      ['Saskatchewan', 'SK'],
+      ['Alberta', 'AB'],
+      ['Northwest Territories', 'NT'],
+      ['Nunavut', 'NU'],
+      ['Yukon Territory', 'YT']
     ]
   end
 end
