@@ -6,7 +6,7 @@ class Behavior.EstimateShipping
     @$shippingEstimateType =  $el.data 'type'
     @$shippingEstimate     =  $ '.calc-shipping'
     @$calculationPanel     =  $ '.vp-calculation'
-    debugger
+    
     @options        = @$calculationPanel.data 'options'
     @$cart          = @$calculationPanel.find '.calc-cart'
     @$quantity      = @$calculationPanel.find '.calc-quantity'
