@@ -5,8 +5,8 @@ class Behavior.EstimateShipping
     @$shippingEstimateCost =  $el.data 'cost'
     @$shippingEstimateType =  $el.data 'type'
     @$shippingEstimate     =  $ '.calc-shipping'
-    @$calculationPanel     =  $ '.vp-calculation'
-    
+    @$calculationPanel     =  $ '.vp-calculation, .vp-calculation-checkout'
+
     @options        = @$calculationPanel.data 'options'
     @$cart          = @$calculationPanel.find '.calc-cart'
     @$quantity      = @$calculationPanel.find '.calc-quantity'
