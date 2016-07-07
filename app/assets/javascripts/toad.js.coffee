@@ -8,6 +8,7 @@
 #= require jquery.bxslider.min
 
 #= require ./plugins/jquery.validate
+#= require_tree ../../../vendor/assets/javascripts/.
 #= require_tree ./plugins
 
 #= require bootstrap
@@ -107,3 +108,5 @@ $(document).ready ->
     event.preventDefault()
     $(this).closest('form#new_stripe_order').submit()
     return
+
+  $("#green_order_phone").mask("999-999-9999");
