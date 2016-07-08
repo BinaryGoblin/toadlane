@@ -93,7 +93,7 @@ Toad::Application.routes.draw do
       get :requested
       get :deals
     end
-    post :checkout
+    match '/checkout', to: 'products#checkout', :via => [:get, :post]
   end
 
   devise_for :users, :controllers => { :registrations => "registrations", confirmations: 'confirmations', :omniauth_callbacks => "omniauth_callbacks" }
