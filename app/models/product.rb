@@ -1,6 +1,6 @@
 class Product < ActiveRecord::Base
   acts_as_commontable
-  
+
   belongs_to :user
 
   self.inheritance_column = nil # So that the :type enum doesn't complain about Single Table Inheritance
@@ -43,5 +43,13 @@ class Product < ActiveRecord::Base
 
   def green_only_present?
     user.green_profile.present? && user.stripe_profile.nil?
+  end
+
+  def green_present?
+    user.green_profile.present?
+  end
+
+  def stripe_present?
+    user.stripe_profile.present?
   end
 end
