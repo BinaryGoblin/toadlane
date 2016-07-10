@@ -44,17 +44,17 @@ class GreenOrdersController < ApplicationController
 
         redirect_to dashboard_order_path(@green_order, :type => "green"), notice: "Your order was succesfully placed."
       else
-        redirect_to product_path(green_order_params[:product_id]), alert: "#{@green_order.errors.full_messages.to_sentence}"
+        redirect_to product_checkout_path(green_order_params[:product_id], total: green_order_params[:total], count: green_order_params[:count], fee: green_order_params[:fee], shipping_cost: green_order_params[:shipping_cost], rebate: green_order_params[:rebate], rebate_percent: green_order_params[:rebate_percent]), alert: "#{@green_order.errors.full_messages.to_sentence}"
       end
     else
-      redirect_to product_path(green_order_params[:product_id]), alert: "GreenByPhone Response: #{response['ResultDescription']}"
+      redirect_to product_checkout_path(green_order_params[:product_id], total: green_order_params[:total], count: green_order_params[:count], fee: green_order_params[:fee], shipping_cost: green_order_params[:shipping_cost], rebate: green_order_params[:rebate], rebate_percent: green_order_params[:rebate_percent]), alert: "GreenByPhone Response: #{response['ResultDescription']}"
       return
     end
   end
 
   private
     def green_order_params
-      params.require(:green_order).permit(:buyer_id, :seller_id, :product_id, :status, :unit_price, :count, :fee, :rebate, :total, :summary,
+      params.require(:green_order).permit(:buyer_id, :seller_id, :product_id, :status, :unit_price, :count, :fee, :rebate, :rebate_percent, :total, :summary,
                                            :description, :shipping_address, :shipping_request, :shipping_details, :tracking_number, :deleted, :shipping_cost,
                                            :address_name, :address_city, :address_state, :address_country, :address_zip, :address_id, :shipping_estimate_id)
     end
