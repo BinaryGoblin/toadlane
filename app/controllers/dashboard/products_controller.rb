@@ -70,7 +70,7 @@ class Dashboard::ProductsController < DashboardController
 
   def update
     set_product
-    
+
     start_date = DateTime.new(product_params["start_date(1i)"].to_i, product_params["start_date(2i)"].to_i, product_params["start_date(3i)"].to_i, product_params["start_date(4i)"].to_i, product_params["start_date(5i)"].to_i)
     end_date = DateTime.new(product_params["end_date(1i)"].to_i, product_params["end_date(2i)"].to_i, product_params["end_date(3i)"].to_i, product_params["end_date(4i)"].to_i, product_params["end_date(5i)"].to_i)
 
@@ -79,7 +79,7 @@ class Dashboard::ProductsController < DashboardController
     end
 
     @product.categories.delete_all
-    
+
     if product_params[:product_categories_attributes].present?
       product_params[:product_categories_attributes] = parse_categories product_params[:product_categories_attributes]
     end
@@ -97,7 +97,7 @@ class Dashboard::ProductsController < DashboardController
     end
 
     respond_to do |format|
-      if @product.update(product_params.merge!(start_date: start_date).merge!(end_date: end_date).except(:images_attributes, 
+      if @product.update(product_params.merge!(start_date: start_date).merge!(end_date: end_date).except(:images_attributes,
         :images_attributes_delete, :pricebreaks_delete))
 
         if images
@@ -137,7 +137,7 @@ class Dashboard::ProductsController < DashboardController
 
   def destroy
     set_product
-    
+
     @product.destroy
     respond_to do |format|
       format.html { redirect_to dashboard_products_path }
@@ -180,11 +180,12 @@ class Dashboard::ProductsController < DashboardController
     end
 
     def product_params
-      params.require(:product).permit(:id, :name, :description, :user_id, :unit_price, :status_action, :status, :status_characteristic, :start_date, :end_date,  
+      params.require(:product).permit(:id, :name, :description, :user_id, :unit_price, :status_action, :status, :status_characteristic, :start_date, :end_date,
                                       :amount, :sold_out, :dimension_width, :dimension_height, :dimension_depth, :dimension_weight, :main_category,
-                                      :pricebreaks_attributes, :pricebreaks_delete, :shipping_estimates_attributes, :shipping_estimates_delete, :sku,
-                                      :slug, :images_attributes => [], :shipping_estimates_attributes => [ :id, :cost, :description, :product_id, :_destroy, :type ], 
-                                      :pricebreaks_attributes => [ :id, :quantity, :price, :product_id, :_destroy ])
+                                      :pricebreaks_attributes, :shipping_estimates_attributes, :shipping_estimates_delete, :sku,
+                                      :slug, :images_attributes => [], :shipping_estimates_attributes => [ :id, :cost, :description, :product_id, :_destroy, :type ],
+                                      :pricebreaks_attributes => [ :id, :quantity, :price, :product_id, :_destroy ],
+                                      :pricebreaks_delete => [])
     end
 
     def parse_categories categories
