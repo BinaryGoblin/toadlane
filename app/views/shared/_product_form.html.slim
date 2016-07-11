@@ -154,7 +154,7 @@
             .index= index+1
             .form-group
               label Price:
-              input.form-control type="text" name="product[pricebreaks_attributes][][price]" value="#{number_with_precision(pb.price, precision: 0, delimiter: '')}"
+              input.form-control type="text" name="product[pricebreaks_attributes][][price]" value="#{number_with_precision(pb.price, precision: 2, delimiter: '')}"
 
             .form-group
               label Quantity:

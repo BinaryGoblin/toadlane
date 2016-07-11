@@ -148,7 +148,7 @@ module ApplicationHelper
       if index == 0
         trs += content_tag :tr do
           concat content_tag :td, needed.to_s + ' - ' + (pricebreak.quantity - 1).to_s
-          concat content_tag :td, '$ ' + unit_price.round.to_s
+          concat content_tag :td, '$ ' + unit_price.to_s
           concat content_tag :td, needed.to_s + ' needed'
         end
       end
@@ -172,7 +172,7 @@ module ApplicationHelper
       end
 
       tr_first = (pricebreak.quantity).to_s + ' - ' + last_quantity
-      tr_second = '$ ' + pricebreak.price.round.to_s
+      tr_second = '$ ' + pricebreak.price.to_s
       tr_third = (pricebreak.quantity).to_s + ' needed'
 
       needed = pricebreak.quantity
@@ -246,24 +246,24 @@ module ApplicationHelper
       product.status_characteristic == "sell" ? "green_border" : "orange_border"
     end
   end
-  
+
   def product_button_color(product)
 	  if product.present?
 	    product.status_characteristic == "sell" ? "btn btn-success" : "btn btn-success-sell"
 	  end
   end
-  
+
   def get_user_notifications
     notifications = get_user_unread_message_notifications
     # TODO
     # notifications += get_user_new_order_notifications
-    
+
     notifications
   end
-  
+
   def get_user_unread_message_notifications
     unread_receipts ||= current_user.mailbox.receipts.where(is_read: 'false')
-    
+
     if unread_receipts
       unread_receipts.count
     else
