@@ -96,6 +96,36 @@ $(document).ready ->
   if $('.vp-calculation-checkout').is(':visible')
     $('input[name="stripe_order[shipping_estimate_id]"]:first').trigger('click');
 
-  $('form#new_green_order').submit ->
-    $(this).find('input[type=submit]').prop 'disabled', true
-    return
+  jQuery.validator.addMethod 'zipcode', ((value, element) ->
+    @optional(element) or /^\d{5}(?:-\d{4})?$/.test(value)
+  ), 'Please provide a valid zipcode.'
+
+  jQuery.validator.addMethod 'validEmail', ((value, element) ->
+    @optional(element) or /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(value)
+  ), 'Please provide a valid email address.'
+
+  $('form#new_green_order').validate
+    rules:
+      "green_order[email_address]":
+        required: true
+        validEmail: true
+      "green_order[routing_number]":
+        required: true
+        minlength: 9
+        maxlength: 9
+        number: true
+      "green_order[state]":
+        required: true
+        minlength: 2
+        maxlength: 2
+        digits: false
+      "green_order[zip]":
+        required: true
+        zipcode: true
+      "green_order[account_number]":
+        required: true
+        number: true
+    submitHandler: (form) ->
+      $(this).find('input[type=submit]').prop 'disabled', true
+      form.submit()
+      return
