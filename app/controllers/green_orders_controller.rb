@@ -28,9 +28,9 @@ class GreenOrdersController < ApplicationController
         address.line1 = green_params["address1"]
         address.line2 = green_params["address2"]
         address.zip = green_params["zip"]
-        address.state = green_params["state"]
+        address.state = green_params["address_state"]
         address.city = green_params["city"]
-        address.country = green_params["country"]
+        address.country = green_params["address_country"]
         address.user = current_user
         address.save
         gop[:address_id] = address.ids
@@ -60,11 +60,11 @@ class GreenOrdersController < ApplicationController
     end
 
     def green_params
-      params.require(:green_order).permit(:name, :email_address, :phone, :address1, :address2, :city, :state, :zip, :country, :routing_number, :account_number)
+      params.require(:green_order).permit(:name, :email_address, :phone, :address1, :address2, :city, :address_state, :zip, :address_country, :routing_number, :account_number)
     end
 
     def green_params_valid?
-      ![green_params[:name], green_params[:email_address], green_params[:phone], green_params[:address1], green_params[:city], green_params[:state], green_params[:zip], green_params[:routing_number], green_params[:account_number]].any? {|p| p.blank?}
+      ![green_params[:name], green_params[:email_address], green_params[:phone], green_params[:address1], green_params[:city], green_params[:address_state], green_params[:zip], green_params[:routing_number], green_params[:account_number]].any? {|p| p.blank?}
     end
 
 end
