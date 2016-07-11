@@ -150,8 +150,8 @@ class Admin::ProductsController < Admin::ApplicationController
     def product_params
       params.require(:product).permit(:id, :name, :description, :user_id, :unit_price, :status_action, :status, :status_characteristic, :start_date, :end_date,
                                       :amount, :sold_out, :dimension_width, :dimension_height, :dimension_depth, :dimension_weight, :main_category,
-                                      :pricebreaks_attributes, :pricebreaks_delete => [], :shipping_estimates_attributes, :shipping_estimates_delete, :sku,
-                                      :slug, :images_attributes => [], :shipping_estimates_attributes => [ :id, :cost, :description, :product_id, :_destroy, :type ],
+                                      :pricebreaks_attributes, :shipping_estimates_attributes, :shipping_estimates_delete, :sku,
+                                      :slug, :pricebreaks_delete => [], :images_attributes => [], :shipping_estimates_attributes => [ :id, :cost, :description, :product_id, :_destroy, :type ],
                                       :pricebreaks_attributes => [ :id, :quantity, :price, :product_id, :_destroy ])
     end
 
