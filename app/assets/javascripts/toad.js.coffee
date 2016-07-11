@@ -124,11 +124,6 @@ $(document).ready ->
         minlength: 9
         maxlength: 9
         number: true
-      "green_order[state]":
-        required: true
-        minlength: 2
-        maxlength: 2
-        digits: false
       "green_order[zip]":
         required: true
         zipcode: true

@@ -5,6 +5,6 @@
   - if country.nil?
     em Please select a country above
   - elsif country.subregions?
-    = subregion_select(:green_order, :address_state, parent_region, {}, {class: 'form-control'})
+    = subregion_select(:green_order, :address_state, parent_region, {}, {class: 'form-control', required: true})
   - else
     = text_field(:green_order, :address_state, class: 'form-control')

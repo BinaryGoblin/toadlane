@@ -167,9 +167,9 @@
                     p.help-block Your 10-digit phone number in the format 999-999-9999.
                 - green_address = current_user.try(:addresses).try(:last)
                 .form-group
-                  = f.label :address_country, "Country", class: "control-label col-sm-4"
+                  = f.label :address_country, "Country *", class: "control-label col-sm-4"
                   .col-sm-8
-                    = f.select :address_country, region_options_for_select(only_us_and_canada), {prompt: 'Please select a country'}, class: 'form-control'
+                    = f.select :address_country, region_options_for_select(only_us_and_canada), {prompt: 'Please select a country'}, class: 'form-control', required: true
                 .form-group
                   = f.label :address_state, "State *", class: "control-label col-sm-4"
                   .col-sm-8
