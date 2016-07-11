@@ -167,6 +167,22 @@
                     p.help-block Your 10-digit phone number in the format 999-999-9999.
                 - green_address = current_user.try(:addresses).try(:last)
                 .form-group
+                  = f.label :address_country, "Country", class: "control-label col-sm-4"
+                  .col-sm-8
+                    = f.select :address_country, region_options_for_select(only_us_and_canada), {prompt: 'Please select a country'}, class: 'form-control'
+                .form-group
+                  = f.label :address_state, "State *", class: "control-label col-sm-4"
+                  .col-sm-8
+                    = render partial: 'subregion_select', locals: {parent_region: f.object.address_country}
+                .form-group
+                  label.control-label.col-sm-4 for="green_order_city" City *
+                  .col-sm-8
+                    input.form-control type="text" name="green_order[city]" id="green_order_city" value="#{green_address.try(:city)}" required="true"
+                .form-group
+                  label.control-label.col-sm-4 for="green_order_zip" Zip *
+                  .col-sm-8
+                    input.form-control type="text" name="green_order[zip]" id="green_order_zip" value="#{green_address.try(:zip)}" required="true"
+                .form-group
                   label.control-label.col-sm-4 for="green_order_address1" Address1 *
                   .col-sm-8
                     input.form-control type="text" name="green_order[address1]" id="green_order_address1" value="#{green_address.try(:line1)}" required="true"
@@ -174,26 +190,6 @@
                   label.control-label.col-sm-4 for="green_order_address2" Address2
                   .col-sm-8
                     input.form-control type="text" name="green_order[address2]" id="green_order_address2" value="#{green_address.try(:line2)}"
-                .form-group
-                  label.control-label.col-sm-4 for="green_order_city" City *
-                  .col-sm-8
-                    input.form-control type="text" name="green_order[city]" id="green_order_city" value="#{green_address.try(:city)}" required="true"
-                .form-group
-                  label.control-label.col-sm-4 for="green_order_state" State *
-                  .col-sm-8
-                    input.form-control type="text" name="green_order[state]" id="green_order_state" value="#{get_state(green_address.try(:state))}" required="true" maxlength="2"
-                    p.help-block Your TWO DIGIT state abbreviation (ex: GA, NY, FL, CA, etc.)
-                .form-group
-                  label.control-label.col-sm-4 for="green_order_zip" Zip *
-                  .col-sm-8
-                    input.form-control type="text" name="green_order[zip]" id="green_order_zip" value="#{green_address.try(:zip)}" required="true"
-                .form-group
-                  label.control-label.col-sm-4 for="green_order_country" Country
-                  .col-sm-8
-                    select#green_order_country.form-control name="green_order[country]"
-                      option value="US" US
-                      option value="CA" CA
-                    p.help-block Your 2-character country code, ex: “US”.
                 .form-group
                   label.control-label.col-sm-4 for="green_order_routing_number" Routing Number *
                   .col-sm-8

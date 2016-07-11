@@ -92,3 +92,4 @@ gem 'paper_trail', '~> 3.0.7'
 gem 'puma', '~> 2.11.1'
 
 gem 'httparty'
+gem 'carmen-rails', '~> 1.0.0'

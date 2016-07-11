@@ -92,6 +92,7 @@ Toad::Application.routes.draw do
       get :for_sale
       get :requested
       get :deals
+      get 'subregion_options'
     end
     match '/checkout', to: 'products#checkout', :via => [:get, :post]
   end

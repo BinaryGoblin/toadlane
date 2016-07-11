@@ -104,6 +104,16 @@ $(document).ready ->
     @optional(element) or /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(value)
   ), 'Please provide a valid email address.'
 
+  $('select#green_order_address_country').change (event) ->
+    select_wrapper = $('#order_state_code_wrapper')
+
+    $('select', select_wrapper).attr('disabled', true)
+
+    country_code = $(this).val()
+
+    url = "/products/subregion_options?parent_region=#{country_code}"
+    select_wrapper.load(url)
+
   $('form#new_green_order').validate
     rules:
       "green_order[email_address]":

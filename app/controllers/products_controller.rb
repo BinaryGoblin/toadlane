@@ -60,6 +60,10 @@ class ProductsController < ApplicationController
     @green_order = GreenOrder.new
   end
 
+  def subregion_options
+    render partial: 'subregion_select'
+  end
+
   private
     def set_product
       @product = Product.find(params[:id])
