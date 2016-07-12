@@ -13,6 +13,10 @@ module ProductHelper
     selected_state.flatten.last
   end
 
+  def only_us_and_canada
+    Carmen::Country.all.select{|c| %w{US CA}.include?(c.code)}
+  end
+
   def states
     [
       ['Alabama', 'AL'],

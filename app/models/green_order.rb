@@ -1,3 +1,35 @@
+# == Schema Information
+#
+# Table name: green_orders
+#
+#  id                   :integer          not null, primary key
+#  buyer_id             :integer
+#  seller_id            :integer
+#  product_id           :integer
+#  check_number         :string
+#  check_id             :string
+#  status               :integer          default(0)
+#  unit_price           :float
+#  count                :integer
+#  fee                  :float
+#  rebate               :float
+#  total                :float
+#  summary              :string(100)
+#  description          :text
+#  tracking_number      :string
+#  deleted              :boolean          default(FALSE), not null
+#  shipping_cost        :float
+#  address_name         :string
+#  address_city         :string
+#  address_state        :string
+#  address_zip          :string
+#  address_country      :string
+#  shipping_estimate_id :integer
+#  address_id           :integer
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#
+
 class GreenOrder < ActiveRecord::Base
   belongs_to :buyer, class_name: 'User', foreign_key: 'buyer_id'
   belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'
@@ -6,6 +38,8 @@ class GreenOrder < ActiveRecord::Base
   belongs_to :address
 
   has_one :refund_request, -> { where deleted: false }
+
+  attr_accessor :name, :email_address, :phone, :address1, :address2, :routing_number, :account_number, :rebate_percent
 
   scope :for_dashboard, -> (page, per_page) do
     where(deleted: false).order('created_at DESC').paginate(page: page, per_page: per_page)
@@ -105,10 +139,10 @@ class GreenOrder < ActiveRecord::Base
       api_ready_params["PhoneExtension"] = ""
       api_ready_params["Address1"] = "#{green_params[:address1]}"
       api_ready_params["Address2"] = "#{green_params[:address2]}"
-      api_ready_params["City"] = "#{green_params[:city]}"
-      api_ready_params["State"] = "#{green_params[:state]}"
-      api_ready_params["Zip"] = "#{green_params[:zip]}"
-      api_ready_params["Country"] = "#{green_params[:country]}"
+      api_ready_params["City"] = "#{green_params[:address_city]}"
+      api_ready_params["State"] = "#{green_params[:address_state].try(:upcase)}"
+      api_ready_params["Zip"] = "#{green_params[:address_zip]}"
+      api_ready_params["Country"] = "#{green_params[:address_country]}"
       api_ready_params["RoutingNumber"] = "#{green_params[:routing_number]}"
       api_ready_params["AccountNumber"] = "#{green_params[:account_number]}"
       api_ready_params["BankName"] = "#{green_params[:bank_name]}"

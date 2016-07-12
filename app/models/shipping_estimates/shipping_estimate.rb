@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: shipping_estimates
+#
+#  id          :integer          not null, primary key
+#  product_id  :integer
+#  cost        :float
+#  description :text
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  type        :string           default("PerUnit"), not null
+#
+
 class ShippingEstimate < ActiveRecord::Base
   belongs_to :product
 

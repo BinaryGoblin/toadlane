@@ -1,3 +1,31 @@
+# == Schema Information
+#
+# Table name: armor_orders
+#
+#  id                 :integer          not null, primary key
+#  buyer_id           :integer
+#  seller_id          :integer
+#  account_id         :integer
+#  product_id         :integer
+#  order_id           :integer
+#  status             :integer          default(0)
+#  unit_price         :float
+#  count              :integer
+#  amount             :float
+#  summary            :string(100)
+#  description        :text
+#  invoice_num        :integer
+#  purchase_order_num :integer
+#  status_change      :datetime
+#  uri                :string
+#  deleted            :boolean          default(FALSE)
+#  created_at         :datetime
+#  updated_at         :datetime
+#  taxes_price        :integer          default(0)
+#  rebate_price       :integer          default(0)
+#  rebate_percent     :integer          default(0)
+#
+
 class ArmorOrder < ActiveRecord::Base
   belongs_to :buyer, class_name: 'User', foreign_key: 'buyer_id'
   belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'

@@ -96,6 +96,41 @@ $(document).ready ->
   if $('.vp-calculation-checkout').is(':visible')
     $('input[name="stripe_order[shipping_estimate_id]"]:first').trigger('click');
 
-  $('form#new_green_order').submit ->
-    $(this).find('input[type=submit]').prop 'disabled', true
-    return
+  jQuery.validator.addMethod 'zipcode', ((value, element) ->
+    @optional(element) or /^\d{5}(?:-\d{4})?$/.test(value)
+  ), 'Please provide a valid zipcode.'
+
+  jQuery.validator.addMethod 'validEmail', ((value, element) ->
+    @optional(element) or /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(value)
+  ), 'Please enter a valid email address.'
+
+  $('select#green_order_address_country').change (event) ->
+    select_wrapper = $('#order_state_code_wrapper')
+
+    $('select', select_wrapper).attr('disabled', true)
+
+    country_code = $(this).val()
+
+    url = "/products/subregion_options?parent_region=#{country_code}"
+    select_wrapper.load(url)
+
+  $('form#new_green_order').validate
+    rules:
+      "green_order[email_address]":
+        required: true
+        validEmail: true
+      "green_order[routing_number]":
+        required: true
+        minlength: 9
+        maxlength: 9
+        number: true
+      "green_order[address_zip]":
+        required: true
+        zipcode: true
+      "green_order[account_number]":
+        required: true
+        number: true
+    submitHandler: (form) ->
+      $(this).find('input[type=submit]').prop 'disabled', true
+      form.submit()
+      return

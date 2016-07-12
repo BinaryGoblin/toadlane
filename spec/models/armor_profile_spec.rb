@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: armor_profiles
+#
+#  id               :integer          not null, primary key
+#  armor_account_id :integer
+#  armor_user_id    :integer
+#  user_id          :integer
+#  created_at       :datetime
+#  updated_at       :datetime
+#
+
 require 'spec_helper'
 
 RSpec.describe ArmorProfile do
