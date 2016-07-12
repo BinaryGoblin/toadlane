@@ -39,6 +39,8 @@ class GreenOrder < ActiveRecord::Base
 
   has_one :refund_request, -> { where deleted: false }
 
+  attr_accessor :name, :email_address, :phone, :address1, :address2, :routing_number, :account_number
+
   scope :for_dashboard, -> (page, per_page) do
     where(deleted: false).order('created_at DESC').paginate(page: page, per_page: per_page)
   end
@@ -137,9 +139,9 @@ class GreenOrder < ActiveRecord::Base
       api_ready_params["PhoneExtension"] = ""
       api_ready_params["Address1"] = "#{green_params[:address1]}"
       api_ready_params["Address2"] = "#{green_params[:address2]}"
-      api_ready_params["City"] = "#{green_params[:city]}"
+      api_ready_params["City"] = "#{green_params[:address_city]}"
       api_ready_params["State"] = "#{green_params[:address_state].try(:upcase)}"
-      api_ready_params["Zip"] = "#{green_params[:zip]}"
+      api_ready_params["Zip"] = "#{green_params[:address_zip]}"
       api_ready_params["Country"] = "#{green_params[:address_country]}"
       api_ready_params["RoutingNumber"] = "#{green_params[:routing_number]}"
       api_ready_params["AccountNumber"] = "#{green_params[:account_number]}"

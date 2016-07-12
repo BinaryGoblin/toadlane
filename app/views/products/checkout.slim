@@ -1,6 +1,10 @@
 .wrap-sm.margin-top-30.vp-calculation-checkout data-options='{"pricebreaks":#{@product.pricebreaks.collect { |p| { quantity: (p.quantity - 1), price: p.price } }.to_json},"maxquantity":#{@data[:available_product].present? ? @data[:available_product].to_s : '"Infinity"'}}'
   h1
     | Checkout :: "#{@product.name}"
+  - if flash[:alert].present?
+    .alert.alert-danger.margin-top-20 role="alert"
+      em
+        = flash[:alert]
   .row.margin-top-20
     .col-md-12
       table.table
@@ -41,13 +45,13 @@
         h2
           | Choose a desired Payment Gateway
         ul.nav.nav-tabs role="tablist"
-          li.active role="presentation"
+          li role="presentation" class=('active' if !@green_order.routing_number.present?)
             a aria-controls="stripe" data-toggle="tab" href="#stripe" role="tab"  Stripe (Credit Card)
-          li role="presentation"
+          li role="presentation" class=('active' if @green_order.routing_number.present?)
             a aria-controls="green" data-toggle="tab" href="#green" role="tab"  Green (eCheck)
       .tab-content
         - if @product.stripe_present?
-          #stripe.tab-pane.active role="tabpanel"
+          #stripe.tab-pane role="tabpanel" class=('active' if !@green_order.routing_number.present?)
             = form_for @stripe_order do |f|
               -if current_user && !current_user.addresses.nil?
                 table.table data-behavior="assignShippingAddress"
@@ -122,7 +126,7 @@
                       data-shipping-address="true"
                       data-email="#{ @product.user.email }"]
         - if @product.green_present?
-          #green.tab-pane role="tabpanel" class=('active' if @product.green_only_present?)
+          #green.tab-pane role="tabpanel" class=('active' if (@product.green_only_present? || @green_order.routing_number.present?))
             = form_for @green_order do |f|
               -if current_user && !current_user.addresses.nil?
                 table.table data-behavior="assignShippingAddress"
@@ -153,17 +157,17 @@
               .greenDetails.form-horizontal
                 h2 Enter your check details below
                 .form-group
-                  label.control-label.col-sm-4 for="green_order_name" Name *
+                  = f.label :name, 'Name *', class: 'control-label col-sm-4'
                   .col-sm-8
-                    input.form-control type="text" name="green_order[name]" id="green_order_name" value="#{current_user.try(:name)}" required="true"
+                    = f.text_field :name, class: 'form-control', :value => "#{current_user.try(:name)}", required: true
                 .form-group
-                  label.control-label.col-sm-4 for="green_order_email_address" Email Address *
+                  = f.label :email_address, 'Email Address *', class: 'control-label col-sm-4'
                   .col-sm-8
-                    input.form-control type="email" name="green_order[email_address]" id="green_order_email_address" value="#{current_user.try(:email)}" required="true"
+                    = f.email_field :email_address, class: 'form-control', :value => "#{current_user.try(:email)}", required: true
                 .form-group
-                  label.control-label.col-sm-4 for="green_order_phone" Phone *
+                  = f.label :phone, 'Phone *', class: 'control-label col-sm-4'
                   .col-sm-8
-                    input.form-control type="text" name="green_order[phone]" id="green_order_phone" value="#{current_user.try(:formatted_phone)}" required="true"
+                    = f.text_field :phone, class: 'form-control', :value => "#{current_user.try(:formatted_phone)}", required: true
                     p.help-block Your 10-digit phone number in the format 999-999-9999.
                 - green_address = current_user.try(:addresses).try(:last)
                 .form-group
@@ -173,32 +177,32 @@
                 .form-group
                   = f.label :address_state, "State *", class: "control-label col-sm-4"
                   .col-sm-8
-                    = render partial: 'subregion_select', locals: {parent_region: f.object.address_country}
+                    = render partial: 'products/subregion_select', locals: {parent_region: f.object.address_country}
                 .form-group
-                  label.control-label.col-sm-4 for="green_order_city" City *
+                  = f.label :address_city, 'City *', class: 'control-label col-sm-4'
                   .col-sm-8
-                    input.form-control type="text" name="green_order[city]" id="green_order_city" value="#{green_address.try(:city)}" required="true"
+                    = f.text_field :address_city, class: 'form-control', :value => "#{green_address.try(:city)}", required: true
                 .form-group
-                  label.control-label.col-sm-4 for="green_order_zip" Zip *
+                  = f.label :address_zip, 'Zip *', class: 'control-label col-sm-4'
                   .col-sm-8
-                    input.form-control type="text" name="green_order[zip]" id="green_order_zip" value="#{green_address.try(:zip)}" required="true"
+                    = f.text_field :address_zip, class: 'form-control', :value => "#{green_address.try(:zip)}", required: true
                 .form-group
-                  label.control-label.col-sm-4 for="green_order_address1" Address1 *
+                  = f.label :address1, 'Address1 *', class: 'control-label col-sm-4'
                   .col-sm-8
-                    input.form-control type="text" name="green_order[address1]" id="green_order_address1" value="#{green_address.try(:line1)}" required="true"
+                    = f.text_field :address1, class: 'form-control', :value => "#{green_address.try(:line1)}", required: true
                 .form-group
-                  label.control-label.col-sm-4 for="green_order_address2" Address2
+                  = f.label :address2, 'Address2', class: 'control-label col-sm-4'
                   .col-sm-8
-                    input.form-control type="text" name="green_order[address2]" id="green_order_address2" value="#{green_address.try(:line2)}"
+                    = f.text_field :address2, class: 'form-control', :value => "#{green_address.try(:line2)}"
                 .form-group
-                  label.control-label.col-sm-4 for="green_order_routing_number" Routing Number *
+                  = f.label :routing_number, 'Routing Number *', class: 'control-label col-sm-4'
                   .col-sm-8
-                    input.form-control type="text" name="green_order[routing_number]" id="green_order_routing_number" required="true" maxlength="9"
+                    = f.text_field :routing_number, class: 'form-control', required: true, maxlength: 9
                     p.help-block Your 9-digit bank routing number.
                 .form-group
-                  label.control-label.col-sm-4 for="green_order_account_number" Account Number *
+                  = f.label :account_number, 'Account Number *', class: 'control-label col-sm-4'
                   .col-sm-8
-                    input.form-control type="text" name="green_order[account_number]" id="green_order_account_number" required="true"
+                    = f.text_field :account_number, class: 'form-control', required: true
               .payment-button.text-right
                 = f.hidden_field :product_id, :value => @product.id
                 = f.hidden_field :unit_price, :value => number_with_precision(@product.unit_price, precision: 2, delimiter: '')

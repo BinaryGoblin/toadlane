@@ -41,6 +41,7 @@ class GreenService
   def cart_check(params = {})
     params["Client_ID"] = "#{client_id}"
     params["ApiPassword"] = "#{api_password}"
+    binding.pry
     response = self.class.post("/CartCheck", { body: params })
     response_hash = Hash.from_xml(response.body)
     response_hash["eCartCheckResult"]

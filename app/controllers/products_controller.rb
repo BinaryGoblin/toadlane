@@ -43,6 +43,7 @@ class ProductsController < ApplicationController
     render 'products/products'
   end
 
+  # TODO Refactor 10018
   def checkout
     return unless current_user.present?
     @product = Product.find(params[:product_id])
@@ -53,7 +54,7 @@ class ProductsController < ApplicationController
       shipping_cost: params[:shipping_cost],
       rebate: params[:rebate],
       rebate_percent: params[:rebate_percent],
-      available_product: get_available_product(@product)
+      available_product: @product.remaining_amount
     }
     @fee = Fee.find_by(:module_name => "Stripe").value
     @stripe_order = StripeOrder.new
@@ -67,10 +68,5 @@ class ProductsController < ApplicationController
   private
     def set_product
       @product = Product.find(params[:id])
-    end
-
-    def get_available_product(product)
-      sold_out = (product.sold_out.present? ? product.sold_out : 0)
-      product.amount - sold_out
     end
 end

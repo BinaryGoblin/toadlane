@@ -102,7 +102,7 @@ $(document).ready ->
 
   jQuery.validator.addMethod 'validEmail', ((value, element) ->
     @optional(element) or /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(value)
-  ), 'Please provide a valid email address.'
+  ), 'Please enter a valid email address.'
 
   $('select#green_order_address_country').change (event) ->
     select_wrapper = $('#order_state_code_wrapper')
@@ -124,7 +124,7 @@ $(document).ready ->
         minlength: 9
         maxlength: 9
         number: true
-      "green_order[zip]":
+      "green_order[address_zip]":
         required: true
         zipcode: true
       "green_order[account_number]":

@@ -80,4 +80,9 @@ class Product < ActiveRecord::Base
   def stripe_present?
     user.stripe_profile.present?
   end
+
+  def remaining_amount
+    sold_out = (self.sold_out.present? ? self.sold_out : 0)
+    self.amount - sold_out
+  end
 end
