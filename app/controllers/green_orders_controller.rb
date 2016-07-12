@@ -85,9 +85,7 @@ class GreenOrdersController < ApplicationController
       }
       @fee = Fee.find_by(:module_name => "Stripe").value
       @stripe_order = StripeOrder.new
-      gop = green_order_params
-      gop.delete(:rebate_percent)
-      @green_order = GreenOrder.new(gop)
+      @green_order = GreenOrder.new(green_order_params)
     end
 
 end

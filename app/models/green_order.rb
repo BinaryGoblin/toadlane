@@ -39,7 +39,7 @@ class GreenOrder < ActiveRecord::Base
 
   has_one :refund_request, -> { where deleted: false }
 
-  attr_accessor :name, :email_address, :phone, :address1, :address2, :routing_number, :account_number
+  attr_accessor :name, :email_address, :phone, :address1, :address2, :routing_number, :account_number, :rebate_percent
 
   scope :for_dashboard, -> (page, per_page) do
     where(deleted: false).order('created_at DESC').paginate(page: page, per_page: per_page)
