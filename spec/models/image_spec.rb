@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: images
+#
+#  id                 :integer          not null, primary key
+#  product_id         :integer
+#  image_file_name    :string
+#  image_file_size    :string
+#  image_content_type :string
+#  created_at         :datetime
+#  updated_at         :datetime
+#
+
 require 'spec_helper'
 
 describe Image do

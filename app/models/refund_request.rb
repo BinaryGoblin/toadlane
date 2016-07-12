@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: refund_requests
+#
+#  id             :integer          not null, primary key
+#  green_order_id :integer
+#  buyer_id       :integer
+#  seller_id      :integer
+#  status         :integer          default(0)
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  deleted        :boolean          default(FALSE)
+#
+
 class RefundRequest < ActiveRecord::Base
   belongs_to :buyer, class_name: 'User', foreign_key: 'buyer_id'
   belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'

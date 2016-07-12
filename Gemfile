@@ -93,3 +93,4 @@ gem 'puma', '~> 2.11.1'
 
 gem 'httparty'
 gem 'carmen-rails', '~> 1.0.0'
+gem 'annotate'

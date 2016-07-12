@@ -1,3 +1,35 @@
+# == Schema Information
+#
+# Table name: green_orders
+#
+#  id                   :integer          not null, primary key
+#  buyer_id             :integer
+#  seller_id            :integer
+#  product_id           :integer
+#  check_number         :string
+#  check_id             :string
+#  status               :integer          default(0)
+#  unit_price           :float
+#  count                :integer
+#  fee                  :float
+#  rebate               :float
+#  total                :float
+#  summary              :string(100)
+#  description          :text
+#  tracking_number      :string
+#  deleted              :boolean          default(FALSE), not null
+#  shipping_cost        :float
+#  address_name         :string
+#  address_city         :string
+#  address_state        :string
+#  address_zip          :string
+#  address_country      :string
+#  shipping_estimate_id :integer
+#  address_id           :integer
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#
+
 class GreenOrder < ActiveRecord::Base
   belongs_to :buyer, class_name: 'User', foreign_key: 'buyer_id'
   belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'

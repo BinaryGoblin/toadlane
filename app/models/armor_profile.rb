@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: armor_profiles
+#
+#  id               :integer          not null, primary key
+#  armor_account_id :integer
+#  armor_user_id    :integer
+#  user_id          :integer
+#  created_at       :datetime
+#  updated_at       :datetime
+#
+
 class ArmorProfile < ActiveRecord::Base
   after_create :create_armor_api_account, unless: :armor_account_exists?
 

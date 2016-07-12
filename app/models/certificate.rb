@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: certificates
+#
+#  id           :integer          not null, primary key
+#  filename     :string
+#  content_type :string
+#  data         :binary
+#  user_id      :integer
+#  created_at   :datetime
+#  updated_at   :datetime
+#
+
 class Certificate < ActiveRecord::Base
   belongs_to :user
 
