@@ -90,4 +90,12 @@ module ProductHelper
       ['Yukon Territory', 'YT']
     ]
   end
+
+  def product_views_text(count)
+    if count > 1
+      "#{count} Product Views"
+    else
+      "#{count} Product View"
+    end
+  end
 end
