@@ -9,8 +9,12 @@ module ProductHelper
   end
 
   def get_state(user_state)
-    selected_state = states.select{ |state| state.first.downcase == user_state.try(:downcase) }
-    selected_state.flatten.last
+    if user_state.present? && user_state.length > 2
+      selected_state = states.select{ |state| state.first.downcase == user_state.try(:downcase) }
+      selected_state.flatten.last
+    else
+      user_state.try(:upcase)
+    end
   end
 
   def only_us_and_canada
