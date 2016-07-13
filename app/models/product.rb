@@ -29,6 +29,8 @@
 class Product < ActiveRecord::Base
   acts_as_commontable
 
+  is_impressionable :counter_cache => true, :column_name => :views_count, :unique => :user_id
+
   belongs_to :user
 
   self.inheritance_column = nil # So that the :type enum doesn't complain about Single Table Inheritance
