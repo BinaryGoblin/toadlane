@@ -13,7 +13,7 @@ module ProductHelper
       selected_state = states.select{ |state| state.first.downcase == user_state.try(:downcase) }
       selected_state.flatten.last
     else
-      user_state
+      user_state.try(:upcase)
     end
   end
 
