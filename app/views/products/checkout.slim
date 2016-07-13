@@ -141,8 +141,8 @@
                           = b.label { b.radio_button(:"data-behavior" => "AssignShipping", :"checked" => (b.object.id == green_shipping_addresses.first.id)) + b.text }
                     tr
                       td
-                        = radio_button 'stripe_order', :address_id, "-1", default: true, 'data-behavior' => "AssignShipping", id: 'stripe_order_address_id__1'
-                        = label :address_id, " Enter new address", for: 'stripe_order_address_id__1'
+                        = radio_button 'green_order', :address_id, "-1", default: true, 'data-behavior' => "AssignShipping", id: 'green_order_address_id__1'
+                        = label :address_id, " Enter new address", for: 'green_order_address_id__1'
               table.table
                 - if !@product.shipping_estimates.nil?
                   thead
