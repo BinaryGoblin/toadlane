@@ -5,33 +5,15 @@
     table.table
       thead
         tr
-          th ID
           th Name
           th Company
-          th Location
-          th Email
-          th Phone Number
           th
 
       tbody
         - @users.each do |user|
           tr
-            td = user.id
             td = user.name
             td = user.company
-            - if user.addresses[0]
-              td
-                = user.addresses[0].line1
-                - if user.addresses[0].line2.nil?
-                - else
-                  br
-                  = user.addresses[0].line2
-                br
-                = user.addresses[0].city + ", " + user.addresses[0].state + " " + user.addresses[0].zip + ", " + user.addresses[0].country
-            -else
-              td Unknown
-            td = mail_to user.email
-            td = user.phone
             td.text-center=link_to 'Message', '#modal_message_' + user.id.to_s, class: 'view', data: { toggle: 'modal' }
 
 = render partial: '/admin/users/communications/user', collection: @users
