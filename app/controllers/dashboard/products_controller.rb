@@ -174,6 +174,12 @@ class Dashboard::ProductsController < DashboardController
     render json: :ok
   end
 
+  def viewers
+    set_product
+    user_ids = @product.impressions.try(:pluck, :user_id)
+    @users = User.where(id: user_ids).order('id ASC')
+  end
+
   private
     def set_product
       @product = Product.find(params[:id])

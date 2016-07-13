@@ -23,6 +23,7 @@
           th Unit price:
           th Valid from:
           th Valid until:
+          th Views Count:
           th
 
       tbody
@@ -43,6 +44,8 @@
             td
               small.date= product.end_date.strftime('%d-%m-%Y')
               small.time= product.end_date.strftime('%T')
+            td
+              = link_to product.views_count, viewers_dashboard_products_path(product), class: 'view'
             td
               = link_to 'Edit', edit_dashboard_product_path(product), class: 'view'
               |  |
