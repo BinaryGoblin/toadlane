@@ -39,6 +39,7 @@ Toad::Application.routes.draw do
         delete :delete_cascade
         post :active_cascade
         post :inactive_cascade
+        get '/:id/viewers', to: 'products#viewers', as: 'viewers'
       end
     end
 

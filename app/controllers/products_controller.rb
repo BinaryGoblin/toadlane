@@ -1,4 +1,8 @@
 class ProductsController < ApplicationController
+
+  # impressionist is for allowing view count and ease of it
+  impressionist :actions=>[:show],  :unique => [:user_id]
+
   layout 'user_dashboard'
 
   before_action :check_terms_of_service
