@@ -137,7 +137,6 @@ class Dashboard::ProductsController < DashboardController
 
   def destroy
     set_product
-
     @product.destroy
     respond_to do |format|
       format.html { redirect_to dashboard_products_path }

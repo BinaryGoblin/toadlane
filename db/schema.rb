@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160713100540) do
+ActiveRecord::Schema.define(version: 20160714043801) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -331,8 +331,10 @@ ActiveRecord::Schema.define(version: 20160713100540) do
     t.integer  "main_category"
     t.integer  "type",                            default: 0
     t.integer  "views_count",                     default: 0
+    t.datetime "deleted_at"
   end
 
+  add_index "products", ["deleted_at"], name: "index_products_on_deleted_at", using: :btree
   add_index "products", ["user_id"], name: "index_products_on_user_id", using: :btree
 
   create_table "refund_requests", force: :cascade do |t|
