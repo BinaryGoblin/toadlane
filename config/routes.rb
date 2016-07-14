@@ -29,6 +29,8 @@ Toad::Application.routes.draw do
     resources :accounts do
       collection do
         post :create_green_profile
+        post :create_armor_profile
+        get :send_confirmation_email
       end
     end
 

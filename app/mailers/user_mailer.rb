@@ -78,4 +78,8 @@ class UserMailer < ActionMailer::Base
 
     mail to: @seller.email, subject: "#{@buyer.name} has canceled a refund request!!!"
   end
+
+  def send_confirmation_email(user)
+    mail to: user.email, subject: "Confirmation email"
+  end
 end

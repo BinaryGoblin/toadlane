@@ -4,7 +4,7 @@
   - if !flash[:error].nil?
     .error-explanation
       = flash[:error]
-      
+
   .row.account-table
     .col-md-3
       h4 Connected<br />Accounts:
@@ -35,6 +35,23 @@
               p <b>Status:</b> <span class="warning">You are not connected to Green By Phone.</span>
             - else
               p <b>Status:</b> <span class="success">You are connected to Green By Phone.</span>
+          hr
+          .account-armor
+            h4 Armor:
+            = form_for @armor_profile, url: create_armor_profile_dashboard_accounts_path, method: "post" do |f|
+              - if params["confirmed_email"] == "true"
+                | Email successfully confirmed
+              - else
+                = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path
+              = f.hidden_field :confirmed_email, :value => params["confirmed_email"]
+              br
+              input type="checkbox" id="armor_payments_terms" name="armor_payments_terms"
+              span
+                |  I agree to the&nbsp;
+                a href="https://app.armorpayments.com/terms/1052419" target="_BLANK" Terms and Conditions
+                | &nbsp;of Armor Payments.
+              br
+              = f.submit "Create new account"
         .col-md-4
           - if @user.stripe_profile.nil?
             - if Rails.env.development?
@@ -44,10 +61,10 @@
               = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect)
           - else
             - if Rails.env.development?
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect, 
+              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
                                                                                            :stripe_landing => "login",
                                                                                            :redirect_uri => "http://localhost:3000/users/auth/stripe_connect/callback")
-            - else 
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect, 
+            - else
+              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
                                                                                            :stripe_landing => "login")
-      hr     
+      hr
