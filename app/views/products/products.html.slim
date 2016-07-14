@@ -1,5 +1,6 @@
-.wrap-sm: .products
-  = render partial: '/shared/product', collection: @products
+.wrap-sm
+  .products.all_products
+    = render partial: '/shared/product', collection: @products
 
 .footer-actions: .fa-container: .wrap-sm
   - if @products
