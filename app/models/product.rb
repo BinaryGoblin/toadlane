@@ -38,14 +38,14 @@ class Product < ActiveRecord::Base
 
   has_paper_trail
 
-  has_many :stripe_orders
-  has_many :green_orders
+  has_many :stripe_orders, dependent: :destroy
+  has_many :green_orders, dependent: :destroy
   has_many :product_categories
   has_many :categories, through: :product_categories, dependent: :destroy
-  has_many :images
+  has_many :images, dependent: :destroy
   accepts_nested_attributes_for :images
-  has_many :pricebreaks, -> { order(quantity: :asc) }, autosave: true
-  has_many :shipping_estimates
+  has_many :pricebreaks, -> { order(quantity: :asc) }, autosave: true, dependent: :destroy
+  has_many :shipping_estimates, dependent: :destroy
   accepts_nested_attributes_for :shipping_estimates,
     :allow_destroy => true,
     :reject_if => lambda { |a| (a[:cost].blank? && a[:description].blank?) }
