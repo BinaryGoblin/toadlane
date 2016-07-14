@@ -28,7 +28,7 @@
 
 class Product < ActiveRecord::Base
   acts_as_commontable
-
+  acts_as_paranoid
   is_impressionable :counter_cache => true, :column_name => :views_count, :unique => :user_id
 
   belongs_to :user
