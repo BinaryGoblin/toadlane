@@ -1,0 +1,30 @@
+doctype html
+html
+  head
+    title = @meta[:title]
+    meta charset="UTF-8" /
+    = render partial: 'blogo/shared/meta'
+
+    = csrf_meta_tags
+    = stylesheet_link_tag "blogo/blog"
+    = stylesheet_link_tag "blogo/blog_overrides"
+
+    = auto_discovery_link_tag :atom, blogo_feed_path
+    = render 'blogo/shared/google_analytics'
+  body
+    #container
+      header.blogo-header
+        .header-titles
+          h1
+            = link_to Blogo.config.site_title, blogo_root_path
+          h2
+            = Blogo.config.site_subtitle
+        .header-icons
+          = render partial: 'blogo/shared/social_icons'
+      #content
+        .pure-g-r
+          .pure-u-3-4
+            = yield
+          .pure-u-1-4
+            = render partial: 'blogo/shared/aside'
+    = render '/shared/footer'
