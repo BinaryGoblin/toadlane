@@ -29,6 +29,7 @@ $(document).ready ->
     maxSlides: 4
     slideMargin: 38
     moveSlides: 1
+    pager: false
   $("#user_state").autocomplete({
     source: ["Alabama",
     "Alaska",
