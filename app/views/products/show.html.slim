@@ -41,7 +41,7 @@
 
           - if @product.description.present?
             .white-panel= simple_format @product.description
-        
+
     	  .white-panel.vp-calculation data-behavior="CalculationProduct" data-options='{"pricebreaks":#{@product.pricebreaks.collect { |p| { quantity: (p.quantity - 1), price: p.price } }.to_json},"maxquantity":#{available.present? ? available.to_s : '"Infinity"'}}'
 
             - if @product.status_characteristic == 'sell'
@@ -183,12 +183,16 @@
                 .user_accounts
                   p
                     b ACTIVE ACCOUNTS:
+                    br
                     - if @product.user.green_profile.present?
                       span.label.label-green
                         | Green By Phone
                     - if @product.user.stripe_profile.present?
                       span.label.label-blue
                         | Stripe
+                    - if @product.user.armor_profile.present?
+                      span.label.label-orange
+                        | Armor
                 - if @product.user.benefits.reject{ |e| e.empty? }.present?
                   .sell
                     b SELL:
