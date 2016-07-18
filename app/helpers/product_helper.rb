@@ -98,4 +98,11 @@ module ProductHelper
       "#{count} Product View"
     end
   end
+
+  def assignable_users_collection
+    user_ids = StripeProfile.pluck(:user_id)
+    user_ids << GreenProfile.pluck(:user_id)
+    user_ids = user_ids.compact
+    User.where(id: user_ids)
+  end
 end
