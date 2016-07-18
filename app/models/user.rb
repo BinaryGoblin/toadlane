@@ -51,6 +51,7 @@ class User < ActiveRecord::Base
 
   has_one :stripe_profile
   has_one :green_profile
+  has_one :armor_profile, class_name: 'ArmorProfile', foreign_key: :user_id
   has_one :stripe_customer
   has_many :products
   has_many :addresses
@@ -86,7 +87,7 @@ class User < ActiveRecord::Base
   #  unless: :armor_api_account_persisted?
   # after_update :update_armor_api_user, if: :armor_api_user_changed?
   # after_update :update_armor_api_account, if: :armor_api_account_changed?
-  
+
   def profile_complete?
     !self.addresses.nil? && !self.name.nil? && !self.email.nil? && !self.phone.nil?
   end
@@ -105,7 +106,7 @@ class User < ActiveRecord::Base
       ArmorOrder.where('buyer_id = ? OR seller_id = ?', self.id, self.id)
     end
   end
-  
+
   def stripe_orders(type=nil)
     if type == 'bought'
       StripeOrder.where(buyer_id: self.id)

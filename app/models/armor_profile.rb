@@ -13,7 +13,7 @@
 class ArmorProfile < ActiveRecord::Base
   # after_create :create_armor_api_account, unless: :armor_account_exists?
   #
-  # belongs_to :user
+  belongs_to :user
   #
   # def client
   #   @client ||= ArmorService.new
