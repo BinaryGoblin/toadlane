@@ -40,8 +40,13 @@ class Dashboard::AccountsController < DashboardController
                       "country" => current_user.addresses.first.country.downcase,
                       "email_confirmed" => email_confirmed,
                       "agreed_terms" => agreed_terms }
-    
+
     result = client.accounts.create(account_data)
+    current_user.armor_profile.update_attribute(:armor_account_id, result.data[:body]["account_id"])
+
+    users = client.users(current_user.armor_profile.armor_account_id).all
+    current_user.armor_profile.update_attribute(:armor_user_id, users.data[:body][0]["user_id"].to_i)
+
     redirect_to dashboard_accounts_path, :flash => { :notice => "Armor Profile successfully created." }
   rescue ArmorService::BadResponseError => e
     redirect_to dashboard_accounts_path, :flash => { :error => e.errors.values.flatten }
