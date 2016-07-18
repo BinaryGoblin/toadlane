@@ -18,6 +18,9 @@ html
       .main-alert data-behavior="FlashMessages"= flash[:alert].upcase
     - elsif flash[:notice]
       .main-notice data-behavior="FlashMessages"= flash[:notice].upcase
+    - elsif flash[:error]
+      .main-alert data-behavior="FlashMessages"=  flash[:error].values.flatten.each {|e| e}
+
     = render '/shared/header'
 
     .find-and-explore
@@ -36,7 +39,7 @@ html
                 = text_field_tag :query, params[:query], placeholder: 'e.g. Iphone 5s black edition LA'
             - if @related_searches.present?
                 - unless @related_searches.count == 1 && @related_searches.last["normalized_query"] == params[:query]
-                    = render partial: "/shared/related_searches", locals: { related_searches: @related_searches, query: params[:query] } 
+                    = render partial: "/shared/related_searches", locals: { related_searches: @related_searches, query: params[:query] }
     == yield
 
     = render '/shared/footer'

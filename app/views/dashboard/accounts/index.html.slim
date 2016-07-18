@@ -39,19 +39,46 @@
           .account-armor
             h4 Armor:
             = form_for @armor_profile, url: create_armor_profile_dashboard_accounts_path, method: "post" do |f|
-              - if params["confirmed_email"] == "true"
+              .form-group
+                = f.label :name, "Name:"
+                = f.text_field :name, class: "form-control", :readonly => true, value: current_user.name
+              .form-group
+                = f.label :email, "Email:"
+                = f.text_field :email, class: "form-control", :readonly => true, value: current_user.email
+              .form-group
+                = f.label :phone, "Phone:"
+                = f.text_field :phone, class: "form-control", :readonly => true, value: current_user.phone
+              .form-group
+                = f.label :address, "Address:"
+                = f.text_field :address, class: "form-control", :readonly => true, value: current_user.addresses.first.try(:line1)
+              .form-group
+                = f.label :city, "City:"
+                = f.text_field :city, class: "form-control", :readonly => true, value: current_user.addresses.first.try(:city)
+              .form-group
+                = f.label :state, "State:"
+                = f.text_field :state, class: "form-control", :readonly => true, value: get_state(current_user.addresses.first.try(:state))
+              .form-group
+                = f.label :zip, "Zip:"
+                = f.text_field :zip, class: "form-control", :readonly => true, value: current_user.addresses.first.try(:zip)
+              .form-group
+                = f.label :country, "Country:"
+                = f.text_field :country, class: "form-control", :readonly => true, value: current_user.addresses.first.try(:country).try(:downcase)
+              .form-group
+                = f.label :company, "Company:"
+                = f.text_field :company, class: "form-control", :readonly => true, value: current_user.company
+              - if current_user.armor_profile.present? && current_user.armor_profile.confirmed_email == true
                 | Email successfully confirmed
               - else
                 = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path
-              = f.hidden_field :confirmed_email, :value => params["confirmed_email"]
+              = f.hidden_field :confirmed_email, :value => current_user.try(:armor_profile).try(:confirmed_email)
+              .form-group
+                = f.check_box :agreed_terms, {}, true, false
+                span
+                  |  I agree to the&nbsp;
+                  a href="https://app.armorpayments.com/terms/1052419" target="_BLANK" Terms and Conditions
+                  | &nbsp;of Armor Payments.
               br
-              input type="checkbox" id="armor_payments_terms" name="armor_payments_terms"
-              span
-                |  I agree to the&nbsp;
-                a href="https://app.armorpayments.com/terms/1052419" target="_BLANK" Terms and Conditions
-                | &nbsp;of Armor Payments.
-              br
-              = f.submit "Create new account"
+              = f.submit "Submit", class: "btn btn-primary"
         .col-md-4
           - if @user.stripe_profile.nil?
             - if Rails.env.development?
