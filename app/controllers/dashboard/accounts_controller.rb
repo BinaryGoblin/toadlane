@@ -24,7 +24,8 @@ class Dashboard::AccountsController < DashboardController
   def create_armor_profile
     client = ArmorService.new
     email_confirmed = params["armor_profile"]["confirmed_email"]
-    agreed_terms = params["armor_payments_terms"] == "on" ? true : false
+    agreed_terms = params["armor_profile"]["agreed_terms"] == "1" ? true : false
+    current_user.armor_profile.update_attribute(:agreed_terms, agreed_terms)
 
     account_data = {
                       "company" => current_user.company,
@@ -39,11 +40,11 @@ class Dashboard::AccountsController < DashboardController
                       "country" => current_user.addresses.first.country.downcase,
                       "email_confirmed" => email_confirmed,
                       "agreed_terms" => agreed_terms }
-
+    
     result = client.accounts.create(account_data)
     redirect_to dashboard_accounts_path, :flash => { :notice => "Armor Profile successfully created." }
   rescue ArmorService::BadResponseError => e
-    redirect_to dashboard_accounts_path(params)
+    redirect_to dashboard_accounts_path, :flash => { :error => e.errors.values.flatten }
   end
 
   def send_confirmation_email

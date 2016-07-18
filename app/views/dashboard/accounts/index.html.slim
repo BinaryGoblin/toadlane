@@ -3,7 +3,11 @@
 .wrap-sm
   - if !flash[:error].nil?
     .error-explanation
-      = flash[:error]
+      - if flash[:error].kind_of?(Array)
+        - flash[:error].each do |error|
+          = error
+      - else
+        = flash[:error]
 
   .row.account-table
     .col-md-3
@@ -72,7 +76,7 @@
                 = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path
               = f.hidden_field :confirmed_email, :value => current_user.try(:armor_profile).try(:confirmed_email)
               .form-group
-                = f.check_box :agreed_terms, {}, true, false
+                = f.check_box :agreed_terms, :checked => current_user.try(:armor_profile).try(:agreed_terms)
                 span
                   |  I agree to the&nbsp;
                   a href="https://app.armorpayments.com/terms/1052419" target="_BLANK" Terms and Conditions

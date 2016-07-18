@@ -18,8 +18,6 @@ html
       .main-alert data-behavior="FlashMessages"= flash[:alert].upcase
     - elsif flash[:notice]
       .main-notice data-behavior="FlashMessages"= flash[:notice].upcase
-    - elsif flash[:error]
-      .main-alert data-behavior="FlashMessages"=  flash[:error].values.flatten.each {|e| e}
 
     = render '/shared/header'
 
