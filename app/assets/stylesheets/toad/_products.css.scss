@@ -65,16 +65,16 @@ $sell-color: #FF8724;
     padding-top: 40px;
     @include opacity(0);
     @include transition(opacity .2s);
-	
+
 	.buy{
 	  color: $buy-color;
 	}
-	
+
 	.sell{
 	  color: $sell-color;
 	}
   }
-  
+
   .btn {
     margin-top: 15px;
   }
@@ -236,12 +236,14 @@ $sell-color: #FF8724;
   font-family: 'PT Sans Narrow', sans-serif;
   padding-top: 20px;
   position: relative;
+  margin-top: 20px;
+  margin-bottom: 20px;
 
   h2, h3 {
     vertical-align: middle;
     color: #3b3e42;
     display: inline-block;
-  }	
+  }
 
   h2 {
     font-size: 48px;
@@ -319,7 +321,7 @@ $sell-color: #FF8724;
     vertical-align: middle;
     color: #3b3e42;
     display: inline-block;
-  } 
+  }
 
   h2 {
     font-size: 48px;
@@ -387,7 +389,7 @@ $sell-color: #FF8724;
 .product-carousel {
   &.carousel{
     height: auto;
-    padding-bottom: 30px;    
+    padding-bottom: 30px;
   }
   .carousel-inner {
     height: auto;
@@ -410,7 +412,7 @@ $sell-color: #FF8724;
       height: auto;
     }
   }
-  
+
   .product {
     margin: 20px 18px 0;
   }
@@ -597,7 +599,7 @@ $sell-color: #FF8724;
       color: $buy-color;
     }
   }
-  
+
   .estimates {
     list-style: none;
     padding: 0;
@@ -652,12 +654,12 @@ $sell-color: #FF8724;
         margin: 0;
       }
     }
-    
+
     .estimate-description {
       float: left;
       width: 70%;
       margin: 0 20px 0 0;
-      
+
       label {
         margin: 0;
       }
@@ -674,7 +676,7 @@ $sell-color: #FF8724;
       margin-right: 0;
     }
   }
-  
+
   .estimate-delete {
     border-color: #cccfd3;
     background: $sell-color;
@@ -700,12 +702,12 @@ $sell-color: #FF8724;
         margin: 0;
       }
     }
-    
+
     .estimate-description {
       float: left;
       width: 75%;
       margin: 0 20px 0 0;
-      
+
       label {
         margin: 0;
       }
@@ -736,32 +738,32 @@ $sell-color: #FF8724;
 
   .price-stock {
     width: 100%;
-  
+
     .unit {
       float: left;
       width: 30.333%;
       margin: 0 20px 22px 0;
-      
+
       input {
         width: 100px;
       }
     }
-    
+
     .amount-soldout {
       float: left;
       width: 30.333%;
       margin: 0 20px 22px 0;
-      
+
       input {
         width: 100px;
       }
     }
-    
+
     .amount-stock {
       float: left;
       width: 30.333%;
       margin: 0 20px 22px 0;
-      
+
       input {
         width: 100px;
       }
@@ -776,7 +778,7 @@ $sell-color: #FF8724;
       float: left;
       margin-top: 25px;
     }
-    
+
     .dimensions-label {
       width: 100%;
     }
