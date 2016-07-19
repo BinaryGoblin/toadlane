@@ -134,3 +134,6 @@ $(document).ready ->
       $(this).find('input[type=submit]').prop 'disabled', true
       form.submit()
       return
+
+  $('.armor-btn').click ->
+    debugger

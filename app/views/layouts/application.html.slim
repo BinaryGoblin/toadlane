@@ -7,6 +7,8 @@ html
     meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"
     meta name="keywords" content=""
     meta name="description" content=""
+    script[type="text/javascript" src="https://code.jquery.com/jquery-1.11.2.min.js"]
+    script[type="text/javascript" src="https://sandbox.armorpayments.com/assets/js/modal.min.js"]
 	meta name="google-site-verification" content="cIwuaMOr9UNAguTJwHKlX_JFlfUJRUH6VQq8Ro-NzYo"
 
     = stylesheet_link_tag 'toad', :media => 'all'
@@ -15,11 +17,11 @@ html
   body
     - if flash[:alert]
       .main-notice data-behavior="FlashMessages"= flash[:alert].upcase
-      
+
     = render '/shared/header'
 
     == yield
 
     = render '/shared/footer'
-    == debug(params) if Rails.env.development? 
+    == debug(params) if Rails.env.development?
     = javascript_include_tag 'toad'

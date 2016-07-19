@@ -83,6 +83,14 @@ class Product < ActiveRecord::Base
     user.stripe_profile.present?
   end
 
+  def armor_present?
+    user.armor_profile.present?
+  end
+
+  def armor_only_present?
+    user.armor_profile.present? && user.stripe_profile.nil? && user.green_profile.nil?
+  end
+
   def remaining_amount
     sold_out = (self.sold_out.present? ? self.sold_out : 0)
     self.amount - sold_out

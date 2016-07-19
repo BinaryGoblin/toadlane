@@ -42,7 +42,7 @@
           hr
           .account-armor
             h4 Armor:
-            = form_for @armor_profile, url: create_armor_profile_dashboard_accounts_path, method: "post" do |f|
+            = form_for ArmorProfile.new, url: create_armor_profile_dashboard_accounts_path, method: "post" do |f|
               .form-group
                 = f.label :name, "Name:"
                 = f.text_field :name, class: "form-control", :readonly => true, value: current_user.name
