@@ -81,19 +81,19 @@
       horizontal-align: right;
     }
   }
-  
+
   h4 {
     line-height: 1;
     font-size: 20px;
     color: black;
     text-transform: none;
   }
-  
+
   p {
     .warning {
       color: red;
     }
-    
+
     .success {
       color: green;
     }
@@ -148,7 +148,7 @@
   width: 175px;
   margin-bottom: 5px;
   position: relative;
- 
+
   &:empty:before {
     @extend .fa;
     @extend .fa-camera;
@@ -317,7 +317,7 @@
   .icheckbox {
     margin: -3px 5px 0 0;
   }
-  
+
   input {
     width: 300px;
   }

@@ -5,6 +5,14 @@ class Dashboard::AccountsController < DashboardController
     set_user
     set_green_profile
     set_profile_for_armor
+    client = ArmorService.new
+    account_id = current_user.armor_profile.armor_account_id
+    user_id = current_user.armor_profile.armor_user_id
+    response =client.accounts.bankaccounts(account_id).all
+    uri = response.data[:path]
+    auth_data = {     'uri' => uri,     'action' => 'create' }
+    result = client.users(account_id).authentications(user_id).create(auth_data)
+    @url = result.data[:body]["url"]
   end
 
   def create_green_profile
