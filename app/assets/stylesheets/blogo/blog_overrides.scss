@@ -1,0 +1,66 @@
+@import "compass/css3";
+@import "bootstrap";
+@import "font-awesome";
+
+@import "common/variables";
+@import "common/mixins";
+@import "common/fonts";
+@import "common/normalize";
+@import "common/helpers";
+@import "common/basic";
+@import "common/header";
+@import "common/footer";
+@import "common/typeahead";
+@import "common/forms";
+@import "common/checkboxes";
+@import "common/tabs";
+@import "common/tables";
+@import "common/labels";
+@import "common/modals";
+@import "common/price_labels";
+@import "common/links";
+@import "common/buttons";
+@import "common/paginations";
+@import "common/footer_actions";
+@import "common/error_explanation";
+@import "common/selectize";
+@import "common/devise";
+@import "common/intl_tel_input";
+@import "common/related_searches";
+@import "common/spacers";
+@import "common/responsive";
+
+body{
+  background: #f4f6f8;
+}
+
+#container .blogo-header{
+  background: #3b3e42;
+  height: 100px;
+  h2{
+    color: #dcdcdc;
+  }
+}
+
+.button-secondary{
+  background: #59af0c;
+  &:hover{
+    color: lighten(#59af0c, 50%)
+  }
+}
+
+.pure-paginator .pure-button{
+  height: auto;
+}
+
+aside {
+  h1{
+    background: none;
+    text-align: left;
+    border-bottom: 4px solid #5c8f10;
+    padding: 10px 0;
+    margin-bottom: 10px;
+    color: #3b3e42;
+    text-transform: uppercase;
+  }
+}

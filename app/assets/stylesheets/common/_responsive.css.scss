@@ -61,8 +61,8 @@
     text-align: center;
   }
   .bx-wrapper{
-    margin-left: 30px;
-    margin-right: 30px;
+    margin-left: 30px !important;
+    margin-right: 30px !important;
   }
 }
 @media (max-width:767px) {
@@ -260,6 +260,10 @@
   }
   .products{
     margin: 10px -15px -12px;
+    &.all_products{
+      display: block;
+      float: none;
+    }
   }
   .result-action {
     padding: 15px;

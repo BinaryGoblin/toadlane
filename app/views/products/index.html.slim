@@ -1,6 +1,6 @@
 .wrap
   .carousel-product-title
-    h3 Recommended listings
+    h3 Recommended
     .actions
       = link_to 'See all listings', all_products_path, class: 'btn btn-success pull-right'
       = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
@@ -12,7 +12,7 @@
           = render partial: '/shared/product', locals: { product: product }
 
   .carousel-product-title
-    h3 Newest Products for sale
+    h3 Newest
     .actions
       = link_to 'See all sales', for_sale_products_path, class: 'btn btn-success pull-right'
       = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
@@ -20,6 +20,18 @@
   #products_second.product-carousel.slide
     ul.bxslider
       - @products_for_sale.each do |product|
+        li
+          = render partial: '/shared/product', locals: { product: product }
+
+  .carousel-product-title
+    h3 Ending Soon
+    .actions
+      = link_to 'See all listings', all_products_path, class: 'btn btn-success pull-right'
+      = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
+
+  #products_first.product-carousel.slide
+    ul.bxslider
+      - @products_ending_soon.each do |product|
         li
           = render partial: '/shared/product', locals: { product: product }
 
