@@ -208,7 +208,7 @@
           - if @product.certificates.present?
             .white-panel.certificates-panel
               .vp-title
-                | Lab results or relevant information
+                | Product Information
               .list-group
                 - @product.certificates.each do |certificate|
                   = link_to "#{certificate.filename}", get_certificate_products_path(certificate.id), class: 'list-group-item'
