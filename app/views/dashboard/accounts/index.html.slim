@@ -4,7 +4,7 @@
   - if !flash[:error].nil?
     .error-explanation
       = flash[:error]
-      
+
   .row.account-table
     .col-md-3
       h4 Connected<br />Accounts:
@@ -33,6 +33,8 @@
               = f.submit "Submit", class: "btn btn-primary"
             - if @user.green_profile.nil?
               p <b>Status:</b> <span class="warning">You are not connected to Green By Phone.</span>
+              a.link.link-ulined href="http://www.green.money/#!sign-up/i2m2l" target="_blank"
+                | Apply to be a merchant
             - else
               p <b>Status:</b> <span class="success">You are connected to Green By Phone.</span>
         .col-md-4
@@ -44,10 +46,10 @@
               = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect)
           - else
             - if Rails.env.development?
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect, 
+              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
                                                                                            :stripe_landing => "login",
                                                                                            :redirect_uri => "http://localhost:3000/users/auth/stripe_connect/callback")
-            - else 
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect, 
+            - else
+              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
                                                                                            :stripe_landing => "login")
-      hr     
+      hr
