@@ -13,6 +13,7 @@
 
 class Certificate < ActiveRecord::Base
   belongs_to :user
+  belongs_to :product
 
   def filename=(new_filename)
     write_attribute("filename", sanitize_filename(new_filename))
