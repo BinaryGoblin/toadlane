@@ -39,7 +39,6 @@
 
 .vp-title {
   color: #000;
-  height: 36px;
   padding: 9px 10px;
   font-size: 14px;
   font-weight: 800;
@@ -536,4 +535,10 @@
 }
 .show_green{
   display: inline-block !important;
+}
+.certificates-panel{
+  .list-group{
+    margin-top: 15px;
+    margin-bottom: 0;
+  }
 }

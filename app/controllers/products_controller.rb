@@ -70,6 +70,11 @@ class ProductsController < ApplicationController
     render partial: 'subregion_select'
   end
 
+  def get_certificate
+    certificate = Certificate.find(params[:certificate_id])
+    send_data certificate.data, :filename => certificate.filename, :type => certificate.content_type
+  end
+
   private
     def set_product
       @product = Product.find(params[:id])

@@ -43,8 +43,12 @@ class Admin::ProductsController < Admin::ApplicationController
       images = product_params.extract!(:images_attributes)
     end
 
+    if product_params[:certificates_attributes].present?
+      certificates = product_params.extract!(:certificates_attributes)
+    end
+
     @user = User.find(product_params[:user_id])
-    @product = @user.products.new(product_params.merge!(start_date: start_date).merge!(end_date: end_date).except(:images_attributes))
+    @product = @user.products.new(product_params.merge!(start_date: start_date).merge!(end_date: end_date).except(:images_attributes, :certificates_attributes))
 
     respond_to do |format|
       if @product.save
@@ -52,6 +56,14 @@ class Admin::ProductsController < Admin::ApplicationController
           images[:images_attributes].each do |image|
             data = { image: image }
             @product.images.new(data)
+            @product.save
+          end
+        end
+
+        if certificates
+          certificates[:certificates_attributes].each do |certificate|
+            data = { uploaded_file: certificate }
+            @product.certificates.new(data)
             @product.save
           end
         end
@@ -95,13 +107,21 @@ class Admin::ProductsController < Admin::ApplicationController
       for_delete = product_params.extract!(:images_attributes_delete)
     end
 
+    if product_params[:certificates_attributes].present?
+      certificates = product_params.extract!(:certificates_attributes)
+    end
+
+    if product_params[:certificates_attributes_delete].present?
+      certificates_for_delete = product_params.extract!(:certificates_attributes_delete)
+    end
+
     if product_params[:pricebreaks_delete].present?
       pricebreak_for_delete = product_params.extract!(:pricebreaks_delete)
     end
 
     respond_to do |format|
       if @product.update(product_params.merge!(start_date: start_date).merge!(end_date: end_date).except(:images_attributes,
-        :images_attributes_delete, :pricebreaks_delete))
+        :images_attributes_delete, :certificates_attributes, :certificates_attributes_delete, :pricebreaks_delete))
 
         if images
           images[:images_attributes].each do |image|
@@ -114,6 +134,20 @@ class Admin::ProductsController < Admin::ApplicationController
         if for_delete
           for_delete[:images_attributes_delete].each do |image|
             @product.images.find(image).destroy
+          end
+        end
+
+        if certificates
+          certificates[:certificates_attributes].each do |certificate|
+            data = { uploaded_file: certificate }
+            @product.certificates.new(data)
+            @product.save
+          end
+        end
+
+        if certificates_for_delete
+          certificates_for_delete[:certificates_attributes_delete].each do |certificate|
+            @product.certificates.find(certificate).destroy
           end
         end
 
@@ -151,7 +185,7 @@ class Admin::ProductsController < Admin::ApplicationController
       params.require(:product).permit(:id, :name, :description, :user_id, :unit_price, :status_action, :status, :status_characteristic, :start_date, :end_date,
                                       :amount, :sold_out, :dimension_width, :dimension_height, :dimension_depth, :dimension_weight, :main_category,
                                       :pricebreaks_attributes, :shipping_estimates_attributes, :shipping_estimates_delete, :sku,
-                                      :slug, :pricebreaks_delete => [], :images_attributes => [], :images_attributes_delete => [], :shipping_estimates_attributes => [ :id, :cost, :description, :product_id, :_destroy, :type ],
+                                      :slug, :pricebreaks_delete => [], :images_attributes => [], :images_attributes_delete => [], :certificates_attributes => [], :certificates_attributes_delete => [], :shipping_estimates_attributes => [ :id, :cost, :description, :product_id, :_destroy, :type ],
                                       :pricebreaks_attributes => [ :id, :quantity, :price, :product_id, :_destroy ])
     end
 

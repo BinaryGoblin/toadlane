@@ -109,29 +109,71 @@
 
     hr
 
-    .offer-from-until
-      .offer-item
-        label.lg.required OFFER valid from:
+    .row
+      .col-md-6
+        .offer-from-until
+          .offer-item
+            label.lg.required OFFER valid from:
 
-        .offer-date
-          label Date:
-          = date_select :product, :start_date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+            .offer-date
+              label Date:
+              = date_select :product, :start_date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
 
-        .offer-time
-          label Time:
-          = time_select :product, :start_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+            .offer-time
+              label Time:
+              = time_select :product, :start_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
 
-      .offer-item
-        label.lg.required OFFER valid until:
+          .offer-item
+            label.lg.required OFFER valid until:
 
-        .offer-date
-          label Date:
-          = date_select :product, :end_date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+            .offer-date
+              label Date:
+              = date_select :product, :end_date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
 
-        .offer-time
-          label Time:
-          = time_select :product, :end_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+            .offer-time
+              label Time:
+              = time_select :product, :end_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+      .col-md-6
+        .product-certificates
+          label Upload product information:
+          .product-form-photos data-behavior="UploadImages" data-options='{"template":"#template-select-certificate","btnAdd":"#add_certificate","deleteImage":".delete-certificate"}'
+            - if @product.certificates.present?
+              - @product.certificates.each do |item|
+                .item: .photo
+                  .image-tag
+                    = item.filename
+                  a.delete-certificate= fa_icon 'trash-o', text: 'Delete'
+                  input name="product[certificates_attributes_delete][]" type="checkbox" value="#{item.id}"
 
+              - if 4 - @product.certificates.count > 0
+                - (1..4-@product.certificates.count).each do
+                  .item.new
+                    .photo
+                      a.delete-certificate= fa_icon 'trash-o', text: 'Delete'
+                    .select
+                      span Select document
+                      input type="file" name="product[certificates_attributes][]" accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif"
+
+            - else
+              - (1..4).each do
+                .item.new
+                  .photo
+                    a.delete-certificate= fa_icon 'trash-o', text: 'Delete'
+                  .select
+                    span Select document
+                    input type="file" name="product[certificates_attributes][]" accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif"
+
+          .clearfix
+            #add_certificate.btn.btn-primary Add information
+            span.photo-ex Supported extensions: jpg, png, gif, PDF, DOC, DOCX, XLS.<br>Max. upload file size 2MB.
+
+          script#template-select-certificate type="text/template"
+            .item.new
+              .photo
+                a.delete-certificate= fa_icon 'trash-o', text: 'Delete'
+              .select
+                span Select photo
+                input type="file" name="product[certificates_attributes][]" accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif"
     hr
     .price-stock.clearfix
       .unit
