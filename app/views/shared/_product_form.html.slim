@@ -145,8 +145,8 @@
                   a.delete-certificate= fa_icon 'trash-o', text: 'Delete'
                   input name="product[certificates_attributes_delete][]" type="checkbox" value="#{item.id}"
 
-              - if 8 - @product.certificates.count > 0
-                - (1..8-@product.certificates.count).each do
+              - if 4 - @product.certificates.count > 0
+                - (1..4-@product.certificates.count).each do
                   .item.new
                     .photo
                       a.delete-certificate= fa_icon 'trash-o', text: 'Delete'
@@ -155,7 +155,7 @@
                       input type="file" name="product[certificates_attributes][]" accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif"
 
             - else
-              - (1..8).each do
+              - (1..4).each do
                 .item.new
                   .photo
                     a.delete-certificate= fa_icon 'trash-o', text: 'Delete'
