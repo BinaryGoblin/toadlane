@@ -42,6 +42,16 @@
           hr
           .account-armor
             h4 Armor:
+            button.btn.btn-primary data-target="#payoneerModal" data-toggle="modal"  Trigger Modal in iFrame
+            #payoneerModal.modal.fade aria-hidden="true" aria-labelledby="payoneerModalLabel" role="dialog" tabindex="-1"
+              .modal-dialog
+                .modal-content
+                  .modal-header
+                    button.close aria-hidden="true" data-dismiss="modal" type="button"  &times;
+                    h4#payoneerModalLabel.modal-title Payoneer
+                  iframe allowtransparency="true" height="600" width="475" frameborder="0" src="#{@url}"
+
+
             = form_for ArmorProfile.new, url: create_armor_profile_dashboard_accounts_path, method: "post" do |f|
               .form-group
                 = f.label :name, "Name:"
