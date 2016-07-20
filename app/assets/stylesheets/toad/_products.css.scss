@@ -895,6 +895,7 @@ $sell-color: #FF8724;
     position: relative;
     background-position: 50% 30%;
     @include background-size(cover);
+    word-wrap: break-word;
   }
 }
 
