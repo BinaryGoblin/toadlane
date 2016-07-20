@@ -94,7 +94,7 @@ class User < ActiveRecord::Base
 
   # user should have at least one payment method to create products
   def has_payment_account?
-    self.stripe_profile.present? || self.green_profile.present?
+    self.stripe_profile.present? || self.green_profile.present? || self.armor_profile.present?
   end
 
   def armor_orders(type=nil)

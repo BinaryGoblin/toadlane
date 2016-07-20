@@ -14,7 +14,7 @@ class Dashboard::ProductsController < DashboardController
       @product = Product.new
     else
       if !current_user.has_payment_account?
-        redirect_to dashboard_accounts_path, :flash => { :error => "You must create or link a Stripe account or a Green account in order to accept payments."}
+        redirect_to dashboard_accounts_path, :flash => { :error => "You must create or link a Stripe account or a Green account or Armor account in order to accept payments."}
       else
         redirect_to dashboard_profile_path, :flash => { :error => "You must complete your profile before you can create product listings." }
       end

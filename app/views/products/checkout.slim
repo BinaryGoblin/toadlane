@@ -49,7 +49,7 @@
             a aria-controls="stripe" data-toggle="tab" href="#stripe" role="tab"  Stripe (Credit Card)
           li role="presentation" class=('active' if @green_order.routing_number.present?)
             a aria-controls="green" data-toggle="tab" href="#green" role="tab"  Green (eCheck)
-          li role="presentation" class=('active')
+          li role="presentation" class=('active' if @product.armor_only_present?)
             a aria-controls="armor" data-toggle="tab" href="#armor" role="tab"  Armor
       .tab-content
         - if @product.stripe_present?
@@ -233,6 +233,6 @@
                     = f.hidden_field :buyer_id, value: @product.user.id
 
                     = f.submit 'Place Order', class: "btn btn-primary"
-
-        #armor.tab-pane role="tabpanel" class=('active')
-          button.btn.btn-default.armor-btn type="button" payoneer payout
+        - if @product.armor_present?
+          #armor.tab-pane role="tabpanel" class=('active' if @product.armor_only_present?)
+            button.btn.btn-default.armor-btn type="button" payoneer payout
