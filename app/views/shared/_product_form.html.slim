@@ -135,7 +135,7 @@
               = time_select :product, :end_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
       .col-md-6
         .product-certificates
-          label Upload lab results or relevant information:
+          label Upload product information:
           .product-form-photos data-behavior="UploadImages" data-options='{"template":"#template-select-certificate","btnAdd":"#add_certificate","deleteImage":".delete-certificate"}'
             - if @product.certificates.present?
               - @product.certificates.each do |item|
