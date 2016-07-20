@@ -41,7 +41,7 @@
 
           - if @product.description.present?
             .white-panel= simple_format @product.description
-        
+
     	  .white-panel.vp-calculation data-behavior="CalculationProduct" data-options='{"pricebreaks":#{@product.pricebreaks.collect { |p| { quantity: (p.quantity - 1), price: p.price } }.to_json},"maxquantity":#{available.present? ? available.to_s : '"Infinity"'}}'
 
             - if @product.status_characteristic == 'sell'
@@ -204,6 +204,14 @@
             b.text-uppercase.pull-left Share:
             .addthis_sharing_toolbox.pull-right
             = javascript_include_tag '//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51a8787656fab455'
+
+          - if @product.certificates.present?
+            .white-panel.certificates-panel
+              .vp-title
+                | Lab results or relevant information
+              .list-group
+                - @product.certificates.each do |certificate|
+                  = link_to "#{certificate.filename}", get_certificate_products_path(certificate.id), class: 'list-group-item'
   - if @related_products.any?
     .wrap
       -if @product.status_characteristic == 'sell'

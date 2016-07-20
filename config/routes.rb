@@ -96,6 +96,7 @@ Toad::Application.routes.draw do
       get :requested
       get :deals
       get 'subregion_options'
+      get '/get_certificate/:certificate_id', to: 'products#get_certificate', as: 'get_certificate'
     end
     match '/checkout', to: 'products#checkout', :via => [:get, :post]
   end
