@@ -31,11 +31,11 @@ class Behavior.EstimateShipping
     @$stripeButton        = $ '.stripe-button-el'
 
     @$stripeAmount        = $ '[name="stripe_order[total]"], [name="green_order[total]"], [name="armor_order[total]"]'
-    @$stripeCount         = $ '[name="stripe_order[count]"], [name="green_order[count]"]'
-    @$stripeFeesPrice     = $ '[name="stripe_order[fee]"], [name="green_order[fee]"]'
+    @$stripeCount         = $ '[name="stripe_order[count]"], [name="green_order[count]"], [name="armor_order[count]"]'
+    @$stripeFeesPrice     = $ '[name="stripe_order[fee]"], [name="green_order[fee]"], [name="armor_order[fee]"]'
     @$stripeShippingCost  = $ '[name="stripe_order[shipping_cost]"], [name="green_order[shipping_cost]"]'
-    @$stripeRebatePrice   = $ '[name="stripe_order[rebate]"], [name="green_order[rebate]"]'
-    @$stripeRebatePercent = $ '[name="stripe_order[rebate_percent]"], [name="green_order[rebate_percent]"]'
+    @$stripeRebatePrice   = $ '[name="stripe_order[rebate]"], [name="green_order[rebate]"], [name="armor_order[rebate]"]'
+    @$stripeRebatePercent = $ '[name="stripe_order[rebate_percent]"], [name="green_order[rebate_percent]"], [name="armor_order[rebate_percent]"]'
 
     @$footer = $ '.payment-button'
 

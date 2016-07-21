@@ -20,7 +20,7 @@ class ArmorOrdersController < ApplicationController
 
   def create
     product = Product.unexpired.find(armor_order_params[:product_id])
-
+    
     additional_params = {
       buyer_id: current_user.id,
       seller_id: product.user.id,
@@ -28,7 +28,12 @@ class ArmorOrdersController < ApplicationController
       status_change: DateTime.now,
       summary: product.name,
       description: product.description,
-      amount: armor_order_params["total"]
+      amount: armor_order_params["total"],
+      unit_price: armor_order_params["unit_price"],
+      count: armor_order_params["count"],
+      fee: armor_order_params["fee"],
+      rebate: armor_order_params["rebate"],
+      rebate_price: armor_order_params["rebate_price"]
     }
     @armor_order = ArmorOrder.new(additional_params)
     if @armor_order.save
