@@ -48,6 +48,9 @@ class ArmorOrder < ActiveRecord::Base
       client = ArmorService.new
       response = client.orders(account_id).create(params)
       self.update_attribute(:order_id, response.data[:body]["order_id"])
+    rescue ArmorService::BadResponseError => e
+      self.update_attribute(:status, 'failed')
+      Rails.logger.warn e.errors
     else
       self.update_attribute(:status, 'completed')
       product.sold_out += self.count
