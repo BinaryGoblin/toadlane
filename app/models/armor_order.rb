@@ -46,7 +46,8 @@ class ArmorOrder < ActiveRecord::Base
     self.update_attribute(:status, 'processing')
     begin
       client = ArmorService.new
-      client.orders(account_id).create(params)
+      response = client.orders(account_id).create(params)
+      self.update_attribute(:order_id, response.data[:body]["order_id"])
     rescue ArmorService::BadResponseError => e
       self.update_attribute(:status, 'failed')
       Rails.logger.warn e.errors
