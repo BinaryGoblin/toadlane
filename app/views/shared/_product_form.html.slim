@@ -68,17 +68,27 @@
           .status_action
             = f.hidden_field :status_characteristic, :value => 'sell'
 
-        label Photos:
-        .product-form-photos data-behavior="UploadImages" data-options='{"template":"#template-select-image","btnAdd":"#add_photo","deleteImage":".delete-image"}'
-          - if @product.images.present?
-            - @product.images.each do |item|
-              .item: .photo
-                .image-tag style="background:url(#{item.image(:small)})"
-                a.delete-image= fa_icon 'trash-o', text: 'Delete'
-                input name="product[images_attributes_delete][]" type="checkbox" value="#{item.id}"
+        .product-images
+          label Photos:
+          .product-form-photos data-behavior="UploadImages" data-options='{"template":"#template-select-image","btnAdd":"#add_photo","deleteImage":".delete-image"}'
+            - if @product.images.present?
+              - @product.images.each do |item|
+                .item: .photo
+                  .image-tag style="background:url(#{item.image(:small)})"
+                  a.delete-image= fa_icon 'trash-o', text: 'Delete'
+                  input name="product[images_attributes_delete][]" type="checkbox" value="#{item.id}"
 
-            - if 8 - @product.images.count > 0
-              - (1..8-@product.images.count).each do
+              - if 4 - @product.images.count > 0
+                - (1..4-@product.images.count).each do
+                  .item.new
+                    .photo
+                      a.delete-image= fa_icon 'trash-o', text: 'Delete'
+                    .select
+                      span Select photo
+                      input type="file" name="product[images_attributes][]" accept="image/*"
+
+            - else
+              - (1..4).each do
                 .item.new
                   .photo
                     a.delete-image= fa_icon 'trash-o', text: 'Delete'
@@ -86,55 +96,18 @@
                     span Select photo
                     input type="file" name="product[images_attributes][]" accept="image/*"
 
-          - else
-            - (1..8).each do
-              .item.new
-                .photo
-                  a.delete-image= fa_icon 'trash-o', text: 'Delete'
-                .select
-                  span Select photo
-                  input type="file" name="product[images_attributes][]" accept="image/*"
+          .clearfix
+            #add_photo.btn.btn-primary Add photo item
+            span.photo-ex Supported extensions: jpg, png, gif.<br>Max. upload file size 25MB.
 
-        .clearfix
-          #add_photo.btn.btn-primary Add photo item
-          span.photo-ex Supported extensions: jpg, png, gif.<br>Max. upload file size 25MB.
-
-        script#template-select-image type="text/template"
-          .item.new
-            .photo
-              a.delete-image= fa_icon 'trash-o', text: 'Delete'
-            .select
-              span Select photo
-              input type="file" name="product[images_attributes][]" accept="image/*"
-
-    hr
-
-    .row
-      .col-md-6
-        .offer-from-until
-          .offer-item
-            label.lg.required OFFER valid from:
-
-            .offer-date
-              label Date:
-              = date_select :product, :start_date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
-
-            .offer-time
-              label Time:
-              = time_select :product, :start_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
-
-          .offer-item
-            label.lg.required OFFER valid until:
-
-            .offer-date
-              label Date:
-              = date_select :product, :end_date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
-
-            .offer-time
-              label Time:
-              = time_select :product, :end_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
-      .col-md-6
-        .product-certificates
+          script#template-select-image type="text/template"
+            .item.new
+              .photo
+                a.delete-image= fa_icon 'trash-o', text: 'Delete'
+              .select
+                span Select photo
+                input type="file" name="product[images_attributes][]" accept="image/*"
+        .product-certificates.margin-top-20
           label Upload product information:
           .product-form-photos data-behavior="UploadImages" data-options='{"template":"#template-select-certificate","btnAdd":"#add_certificate","deleteImage":".delete-certificate"}'
             - if @product.certificates.present?
@@ -174,6 +147,35 @@
               .select
                 span Select photo
                 input type="file" name="product[certificates_attributes][]" accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif"
+
+    hr
+
+    .row
+      .col-md-6
+        .offer-from-until
+          .offer-item
+            label.lg.required OFFER valid from:
+
+            .offer-date
+              label Date:
+              = date_select :product, :start_date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+
+            .offer-time
+              label Time:
+              = time_select :product, :start_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+
+          .offer-item
+            label.lg.required OFFER valid until:
+
+            .offer-date
+              label Date:
+              = date_select :product, :end_date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+
+            .offer-time
+              label Time:
+              = time_select :product, :end_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+      .col-md-6
+
     hr
     .price-stock.clearfix
       .unit
