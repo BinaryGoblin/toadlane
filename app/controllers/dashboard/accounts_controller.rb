@@ -32,6 +32,10 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def create_armor_profile
+    if !current_user.profile_complete?
+      redirect_to dashboard_profile_path, :flash => { :error => "You must complete your profile before creating Armor Profile." }
+      return
+    end
     client = ArmorService.new
     email_confirmed = params["armor_profile"]["confirmed_email"]
     agreed_terms = params["armor_profile"]["agreed_terms"] == "1" ? true : false
