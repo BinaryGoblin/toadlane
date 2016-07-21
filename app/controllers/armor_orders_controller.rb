@@ -20,47 +20,69 @@ class ArmorOrdersController < ApplicationController
 
   def create
     product = Product.unexpired.find(armor_order_params[:product_id])
+    additional_params = {
+      buyer_id: current_user.id,
+      seller_id: product.user.armor_profile.armor_user_id,
+      product_id: product.id,
+      status_change: DateTime.now
+    }
+    @armor_order = ArmorOrder.new(additional_params)
+    if @armor_order.save
 
-    if product.status_characteristic == 'sell'
-      additional_params = {
-        buyer_id: current_user.id,
-        seller_id: product.user.id,
-        product_id: product.id,
-        status_change: DateTime.now,
-        account_id: current_user.armor_account_id
+      api_armor_order_params = {
+        'seller_id'   => "#{product.user.armor_user_id}",
+        'buyer_id'    => "#{current_user.armor_user_id}",
+        'amount'      => armor_order_params["total"],
+        'summary'     => product.name,
+        'description' => product.description
       }
+      binding.pry
+      @armor_order.create_armor_api_order(current_user.armor_account_id, api_armor_order_params)
     else
-      additional_params = {
-        buyer_id: product.user.id,
-        seller_id: current_user.id,
-        product_id: product.id,
-        status_change: DateTime.now,
-        account_id: current_user.armor_account_id
-      }
+      redirect_to :back, :flash => { :alert => @armor_order.errors.messages}
     end
-
-    @armor_order = ArmorOrder.new(armor_order_params.merge(additional_params))
-
-    respond_to do |format|
-      if @armor_order.save
-
-        api_armor_order_params = {
-          'seller_id'   => "#{product.user.armor_user_id}",
-          'buyer_id'    => "#{current_user.armor_user_id}",
-          'amount'      => armor_order_params["amount"],
-          'summary'     => product.name,
-          'description' => product.description
-        }
-
-        @armor_order.create_armor_api_order(current_user.armor_account_id, api_armor_order_params)
-
-        format.html { redirect_to dashboard_orders_path, notice: 'Armor Order was successfully created.' }
-        format.json { render :show, status: :created, location: @armor_order }
-      else
-        format.html { render :new }
-        format.json { render json: @armor_order.errors, status: :unprocessable_entity }
-      end
-    end
+    # product = Product.unexpired.find(armor_order_params[:product_id])
+    #
+    # if product.status_characteristic == 'sell'
+    #   additional_params = {
+    #     buyer_id: current_user.id,
+    #     seller_id: product.user.id,
+    #     product_id: product.id,
+    #     status_change: DateTime.now,
+    #     account_id: current_user.armor_account_id
+    #   }
+    # else
+    #   additional_params = {
+    #     buyer_id: product.user.id,
+    #     seller_id: current_user.id,
+    #     product_id: product.id,
+    #     status_change: DateTime.now,
+    #     account_id: current_user.armor_account_id
+    #   }
+    # end
+    #
+    # @armor_order = ArmorOrder.new(armor_order_params.merge(additional_params))
+    #
+    # respond_to do |format|
+    #   if @armor_order.save
+    #
+    #     api_armor_order_params = {
+    #       'seller_id'   => "#{product.user.armor_user_id}",
+    #       'buyer_id'    => "#{current_user.armor_user_id}",
+    #       'amount'      => armor_order_params["amount"],
+    #       'summary'     => product.name,
+    #       'description' => product.description
+    #     }
+    #
+    #     @armor_order.create_armor_api_order(current_user.armor_account_id, api_armor_order_params)
+    #
+    #     format.html { redirect_to dashboard_orders_path, notice: 'Armor Order was successfully created.' }
+    #     format.json { render :show, status: :created, location: @armor_order }
+    #   else
+    #     format.html { render :new }
+    #     format.json { render json: @armor_order.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   def update

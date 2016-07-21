@@ -30,7 +30,7 @@ class Behavior.EstimateShipping
     @$stripeButtonScript  = $ '.stripe-button'
     @$stripeButton        = $ '.stripe-button-el'
 
-    @$stripeAmount        = $ '[name="stripe_order[total]"], [name="green_order[total]"]'
+    @$stripeAmount        = $ '[name="stripe_order[total]"], [name="green_order[total]"], [name="armor_order[total]"]'
     @$stripeCount         = $ '[name="stripe_order[count]"], [name="green_order[count]"]'
     @$stripeFeesPrice     = $ '[name="stripe_order[fee]"], [name="green_order[fee]"]'
     @$stripeShippingCost  = $ '[name="stripe_order[shipping_cost]"], [name="green_order[shipping_cost]"]'

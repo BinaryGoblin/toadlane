@@ -31,7 +31,7 @@ class ArmorOrder < ActiveRecord::Base
   belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'
   belongs_to :product
 
-  validates_presence_of :unit_price, :account_id
+  # validates_presence_of :unit_price, :account_id
 
   scope :for_dashboard, -> (page, per_page) do
     where(deleted: false)
