@@ -53,7 +53,11 @@ class ArmorOrder < ActiveRecord::Base
       Rails.logger.warn e.errors
     else
       self.update_attribute(:status, 'completed')
+      product.sold_out += self.count
+      self.product.save
+      UserMailer.sales_order_notification_to_seller(self).deliver_now
+      UserMailer.sales_order_notification_to_buyer(self).deliver_now
     end
   end
-  handle_asynchronously :create_armor_api_order
+  # handle_asynchronously :create_armor_api_order
 end
