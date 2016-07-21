@@ -17,11 +17,11 @@ class Video < ActiveRecord::Base
   validates_presence_of :product_id, :video_file_name, :video_file_size, :video_content_type
 
   has_attached_file :video, styles: {
-    :medium => {
-      :geometry => '640x480',
-      :format => 'mp4'
+    medium: {
+      geometry: '640x480',
+      format: 'mp4'
     },
-    :thumb => { :geometry => "110x95", :format => 'jpeg', :time => 10}
+    small: { :geometry => "110x95#", :format => 'jpg'}
   }, :processors => [:transcoder]
   do_not_validate_attachment_file_type :video
 end

@@ -181,7 +181,7 @@
             - if @product.videos.present?
               - @product.videos.each do |item|
                 .item: .photo
-                  .image-tag style="background:url(#{item.video(:thumb)})"
+                  .image-tag style="background:url(#{item.video(:small)})"
                   a.delete-video= fa_icon 'trash-o', text: 'Delete'
                   input name="product[videos_attributes_delete][]" type="checkbox" value="#{item.id}"
 
