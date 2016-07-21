@@ -24,6 +24,8 @@
 #  dimension_weight      :string
 #  main_category         :integer
 #  type                  :integer          default(0)
+#  views_count           :integer          default(0)
+#  deleted_at            :datetime
 #
 
 FactoryGirl.define do
