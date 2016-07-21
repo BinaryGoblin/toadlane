@@ -16,20 +16,20 @@ class UserMailer < ActionMailer::Base
     mail to: email, subject: 'New event - Add Admin Account'
   end
 
-  def sales_order_notification_to_seller(stripe_order)
-    @stripe_order = stripe_order
-    @seller = User.find_by_id(@stripe_order.seller_id)
-    @buyer = User.find_by_id(@stripe_order.buyer_id)
-    @product = Product.find_by_id(@stripe_order.product_id)
+  def sales_order_notification_to_seller(order)
+    @order = order
+    @seller = User.find_by_id(@order.seller_id)
+    @buyer = User.find_by_id(@order.buyer_id)
+    @product = Product.find_by_id(@order.product_id)
 
     mail to: @seller.email, subject: 'You have a sales order!!!'
   end
 
-  def sales_order_notification_to_buyer(stripe_order)
-    @stripe_order = stripe_order
-    @seller = User.find_by_id(@stripe_order.seller_id)
-    @buyer = User.find_by_id(@stripe_order.buyer_id)
-    @product = Product.find_by_id(@stripe_order.product_id)
+  def sales_order_notification_to_buyer(order)
+    @order = order
+    @seller = User.find_by_id(@order.seller_id)
+    @buyer = User.find_by_id(@order.buyer_id)
+    @product = Product.find_by_id(@order.product_id)
 
     mail to: @buyer.email, subject: 'Your order has been placed!!!'
   end
