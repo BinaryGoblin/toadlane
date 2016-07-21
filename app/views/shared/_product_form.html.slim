@@ -98,7 +98,7 @@
 
           .clearfix
             #add_photo.btn.btn-primary Add photo item
-            span.photo-ex Supported extensions: jpg, png, gif.<br>Max. upload file size 25MB.
+            span.photo-ex Supported extensions: jpg, png, gif.<br>Max. upload file size 5MB.
 
           script#template-select-image type="text/template"
             .item.new
@@ -175,7 +175,45 @@
               label Time:
               = time_select :product, :end_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
       .col-md-6
+        .form-group.product-videos
+          label Upload Videos:
+          .product-form-photos data-behavior="UploadImages" data-options='{"template":"#template-select-video","btnAdd":"#add_video","deleteImage":".delete-video"}'
+            - if @product.videos.present?
+              - @product.videos.each do |item|
+                .item: .photo
+                  .image-tag style="background:url(#{item.video(:thumb)})"
+                  a.delete-video= fa_icon 'trash-o', text: 'Delete'
+                  input name="product[videos_attributes_delete][]" type="checkbox" value="#{item.id}"
 
+              - if 4 - @product.videos.count > 0
+                - (1..4-@product.videos.count).each do
+                  .item.new
+                    .photo
+                      a.delete-video= fa_icon 'trash-o', text: 'Delete'
+                    .select
+                      span Select video
+                      input type="file" name="product[videos_attributes][]" accept="video/*"
+
+            - else
+              - (1..4).each do
+                .item.new
+                  .photo
+                    a.delete-video= fa_icon 'trash-o', text: 'Delete'
+                  .select
+                    span Select video
+                    input type="file" name="product[videos_attributes][]" accept="video/*"
+
+          .clearfix
+            #add_video.btn.btn-primary Add video
+            span.photo-ex Supported extensions: MP4, FLV, Ogg, mov.<br>Max. upload file size 25MB.
+
+          script#template-select-video type="text/template"
+            .item.new
+              .photo
+                a.delete-video= fa_icon 'trash-o', text: 'Delete'
+              .select
+                span Select video
+                input type="file" name="product[videos_attributes][]" accept="video/*"
     hr
     .price-stock.clearfix
       .unit

@@ -15,7 +15,6 @@ class Video < ActiveRecord::Base
   belongs_to :product
 
   validates_presence_of :product_id, :video_file_name, :video_file_size, :video_content_type
-  validates_attachment_presence :video
 
   has_attached_file :video, styles: {
     :medium => {
@@ -24,4 +23,5 @@ class Video < ActiveRecord::Base
     },
     :thumb => { :geometry => "110x95", :format => 'jpeg', :time => 10}
   }, :processors => [:transcoder]
+  do_not_validate_attachment_file_type :video
 end
