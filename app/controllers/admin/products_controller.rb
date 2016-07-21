@@ -115,13 +115,21 @@ class Admin::ProductsController < Admin::ApplicationController
       certificates_for_delete = product_params.extract!(:certificates_attributes_delete)
     end
 
+    if product_params[:videos_attributes].present?
+      videos = product_params.extract!(:videos_attributes)
+    end
+
+    if product_params[:videos_attributes_delete].present?
+      videos_for_delete = product_params.extract!(:videos_attributes_delete)
+    end
+
     if product_params[:pricebreaks_delete].present?
       pricebreak_for_delete = product_params.extract!(:pricebreaks_delete)
     end
 
     respond_to do |format|
       if @product.update(product_params.merge!(start_date: start_date).merge!(end_date: end_date).except(:images_attributes,
-        :images_attributes_delete, :certificates_attributes, :certificates_attributes_delete, :pricebreaks_delete))
+        :images_attributes_delete, :certificates_attributes, :certificates_attributes_delete, :videos_attributes, :videos_attributes_delete, :pricebreaks_delete))
 
         if images
           images[:images_attributes].each do |image|
@@ -148,6 +156,20 @@ class Admin::ProductsController < Admin::ApplicationController
         if certificates_for_delete
           certificates_for_delete[:certificates_attributes_delete].each do |certificate|
             @product.certificates.find(certificate).destroy
+          end
+        end
+
+        if videos
+          videos[:videos_attributes].each do |video|
+            data = { video: video }
+            @product.videos.new(data)
+            @product.save
+          end
+        end
+
+        if videos_for_delete
+          videos_for_delete[:videos_attributes_delete].each do |video|
+            @product.videos.find(video).destroy
           end
         end
 
@@ -185,7 +207,7 @@ class Admin::ProductsController < Admin::ApplicationController
       params.require(:product).permit(:id, :name, :description, :user_id, :unit_price, :status_action, :status, :status_characteristic, :start_date, :end_date,
                                       :amount, :sold_out, :dimension_width, :dimension_height, :dimension_depth, :dimension_weight, :main_category,
                                       :pricebreaks_attributes, :shipping_estimates_attributes, :shipping_estimates_delete, :sku,
-                                      :slug, :pricebreaks_delete => [], :images_attributes => [], :images_attributes_delete => [], :certificates_attributes => [], :certificates_attributes_delete => [], :shipping_estimates_attributes => [ :id, :cost, :description, :product_id, :_destroy, :type ],
+                                      :slug, :pricebreaks_delete => [], :images_attributes => [], :images_attributes_delete => [], :certificates_attributes => [], :certificates_attributes_delete => [], :videos_attributes => [], :videos_attributes_delete => [], :shipping_estimates_attributes => [ :id, :cost, :description, :product_id, :_destroy, :type ],
                                       :pricebreaks_attributes => [ :id, :quantity, :price, :product_id, :_destroy ])
     end
 
