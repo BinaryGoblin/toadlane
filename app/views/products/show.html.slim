@@ -212,6 +212,13 @@
               .list-group
                 - @product.certificates.each do |certificate|
                   = link_to "#{certificate.filename}", get_certificate_products_path(certificate.id), class: 'list-group-item'
+
+          - if @product.videos.any?
+            .white-panel.certificates-panel
+              .vp-title
+                | Product Video
+            - @product.videos.each do |video|
+              = video_tag video.video.url(:medium), controls: true, type: "video/mp4", width: "100%"
   - if @related_products.any?
     .wrap
       -if @product.status_characteristic == 'sell'
