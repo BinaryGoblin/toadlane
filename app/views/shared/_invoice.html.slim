@@ -78,8 +78,8 @@ div
           td colspan="3" #{number_with_precision(order.rebate, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
           td -$ #{number_with_precision(order.rebate, precision: 2, delimiter: '')}
         - if order.instance_of? ArmorOrder
-          td colspan="3" #{number_with_precision(order.rebate_percent, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
-          td -$ #{number_with_precision(order.rebate_price, precision: 2, delimiter: '')}
+          td colspan="3" #{number_with_precision(order.rebate, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
+          td -$ #{number_with_precision(order.rebate, precision: 2, delimiter: '')}
         - if order.instance_of? GreenOrder
           td colspan="3" #{number_with_precision(order.rebate, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
           td -$ #{number_with_precision(order.rebate, precision: 2, delimiter: '')}
@@ -89,7 +89,7 @@ div
         - if order.instance_of? StripeOrder
           td $ #{number_with_precision(order.fee, precision: 2, delimiter: '')}
         - if order.instance_of? ArmorOrder
-          td $ #{number_with_precision(order.taxes_price, precision: 2, delimiter: '')}
+          td $ #{number_with_precision(order.fee, precision: 2, delimiter: '')}
         - if order.instance_of? GreenOrder
           td $ #{number_with_precision(order.fee, precision: 2, delimiter: '')}
 
