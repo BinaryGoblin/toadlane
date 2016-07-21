@@ -208,6 +208,14 @@
             b.text-uppercase.pull-left Share:
             .addthis_sharing_toolbox.pull-right
             = javascript_include_tag '//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51a8787656fab455'
+
+          - if @product.certificates.present?
+            .white-panel.certificates-panel
+              .vp-title
+                | Product Information
+              .list-group
+                - @product.certificates.each do |certificate|
+                  = link_to "#{certificate.filename}", get_certificate_products_path(certificate.id), class: 'list-group-item'
   - if @related_products.any?
     .wrap
       -if @product.status_characteristic == 'sell'

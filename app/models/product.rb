@@ -46,6 +46,8 @@ class Product < ActiveRecord::Base
   accepts_nested_attributes_for :images
   has_many :pricebreaks, -> { order(quantity: :asc) }, autosave: true, dependent: :destroy
   has_many :shipping_estimates, dependent: :destroy
+  has_many :certificates, dependent: :destroy
+
   accepts_nested_attributes_for :shipping_estimates,
     :allow_destroy => true,
     :reject_if => lambda { |a| (a[:cost].blank? && a[:description].blank?) }
