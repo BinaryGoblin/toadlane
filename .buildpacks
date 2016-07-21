@@ -1,0 +1,4 @@
+https://github.com/heroku/heroku-buildpack-ruby
+https://github.com/a2ikm/heroku-buildpack-libjpeg62.git
+https://github.com/bruchu/heroku-buildpack-ffmpeg
+https://github.com/akomic/heroku-buildpack-ffmpegthumbnailer.git
