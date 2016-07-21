@@ -32,36 +32,36 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def create_armor_profile
-    if !current_user.profile_complete?
+    if current_user.profile_complete? && current_user.armor_profile.present?
+      client = ArmorService.new
+      email_confirmed = params["armor_profile"]["confirmed_email"]
+      agreed_terms = params["armor_profile"]["agreed_terms"] == "1" ? true : false
+      current_user.armor_profile.update_attribute(:agreed_terms, agreed_terms)
+
+      account_data = {
+                        "company" => current_user.company,
+                        "user_name" => current_user.name,
+                        "user_email" => current_user.email,
+                        "user_phone" => current_user.phone,
+                        "address" => current_user.addresses.first.line1,
+                        "city" => current_user.addresses.first.city,
+                        # "state" => get_state(current_user.addresses.first.state) || current_user.addresses.first.state,
+                        "state" => "CA",
+                        "zip" => current_user.addresses.first.zip,
+                        "country" => current_user.addresses.first.country.downcase,
+                        "email_confirmed" => email_confirmed,
+                        "agreed_terms" => agreed_terms }
+
+      result = client.accounts.create(account_data)
+      current_user.armor_profile.update_attribute(:armor_account_id, result.data[:body]["account_id"])
+
+      users = client.users(current_user.armor_profile.armor_account_id).all
+      current_user.armor_profile.update_attribute(:armor_user_id, users.data[:body][0]["user_id"].to_i)
+
+      redirect_to dashboard_accounts_path, :flash => { :notice => "Armor Profile successfully created." }
+    else
       redirect_to dashboard_profile_path, :flash => { :error => "You must complete your profile before creating Armor Profile." }
-      return
     end
-    client = ArmorService.new
-    email_confirmed = params["armor_profile"]["confirmed_email"]
-    agreed_terms = params["armor_profile"]["agreed_terms"] == "1" ? true : false
-    current_user.armor_profile.update_attribute(:agreed_terms, agreed_terms)
-
-    account_data = {
-                      "company" => current_user.company,
-                      "user_name" => current_user.name,
-                      "user_email" => current_user.email,
-                      "user_phone" => current_user.phone,
-                      "address" => current_user.addresses.first.line1,
-                      "city" => current_user.addresses.first.city,
-                      # "state" => get_state(current_user.addresses.first.state) || current_user.addresses.first.state,
-                      "state" => "CA",
-                      "zip" => current_user.addresses.first.zip,
-                      "country" => current_user.addresses.first.country.downcase,
-                      "email_confirmed" => email_confirmed,
-                      "agreed_terms" => agreed_terms }
-
-    result = client.accounts.create(account_data)
-    current_user.armor_profile.update_attribute(:armor_account_id, result.data[:body]["account_id"])
-
-    users = client.users(current_user.armor_profile.armor_account_id).all
-    current_user.armor_profile.update_attribute(:armor_user_id, users.data[:body][0]["user_id"].to_i)
-
-    redirect_to dashboard_accounts_path, :flash => { :notice => "Armor Profile successfully created." }
   rescue ArmorService::BadResponseError => e
     redirect_to dashboard_accounts_path, :flash => { :error => e.errors.values.flatten }
   end
