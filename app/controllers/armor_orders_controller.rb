@@ -52,6 +52,9 @@ class ArmorOrdersController < ApplicationController
     else
       redirect_to :back, :flash => { :alert => @armor_order.errors.messages}
     end
+  rescue ArmorService::BadResponseError => e
+    @armor_order.update_attribute(:status, 'failed')
+    redirect_to :back, :flash => { :error => e.errors }
   end
 
   def update
