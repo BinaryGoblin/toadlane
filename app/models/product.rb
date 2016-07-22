@@ -70,6 +70,7 @@ class Product < ActiveRecord::Base
     ap = []
     ap << "Credit Card" if user.stripe_profile.present?
     ap << "eCheck" if user.green_profile.present?
+    ap << "Armor" if user.armor_profile.present?
     ap
   end
 
