@@ -68,6 +68,19 @@
           .status_action
             = f.hidden_field :status_characteristic, :value => 'sell'
 
+        - if current_user.armor_profile.present?
+          .offer-from-until
+            .offer-item
+              label.lg.required Select Inspection Date
+              .offer-date
+                label Date:
+                = date_select :product, :inspection_date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+
+              .offer-time
+                label Time:
+                = time_select :product, :inspection_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+
+
         label Photos:
         .product-form-photos data-behavior="UploadImages" data-options='{"template":"#template-select-image","btnAdd":"#add_photo","deleteImage":".delete-image"}'
           - if @product.images.present?
@@ -111,6 +124,7 @@
 
     .row
       .col-md-6
+
         .offer-from-until
           .offer-item
             label.lg.required OFFER valid from:

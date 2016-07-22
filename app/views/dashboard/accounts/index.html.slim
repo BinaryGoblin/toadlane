@@ -44,6 +44,10 @@
           hr
           .account-armor#armor-profile-section
             h4 Armor:
+            - if current_user.armor_profile.nil?
+              p <b>Status:</b> <span class="warning">You are not connected to Armor.</span>
+            - else
+              p <b>Status:</b> <span class="success">You are connected to Armor.</span>
             -if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
               button.btn.btn-primary data-target="#payoneerModal" data-toggle="modal" Payoneer Payout Preference
               #payoneerModal.modal.fade aria-hidden="true" aria-labelledby="payoneerModalLabel" role="dialog" tabindex="-1"
