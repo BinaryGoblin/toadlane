@@ -32,6 +32,14 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def create_armor_profile
+    if !current_user.armor_profile.present?
+      redirect_to dashboard_accounts_path, :flash => { :error => "You must verify your email address before creating Armor Profile." }
+      return
+    elsif params["armor_profile"]["agreed_terms"] == "0"
+      redirect_to dashboard_accounts_path, :flash => { :error => "You must agree to the Terms and Conditions before creating Armor Profile." }
+      return
+    end
+
     if current_user.profile_complete? && current_user.armor_profile.present?
       client = ArmorService.new
       email_confirmed = params["armor_profile"]["confirmed_email"]

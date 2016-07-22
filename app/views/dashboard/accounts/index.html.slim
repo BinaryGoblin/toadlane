@@ -89,7 +89,7 @@
                 = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path
               = f.hidden_field :confirmed_email, :value => current_user.try(:armor_profile).try(:confirmed_email)
               .form-group
-                = f.check_box :agreed_terms, :checked => current_user.try(:armor_profile).try(:agreed_terms)
+                = f.check_box :agreed_terms, :checked => current_user.try(:armor_profile).try(:agreed_terms), :required => true
                 span
                   |  I agree to the&nbsp;
                   a href="https://app.armorpayments.com/terms/1052419" target="_BLANK" Terms and Conditions
