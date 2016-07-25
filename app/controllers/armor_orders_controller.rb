@@ -45,7 +45,7 @@ class ArmorOrdersController < ApplicationController
   def update
     product = Product.unexpired.find(armor_order_params[:product_id])
     armor_order = ArmorOrder.find_by_id(params[:id])
-    inspection_date_approved = armor_order_params["inspection_date_approved"] == "1" ? true : false
+    inspection_date_approved_by_seller = armor_order_params["inspection_date_approved_by_seller"] == "1" ? true : false
 
     if armor_order.inspection_date.nil?
       armor_order.update_attribute(:inspection_date, product.inspection_date)
@@ -66,7 +66,7 @@ class ArmorOrdersController < ApplicationController
       rebate: armor_order_params["rebate"],
       rebate_price: armor_order_params["rebate_price"],
       shipping_cost: armor_order_params["shipping_cost"],
-      inspection_date_approved: inspection_date_approved
+      inspection_date_approved_by_seller: inspection_date_approved_by_seller
     }
 
     if armor_order.update_attributes(additional_params)

@@ -50,32 +50,33 @@ ActiveRecord::Schema.define(version: 20160725034238) do
   add_index "armor_invoices", ["product_id"], name: "index_armor_invoices_on_product_id", using: :btree
 
   create_table "armor_orders", force: :cascade do |t|
-    t.integer  "buyer_id",                 limit: 8
-    t.integer  "seller_id",                limit: 8
-    t.integer  "account_id",               limit: 8
+    t.integer  "buyer_id",                           limit: 8
+    t.integer  "seller_id",                          limit: 8
+    t.integer  "account_id",                         limit: 8
     t.integer  "product_id"
-    t.integer  "order_id",                 limit: 8
-    t.integer  "status",                               default: 0
+    t.integer  "order_id",                           limit: 8
+    t.integer  "status",                                         default: 0
     t.float    "unit_price"
     t.integer  "count"
     t.float    "amount"
-    t.string   "summary",                  limit: 100
+    t.string   "summary",                            limit: 100
     t.text     "description"
     t.integer  "invoice_num"
     t.integer  "purchase_order_num"
     t.datetime "status_change"
     t.string   "uri"
-    t.boolean  "deleted",                              default: false
+    t.boolean  "deleted",                                        default: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "taxes_price",                          default: 0
-    t.integer  "rebate_price",                         default: 0
-    t.integer  "rebate_percent",                       default: 0
+    t.integer  "taxes_price",                                    default: 0
+    t.integer  "rebate_price",                                   default: 0
+    t.integer  "rebate_percent",                                 default: 0
     t.float    "fee"
     t.float    "rebate"
     t.float    "shipping_cost"
     t.datetime "inspection_date"
-    t.boolean  "inspection_date_approved",             default: false
+    t.boolean  "inspection_date_approved_by_seller",             default: false
+    t.boolean  "inspection_date_approved_by_buyer",              default: false
   end
 
   create_table "armor_profiles", force: :cascade do |t|
