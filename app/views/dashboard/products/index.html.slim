@@ -60,19 +60,20 @@
 
   = will_paginate @products
 
-#requestInspectionDateModal.modal.fade.in[style="display: block;"]
-  .modal-dialog
-    .modal-content
-      .modal-header
-        button.close aria-label="Close" data-dismiss="modal" type="button"
-          span aria-hidden="true"  &times;
-        h4.modal-title Inspection Request Date For Product:: #{@armor_order.product.name}
-      .modal-body
-        = @buyer.name
-        | &nbsp; has requested the inspection date to be #{@armor_order.inspection_date}
-        p If you are okay then click Yes, and if you want to set a new inspection date then click No to go to product's edit page
-      .modal-footer
-        = link_to "Yes", dashboard_product_confirm_inspection_date_path(product_id: @armor_order.product.id, armor_order_id: @armor_order.id), class: 'btn btn-primary', method: :post
-        = link_to "No", edit_dashboard_product_path(id: @armor_order.product.id), class: 'btn btn-primary'
+- if @armor_order.present?
+  #requestInspectionDateModal.modal.fade.in[style="display: block;"]
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close aria-label="Close" data-dismiss="modal" type="button"
+            span aria-hidden="true"  &times;
+          h4.modal-title Inspection Request Date For Product:: #{@armor_order.product.name}
+        .modal-body
+          = @buyer.name
+          | &nbsp; has requested the inspection date to be #{@armor_order.inspection_date}
+          p If you are okay then click Yes, and if you want to set a new inspection date then click No to go to product's edit page
+        .modal-footer
+          = link_to "Yes", dashboard_product_confirm_inspection_date_path(product_id: @armor_order.product.id, armor_order_id: @armor_order.id), class: 'btn btn-primary', method: :post
+          = link_to "No", edit_dashboard_product_path(id: @armor_order.product.id), class: 'btn btn-primary'
 
-.modal-backdrop.fade.in
+  .modal-backdrop.fade.in
