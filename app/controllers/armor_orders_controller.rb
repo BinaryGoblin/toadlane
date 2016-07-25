@@ -19,39 +19,7 @@ class ArmorOrdersController < ApplicationController
   end
 
   def create
-    product = Product.unexpired.find(armor_order_params[:product_id])
 
-    additional_params = {
-
-      status_change: DateTime.now,
-      summary: product.name,
-      description: product.description,
-      amount: armor_order_params["total"],
-      unit_price: armor_order_params["unit_price"],
-      count: armor_order_params["count"],
-      fee: armor_order_params["fee"],
-      rebate: armor_order_params["rebate"],
-      rebate_price: armor_order_params["rebate_price"],
-      shipping_cost: armor_order_params["shipping_cost"]
-    }
-    @armor_order = ArmorOrder.new(additional_params)
-    if @armor_order.save
-
-      api_armor_order_params = {
-        'seller_id'   => "#{product.user.armor_profile.armor_user_id}",
-        'buyer_id'    => "#{current_user.armor_profile.armor_user_id}",
-        'amount'      => armor_order_params["total"],
-        'summary'     => product.name,
-        'description' => product.description
-      }
-      @armor_order.create_armor_api_order(current_user.armor_profile.armor_account_id, api_armor_order_params)
-
-      redirect_to dashboard_orders_path, :flash => { :notice => 'Armor Order was successfully created.'}
-    else
-      redirect_to :back, :flash => { :alert => @armor_order.errors.messages}
-    end
-  rescue ArmorService::BadResponseError => e
-    redirect_to dashboard_accounts_path, :flash => { :error => e.errors.values.flatten }
   end
 
   def set_inspection_date
@@ -75,15 +43,49 @@ class ArmorOrdersController < ApplicationController
   end
 
   def update
-    respond_to do |format|
-      if @armor_order.update(armor_order_params)
-        format.html { redirect_to @armor_order, notice: 'Armor order was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @armor_order.errors, status: :unprocessable_entity }
-      end
+    product = Product.unexpired.find(armor_order_params[:product_id])
+    armor_order = ArmorOrder.find_by_id(params[:id])
+    inspection_date_approved = armor_order_params["inspection_date_approved"] == "1" ? true : false
+
+    if armor_order.inspection_date.nil?
+      armor_order.update_attribute(:inspection_date, product.inspection_date)
     end
+
+    additional_params = {
+
+      status_change: DateTime.now,
+      product_id: product.id,
+      buyer_id: current_user.id,
+      seller_id: product.user.id,
+      summary: product.name,
+      description: product.description,
+      amount: armor_order_params["total"],
+      unit_price: armor_order_params["unit_price"],
+      count: armor_order_params["count"],
+      fee: armor_order_params["fee"],
+      rebate: armor_order_params["rebate"],
+      rebate_price: armor_order_params["rebate_price"],
+      shipping_cost: armor_order_params["shipping_cost"],
+      inspection_date_approved: inspection_date_approved
+    }
+
+    if armor_order.update_attributes(additional_params)
+
+      api_armor_order_params = {
+        'seller_id'   => "#{product.user.armor_profile.armor_user_id}",
+        'buyer_id'    => "#{current_user.armor_profile.armor_user_id}",
+        'amount'      => armor_order_params["total"],
+        'summary'     => product.name,
+        'description' => product.description
+      }
+      armor_order.create_armor_api_order(current_user.armor_profile.armor_account_id, api_armor_order_params)
+
+      redirect_to dashboard_orders_path(armor_order, type: 'armor'), :flash => { :notice => 'Armor Order was successfully created.'}
+    else
+      redirect_to :back, :flash => { :alert => armor_order.errors.messages}
+    end
+  rescue ArmorService::BadResponseError => e
+    redirect_to dashboard_accounts_path, :flash => { :error => e.errors.values.flatten }
   end
 
   def destroy
