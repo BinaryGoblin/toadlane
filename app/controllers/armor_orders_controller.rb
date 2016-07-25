@@ -22,9 +22,7 @@ class ArmorOrdersController < ApplicationController
     product = Product.unexpired.find(armor_order_params[:product_id])
 
     additional_params = {
-      buyer_id: current_user.id,
-      seller_id: product.user.id,
-      product_id: product.id,
+
       status_change: DateTime.now,
       summary: product.name,
       description: product.description,
@@ -54,6 +52,26 @@ class ArmorOrdersController < ApplicationController
     end
   rescue ArmorService::BadResponseError => e
     redirect_to dashboard_accounts_path, :flash => { :error => e.errors.values.flatten }
+  end
+
+  def set_inspection_date
+    armor_order = ArmorOrder.find_by_id(params[:armor_order_id])
+
+    product = Product.unexpired.find(params[:product_id])
+
+    inspection_date = DateTime.new(
+                                    params["armor_order"]["inspection_date(1i)"].to_i,
+                                    params["armor_order"]["inspection_date(2i)"].to_i,
+                                    params["armor_order"]["inspection_date(3i)"].to_i,
+                                    params["armor_order"]["inspection_date(4i)"].to_i,
+                                    params["armor_order"]["inspection_date(5i)"].to_i)
+
+    if armor_order.update_attributes({buyer_id: current_user.id, seller_id: product.user.id, product_id: product.id, inspection_date: inspection_date})
+      flash_message = { :notice => 'Inspection Date has been set successfully.'}
+    else
+      flash_message = { :alert => 'Inspection Date has could not be set.'}
+    end
+    redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => flash_message
   end
 
   def update

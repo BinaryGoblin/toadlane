@@ -261,7 +261,40 @@
                 = f.hidden_field :rebate, :value => '0'
                 = f.hidden_field :rebate_percent, :value => '0'
                 = f.hidden_field :shipping_cost, :value => '0'
+
+                .form-group
+                  = f.check_box :inspection_date_approved, :checked => @armor_order.inspection_date_approved, :required => true
+                  span
+                    | &nbsp;Approve inspection date i.e (#{get_inspection_date(@product, @armor_order)})&nbsp;
+
+                .form-group
+                  a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here
+                  span
+                  | &nbsp;if you want to set new inspection date
+
                 = f.submit 'Create Order', class: "btn btn-primary"
             - else
                 | You need to first create Armor Profile&nbsp;
                 = link_to "Click Here to go to Accounts Page", dashboard_accounts_path(anchor: "armor-profile-section"), target: '_blank'
+
+#setInpsectionDateModal.modal.fade aria-hidden="true" aria-labelledby="setInpsectionDateModalLabel" role="dialog" tabindex="-1"
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close aria-label="Close" data-dismiss="modal" type="button"
+          span aria-hidden="true"  &times;
+        h4.modal-title Set Inspection Date
+      .modal-body
+        = form_for @armor_order, url: armor_order_set_inspection_date_path(armor_order_id: @armor_order.id, product_id: @product.id), method: :post  do |f|
+          .offer-from-until
+            .offer-item
+              label.lg.required Select Inspection Date
+              .offer-date
+                label Date:
+                = date_select :armor_order, :inspection_date, { :default => Date.today, order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+
+              .offer-time
+                label Time:
+                = time_select :armor_order, :inspection_date, { :default => Time.now, ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+          button.btn.btn-secondary data-dismiss="modal" type="button"  Close
+          = f.submit 'Save', class: "btn btn-primary"

@@ -64,7 +64,11 @@ class ProductsController < ApplicationController
     @fee = Fee.find_by(:module_name => "Stripe").value
     @stripe_order = StripeOrder.new
     @green_order = GreenOrder.new
-    @armor_order = ArmorOrder.new
+    if params["armor_order_id"].present?
+      @armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
+    else
+      @armor_order = ArmorOrder.create
+    end
   end
 
   def subregion_options
