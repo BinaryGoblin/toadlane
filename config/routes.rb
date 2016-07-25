@@ -48,6 +48,7 @@ Toad::Application.routes.draw do
         post :inactive_cascade
         get '/:id/viewers', to: 'products#viewers', as: 'viewers'
       end
+      post :confirm_inspection_date
     end
 
     resources :orders, only: [:index, :show] do

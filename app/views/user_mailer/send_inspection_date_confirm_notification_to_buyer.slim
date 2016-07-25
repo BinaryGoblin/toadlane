@@ -1,0 +1,7 @@
+= @buyer.name
+| &nbsp; has confirmed the inspection date you set
+= @armor_order.inspection_date
+
+| Now you can create order
+br
+= link_to 'Product', dashboard_products_url(armor_order_id: @armor_order, request_inspection_date_by_buyer: true)

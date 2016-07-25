@@ -263,7 +263,7 @@
                 = f.hidden_field :shipping_cost, :value => '0'
 
                 .form-group
-                  = f.check_box :inspection_date_approved_by_seller, :checked => @armor_order.inspection_date_approved, :required => true
+                  = f.check_box :inspection_date_approved_by_seller, :checked => @armor_order.inspection_date_approved_by_buyer, :required => true
                   span
                     | &nbsp;Approve inspection date i.e (#{get_inspection_date(@product, @armor_order)})&nbsp;
 

@@ -2,6 +2,10 @@ class Dashboard::ProductsController < DashboardController
   def index
     @products = Product.where(user_id: current_user.id).paginate(page: params[:page], per_page: params[:count]).order('id DESC')
     @products_count = @products.count
+    if params["armor_order_id"].present?
+      @armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
+      @buyer = @armor_order.buyer
+    end
   end
 
   def edit
@@ -219,6 +223,17 @@ class Dashboard::ProductsController < DashboardController
     set_product
     user_ids = @product.impressions.try(:pluck, :user_id)
     @users = User.where(id: user_ids).order('id ASC')
+  end
+
+  def confirm_inspection_date
+    armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
+    product = Product.find_by_id(params["product_id"])
+    if armor_order.update_attribute(:inspection_date_approved_by_seller, true)
+      UserMailer.send_inspection_date_confirm_notification_to_buyer(armor_order).deliver_now
+      redirect_to product_path(product.id), :flash => { :notice => "Inspection date for #{product.name} has been set to #{armor_order.inspection_date.to_date}"}
+    else
+      redirect_to product_path(product.id), :flash => { :notice => armor_order.errors}
+    end
   end
 
   private

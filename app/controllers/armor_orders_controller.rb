@@ -35,11 +35,11 @@ class ArmorOrdersController < ApplicationController
                                     params["armor_order"]["inspection_date(5i)"].to_i)
 
     if armor_order.update_attributes({buyer_id: current_user.id, seller_id: product.user.id, product_id: product.id, inspection_date: inspection_date})
-      flash_message = { :notice => 'Inspection Date has been set successfully.'}
+      UserMailer.send_inspection_date_set_notification_to_seller(armor_order).deliver_now
+      redirect_to product_path(product.id), :flash => { :notice => 'Your request to set inspectiond date has been informed to the seller.'}
     else
-      flash_message = { :alert => 'Inspection Date has could not be set.'}
+      redirect_to product_checkout_path(product_id: product.id), :flash => { :alert => 'Inspection Date has could not be set.'}
     end
-    redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => flash_message
   end
 
   def update
