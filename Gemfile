@@ -34,6 +34,7 @@ gem 'angularjs-rails', '~> 1.3.14'
 gem 'elementaljs-rails', '~> 0.0.11'
 
 gem 'paperclip', '~> 4.2.1'
+gem 'paperclip-av-transcoder', '~> 0.6.4'
 gem 'aws-sdk', '< 2.0'
 gem 'searchkick', '~> 0.8.7'
 gem 'searchjoy'

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160720040749) do
+ActiveRecord::Schema.define(version: 20160721045630) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -558,6 +558,15 @@ ActiveRecord::Schema.define(version: 20160720040749) do
   end
 
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
+
+  create_table "videos", force: :cascade do |t|
+    t.integer  "product_id"
+    t.string   "video_file_name"
+    t.string   "video_file_size"
+    t.string   "video_content_type"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
 
   add_foreign_key "addresses", "users"
   add_foreign_key "mailboxer_conversation_opt_outs", "mailboxer_conversations", column: "conversation_id", name: "mb_opt_outs_on_conversations_id"
