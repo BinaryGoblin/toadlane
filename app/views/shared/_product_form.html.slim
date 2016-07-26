@@ -148,33 +148,6 @@
                 span Select photo
                 input type="file" name="product[certificates_attributes][]" accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif"
 
-    hr
-
-    .row
-      .col-md-6
-        .offer-from-until
-          .offer-item
-            label.lg.required OFFER valid from:
-
-            .offer-date
-              label Date:
-              = date_select :product, :start_date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
-
-            .offer-time
-              label Time:
-              = time_select :product, :start_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
-
-          .offer-item
-            label.lg.required OFFER valid until:
-
-            .offer-date
-              label Date:
-              = date_select :product, :end_date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
-
-            .offer-time
-              label Time:
-              = time_select :product, :end_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
-      .col-md-6
         .form-group.product-videos
           label Upload Videos:
           .product-form-photos data-behavior="UploadImages" data-options='{"template":"#template-select-video","btnAdd":"#add_video","deleteImage":".delete-video"}'
@@ -214,6 +187,32 @@
               .select
                 span Select video
                 input type="file" name="product[videos_attributes][]" accept="video/*"
+    hr
+
+    .row
+      .col-md-6
+        .offer-from-until
+          .offer-item
+            label.lg.required OFFER valid from:
+
+            .offer-date
+              label Date:
+              = date_select :product, :start_date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+
+            .offer-time
+              label Time:
+              = time_select :product, :start_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+
+          .offer-item
+            label.lg.required OFFER valid until:
+
+            .offer-date
+              label Date:
+              = date_select :product, :end_date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+
+            .offer-time
+              label Time:
+              = time_select :product, :end_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
     hr
     .price-stock.clearfix
       .unit
