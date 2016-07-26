@@ -899,6 +899,30 @@ $sell-color: #FF8724;
   }
 }
 
+.product-videos .product-form-photos{
+  .select{
+    display: block;
+    span, input[type="file"]{
+      opacity: 0;
+    }
+  }
+  .new{
+    .select{
+      span{
+        opacity: 1;
+      }
+    }
+  }
+  .item{
+    position: relative;
+  }
+  label.error{
+    position: absolute;
+    top: 0;
+    padding: 10px;
+  }
+}
+
 .offer-from-until {
   width: 100%;
 }
