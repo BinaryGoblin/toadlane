@@ -1,6 +1,14 @@
 = render '/shared/tabs'
 
 .wrap-sm
+  .table-options
+    table width="100%"
+      tr
+        td
+          = link_to 'Scheduled Today', products_under_inspection_dashboard_products_path(type: 'today'), class: 'btn btn-default pull-right', _class_active: 'btn-success'
+        td
+          = link_to 'Incomplete', products_under_inspection_dashboard_products_path(type: 'incomplete'), class: 'btn btn-default pull-right', _class_active: 'btn-success'
+          = link 'Completed', products_under_inspection_dashboard_products_path(type: 'complete'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
   .table-responsive
     table.table data-behavior="TableCheckbox" data-options='{"paramName":"orders_ids"}'
       thead
