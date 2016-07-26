@@ -66,7 +66,8 @@ class ArmorOrdersController < ApplicationController
       rebate: armor_order_params["rebate"],
       rebate_price: armor_order_params["rebate_price"],
       shipping_cost: armor_order_params["shipping_cost"],
-      inspection_date_approved_by_seller: inspection_date_approved_by_seller
+      inspection_date_approved_by_seller: inspection_date_approved_by_seller,
+      inspection_date_approved_by_buyer: true
     }
 
     if armor_order.update_attributes(additional_params)

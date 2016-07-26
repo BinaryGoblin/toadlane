@@ -270,6 +270,16 @@ class Dashboard::ProductsController < DashboardController
     end
   end
 
+  def products_under_inspection
+    @orders = ArmorOrder.where(buyer_id: current_user.id,
+                                    inspection_date_approved_by_seller: true,
+                                    inspection_date_approved_by_buyer: true,
+                                    inspection_complete: false)
+                              .where('inspection_date BETWEEN ? AND ?',
+                                      DateTime.now.beginning_of_day,
+                                      DateTime.now.end_of_day )
+  end
+
   private
     def set_product
       @product = Product.find(params[:id])
