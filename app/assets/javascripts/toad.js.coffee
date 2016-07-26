@@ -105,6 +105,11 @@ $(document).ready ->
     @optional(element) or /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(value)
   ), 'Please enter a valid email address.'
 
+  jQuery.validator.addMethod 'filesize', ((value, element, param) ->
+    mult_param = param * 1048576
+    @optional(element) or (element.files[0].size <= mult_param)
+  ), 'File size must be less than {0} MB'
+
   $('select#green_order_address_country').change (event) ->
     select_wrapper = $('#order_state_code_wrapper')
 
@@ -135,3 +140,9 @@ $(document).ready ->
       $(this).find('input[type=submit]').prop 'disabled', true
       form.submit()
       return
+
+  $('form.product_form_partial').validate
+    rules:
+      "product[videos_attributes][]":
+        required: false
+        filesize: 5

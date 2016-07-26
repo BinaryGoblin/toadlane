@@ -24,6 +24,8 @@
 #  dimension_weight      :string
 #  main_category         :integer
 #  type                  :integer          default(0)
+#  views_count           :integer          default(0)
+#  deleted_at            :datetime
 #
 
 class Product < ActiveRecord::Base
@@ -43,7 +45,8 @@ class Product < ActiveRecord::Base
   has_many :product_categories
   has_many :categories, through: :product_categories, dependent: :destroy
   has_many :images, dependent: :destroy
-  accepts_nested_attributes_for :images
+  has_many :videos, dependent: :destroy
+  accepts_nested_attributes_for :images, :videos
   has_many :pricebreaks, -> { order(quantity: :asc) }, autosave: true, dependent: :destroy
   has_many :shipping_estimates, dependent: :destroy
   has_many :certificates, dependent: :destroy
