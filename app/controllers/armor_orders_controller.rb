@@ -80,7 +80,12 @@ class ArmorOrdersController < ApplicationController
       }
       armor_order.create_armor_api_order(current_user.armor_profile.armor_account_id, api_armor_order_params)
 
-      redirect_to dashboard_orders_path(armor_order, type: 'armor'), :flash => { :notice => 'Armor Order was successfully created.'}
+      seller_account_id = armor_order.seller_account_id
+
+      armor_order.get_armor_payment_instruction_url(seller_account_id)
+
+      # redirect_to dashboard_orders_path(armor_order, type: 'armor'), :flash => { :notice => 'Armor Order was successfully created.'}
+      redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'Armor Order was successfully created.'}
     else
       redirect_to :back, :flash => { :alert => armor_order.errors.messages}
     end

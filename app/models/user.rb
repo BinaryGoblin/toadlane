@@ -156,6 +156,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def armor_account_id
+    armor_profile.armor_account_id
+  end
+
   private
   def associate_api_user
     if armor_api_account_exists?

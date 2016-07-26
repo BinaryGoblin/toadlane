@@ -250,7 +250,7 @@
                     = f.submit 'Place Order', class: "btn btn-primary"
         - if @product.armor_present?
           #armor.tab-pane role="tabpanel" class=('active' if @product.armor_only_present?)
-            - if current_user.armor_profile.present?
+            - if current_user.armor_profile.present? && @armor_order.uri.nil?
               = form_for @armor_order do |f|
                 = f.hidden_field :total, :value => number_with_precision(@product.unit_price, precision: 2, delimiter: '')
                 = f.hidden_field :product_id, :value => @product.id
@@ -273,9 +273,19 @@
                   | &nbsp;if you want to set new inspection date
 
                 = f.submit 'Create Order', class: "btn btn-primary"
-            - else
-                | You need to first create Armor Profile&nbsp;
-                = link_to "Click Here to go to Accounts Page", dashboard_accounts_path(anchor: "armor-profile-section"), target: '_blank'
+            - elsif current_user.armor_profile.nil?
+              | You need to first create Armor Profile&nbsp;
+              = link_to "Click Here to go to Accounts Page", dashboard_accounts_path(anchor: "armor-profile-section"), target: '_blank'
+
+            - if @armor_order.uri.present?
+                button.btn.btn-primary data-target="#paymentInstructionModal" data-toggle="modal" Payoneer Payout Preference
+                #paymentInstructionModal.modal.fade aria-hidden="true" aria-labelledby="paymentInstructionModalLabel" role="dialog" tabindex="-1"
+                  .modal-dialog
+                    .modal-content
+                      .modal-header
+                        button.close aria-hidden="true" data-dismiss="modal" type="button"  &times;
+                        h4#paymentInstructionModalLabel.modal-title Payoneer Payout Preference
+                      iframe allowtransparency="true" height="600" width="475" frameborder="0" src="#{@armor_order.uri}"
 
 #setInpsectionDateModal.modal.fade aria-hidden="true" aria-labelledby="setInpsectionDateModalLabel" role="dialog" tabindex="-1"
   .modal-dialog

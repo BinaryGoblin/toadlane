@@ -60,4 +60,20 @@ class ArmorOrder < ActiveRecord::Base
     end
   end
   # handle_asynchronously :create_armor_api_order
+
+  def seller_account_id
+    seller.armor_account_id
+  end
+
+  def get_armor_payment_instruction_url(seller_account_id)
+    client = ArmorService.new
+    payement_response = client.orders(seller_account_id).paymentinstructions(self.order_id).all
+    payement_instruction_uri = payement_response.data[:body]["uri"]
+    auth_data =
+              { 'uri' => payement_instruction_uri,
+                'action' => 'view' }
+
+    response = client.users(buyer.armor_profile.armor_account_id).authentications(buyer.armor_profile.armor_user_id).create(auth_data)
+    self.update_attribute(:uri, response.data[:body]["url"])
+  end
 end
