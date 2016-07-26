@@ -275,9 +275,13 @@ class Dashboard::ProductsController < DashboardController
                                     inspection_date_approved_by_seller: true,
                                     inspection_date_approved_by_buyer: true,
                                     inspection_complete: false)
-                              .where('inspection_date BETWEEN ? AND ?',
-                                      DateTime.now.beginning_of_day,
-                                      DateTime.now.end_of_day )
+    # @orders = ArmorOrder.where(buyer_id: current_user.id,
+    #                                 inspection_date_approved_by_seller: true,
+    #                                 inspection_date_approved_by_buyer: true,
+    #                                 inspection_complete: false)
+    #                           .where('inspection_date BETWEEN ? AND ?',
+    #                                   DateTime.now.beginning_of_day,
+    #                                   DateTime.now.end_of_day )
   end
 
   private
