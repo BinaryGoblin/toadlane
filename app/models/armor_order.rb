@@ -32,6 +32,7 @@ class ArmorOrder < ActiveRecord::Base
   belongs_to :product
 
   # validates_presence_of :unit_price, :account_id
+  validate :inspection_date_validator
 
   scope :for_dashboard, -> (page, per_page) do
     where(deleted: false)
@@ -75,5 +76,11 @@ class ArmorOrder < ActiveRecord::Base
 
     response = client.users(buyer.armor_profile.armor_account_id).authentications(buyer.armor_profile.armor_user_id).create(auth_data)
     self.update_attribute(:uri, response.data[:body]["url"])
+  end
+
+  def inspection_date_validator
+    if inspection_date.present?
+      errors.add(:inspection_date, 'must be greater than today') if inspection_date.to_date <= Date.today
+    end
   end
 end

@@ -38,7 +38,7 @@ class ArmorOrdersController < ApplicationController
       UserMailer.send_inspection_date_set_notification_to_seller(armor_order).deliver_now
       redirect_to product_path(product.id), :flash => { :notice => 'Your request to set inspectiond date has been informed to the seller.'}
     else
-      redirect_to product_checkout_path(product_id: product.id), :flash => { :alert => 'Inspection Date has could not be set.'}
+      redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :alert => armor_order.errors.full_messages.first}
     end
   end
 
