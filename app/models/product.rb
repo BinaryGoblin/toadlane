@@ -102,6 +102,6 @@ class Product < ActiveRecord::Base
   end
 
   def inspection_date_validator
-    errors.add(:inspection_date, 'must be greater than today') if inspection_date.to_date >= Date.today
+    errors.add(:inspection_date, 'must be greater than today') if inspection_date.to_date <= Date.today
   end
 end
