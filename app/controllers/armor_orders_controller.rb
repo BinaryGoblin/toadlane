@@ -70,6 +70,7 @@ class ArmorOrdersController < ApplicationController
       inspection_date_approved_by_buyer: true
     }
 
+    binding.pry
     if armor_order.update_attributes(additional_params)
 
       api_armor_order_params = {
@@ -78,31 +79,40 @@ class ArmorOrdersController < ApplicationController
         'amount'      => armor_order_params["total"],
         'summary'     => product.name,
         'description' => product.description,
-        'inspection' => true,
-        'goodsmilestones'=>
-          [
-            {
-              'name': 'Order created',
-              'amount': armor_order_params["total"],
-              'escrow': armor_order_params["total"]
-            },
-            {
-              'name': 'Goods inspected',
-              'amount': armor_order_params["total"],
-              'escrow': armor_order_params["total"]
-            },
-            {
-              'name': 'Goods shipped',
-              'amount': 0,
-              'escrow': 0
-            },
-            {
-              'name': 'Order released',
-              'amount': armor_order_params["total"],
-              'escrow': 0
-            }
-          ]
+        'inspection' => true
         }
+      # api_armor_order_params = {
+      #   'seller_id'   => "#{product.user.armor_profile.armor_user_id}",
+      #   'buyer_id'    => "#{current_user.armor_profile.armor_user_id}",
+      #   'amount'      => armor_order_params["total"],
+      #   'summary'     => product.name,
+      #   'description' => product.description,
+      #   'inspection' => true,
+      #   'goodsmilestones'=>
+      #     [
+      #       {
+      #         'name': 'Order created',
+      #         'amount': armor_order_params["total"],
+      #         'escrow': armor_order_params["total"]
+      #       },
+      #       {
+      #         'name': 'Goods inspected',
+      #         'amount': armor_order_params["total"],
+      #         'escrow': armor_order_params["total"]
+      #       },
+      #       {
+      #         'name': 'Goods shipped',
+      #         'amount': 0,
+      #         'escrow': 0
+      #       },
+      #       {
+      #         'name': 'Order released',
+      #         'amount': armor_order_params["total"],
+      #         'escrow': 0
+      #       }
+      #     ]
+      #   }
+
       armor_order.create_armor_api_order(api_armor_order_params)
 
       armor_order.get_armor_payment_instruction_url
@@ -110,10 +120,10 @@ class ArmorOrdersController < ApplicationController
       # redirect_to dashboard_orders_path(armor_order, type: 'armor'), :flash => { :notice => 'Armor Order was successfully created.'}
       redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'Armor Order was successfully created.'}
     else
-      redirect_to :back, :flash => { :alert => armor_order.errors.messages}
+      redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :alert => armor_order.errors.messages}
     end
   rescue ArmorService::BadResponseError => e
-    redirect_to dashboard_accounts_path, :flash => { :error => e.errors.values.flatten }
+    redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :error => e.errors.values.flatten }
   end
 
   def destroy

@@ -302,7 +302,7 @@ class Dashboard::ProductsController < DashboardController
 
     # release fund by buyer
     seller_account_id = armor_order.seller_account_id
-    order_response = client.orders(account_id).get(armor_order.order_id)
+    order_response = client.orders(seller_account_id).get(armor_order.order_id)
 
     order_uri = order_response.data[:body]["uri"]
 

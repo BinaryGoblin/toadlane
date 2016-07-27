@@ -47,6 +47,7 @@ class ArmorOrder < ActiveRecord::Base
     self.update_attribute(:status, 'processing')
     begin
       client = ArmorService.new
+      binding.pry
       response = client.orders(seller_account_id).create(params)
       self.update_attribute(:order_id, response.data[:body]["order_id"])
     rescue ArmorService::BadResponseError => e
