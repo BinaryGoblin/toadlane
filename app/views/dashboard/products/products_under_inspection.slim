@@ -1,6 +1,13 @@
 = render '/shared/tabs'
 
 .wrap-sm
+  - if !flash[:error].nil?
+    .error-explanation
+      - if flash[:error].kind_of?(Array)
+        - flash[:error].each do |error|
+          = error
+      - else
+        = flash[:error]
   .table-options
     table width="100%"
       tr
@@ -22,6 +29,7 @@
           th Inspection Date:
           th Inspection Complete:
           th.text-center Details
+          th.text-center Action
 
       tbody
         - @orders.each do |order|
@@ -49,6 +57,9 @@
               - elsif refund_requested?(order)
                 | &nbsp;
                 = link_to 'Refund Requested', dashboard_refund_requests_path(bought_or_sold: 'bought'), class: 'view'
+            td.text-center
+              = link_to "Complete Inspection", dashboard_product_complete_inspection_path(product_id: order.product.id, armor_order_id: order.id),
+                                      class: 'link link-ulined', data: {confirm: "You sure you want to complete inspection for product: #{order.product.name}?"}
 
 .footer-actions: .fa-container: .wrap-sm
 

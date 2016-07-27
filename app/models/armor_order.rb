@@ -43,11 +43,12 @@ class ArmorOrder < ActiveRecord::Base
   # not_started must be first (ie. at index 0) for the default value to be correct
   enum status: %i{ not_started processing completed failed }
 
-  def create_armor_api_order(account_id, params)
+  def create_armor_api_order(params)
     self.update_attribute(:status, 'processing')
     begin
       client = ArmorService.new
-      response = client.orders(account_id).create(params)
+      binding.pry
+      response = client.orders(seller_account_id).create(params)
       self.update_attribute(:order_id, response.data[:body]["order_id"])
     rescue ArmorService::BadResponseError => e
       self.update_attribute(:status, 'failed')
@@ -66,7 +67,7 @@ class ArmorOrder < ActiveRecord::Base
     seller.armor_account_id
   end
 
-  def get_armor_payment_instruction_url(seller_account_id)
+  def get_armor_payment_instruction_url
     client = ArmorService.new
     payement_response = client.orders(seller_account_id).paymentinstructions(self.order_id).all
     payement_instruction_uri = payement_response.data[:body]["uri"]

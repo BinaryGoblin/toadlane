@@ -290,6 +290,19 @@ class Dashboard::ProductsController < DashboardController
     end
   end
 
+  def complete_inspection
+    armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
+    client = ArmorService.new
+    action_data = {
+                    "action" => "completeinspection",
+                    "confirm" => true }
+    binding.pry
+    response = client.orders(armor_order.seller_account_id).update(armor_order.order_id, action_data)
+    armor_order.update_attribute(:inspection_complete, true)
+  rescue ArmorService::BadResponseError => e
+    redirect_to products_under_inspection_dashboard_products_path, :flash => { :error => e.errors.values.flatten }
+  end
+
   private
     def set_product
       @product = Product.find(params[:id])

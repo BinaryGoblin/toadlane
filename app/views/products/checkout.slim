@@ -278,7 +278,7 @@
               = link_to "Click Here to go to Accounts Page", dashboard_accounts_path(anchor: "armor-profile-section"), target: '_blank'
 
             - if @armor_order.uri.present?
-                button.btn.btn-primary data-target="#paymentInstructionModal" data-toggle="modal" Payoneer Payout Preference
+                button.btn.btn-primary data-target="#paymentInstructionModal" data-toggle="modal" View Payment Details
                 #paymentInstructionModal.modal.fade aria-hidden="true" aria-labelledby="paymentInstructionModalLabel" role="dialog" tabindex="-1"
                   .modal-dialog
                     .modal-content

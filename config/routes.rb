@@ -49,6 +49,7 @@ Toad::Application.routes.draw do
         get '/:id/viewers', to: 'products#viewers', as: 'viewers'
         get :products_under_inspection
       end
+      get :complete_inspection
       post :confirm_inspection_date
     end
 
