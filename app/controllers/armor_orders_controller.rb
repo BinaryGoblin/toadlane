@@ -77,8 +77,32 @@ class ArmorOrdersController < ApplicationController
         'buyer_id'    => "#{current_user.armor_profile.armor_user_id}",
         'amount'      => armor_order_params["total"],
         'summary'     => product.name,
-        'description' => product.description
-      }
+        'description' => product.description,
+        'inspection' => true,
+        'goodsmilestones'=>
+          [
+            {
+              'name': 'Order created',
+              'amount': armor_order_params["total"],
+              'escrow': armor_order_params["total"]
+            },
+            {
+              'name': 'Goods inspected',
+              'amount': armor_order_params["total"],
+              'escrow': armor_order_params["total"]
+            },
+            {
+              'name': 'Goods shipped',
+              'amount': 0,
+              'escrow': 0
+            },
+            {
+              'name': 'Order released',
+              'amount': armor_order_params["total"],
+              'escrow': 0
+            }
+          ]
+        }
       armor_order.create_armor_api_order(api_armor_order_params)
 
       armor_order.get_armor_payment_instruction_url

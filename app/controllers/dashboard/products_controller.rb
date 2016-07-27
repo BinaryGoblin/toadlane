@@ -296,8 +296,26 @@ class Dashboard::ProductsController < DashboardController
     action_data = {
                     "action" => "completeinspection",
                     "confirm" => true }
+
     response = client.orders(armor_order.seller_account_id).update(armor_order.order_id, action_data)
     armor_order.update_attribute(:inspection_complete, true)
+
+    # release fund by buyer
+    seller_account_id = armor_order.seller_account_id
+    order_response = client.orders(account_id).get(armor_order.order_id)
+
+    order_uri = order_response.data[:body]["uri"]
+
+    buyer_account_id = armor_order.buyer.armor_profile.armor_account_id
+    buyer_user_id = armor_order.buyer.armor_profile.armor_user_id
+
+    auth_data = {
+                  'uri' => order_uri,
+                  'action' => 'release' }
+
+    result = client.users(buyer_account_id).authentications(buyer_user_id).create(auth_data)
+
+    redirect_to products_under_inspection_dashboard_products_path, :flash => { :error => "Completed inspection and released fund" }
   rescue ArmorService::BadResponseError => e
     redirect_to products_under_inspection_dashboard_products_path, :flash => { :error => e.errors.values.flatten }
   end
