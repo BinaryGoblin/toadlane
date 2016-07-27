@@ -296,7 +296,6 @@ class Dashboard::ProductsController < DashboardController
     action_data = {
                     "action" => "completeinspection",
                     "confirm" => true }
-    binding.pry
     response = client.orders(armor_order.seller_account_id).update(armor_order.order_id, action_data)
     armor_order.update_attribute(:inspection_complete, true)
   rescue ArmorService::BadResponseError => e
