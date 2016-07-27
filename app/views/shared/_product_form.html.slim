@@ -177,7 +177,7 @@
                       a.delete-video= fa_icon 'trash-o', text: 'Delete'
                     .select
                       span Select video
-                      input type="file" name="product[videos_attributes][]" accept="video/*"
+                      input type="file" name="product[videos_attributes][]" accept="video/*, video/3gpp, video/x-flv, video/mpeg, .m2v"
 
             - else
               - (1..4).each do
@@ -186,11 +186,11 @@
                     a.delete-video= fa_icon 'trash-o', text: 'Delete'
                   .select
                     span Select video
-                    input type="file" name="product[videos_attributes][]" accept="video/*"
+                    input type="file" name="product[videos_attributes][]" accept="video/*, video/3gpp, .mkv, video/x-flv, video/3gpp2, video/mpeg, .m2v"
 
           .clearfix
             #add_video.btn.btn-primary Add video
-            span.photo-ex Supported extensions: MP4, FLV, Ogg, mov.<br>Max. upload file size 5MB.
+            span.photo-ex Supported extensions: MP4, AVI, 3GP, FLV, M4V, MOV, M2V.<br>Max. upload file size 5MB.
 
           script#template-select-video type="text/template"
             .item.new
@@ -198,7 +198,7 @@
                 a.delete-video= fa_icon 'trash-o', text: 'Delete'
               .select
                 span Select video
-                input type="file" name="product[videos_attributes][]" accept="video/*"
+                input type="file" name="product[videos_attributes][]" accept="video/*, video/3gpp, .mkv, video/x-flv, video/3gpp2, video/mpeg, .m2v"
     hr
 
     .row
