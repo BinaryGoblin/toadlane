@@ -20,8 +20,8 @@
     table.table data-behavior="TableCheckbox" data-options='{"paramName":"orders_ids"}'
       thead
         tr
-          th: input type="checkbox"
           th Product ID:
+          th Order ID:
           th Product name:
           th Unit price:
           th Quantity:
@@ -34,8 +34,8 @@
       tbody
         - @orders.each do |order|
           tr
-            td: input type="checkbox" value="#{order.id}"
             td= order.product.id
+            td= order.id
             td= link_to order.product.name, product_path(order.product, cat_id: order.product.main_category), class: 'link link-ulined', target: '_blank'
             td= number_to_currency(order.unit_price, :unit => "$", precision: 2)
             td= order.count
