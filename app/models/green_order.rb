@@ -140,25 +140,25 @@ class GreenOrder < ActiveRecord::Base
         else
           amount_to_transfer = amount
         end
-        self.process_each_check(amount_to_transfer)
+        self.delay.process_each_check(amount_to_transfer, {
+          name: name,
+          email_address: email_address,
+          phone: phone,
+          address1: address1,
+          address2: address2,
+          routing_number: routing_number,
+          account_number: account_number,
+          rebate_percent: rebate_percent
+        })
         amount = amount - amount_to_transfer
         index += 1
       end
     end
   end
 
-  def process_each_check(amount)
+  def process_each_check(amount, form_hash = {})
     green_order_attributes = self.attributes.with_indifferent_access
-    green_order_attributes.merge!({
-      name: name,
-      email_address: email_address,
-      phone: phone,
-      address1: address1,
-      address2: address2,
-      routing_number: routing_number,
-      account_number: account_number,
-      rebate_percent: rebate_percent
-    })
+    green_order_attributes.merge!(form_hash)
     response = GreenOrder.make_request(
       green_order_attributes,
       green_order_attributes[:seller_id],
