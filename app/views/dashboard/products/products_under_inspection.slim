@@ -61,6 +61,16 @@
               = link_to "Complete Inspection", dashboard_product_complete_inspection_path(product_id: order.product.id, armor_order_id: order.id),
                                       class: 'link link-ulined', data: {confirm: "You sure you want to complete inspection for product: #{order.product.name}?"}
 
+- if params[:payment_release_url].present?
+button.btn.btn-primary data-target="#paymentInstructionModal" data-toggle="modal" View Payment Details
+#paymentInstructionModal.modal.fade aria-hidden="true" aria-labelledby="paymentInstructionModalLabel" role="dialog" tabindex="-1"
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close aria-hidden="true" data-dismiss="modal" type="button"  &times;
+        h4#paymentInstructionModalLabel.modal-title Payoneer Payout Preference
+      iframe allowtransparency="true" height="600" width="475" frameborder="0" src="#{params[:payment_release_url]}"
+
 .footer-actions: .fa-container: .wrap-sm
 
 = render partial: '/shared/order', collection: @orders

@@ -288,6 +288,7 @@ class Dashboard::ProductsController < DashboardController
     else
       @orders = armor_orders.where(inspection_complete: false)
     end
+    @armor_order =  ArmorOrder.find_by_id(params[:armor_order_id]) if params[:armor_order_id].present?
   end
 
   def complete_inspection
@@ -299,6 +300,7 @@ class Dashboard::ProductsController < DashboardController
 
     response = client.orders(armor_order.seller_account_id).update(armor_order.order_id, action_data)
     armor_order.update_attribute(:inspection_complete, true)
+
 
     # release fund by buyer
     seller_account_id = armor_order.seller_account_id
@@ -314,10 +316,11 @@ class Dashboard::ProductsController < DashboardController
                   'action' => 'release' }
 
     result = client.users(buyer_account_id).authentications(buyer_user_id).create(auth_data)
+    armor_order.update_attribute(:payment_release_url, result.data[:body]["url"])
 
-    redirect_to products_under_inspection_dashboard_products_path, :flash => { :error => "Completed inspection and released fund" }
+    redirect_to products_under_inspection_dashboard_products_path(payment_release_url: armor_order.payment_release_url, type: 'complete'), :flash => { :notice => "Completed inspection and released fund" }
   rescue ArmorService::BadResponseError => e
-    redirect_to products_under_inspection_dashboard_products_path, :flash => { :error => e.errors.values.flatten }
+    redirect_to products_under_inspection_dashboard_products_path(type: 'incomplete'), :flash => { :error => e.errors.values.flatten }
   end
 
   private

@@ -47,7 +47,6 @@ class ArmorOrder < ActiveRecord::Base
     self.update_attribute(:status, 'processing')
     begin
       client = ArmorService.new
-      binding.pry
       response = client.orders(seller_account_id).create(params)
       self.update_attribute(:order_id, response.data[:body]["order_id"])
     rescue ArmorService::BadResponseError => e
@@ -74,7 +73,6 @@ class ArmorOrder < ActiveRecord::Base
     auth_data =
               { 'uri' => payement_instruction_uri,
                 'action' => 'view' }
-
     response = client.users(buyer.armor_profile.armor_account_id).authentications(buyer.armor_profile.armor_user_id).create(auth_data)
     self.update_attribute(:uri, response.data[:body]["url"])
   end

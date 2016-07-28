@@ -70,7 +70,6 @@ class ArmorOrdersController < ApplicationController
       inspection_date_approved_by_buyer: true
     }
 
-    binding.pry
     if armor_order.update_attributes(additional_params)
 
       api_armor_order_params = {
@@ -79,39 +78,31 @@ class ArmorOrdersController < ApplicationController
         'amount'      => armor_order_params["total"],
         'summary'     => product.name,
         'description' => product.description,
-        'inspection' => true
+        'inspection' => true,
+        'goodsmilestones'=>
+          [
+            {
+              'name': 'Order created',
+              'amount': 0,
+              'escrow': 0
+            },
+            {
+              'name': 'Goods inspected',
+              'amount': 0,
+              'escrow': 0
+            },
+            {
+              'name': 'Goods shipped',
+              'amount': 0,
+              'escrow': 0
+            },
+            {
+              'name': 'Order released',
+              'amount': armor_order_params["total"],
+              'escrow': armor_order_params["total"]
+            }
+          ]
         }
-      # api_armor_order_params = {
-      #   'seller_id'   => "#{product.user.armor_profile.armor_user_id}",
-      #   'buyer_id'    => "#{current_user.armor_profile.armor_user_id}",
-      #   'amount'      => armor_order_params["total"],
-      #   'summary'     => product.name,
-      #   'description' => product.description,
-      #   'inspection' => true,
-      #   'goodsmilestones'=>
-      #     [
-      #       {
-      #         'name': 'Order created',
-      #         'amount': armor_order_params["total"],
-      #         'escrow': armor_order_params["total"]
-      #       },
-      #       {
-      #         'name': 'Goods inspected',
-      #         'amount': armor_order_params["total"],
-      #         'escrow': armor_order_params["total"]
-      #       },
-      #       {
-      #         'name': 'Goods shipped',
-      #         'amount': 0,
-      #         'escrow': 0
-      #       },
-      #       {
-      #         'name': 'Order released',
-      #         'amount': armor_order_params["total"],
-      #         'escrow': 0
-      #       }
-      #     ]
-      #   }
 
       armor_order.create_armor_api_order(api_armor_order_params)
 
