@@ -47,15 +47,15 @@ class Dashboard::AccountsController < DashboardController
       current_user.armor_profile.update_attribute(:agreed_terms, agreed_terms)
 
       account_data = {
-                        "company" => current_user.company,
-                        "user_name" => current_user.name,
-                        "user_email" => current_user.email,
-                        "user_phone" => current_user.phone,
-                        "address" => current_user.addresses.first.line1,
-                        "city" => current_user.addresses.first.city,
-                        "state" => get_state(current_user.addresses.first.state) || current_user.addresses.first.state,
-                        "zip" => current_user.addresses.first.zip,
-                        "country" => current_user.addresses.first.country.downcase,
+                        "company" => armor_params["company"],
+                        "user_name" => armor_params["name"],
+                        "user_email" => armor_params["email"],
+                        "user_phone" => armor_params["phone"],
+                        "address" => armor_params["address"],
+                        "city" => armor_params["city"],
+                        "state" => armor_params["state"],
+                        "zip" => armor_params["zip"],
+                        "country" => armor_params["country"],
                         "email_confirmed" => email_confirmed,
                         "agreed_terms" => agreed_terms }
 
