@@ -31,6 +31,8 @@
 #
 
 class GreenOrder < ActiveRecord::Base
+  MAX_AMOUNT = 25000.00
+
   belongs_to :buyer, class_name: 'User', foreign_key: 'buyer_id'
   belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'
   belongs_to :product
@@ -38,6 +40,7 @@ class GreenOrder < ActiveRecord::Base
   belongs_to :address
 
   has_one :refund_request, -> { where deleted: false }
+  has_many :green_checks, dependent: :destroy
 
   attr_accessor :name, :email_address, :phone, :address1, :address2, :routing_number, :account_number, :rebate_percent
 
@@ -72,7 +75,7 @@ class GreenOrder < ActiveRecord::Base
         "Result" => "404",
         "ResultDescription" => "Seller not found or invalid Green Profile",
         "CheckNumber" => "",
-        "CheckId": ""
+        "Check_ID": ""
       }
     end
   end
@@ -126,6 +129,52 @@ class GreenOrder < ActiveRecord::Base
     end
   end
 
+  def process_checks_breakdown
+    amount = self.total
+    if amount > GreenOrder::MAX_AMOUNT
+      amount = amount - GreenOrder::MAX_AMOUNT
+      index = 1
+      until amount == 0 do
+        if amount > GreenOrder::MAX_AMOUNT
+          amount_to_transfer = GreenOrder::MAX_AMOUNT - ( index * 100.00 )
+        else
+          amount_to_transfer = amount
+        end
+        self.process_each_check(amount_to_transfer)
+        amount = amount - amount_to_transfer
+        index += 1
+      end
+    end
+  end
+
+  def process_each_check(amount)
+    green_order_attributes = self.attributes.with_indifferent_access
+    green_order_attributes.merge!({
+      name: name,
+      email_address: email_address,
+      phone: phone,
+      address1: address1,
+      address2: address2,
+      routing_number: routing_number,
+      account_number: account_number,
+      rebate_percent: rebate_percent
+    })
+    response = GreenOrder.make_request(
+      green_order_attributes,
+      green_order_attributes[:seller_id],
+      green_order_attributes[:product_id],
+      green_order_attributes[:buyer_id],
+      amount
+    )
+    self.green_checks.create({
+      result: response['Result'],
+      result_description: response['ResultDescription'],
+      check_id: response['Check_ID'],
+      check_number: response['CheckNumber'],
+      amount: amount
+    })
+  end
+
   private_class_method
     def self.has_green_bank_info?(green_params)
       ![green_params[:routing_number], green_params[:account_number], green_params[:bank_name]].any? {|p| p.blank?}
@@ -146,8 +195,8 @@ class GreenOrder < ActiveRecord::Base
       api_ready_params["RoutingNumber"] = "#{green_params[:routing_number]}"
       api_ready_params["AccountNumber"] = "#{green_params[:account_number]}"
       api_ready_params["BankName"] = "#{green_params[:bank_name]}"
-      api_ready_params["CheckMemo"] = "p:#{product_id}u:#{buyer_id}"
-      api_ready_params["CheckAmount"] = "#{amount}"
+      api_ready_params["CheckMemo"] = "p:#{product_id}u:#{buyer_id}t:#{Time.now.to_i}"
+      api_ready_params["CheckAmount"] = "#{amount.round(2)}"
       api_ready_params["CheckDate"] = "#{Time.now.strftime("%m/%d/%Y")}"
       api_ready_params["CheckNumber"] = ""
       api_ready_params
