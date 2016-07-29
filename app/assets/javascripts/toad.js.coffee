@@ -4,6 +4,7 @@
 #= require jquery-ui/selectmenu
 #= require jquery-ui/tooltip
 #= require jquery-ui/autocomplete
+#= require html5lightbox
 
 #= require jquery.bxslider.min
 
@@ -85,6 +86,8 @@ $(document).ready ->
     ],
     autocomplete: true
   });
+  
+  $(".html5lightbox").html5lightbox()
 
   $('.related_searches a').click (event) ->
     event.preventDefault()
