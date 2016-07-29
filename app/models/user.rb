@@ -163,10 +163,12 @@ class User < ActiveRecord::Base
   end
 
   def validate_phone_number
-    phone_number = Phonelib.parse(phone)
+    if phone.present?
+      phone_number = Phonelib.parse(phone)
 
-    if !phone_number.valid?
-      errors.add(:phone, 'number is not valid')
+      if !phone_number.valid?
+        errors.add(:phone, 'number is not valid')
+      end
     end
   end
 

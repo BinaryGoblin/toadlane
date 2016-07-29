@@ -23,7 +23,24 @@
             p <b>Status:</b> <span class="warning">You are not connected to Stripe.</span>
           - else
             p <b>Status:</b> <span class="success">You are connected to Stripe.</span>
-          hr
+        .col-md-4
+          - if @user.stripe_profile.nil?
+            - if Rails.env.development?
+              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
+                                                                                           :redirect_uri => "http://localhost:3000/users/auth/stripe_connect/callback")
+            - else
+              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect)
+          - else
+            - if Rails.env.development?
+              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
+                                                                                           :stripe_landing => "login",
+                                                                                           :redirect_uri => "http://localhost:3000/users/auth/stripe_connect/callback")
+            - else
+              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
+                                                                                           :stripe_landing => "login")
+      hr
+      .row.account-list-table
+        .col-md-8
           .account-green
             h4 Green By Phone:
             p Merchant Gateway, Verification Services, Consulting
@@ -41,7 +58,9 @@
                 | Apply to be a merchant
             - else
               p <b>Status:</b> <span class="success">You are connected to Green By Phone.</span>
-          hr
+      hr
+      .row.account-list-table
+        .col-md-8
           .account-armor#armor-profile-section
             h4 Armor:
             - if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
@@ -57,8 +76,8 @@
                 .row
                   .col-md-6
                     .form-group
-                      - if current_user.armor_profile.nil? && current_user.armor_profile.confirmed_email != true
-                        = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path
+                      - if current_user.armor_profile.nil?
+                        = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path, class: ".link link-ulined"
                       = f.hidden_field :confirmed_email, :value => current_user.try(:armor_profile).try(:confirmed_email)
 
                 - if current_user.armor_profile.present? && current_user.armor_profile.confirmed_email == true
@@ -93,7 +112,6 @@
                           tr
                             td
                               = b.label { b.radio_button(:"data-behavior" => "AssignShipping", :"checked" => (b.object.id == armor_shipping_address.first.id)) + b.text }
-
                   .row
                     .col-md-8
                       br
@@ -104,19 +122,4 @@
                         | &nbsp;of Armor Payments.
                   br
                   = f.submit "Submit", class: "btn btn-primary"
-        .col-md-4
-          - if @user.stripe_profile.nil?
-            - if Rails.env.development?
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
-                                                                                           :redirect_uri => "http://localhost:3000/users/auth/stripe_connect/callback")
-            - else
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect)
-          - else
-            - if Rails.env.development?
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
-                                                                                           :stripe_landing => "login",
-                                                                                           :redirect_uri => "http://localhost:3000/users/auth/stripe_connect/callback")
-            - else
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
-                                                                                           :stripe_landing => "login")
       hr
