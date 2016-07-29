@@ -86,7 +86,7 @@ $(document).ready ->
     ],
     autocomplete: true
   });
-  
+
   $(".html5lightbox").html5lightbox()
 
   $('.related_searches a').click (event) ->
@@ -97,7 +97,6 @@ $(document).ready ->
     return
 
   $("#green_order_phone").mask("999-999-9999");
-  $("#armor_profile_phone").mask("+9 9999999999");
 
   if $('.vp-calculation-checkout').is(':visible')
     $('input[name="stripe_order[shipping_estimate_id]"]:first').trigger('click');

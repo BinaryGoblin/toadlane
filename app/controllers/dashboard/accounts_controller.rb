@@ -32,15 +32,7 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def create_armor_profile
-    if !current_user.armor_profile.present?
-      redirect_to dashboard_accounts_path, :flash => { :error => "You must verify your email address before creating Armor Profile." }
-      return
-    elsif armor_params["agreed_terms"] == "0"
-      redirect_to dashboard_accounts_path, :flash => { :error => "You must agree to the Terms and Conditions before creating Armor Profile." }
-      return
-    end
-
-    if current_user.profile_complete? && current_user.armor_profile.present?
+    if current_user.armor_profile.present?
       client = ArmorService.new
       email_confirmed = armor_params["confirmed_email"]
       agreed_terms = armor_params["agreed_terms"] == "1" ? true : false
@@ -51,9 +43,15 @@ class Dashboard::AccountsController < DashboardController
         name: armor_params["name"],
         phone: phone_number,
         company: armor_params["company"],
-        })
+      })
 
-      selected_address = current_user.addresses.find_by_id(armor_params[:address_id])
+      if armor_params["addresses"].present?
+        current_user.addresses.create(armor_params["addresses"])
+        selected_address = current_user.addresses.first
+      else
+        selected_address = current_user.addresses.find_by_id(armor_params[:address_id])
+      end
+
 
       account_data = {
                         "company" => armor_params["company"],
@@ -76,7 +74,7 @@ class Dashboard::AccountsController < DashboardController
 
       redirect_to dashboard_accounts_path, :flash => { :notice => "Armor Profile successfully created." }
     else
-      redirect_to dashboard_profile_path, :flash => { :error => "You must complete your profile before creating Armor Profile." }
+      redirect_to dashboard_accounts_path
     end
   rescue ArmorService::BadResponseError => e
     redirect_to dashboard_accounts_path, :flash => { :error => e.errors.values.flatten }
