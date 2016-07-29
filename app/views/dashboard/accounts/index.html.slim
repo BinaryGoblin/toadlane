@@ -48,8 +48,10 @@
               p <b>Status:</b> <span class="success">You are connected to Armor.</span>
             - else
               p <b>Status:</b> <span class="warning">You are not connected to Armor.</span>
-            -if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
-              button.btn.btn-primary data-target="#payoneerModal" data-toggle="modal" Payoneer Payout Preference
+            - if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
+              | Now create or login to Payoneer
+              br
+              button.btn.btn-primary data-target="#payoneerModal" data-toggle="modal" Payoneer Account
               #payoneerModal.modal.fade aria-hidden="true" aria-labelledby="payoneerModalLabel" role="dialog" tabindex="-1"
                 .modal-dialog
                   .modal-content
@@ -57,60 +59,58 @@
                       button.close aria-hidden="true" data-dismiss="modal" type="button"  &times;
                       h4#payoneerModalLabel.modal-title Payoneer Payout Preference
                     iframe allowtransparency="true" height="600" width="475" frameborder="0" src="#{@url}"
-
-            = form_for @armor_profile, url: create_armor_profile_dashboard_accounts_path, method: "post" do |f|
-              .row
-                .col-md-6
-                  .form-group
-                    - if current_user.armor_profile.present? && current_user.armor_profile.confirmed_email == true
-                      | Email successfully confirmed
-                    - else
-                      = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path
-                    = f.hidden_field :confirmed_email, :value => current_user.try(:armor_profile).try(:confirmed_email)
-                    
-              - if current_user.armor_profile.present? && current_user.armor_profile.confirmed_email == true
+            - else
+              = form_for @armor_profile, url: create_armor_profile_dashboard_accounts_path, method: "post" do |f|
                 .row
                   .col-md-6
                     .form-group
-                      = f.label :name, 'Name:', class: 'required'
-                      = f.text_field :name, class: 'form-control', :value => "#{current_user.try(:name)}", required: true
+                      - if current_user.armor_profile.nil? && current_user.armor_profile.confirmed_email != true
+                        = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path
+                      = f.hidden_field :confirmed_email, :value => current_user.try(:armor_profile).try(:confirmed_email)
 
-                    .form-group
-                      = f.label :phone, 'Phone:', class: 'required'
-                      = f.telephone_field :phone, class: 'form-control', :value => "#{current_user.try(:phone)}", data: { behavior: 'IntlPhone' }, required: true
+                - if current_user.armor_profile.present? && current_user.armor_profile.confirmed_email == true
+                  .row
+                    .col-md-6
+                      .form-group
+                        = f.label :name, 'Name:', class: 'required'
+                        = f.text_field :name, class: 'form-control', :value => "#{current_user.try(:name)}", required: true
 
-                  .col-md-6
-                    .form-group
-                      = f.label :company, 'Company:'
-                      = f.text_field :company, class: 'form-control', :value => "#{current_user.try(:company)}"
+                      .form-group
+                        = f.label :phone, 'Phone:', class: 'required'
+                        = f.telephone_field :phone, class: 'form-control', :value => "#{current_user.try(:phone)}", data: { behavior: 'IntlPhone' }, required: true
 
-                    .form-group
-                      = f.label :email, 'Email:', class: 'required'
-                      = f.text_field :email, class: 'form-control', :value => "#{current_user.try(:email)}", disabled: true, required: true
+                    .col-md-6
+                      .form-group
+                        = f.label :company, 'Company:'
+                        = f.text_field :company, class: 'form-control', :value => "#{current_user.try(:company)}"
 
-                .row.profile-table
-                  .col-md-6
-                    thead
-                      tr
-                        th
-                          h4 Select Address::
-                    tbody
-                      - armor_shipping_address = Address.where(:user => current_user).order('created_at')
-                      = f.collection_radio_buttons(:address_id, armor_shipping_address, :id, :get_inline_address) do |b, index|
+                      .form-group
+                        = f.label :email, 'Email:', class: 'required'
+                        = f.text_field :email, class: 'form-control', :value => "#{current_user.try(:email)}", readonly: true
+
+                  .row.profile-table
+                    .col-md-6
+                      thead
                         tr
-                          td
-                            = b.label { b.radio_button(:"data-behavior" => "AssignShipping", :"checked" => (b.object.id == armor_shipping_address.first.id)) + b.text }
+                          th
+                            h4 Select Address::
+                      tbody
+                        - armor_shipping_address = Address.where(:user => current_user).order('created_at')
+                        = f.collection_radio_buttons(:address_id, armor_shipping_address, :id, :get_inline_address) do |b, index|
+                          tr
+                            td
+                              = b.label { b.radio_button(:"data-behavior" => "AssignShipping", :"checked" => (b.object.id == armor_shipping_address.first.id)) + b.text }
 
-                .row
-                  .col-md-8
-                    br
-                    = f.check_box :agreed_terms, :checked => current_user.try(:armor_profile).try(:agreed_terms), :required => true
-                    span
-                      |  I agree to the&nbsp;
-                      a href="https://app.armorpayments.com/terms/1052419" target="_BLANK" Terms and Conditions
-                      | &nbsp;of Armor Payments.
-                br
-                = f.submit "Submit", class: "btn btn-primary"
+                  .row
+                    .col-md-8
+                      br
+                      = f.check_box :agreed_terms, :checked => current_user.try(:armor_profile).try(:agreed_terms), :required => true
+                      span
+                        |  I agree to the&nbsp;
+                        a href="https://app.armorpayments.com/terms/1052419" target="_BLANK" Terms and Conditions
+                        | &nbsp;of Armor Payments.
+                  br
+                  = f.submit "Submit", class: "btn btn-primary"
         .col-md-4
           - if @user.stripe_profile.nil?
             - if Rails.env.development?

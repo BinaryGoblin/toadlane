@@ -32,11 +32,10 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def create_armor_profile
-    binding.pry
     if !current_user.armor_profile.present?
       redirect_to dashboard_accounts_path, :flash => { :error => "You must verify your email address before creating Armor Profile." }
       return
-    elsif user_params["agreed_terms"] == "0"
+    elsif armor_params["agreed_terms"] == "0"
       redirect_to dashboard_accounts_path, :flash => { :error => "You must agree to the Terms and Conditions before creating Armor Profile." }
       return
     end
@@ -47,6 +46,13 @@ class Dashboard::AccountsController < DashboardController
       agreed_terms = armor_params["agreed_terms"] == "1" ? true : false
       current_user.armor_profile.update_attribute(:agreed_terms, agreed_terms)
       phone_number = Phonelib.parse(armor_params["phone"])
+
+      current_user.update_attributes({
+        name: armor_params["name"],
+        phone: phone_number,
+        company: armor_params["company"],
+        })
+
       selected_address = current_user.addresses.find_by_id(armor_params[:address_id])
 
       account_data = {
@@ -57,11 +63,11 @@ class Dashboard::AccountsController < DashboardController
                         "address" => selected_address.line1.present? ? selected_address.line1 : selected_address.line2,
                         "city" => selected_address.city,
                         "state" => get_state(selected_address.state),
-                        "zip" => selected_address.line1.zip,
+                        "zip" => selected_address.zip,
                         "country" => selected_address.country.downcase,
                         "email_confirmed" => email_confirmed,
                         "agreed_terms" => agreed_terms }
-
+      
       result = client.accounts.create(account_data)
       current_user.armor_profile.update_attribute(:armor_account_id, result.data[:body]["account_id"])
 
@@ -91,7 +97,6 @@ class Dashboard::AccountsController < DashboardController
 
   def set_armor_profile
     current_armor_profile = current_user.armor_profile
-    binding.pry
     if current_armor_profile.present?
       @armor_profile = current_armor_profile
     elsif params[:confirmed_email].present? && current_armor_profile.nil?
