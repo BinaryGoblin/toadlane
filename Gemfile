@@ -51,6 +51,8 @@ gem 'commontator', '~> 4.11.1'
 
 gem 'postmark-rails', '>= 0.10.0'
 
+gem 'phonelib', '~> 0.6.2'
+
 # Dev - debugging group
 group :development do
   gem 'pry-rails'
