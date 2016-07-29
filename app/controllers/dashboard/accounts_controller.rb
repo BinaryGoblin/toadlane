@@ -67,7 +67,7 @@ class Dashboard::AccountsController < DashboardController
                         "country" => selected_address.country.downcase,
                         "email_confirmed" => email_confirmed,
                         "agreed_terms" => agreed_terms }
-      
+
       result = client.accounts.create(account_data)
       current_user.armor_profile.update_attribute(:armor_account_id, result.data[:body]["account_id"])
 
@@ -104,7 +104,7 @@ class Dashboard::AccountsController < DashboardController
     else
       @armor_profile = ArmorProfile.new
     end
-    redirect_to dashboard_accounts_path(armor_profile_id: @armor_profile)
+    redirect_to dashboard_accounts_path(armor_profile_id: @armor_profile), :flash => { :notice => "Your email has been confirmed successfully. fill up other details to create armor profile" }
   end
 
   private
