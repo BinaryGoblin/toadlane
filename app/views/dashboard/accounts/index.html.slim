@@ -58,71 +58,59 @@
                       h4#payoneerModalLabel.modal-title Payoneer Payout Preference
                     iframe allowtransparency="true" height="600" width="475" frameborder="0" src="#{@url}"
 
-
-            //=# form_for ArmorProfile.new, url: create_armor_profile_dashboard_accounts_path, method: "post" do |f|
-            = form_for setup_user(current_user), url: create_armor_profile_dashboard_accounts_path, method: "post", :html => { autocomplete: "off", data: { behavior: 'Validations', options: '{"rules":{"user[armor_bank_account_attributes][account_routing]":{"routing":true}}}'} } do |f|
+            = form_for @armor_profile, url: create_armor_profile_dashboard_accounts_path, method: "post" do |f|
               .row
                 .col-md-6
                   .form-group
-                    = f.label :name, 'Name:', class: 'required'
-                    = f.text_field :name, class: 'form-control', required: true
-
-                  .form-group
-                    = f.label :phone, 'Phone:', class: 'required'
-                    = f.telephone_field :phone, class: 'form-control user_phone_field', data: { behavior: 'IntlPhone' }, required: true
-
-                  .form-group
-                    = f.label :company, 'Company:'
-                    = f.text_field :company, class: 'form-control'
-
-                .col-md-6
-                  .form-group
-                    = f.label :email, 'Email:', class: 'required'
-                    = f.text_field :email, class: 'form-control', disabled: true, required: true
-
-              .row.profile-table
-                .col-md-3
-                  h4 Addresses
-                .col-md-9
-                  = f.fields_for :addresses do |ff|
-                    //h4 Address ##{ff.index + 1}
-                    //- if ff.index == 0
-                      //i Default Address
-                    .row.profile-table
-                      .col-md-6
-                        .form-group
-                          = ff.label :line1, 'Address Line 1:', class: 'required'
-                          = ff.text_field :line1, class: 'form-control'
-
-                          .form-group
-                            = ff.label :city, 'City:', class: 'required'
-                            = ff.text_field :city, class: 'form-control'
-
-                          .form-group
-                            = ff.label :state, 'State:', class: 'required'
-                            = ff.text_field :state, class: 'form-control'
-
-                          .form-group
-                            = ff.label :zip, 'Postal Code:', class: 'required'
-                            = ff.text_field :zip, class: 'form-control'
-
-                          .form-group
-                            = ff.label :country, 'Country:', class: 'required'
-                            = ff.country_select 'country', [ 'US', 'GB' ], { iso_codes: true }, { class: 'form-control' }
-
+                    - if current_user.armor_profile.present? && current_user.armor_profile.confirmed_email == true
+                      | Email successfully confirmed
+                    - else
+                      = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path
+                    = f.hidden_field :confirmed_email, :value => current_user.try(:armor_profile).try(:confirmed_email)
+                    
               - if current_user.armor_profile.present? && current_user.armor_profile.confirmed_email == true
-                | Email successfully confirmed
-              - else
-                = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path
-              = f.hidden_field :confirmed_email, :value => current_user.try(:armor_profile).try(:confirmed_email)
-              .form-group
-                = f.check_box :agreed_terms, :checked => current_user.try(:armor_profile).try(:agreed_terms), :required => true
-                span
-                  |  I agree to the&nbsp;
-                  a href="https://app.armorpayments.com/terms/1052419" target="_BLANK" Terms and Conditions
-                  | &nbsp;of Armor Payments.
-              br
-              = f.submit "Submit", class: "btn btn-primary"
+                .row
+                  .col-md-6
+                    .form-group
+                      = f.label :name, 'Name:', class: 'required'
+                      = f.text_field :name, class: 'form-control', :value => "#{current_user.try(:name)}", required: true
+
+                    .form-group
+                      = f.label :phone, 'Phone:', class: 'required'
+                      = f.telephone_field :phone, class: 'form-control', :value => "#{current_user.try(:phone)}", data: { behavior: 'IntlPhone' }, required: true
+
+                  .col-md-6
+                    .form-group
+                      = f.label :company, 'Company:'
+                      = f.text_field :company, class: 'form-control', :value => "#{current_user.try(:company)}"
+
+                    .form-group
+                      = f.label :email, 'Email:', class: 'required'
+                      = f.text_field :email, class: 'form-control', :value => "#{current_user.try(:email)}", disabled: true, required: true
+
+                .row.profile-table
+                  .col-md-6
+                    thead
+                      tr
+                        th
+                          h4 Select Address::
+                    tbody
+                      - armor_shipping_address = Address.where(:user => current_user).order('created_at')
+                      = f.collection_radio_buttons(:address_id, armor_shipping_address, :id, :get_inline_address) do |b, index|
+                        tr
+                          td
+                            = b.label { b.radio_button(:"data-behavior" => "AssignShipping", :"checked" => (b.object.id == armor_shipping_address.first.id)) + b.text }
+
+                .row
+                  .col-md-8
+                    br
+                    = f.check_box :agreed_terms, :checked => current_user.try(:armor_profile).try(:agreed_terms), :required => true
+                    span
+                      |  I agree to the&nbsp;
+                      a href="https://app.armorpayments.com/terms/1052419" target="_BLANK" Terms and Conditions
+                      | &nbsp;of Armor Payments.
+                br
+                = f.submit "Submit", class: "btn btn-primary"
         .col-md-4
           - if @user.stripe_profile.nil?
             - if Rails.env.development?

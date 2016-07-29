@@ -60,7 +60,6 @@ class User < ActiveRecord::Base
     :reject_if => lambda { |a| (a[:name].empty? && a[:line1].empty? && a[:line2].empty? && a[:city].empty? && a[:state].empty? && a[:zip].empty?) }
   validates :terms_of_service, :inclusion => {:in => [true, false]}
   validates :name, presence: true, on: :create
-  validates :attribute, phone: { possible: true, types: [:voip, :mobile] }
   has_many :requests_of_sender, class_name: 'Request', foreign_key: :sender_id
   has_many :requests_of_receiver, class_name: 'Request', foreign_key: :receiver_id
 
@@ -81,6 +80,8 @@ class User < ActiveRecord::Base
   before_destroy { roles.clear }
 
   serialize :benefits, Array
+
+  validate :validate_phone_number
 
   # after_create :associate_api_user
   # after_update :create_armor_api_account,
@@ -159,6 +160,14 @@ class User < ActiveRecord::Base
 
   def armor_account_id
     armor_profile.armor_account_id
+  end
+
+  def validate_phone_number
+    phone_number = Phonelib.parse(phone)
+
+    if !phone_number.valid?
+      errors.add(:phone, 'number is not valid')
+    end
   end
 
   private

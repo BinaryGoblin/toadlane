@@ -32,30 +32,33 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def create_armor_profile
+    binding.pry
     if !current_user.armor_profile.present?
       redirect_to dashboard_accounts_path, :flash => { :error => "You must verify your email address before creating Armor Profile." }
       return
-    elsif params["armor_profile"]["agreed_terms"] == "0"
+    elsif user_params["agreed_terms"] == "0"
       redirect_to dashboard_accounts_path, :flash => { :error => "You must agree to the Terms and Conditions before creating Armor Profile." }
       return
     end
 
     if current_user.profile_complete? && current_user.armor_profile.present?
       client = ArmorService.new
-      email_confirmed = params["armor_profile"]["confirmed_email"]
-      agreed_terms = params["armor_profile"]["agreed_terms"] == "1" ? true : false
+      email_confirmed = armor_params["confirmed_email"]
+      agreed_terms = armor_params["agreed_terms"] == "1" ? true : false
       current_user.armor_profile.update_attribute(:agreed_terms, agreed_terms)
+      phone_number = Phonelib.parse(armor_params["phone"])
+      selected_address = current_user.addresses.find_by_id(armor_params[:address_id])
 
       account_data = {
                         "company" => armor_params["company"],
                         "user_name" => armor_params["name"],
                         "user_email" => armor_params["email"],
-                        "user_phone" => armor_params["phone"],
-                        "address" => armor_params["address"],
-                        "city" => armor_params["city"],
-                        "state" => armor_params["state"],
-                        "zip" => armor_params["zip"],
-                        "country" => armor_params["country"],
+                        "user_phone" => phone_number.international,
+                        "address" => selected_address.line1.present? ? selected_address.line1 : selected_address.line2,
+                        "city" => selected_address.city,
+                        "state" => get_state(selected_address.state),
+                        "zip" => selected_address.line1.zip,
+                        "country" => selected_address.country.downcase,
                         "email_confirmed" => email_confirmed,
                         "agreed_terms" => agreed_terms }
 
@@ -88,6 +91,7 @@ class Dashboard::AccountsController < DashboardController
 
   def set_armor_profile
     current_armor_profile = current_user.armor_profile
+    binding.pry
     if current_armor_profile.present?
       @armor_profile = current_armor_profile
     elsif params[:confirmed_email].present? && current_armor_profile.nil?
@@ -113,9 +117,9 @@ class Dashboard::AccountsController < DashboardController
     end
 
     def set_profile_for_armor
-      current_green_profile = current_user.green_profile
-      if current_green_profile.present?
-        @green_profile = current_green_profile
+      current_armor_profile = current_user.armor_profile
+      if current_armor_profile.present?
+        @armor_profile = current_armor_profile
       elsif params["armor_profile_id"].present?
         @armor_profile = ArmorProfile.find_by_id(params["armor_profile_id"])
       else
