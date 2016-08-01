@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160801073819) do
+ActiveRecord::Schema.define(version: 20160801082034) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -74,11 +74,12 @@ ActiveRecord::Schema.define(version: 20160801073819) do
     t.float    "fee"
     t.float    "rebate"
     t.float    "shipping_cost"
-    t.datetime "inspection_date"
     t.boolean  "inspection_date_approved_by_seller",             default: false
     t.boolean  "inspection_date_approved_by_buyer",              default: false
     t.boolean  "inspection_complete",                            default: false
     t.string   "payment_release_url"
+    t.datetime "inspection_date_by_seller"
+    t.datetime "inspection_date_by_buyer"
   end
 
   create_table "armor_profiles", force: :cascade do |t|
