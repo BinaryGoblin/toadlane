@@ -69,6 +69,7 @@ class ProductsController < ApplicationController
     else
       @armor_order = ArmorOrder.create
     end
+    @armor_profile = current_user.armor_profile.present? ? current_user.armor_profile : ArmorProfile.new
   end
 
   def subregion_options

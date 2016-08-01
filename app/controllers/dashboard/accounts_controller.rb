@@ -72,17 +72,19 @@ class Dashboard::AccountsController < DashboardController
       users = client.users(current_user.armor_profile.armor_account_id).all
       current_user.armor_profile.update_attribute(:armor_user_id, users.data[:body][0]["user_id"].to_i)
 
-      redirect_to dashboard_accounts_path, :flash => { :notice => "Armor Profile successfully created." }
+      redirect_to :back, :flash => { :notice => "Armor Profile successfully created." }
     else
-      redirect_to dashboard_accounts_path
+      redirect_to :back
     end
   rescue ArmorService::BadResponseError => e
-    redirect_to dashboard_accounts_path, :flash => { :error => e.errors.values.flatten }
+    redirect_to :back, :flash => { :error => e.errors.values.flatten }
   end
 
   def send_confirmation_email
-    email = UserMailer.send_confirmation_email(current_user).deliver_now
-    redirect_to dashboard_accounts_path, :flash => { :notice => "Confirmation email has been sent. Please check your email." }
+    product = Product.find_by_id(params[:product_id])
+    armor_order = ArmorOrder.find_by_id(params[:armor_order_id])
+    email = UserMailer.send_confirmation_email(current_user, product, armor_order).deliver_now
+    redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :notice => "Confirmation email has been sent. Please check your email." }
   end
 
   def update
@@ -96,13 +98,13 @@ class Dashboard::AccountsController < DashboardController
   def set_armor_profile
     current_armor_profile = current_user.armor_profile
     if current_armor_profile.present?
-      @armor_profile = current_armor_profile
+      armor_profile = current_armor_profile
     elsif params[:confirmed_email].present? && current_armor_profile.nil?
-      @armor_profile = ArmorProfile.create(:confirmed_email => params[:confirmed_email], :user_id => current_user.id)
+      armor_profile = ArmorProfile.create(:confirmed_email => params[:confirmed_email], :user_id => current_user.id)
     else
-      @armor_profile = ArmorProfile.new
+      armor_profile = ArmorProfile.new
     end
-    redirect_to dashboard_accounts_path(armor_profile_id: @armor_profile), :flash => { :notice => "Your email has been confirmed successfully. fill up other details to create armor profile" }
+    redirect_to product_checkout_path(product_id: params[:product_id], armor_order_id: params[:armor_order_id], armor_profile_id: armor_profile.id), :flash => { :notice => "Your email has been confirmed successfully. fill up other details to create armor profile" }
   end
 
   private

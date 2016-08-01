@@ -295,7 +295,11 @@
                       = f.submit 'Place Order', class: "btn btn-primary"
           - if @product.armor_present?
             #armor.tab-pane role="tabpanel" class=('active' if @product.armor_only_present?)
-              - if current_user.armor_profile.present? && @armor_order.uri.nil?
+              - if current_user.armor_profile.nil?
+                | You have to create Armor Profile first.
+              = render partial: 'armor_account_create', :locals => { :product => @product, :user => current_user, :armor_profile => @armor_profile, :armor_order => @armor_order }
+
+              - if @armor_profile.armor_account_id.present? && @armor_order.uri.nil?
                 = form_for @armor_order do |f|
                   = f.hidden_field :total, :value => number_with_precision(@product.unit_price, precision: 2, delimiter: '')
                   = f.hidden_field :product_id, :value => @product.id
@@ -319,9 +323,6 @@
                     | &nbsp;if you want to set new inspection date
 
                   = f.submit 'Create Order', class: "btn btn-primary"
-              - elsif current_user.armor_profile.nil?
-                | You need to first create Armor Profile&nbsp;
-                = link_to "Click Here to go to Accounts Page", dashboard_accounts_path(anchor: "armor-profile-section"), target: '_blank'
 
 #setInpsectionDateModal.modal.fade aria-hidden="true" aria-labelledby="setInpsectionDateModalLabel" role="dialog" tabindex="-1"
   .modal-dialog
