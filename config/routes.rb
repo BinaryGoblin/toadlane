@@ -7,6 +7,7 @@ Toad::Application.routes.draw do
 
   resources :armor_orders, except: [:edit, :new] do
     post :set_inspection_date, to: 'armor_orders#set_inspection_date', as: 'set_inspection_date'
+    post :confirm_inspection_date
   end
 
   resources :stripe_orders do
@@ -50,7 +51,6 @@ Toad::Application.routes.draw do
         get :products_under_inspection
       end
       get :complete_inspection
-      post :confirm_inspection_date
     end
 
     resources :orders, only: [:index, :show] do

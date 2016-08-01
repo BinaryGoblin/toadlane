@@ -239,3 +239,20 @@
       .text-center= link_to 'See all related products', '#', class: 'btn btn-success'
 
 = render partial: 'modals', locals: { product: @product }
+
+
+#requestInspectionDateModal.modal.fade.in[style="display: block;"]
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close aria-label="Close" data-dismiss="modal" type="button"
+          span aria-hidden="true"  &times;
+        h4.modal-title Inspection Request Date For Product:: #{@armor_order.product.name}
+      .modal-body
+        = @armor_order.buyer.name
+        | &nbsp; has requested the inspection date to be #{@armor_order.inspection_date_by_buyer}
+        p If you are okay then click Yes, and if you want to set a new inspection date set the inspection date below
+      .modal-footer
+        = link_to "Yes", armor_order_confirm_inspection_date_path(product_id: @armor_order.product.id, armor_order_id: @armor_order.id), class: 'btn btn-primary', method: :post
+
+.modal-backdrop.fade.in

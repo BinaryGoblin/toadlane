@@ -27,6 +27,8 @@ class ProductsController < ApplicationController
     @fee = Fee.find_by(:module_name => "Stripe").value
     commontator_thread_show(@product)
     @related_products = Product.unexpired.where(main_category: @product.main_category).where.not(id: @product.id)
+
+    @armor_order = ArmorOrder.find_by_id(params[:armor_order_id])
   end
 
   def products
