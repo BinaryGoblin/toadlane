@@ -105,12 +105,4 @@ module ProductHelper
     user_ids = user_ids.compact
     User.where(id: user_ids)
   end
-
-  def get_inspection_date(product, armor_order)
-    if armor_order.inspection_date.present?
-      armor_order.inspection_date.to_date
-    else
-      product.inspection_date.to_date
-    end
-  end
 end

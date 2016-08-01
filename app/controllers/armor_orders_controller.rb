@@ -28,15 +28,15 @@ class ArmorOrdersController < ApplicationController
     product = Product.unexpired.find(params[:product_id])
 
     inspection_date = DateTime.new(
-                                    params["armor_order"]["inspection_date(1i)"].to_i,
-                                    params["armor_order"]["inspection_date(2i)"].to_i,
-                                    params["armor_order"]["inspection_date(3i)"].to_i,
-                                    params["armor_order"]["inspection_date(4i)"].to_i,
-                                    params["armor_order"]["inspection_date(5i)"].to_i)
+                                    params["armor_order"]["inspection_date_by_buyer(1i)"].to_i,
+                                    params["armor_order"]["inspection_date_by_buyer(2i)"].to_i,
+                                    params["armor_order"]["inspection_date_by_buyer(3i)"].to_i,
+                                    params["armor_order"]["inspection_date_by_buyer(4i)"].to_i,
+                                    params["armor_order"]["inspection_date_by_buyer(5i)"].to_i)
 
-    if armor_order.update_attributes({buyer_id: current_user.id, seller_id: product.user.id, product_id: product.id, inspection_date: inspection_date})
+    if armor_order.update_attributes({buyer_id: current_user.id, seller_id: product.user.id, product_id: product.id, inspection_date_by_buyer: inspection_date})
       UserMailer.send_inspection_date_set_notification_to_seller(armor_order).deliver_now
-      redirect_to product_path(product.id), :flash => { :notice => 'Your request to set inspectiond date has been informed to the seller.'}
+      redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'Your request to set inspectiond date has been informed to the seller.'}
     else
       redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :alert => armor_order.errors.full_messages.first}
     end
