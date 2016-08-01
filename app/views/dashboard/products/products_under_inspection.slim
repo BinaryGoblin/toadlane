@@ -62,7 +62,8 @@
                   = link_to "Complete Inspection", dashboard_product_complete_inspection_path(product_id: order.product.id, armor_order_id: order.id),
                                           class: 'link link-ulined', data: {confirm: "You sure you want to complete inspection for product: #{order.product.name}?"}
                 - else
-                  | -
+                  a.html5lightbox.btn.btn-primary data-height="411" data-width="730" href="#{order.payment_release_url}" Release Payment
+
 
 
 = render partial: '/shared/order', collection: @orders
