@@ -31,10 +31,6 @@ class Dashboard::ProductsController < DashboardController
     start_date = DateTime.new(product_params["start_date(1i)"].to_i, product_params["start_date(2i)"].to_i, product_params["start_date(3i)"].to_i, product_params["start_date(4i)"].to_i, product_params["start_date(5i)"].to_i)
     end_date = DateTime.new(product_params["end_date(1i)"].to_i, product_params["end_date(2i)"].to_i, product_params["end_date(3i)"].to_i, product_params["end_date(4i)"].to_i, product_params["end_date(5i)"].to_i)
 
-    if current_user.armor_profile.present?
-      inspection_date = DateTime.new(product_params["inspection_date(1i)"].to_i, product_params["inspection_date(2i)"].to_i, product_params["inspection_date(3i)"].to_i, product_params["inspection_date(4i)"].to_i, product_params["inspection_date(5i)"].to_i)
-    end
-
     if product_params[:pricebreaks_attributes].present?
       product_params[:pricebreaks_attributes] =  parse_pricebrakes product_params[:pricebreaks_attributes]
     end
@@ -57,7 +53,7 @@ class Dashboard::ProductsController < DashboardController
       videos = product_params.extract!(:videos_attributes)
     end
 
-    @product = current_user.products.new(product_params.merge!(start_date: start_date).merge!(end_date: end_date).merge!(inspection_date: inspection_date).except(:images_attributes, :certificates_attributes, :videos_attributes))
+    @product = current_user.products.new(product_params.merge!(start_date: start_date).merge!(end_date: end_date).except(:images_attributes, :certificates_attributes, :videos_attributes))
 
     respond_to do |format|
       if @product.save
@@ -106,9 +102,6 @@ class Dashboard::ProductsController < DashboardController
     start_date = DateTime.new(product_params["start_date(1i)"].to_i, product_params["start_date(2i)"].to_i, product_params["start_date(3i)"].to_i, product_params["start_date(4i)"].to_i, product_params["start_date(5i)"].to_i)
     end_date = DateTime.new(product_params["end_date(1i)"].to_i, product_params["end_date(2i)"].to_i, product_params["end_date(3i)"].to_i, product_params["end_date(4i)"].to_i, product_params["end_date(5i)"].to_i)
 
-    if current_user.armor_profile.present?
-      inspection_date = DateTime.new(product_params["inspection_date(1i)"].to_i, product_params["inspection_date(2i)"].to_i, product_params["inspection_date(3i)"].to_i, product_params["inspection_date(4i)"].to_i, product_params["inspection_date(5i)"].to_i)
-    end
 
     if product_params[:pricebreaks_attributes].present?
       product_params[:pricebreaks_attributes] =  parse_pricebrakes product_params[:pricebreaks_attributes]
@@ -149,7 +142,7 @@ class Dashboard::ProductsController < DashboardController
     end
 
     respond_to do |format|
-      if @product.update(product_params.merge!(start_date: start_date).merge!(end_date: end_date).merge!(inspection_date: inspection_date).except(:images_attributes,
+      if @product.update(product_params.merge!(start_date: start_date).merge!(end_date: end_date).except(:images_attributes,
         :images_attributes_delete, :certificates_attributes, :certificates_attributes_delete, :videos_attributes, :videos_attributes_delete, :pricebreaks_delete))
 
         if images
