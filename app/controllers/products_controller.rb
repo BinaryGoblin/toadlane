@@ -61,9 +61,10 @@ class ProductsController < ApplicationController
       shipping_cost: params[:shipping_cost],
       rebate: params[:rebate],
       rebate_percent: params[:rebate_percent],
-      available_product: @product.remaining_amount
+      available_product: @product.remaining_amount,
+      fee: Fee.find_by(:module_name => "Stripe").value
     }
-    @fee = Fee.find_by(:module_name => "Stripe").value
+
     @stripe_order = StripeOrder.new
     @green_order = GreenOrder.new
     if params["armor_order_id"].present?
@@ -71,6 +72,7 @@ class ProductsController < ApplicationController
     else
       @armor_order = ArmorOrder.create
     end
+    set_order_details(@armor_order, @data)
     @armor_profile = current_user.armor_profile.present? ? current_user.armor_profile : ArmorProfile.new
   end
 
@@ -86,5 +88,15 @@ class ProductsController < ApplicationController
   private
     def set_product
       @product = Product.find(params[:id])
+    end
+
+    def set_order_details(armor_order, data)
+      armor_order.rebate_percentage = data[:rebate_percent]
+      armor_order.quantity = data[:quantity]
+      armor_order.order_amount = data[:total]
+      armor_order.rebate = data[:rebate]
+      armor_order.fee_percent = data[:fee]
+      armor_order.fee_price = data[:fee_amount]
+      armor_order.shipping_cost = data[:shipping_cost]
     end
 end

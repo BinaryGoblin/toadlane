@@ -1,0 +1,52 @@
+- if armor_order.order_details_present?
+  tr
+    td= product.name
+    td.stripe-quantity =armor_order.quantity
+    td data-unit-price="#{number_with_precision(product.unit_price, precision: 0, delimiter: '')}" $ #{number_with_precision(product.unit_price, precision: 2, delimiter: '')}
+    td $ <span class="stripe-unit-total">#{number_with_precision(get_subtotal(product.unit_price, armor_order.quantity), precision: 2, delimiter: '')}</span>
+
+  tr
+    td colspan="3" <span class="stripe-rebate">#{armor_order.rebate_percentage}</span>% rebate for purchasing <span class="stripe-quantity">#{armor_order.quantity}</span> pcs
+    td -$ <span class="stripe-rebate-price">#{armor_order.rebate}</span>
+
+  tr
+    td colspan="3" Toadlane Fee (<span class="calc-fees">#{armor_order.fee_percent}</span>%)
+    td $ <span class="stripe-fees-price">#{armor_order.fee_price}</span>
+
+  tr
+    td Shipping Estimate
+    td.stripe_quantity =armor_order.quantity
+    td $ <span class="calc-shipping" data-type="PerUnit">#{armor_order.shipping_cost}</span>
+    td $ <span class="stripe-shipping-price">#{number_with_precision(get_shipping_cost(armor_order.quantity, armor_order.shipping_cost), precision: 2, delimiter: '')}</span>
+
+  tr
+    td.no-border colspan="2"
+    td.text-center: b.text-uppercase Total:
+    td: b $ <span class="stripe-total">#{number_with_precision(armor_order.order_amount, precision: 2, delimiter: '')}</span>
+    
+- else
+
+  tr
+    td= product.name
+    td.stripe-quantity =data[:quantity]
+    td data-unit-price="#{number_with_precision(product.unit_price, precision: 0, delimiter: '')}" $ #{number_with_precision(product.unit_price, precision: 2, delimiter: '')}
+    td $ <span class="stripe-unit-total">#{number_with_precision(get_subtotal(product.unit_price, data[:quantity]), precision: 2, delimiter: '')}</span>
+
+  tr
+    td colspan="3" <span class="stripe-rebate">#{data[:rebate_percent]}</span>% rebate for purchasing <span class="stripe-quantity">#{data[:quantity]}</span> pcs
+    td -$ <span class="stripe-rebate-price">#{data[:rebate]}</span>
+
+  tr
+    td colspan="3" Toadlane Fee (<span class="calc-fees">#{data[:fee]}</span>%)
+    td $ <span class="stripe-fees-price">#{data[:fee_amount]}</span>
+
+  tr
+    td Shipping Estimate
+    td.stripe_quantity =data[:quantity]
+    td $ <span class="calc-shipping" data-type="PerUnit">#{data[:shipping_cost]}</span>
+    td $ <span class="stripe-shipping-price">#{number_with_precision(get_shipping_cost(data[:quantity],data[:shipping_cost]), precision: 2, delimiter: '')}</span>
+
+  tr
+    td.no-border colspan="2"
+    td.text-center: b.text-uppercase Total:
+    td: b $ <span class="stripe-total">#{number_with_precision(data[:total], precision: 2, delimiter: '')}</span>

@@ -31,6 +31,9 @@ class ArmorOrder < ActiveRecord::Base
   belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'
   belongs_to :product
 
+  attr_accessor :rebate_percentage, :quantity, :order_amount, :rebate, :fee_percent, :fee_price, :shipping_cost
+
+
   # validates_presence_of :unit_price, :account_id
 
   scope :for_dashboard, -> (page, per_page) do
@@ -74,5 +77,11 @@ class ArmorOrder < ActiveRecord::Base
                 'action' => 'view' }
     response = client.users(buyer.armor_profile.armor_account_id).authentications(buyer.armor_profile.armor_user_id).create(auth_data)
     self.update_attribute(:uri, response.data[:body]["url"])
+  end
+
+  def order_details_present?
+    self.rebate_percentage.present? && self.quantity.present? &&
+    self.order_amount.present? && self.rebate.present? &&
+    self.fee_percent.present? && self.fee_price.present? && self.shipping_cost.present?
   end
 end
