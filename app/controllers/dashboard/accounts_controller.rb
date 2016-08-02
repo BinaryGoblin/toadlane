@@ -34,10 +34,14 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def update
-    if green_params.present?
+    if params[:green_profile].present?
       green_profile = current_user.green_profile
       green_profile.update_attributes(green_params)
       redirect_to dashboard_accounts_path, :flash => { :notice => "Green Profile successfully updated." }
+    elsif params[:amg_profile].present?
+      amg_profile = current_user.amg_profile
+      amg_profile.update_attributes(amg_params)
+      redirect_to dashboard_accounts_path, :flash => { :notice => "AMG Profile successfully updated." }
     end
   end
 
