@@ -45,7 +45,7 @@
               td= number_to_currency(order.amount, :unit => "$", precision: 2)
             -if order.instance_of? GreenOrder
               td= number_to_currency(order.total, :unit => "$", precision: 2)
-            td= order.inspection_date
+            td= order.inspection_date_by_seller
             td
               span.label
                 = order.inspection_complete

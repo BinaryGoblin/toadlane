@@ -1,4 +1,4 @@
-- if armor_order.uri.present?
+- if armor_order.buyer_id && armor_order.seller_id
   tr
     td= product.name
     td.stripe-quantity =armor_order.count
@@ -10,8 +10,8 @@
     td -$ <span class="stripe-rebate-price">#{armor_order.rebate}</span>
 
   tr
-    td colspan="3" Toadlane Fee (<span class="calc-fees">#{armor_order.fee}</span>%)
-    td $ <span class="stripe-fees-price">#{data[:fee_amount]}</span>
+    td colspan="3" Toadlane Fee (<span class="calc-fees">#{data[:fee]}</span>%)
+    td $ <span class="stripe-fees-price">#{armor_order.fee}</span>
 
   tr
     td Shipping Estimate

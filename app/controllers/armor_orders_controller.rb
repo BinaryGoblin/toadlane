@@ -34,6 +34,26 @@ class ArmorOrdersController < ApplicationController
                                   )
 
     armor_order = ArmorOrder.create
+
+    additional_params = {
+
+      status_change: DateTime.now,
+      product_id: product.id,
+      buyer_id: current_user.id,
+      seller_id: product.user.id,
+      summary: product.name,
+      description: product.description,
+      amount: armor_order_params["total"],
+      unit_price: armor_order_params["unit_price"],
+      count: armor_order_params["count"],
+      fee: armor_order_params["fee"],
+      rebate: armor_order_params["rebate"],
+      rebate_price: armor_order_params["rebate_price"],
+      shipping_cost: armor_order_params["shipping_cost"],
+    }
+
+    armor_order.update_attributes(additional_params)
+
     if product.user == current_user
       set_inspection_date_notify_buyer(armor_order, inspection_date, product)
     else
@@ -59,25 +79,7 @@ class ArmorOrdersController < ApplicationController
     armor_order = ArmorOrder.find_by_id(params[:id])
     inspection_date_approved_by_seller = armor_order_params["inspection_date_approved_by_seller"] == "1" ? true : false
 
-    if armor_order.inspection_date.nil?
-      armor_order.update_attribute(:inspection_date, product.inspection_date)
-    end
-
     additional_params = {
-
-      status_change: DateTime.now,
-      product_id: product.id,
-      buyer_id: current_user.id,
-      seller_id: product.user.id,
-      summary: product.name,
-      description: product.description,
-      amount: armor_order_params["total"],
-      unit_price: armor_order_params["unit_price"],
-      count: armor_order_params["count"],
-      fee: armor_order_params["fee"],
-      rebate: armor_order_params["rebate"],
-      rebate_price: armor_order_params["rebate_price"],
-      shipping_cost: armor_order_params["shipping_cost"],
       inspection_date_approved_by_seller: inspection_date_approved_by_seller,
       inspection_date_approved_by_buyer: true
     }
