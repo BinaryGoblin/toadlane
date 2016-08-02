@@ -31,7 +31,7 @@ class ArmorOrder < ActiveRecord::Base
   belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'
   belongs_to :product
 
-  attr_accessor :rebate_percentage, :quantity, :order_amount, :rebate, :fee_percent, :fee_price, :shipping_cost
+  # attr_accessor :rebate_percentage, :quantity, :order_amount, :rebate, :fee_percent, :fee_price, :shipping_cost
 
 
   # validates_presence_of :unit_price, :account_id

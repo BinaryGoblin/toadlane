@@ -65,6 +65,7 @@ class ProductsController < ApplicationController
       fee: Fee.find_by(:module_name => "Stripe").value
     }
 
+
     @stripe_order = StripeOrder.new
     @green_order = GreenOrder.new
     if params["armor_order_id"].present?
@@ -72,7 +73,7 @@ class ProductsController < ApplicationController
     else
       @armor_order = ArmorOrder.create
     end
-    set_order_details(@armor_order, @data)
+    # set_order_details(@armor_order, @data)
     @armor_profile = current_user.armor_profile.present? ? current_user.armor_profile : ArmorProfile.new
   end
 

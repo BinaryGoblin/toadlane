@@ -244,11 +244,11 @@
                       = f.submit 'Place Order', class: "btn btn-primary"
           - if @product.armor_present?
             #armor.tab-pane role="tabpanel" class=('active' if @product.armor_only_present?)
-              - if current_user.armor_profile.nil?
+              - if current_user.armor_profile.armor_account_id.nil?
                 | You have to create Armor Profile first.
                 = render partial: 'armor_account_create', :locals => { :product => @product, :user => current_user, :armor_profile => @armor_profile, :armor_order => @armor_order }
 
-              - if @armor_order.inspection_date_by_seller.present? && @armor_order.inspection_date_by_buyer.present?
+              - elsif @armor_order.inspection_date_by_seller && @armor_order.inspection_date_approved_by_seller == true
                 - if @armor_profile.armor_account_id.present? && @armor_order.uri.nil?
                   = form_for @armor_order do |f|
                     = f.hidden_field :total, :value => number_with_precision(@product.unit_price, precision: 2, delimiter: '')
@@ -266,14 +266,18 @@
                         = f.check_box :inspection_date_approved_by_seller, :checked => @armor_order.inspection_date_approved_by_buyer, :required => true
                         span
                           | &nbsp;Approve inspection date i.e (#{@armor_order.inspection_date_by_seller})&nbsp;
+                      .form-group
+                        a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here
+                        span
+                        | &nbsp;to set inspection date
 
 
                     = f.submit 'Create Order', class: "btn btn-primary"
               - else
                 .form-group
-                a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here
-                span
-                | &nbsp;to set inspection date
+                  a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here
+                  span
+                  | &nbsp;to set inspection date
 
 #setInpsectionDateModal.modal.fade aria-hidden="true" aria-labelledby="setInpsectionDateModalLabel" role="dialog" tabindex="-1"
   .modal-dialog

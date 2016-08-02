@@ -46,7 +46,7 @@ class ArmorOrdersController < ApplicationController
 
     product = Product.unexpired.find(params[:product_id])
 
-    if armor_order.update_attributes({:inspection_date_by_seller, armor_order.inspection_date_by_buyer, inspection_date_approved_by_seller: true})
+    if armor_order.update_attributes({inspection_date_by_seller: armor_order.inspection_date_by_buyer, inspection_date_approved_by_seller: true})
       UserMailer.send_inspection_date_confirm_notification_to_buyer(armor_order).deliver_now
       redirect_to product_path(id: product.id), :flash => { :notice => "Inspection date has been set to #{armor_order.inspection_date_by_seller} and has been informed to buyer."}
     else
@@ -148,11 +148,11 @@ class ArmorOrdersController < ApplicationController
     end
 
     def set_inspection_date_notify_buyer(armor_order, inspection_date, product)
-      if armor_order.update_attributes({:inspection_date_by_seller, inspection_date, , inspection_date_approved_by_seller: true})
+      if armor_order.update_attributes({inspection_date_by_seller: inspection_date , inspection_date_approved_by_seller: true})
         UserMailer.send_inspection_date_set_notification_to_buyer(armor_order).deliver_now
-        redirect_to product_checkout_path(product_id: armor_order.product.id, armor_order_id: armor_order.id), :flash => { :notice => 'New inspection date has been set and has been notified to buyer.'}
+        redirect_to product_path(id: product.id), :flash => { :notice => 'New inspection date has been set and has been notified to buyer.'}
       else
-        redirect_to product_checkout_path(product_id: armor_order.product.id, armor_order_id: armor_order.id), :flash => { :alert => armor_order.errors.full_messages.first}
+        redirect_to product_path(id: product.id), :flash => { :alert => armor_order.errors.full_messages.first}
       end
     end
 
