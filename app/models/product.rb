@@ -63,8 +63,6 @@ class Product < ActiveRecord::Base
   validates_presence_of :end_date, :status_characteristic
   validates_presence_of :shipping_estimates
 
-  validate :inspection_date_validator
-
   searchkick autocomplete: ['name'], fields: [:name, :main_category]
 
   scope :unexpired, -> { where("end_date > ?", DateTime.now).where(status: true) }
@@ -102,9 +100,5 @@ class Product < ActiveRecord::Base
   def remaining_amount
     sold_out = (self.sold_out.present? ? self.sold_out : 0)
     self.amount - sold_out
-  end
-
-  def inspection_date_validator
-    errors.add(:inspection_date, 'must be greater than today') if inspection_date.to_date <= Date.today
   end
 end

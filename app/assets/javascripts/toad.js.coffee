@@ -89,6 +89,11 @@ $(document).ready ->
 
   $(".html5lightbox").html5lightbox()
 
+  $('#set_new_inspection').click ->
+    $(".set_inspection_date").show()
+    $(".confirm-inspection-date-btn").hide()
+
+
   $('.related_searches a').click (event) ->
     event.preventDefault()
     rs = $(this).html()

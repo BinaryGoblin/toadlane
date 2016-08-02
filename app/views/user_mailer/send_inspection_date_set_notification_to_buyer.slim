@@ -1,0 +1,9 @@
+= @buyer.name
+- if @armor_order.inspection_date_by_buyer == @armor_order.inspection_date_by_seller
+  | &nbsp;has accepted the inspection date that you set i.e #{@armor_order.inspection_date_by_buyer}
+- else
+  | &nbsp;has rejected the inspection date that you set i.e #{@armor_order.inspection_date_by_buyer} and has set a
+  | &nbsp; new inspection date to #{@armor_order.inspection_date_by_seller}
+
+br
+= link_to 'Go To Checkout Page', product_checkout_url(id: @product.id, armor_order_id: @armor_order.id) 
