@@ -4,4 +4,4 @@
 
 | Now you can create order
 br
-= link_to 'Product', dashboard_products_url(armor_order_id: @armor_order, request_inspection_date_by_buyer: true)
+= link_to 'Go To Checkout Page', product_checkout_url(id: @product.id, armor_order_id: @armor_order.id, inspection_date_by_seller: true) 
