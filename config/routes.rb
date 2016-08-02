@@ -50,7 +50,6 @@ Toad::Application.routes.draw do
         post :active_cascade
         post :inactive_cascade
         get '/:id/viewers', to: 'products#viewers', as: 'viewers'
-        get :products_under_inspection
       end
       get :complete_inspection
     end
@@ -59,6 +58,7 @@ Toad::Application.routes.draw do
       collection do
         delete :delete_cascade
         get :cancel_order
+        get :orders_under_inspection
       end
     end
 

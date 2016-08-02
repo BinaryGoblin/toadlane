@@ -9,14 +9,14 @@ div
       tr
         td colspan="4" valign="top" alrign="left"
           h4.text-uppercase order ##{order.id}
-          div Date: #{order.created_at.strftime('%m-%d-%Y')}
           p
             - if order.instance_of? StripeOrder
-            -# if order.instance_of? ArmorOrder
-              //div
-               //|
-                 //To complete order log into your <a href="//www.Armorpayments.com/Toadlane" target="_blank">Armorpayments.com/Toadlane</a> account. <br />
-                 //If this is your first order with Toadlane, you will need to reset your password.
+            - if order.instance_of? ArmorOrder
+                div
+                  | Armor Order Id #
+                  = order.order_id
+          div Date: #{order.created_at.strftime('%m-%d-%Y')}
+
 
       tr
         td colspan="2" valign="top"

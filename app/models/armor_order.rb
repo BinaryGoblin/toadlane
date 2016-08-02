@@ -55,7 +55,7 @@ class ArmorOrder < ActiveRecord::Base
       self.update_attribute(:status, 'failed')
       Rails.logger.warn e.errors
     else
-      self.update_attribute(:status, 'completed')
+      self.update_attribute(:status, 'processing')
       product.sold_out += self.count
       self.product.save
       UserMailer.sales_order_notification_to_seller(self).deliver_now
@@ -77,11 +77,5 @@ class ArmorOrder < ActiveRecord::Base
                 'action' => 'view' }
     response = client.users(buyer.armor_profile.armor_account_id).authentications(buyer.armor_profile.armor_user_id).create(auth_data)
     self.update_attribute(:uri, response.data[:body]["url"])
-  end
-
-  def order_details_present?
-    self.rebate_percentage.present? && self.quantity.present? &&
-    self.order_amount.present? && self.rebate.present? &&
-    self.fee_percent.present? && self.fee_price.present? && self.shipping_cost.present?
   end
 end

@@ -75,8 +75,8 @@ class ArmorOrdersController < ApplicationController
   end
 
   def update
-    product = Product.unexpired.find(armor_order_params[:product_id])
     armor_order = ArmorOrder.find_by_id(params[:id])
+    product = armor_order.product
     inspection_date_approved_by_seller = armor_order_params["inspection_date_approved_by_seller"] == "1" ? true : false
 
     additional_params = {
@@ -89,7 +89,7 @@ class ArmorOrdersController < ApplicationController
       api_armor_order_params = {
         'seller_id'   => "#{product.user.armor_profile.armor_user_id}",
         'buyer_id'    => "#{current_user.armor_profile.armor_user_id}",
-        'amount'      => armor_order_params["total"],
+        'amount'      => armor_order.amount,
         'summary'     => product.name,
         'description' => product.description,
         'inspection' => true,
@@ -112,8 +112,8 @@ class ArmorOrdersController < ApplicationController
             },
             {
               'name': 'Order released',
-              'amount': armor_order_params["total"],
-              'escrow': armor_order_params["total"]
+              'amount': armor_order.amount,
+              'escrow': armor_order.amount
             }
           ]
         }
@@ -137,6 +137,47 @@ class ArmorOrdersController < ApplicationController
       format.html { redirect_to armor_orders_url }
       format.json { head :no_content }
     end
+  end
+
+  def complete_inspection
+    armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
+    client = ArmorService.new
+    action_data = {
+                    "action" => "completeinspection",
+                    "confirm" => true }
+
+    response = client.orders(armor_order.seller_account_id).update(armor_order.order_id, action_data)
+    armor_order.update_attribute(:inspection_complete, true)
+
+    # shipping details
+    account_id = armor_order.seller.armor_profile.armor_account_id
+    order_id = armor_order.order_id
+    action_data = {
+                      "user_id" => armor_order.seller.armor_profile.armor_user_id,
+                      "carrier_id" => 8,
+                      "tracking_id" => "z1234567890",
+                      "description" => "Shipped via UPS ground in a protective box." }
+    result = client.orders(account_id).shipments(order_id).create(action_data)
+
+    # release fund by buyer
+    seller_account_id = armor_order.seller_account_id
+    order_response = client.orders(seller_account_id).get(armor_order.order_id)
+
+    order_uri = order_response.data[:body]["uri"]
+
+    buyer_account_id = armor_order.buyer.armor_profile.armor_account_id
+    buyer_user_id = armor_order.buyer.armor_profile.armor_user_id
+
+    auth_data = {
+                  'uri' => order_uri,
+                  'action' => 'release' }
+
+    result = client.users(buyer_account_id).authentications(buyer_user_id).create(auth_data)
+    armor_order.update_attribute(:payment_release_url, result.data[:body]["url"])
+
+    redirect_to products_under_inspection_dashboard_products_path(payment_release_url: armor_order.payment_release_url, type: 'complete'), :flash => { :notice => "Completed inspection and released fund" }
+  rescue ArmorService::BadResponseError => e
+    redirect_to products_under_inspection_dashboard_products_path(type: 'incomplete'), :flash => { :error => e.errors.values.flatten }
   end
 
   private

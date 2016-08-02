@@ -11,12 +11,14 @@
         td
           = link 'Stripe Orders', dashboard_orders_path(bought_or_sold: params['bought_or_sold'], type: 'stripe'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
           = link 'Green Orders', dashboard_orders_path(bought_or_sold: params['bought_or_sold'], type: 'green'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-          / TODO this is disabled until we re-integrate armor payments
           = link 'Armor Payments Orders', dashboard_orders_path(bought_or_sold: params['bought_or_sold'], type: 'armor'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
         td
           = link_to 'All', dashboard_orders_path(type: params['type']), class: 'btn btn-default pull-right', _class_active: 'btn-success'
           = link 'Sold', dashboard_orders_path(bought_or_sold: 'sold', type: params['type']), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
           = link 'Bought', dashboard_orders_path(bought_or_sold: 'bought', type: params['type']), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
+        //-# if params[:type] == "armor" && params["bought_or_sold"] == "bought"
+          //td
+            //= link 'Incomplete Inspection', orders_under_inspection_dashboard_orders_path(bought_or_sold: 'bought', type: params['type']), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
 
   .table-responsive
     table.table data-behavior="TableCheckbox" data-options='{"paramName":"orders_ids"}'

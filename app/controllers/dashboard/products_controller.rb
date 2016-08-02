@@ -252,59 +252,6 @@ class Dashboard::ProductsController < DashboardController
     @users = User.where(id: user_ids).order('id ASC')
   end
 
-  def products_under_inspection
-    armor_orders = ArmorOrder.where(buyer_id: current_user.id,
-                                inspection_date_approved_by_seller: true,
-                                inspection_date_approved_by_buyer: true)
-
-    case params[:type]
-    when 'complete'
-      @orders = armor_orders.where(inspection_complete: true)
-    when 'incomplete'
-      @orders = armor_orders.where(inspection_complete: false)
-    when 'today'
-      @orders = armor_orders.where(inspection_complete: false)
-                            .where('inspection_date BETWEEN ? AND ?',
-                                      DateTime.now.beginning_of_day,
-                                      DateTime.now.end_of_day )
-    else
-      @orders = armor_orders.where(inspection_complete: false)
-    end
-    @armor_order =  ArmorOrder.find_by_id(params[:armor_order_id]) if params[:armor_order_id].present?
-  end
-
-  def complete_inspection
-    armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
-    client = ArmorService.new
-    action_data = {
-                    "action" => "completeinspection",
-                    "confirm" => true }
-
-    response = client.orders(armor_order.seller_account_id).update(armor_order.order_id, action_data)
-    armor_order.update_attribute(:inspection_complete, true)
-
-
-    # release fund by buyer
-    seller_account_id = armor_order.seller_account_id
-    order_response = client.orders(seller_account_id).get(armor_order.order_id)
-
-    order_uri = order_response.data[:body]["uri"]
-
-    buyer_account_id = armor_order.buyer.armor_profile.armor_account_id
-    buyer_user_id = armor_order.buyer.armor_profile.armor_user_id
-
-    auth_data = {
-                  'uri' => order_uri,
-                  'action' => 'release' }
-
-    result = client.users(buyer_account_id).authentications(buyer_user_id).create(auth_data)
-    armor_order.update_attribute(:payment_release_url, result.data[:body]["url"])
-
-    redirect_to products_under_inspection_dashboard_products_path(payment_release_url: armor_order.payment_release_url, type: 'complete'), :flash => { :notice => "Completed inspection and released fund" }
-  rescue ArmorService::BadResponseError => e
-    redirect_to products_under_inspection_dashboard_products_path(type: 'incomplete'), :flash => { :error => e.errors.values.flatten }
-  end
-
   private
     def set_product
       @product = Product.find(params[:id])

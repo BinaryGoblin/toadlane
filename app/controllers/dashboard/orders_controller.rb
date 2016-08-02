@@ -80,6 +80,15 @@ class Dashboard::OrdersController < DashboardController
     end
   end
 
+  def orders_under_inspection
+    armor_orders = ArmorOrder.where(buyer_id: current_user.id,
+                                inspection_date_approved_by_seller: true,
+                                inspection_date_approved_by_buyer: true)
+
+    @orders = armor_orders.where(inspection_complete: false)
+    # @armor_order =  ArmorOrder.find_by_id(params[:armor_order_id]) if params[:armor_order_id].present?
+  end
+
   private
    def get_order_status
     @orders = ArmorOrder.where(deleted: false).own_orders(current_user.id)
