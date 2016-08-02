@@ -37,6 +37,21 @@
                 | Apply to be a merchant
             - else
               p <b>Status:</b> <span class="success">You are connected to Green By Phone.</span>
+          hr
+          .account-amg
+            h4 Advanced Merchant Group
+            p A simple payments solution for your business and your customers
+            = form_for @amg_profile, url: create_amg_profile_dashboard_accounts_path do |f|
+              .form-group
+                = f.label :amg_api_key, "AMG API Key:"
+                = f.text_field :amg_api_key, class: "form-control", required: true
+              = f.submit "Submit", class: "btn btn-primary"
+            - if @user.amg_profile.nil?
+              p <b>Status:</b> <span class="warning">You are not connected to Advanced Merchant Group.</span>
+              a.link.link-ulined href="https://amgsecurepay.com/clientlogin/" target="_blank"
+                | Apply to be a merchant
+            - else
+              p <b>Status:</b> <span class="success">You are connected to Advanced Merchant Group.</span>
         .col-md-4
           - if @user.stripe_profile.nil?
             - if Rails.env.development?

@@ -31,6 +31,7 @@ Toad::Application.routes.draw do
     resources :accounts do
       collection do
         post :create_green_profile
+        post :create_amg_profile
       end
     end
 
