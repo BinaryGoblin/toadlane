@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160721045630) do
+ActiveRecord::Schema.define(version: 20160802092633) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,13 @@ ActiveRecord::Schema.define(version: 20160721045630) do
   end
 
   add_index "addresses", ["user_id"], name: "index_addresses_on_user_id", using: :btree
+
+  create_table "amg_profiles", force: :cascade do |t|
+    t.string   "amg_api_key"
+    t.integer  "user_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
 
   create_table "armor_invoices", force: :cascade do |t|
     t.integer  "buyer_id"
@@ -71,6 +78,9 @@ ActiveRecord::Schema.define(version: 20160721045630) do
     t.integer  "taxes_price",                    default: 0
     t.integer  "rebate_price",                   default: 0
     t.integer  "rebate_percent",                 default: 0
+    t.float    "fee"
+    t.float    "rebate"
+    t.float    "shipping_cost"
   end
 
   create_table "armor_profiles", force: :cascade do |t|
@@ -79,6 +89,8 @@ ActiveRecord::Schema.define(version: 20160721045630) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "confirmed_email"
+    t.boolean  "agreed_terms"
   end
 
   add_index "armor_profiles", ["user_id"], name: "index_armor_profiles_on_user_id", using: :btree
@@ -211,6 +223,17 @@ ActiveRecord::Schema.define(version: 20160721045630) do
     t.decimal  "value",       precision: 5, scale: 3
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
+  end
+
+  create_table "green_checks", force: :cascade do |t|
+    t.string   "result"
+    t.string   "result_description"
+    t.string   "check_number"
+    t.string   "check_id"
+    t.integer  "green_order_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.float    "amount"
   end
 
   create_table "green_orders", force: :cascade do |t|
