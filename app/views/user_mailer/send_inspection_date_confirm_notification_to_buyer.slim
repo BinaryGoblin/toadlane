@@ -1,7 +1,7 @@
 = @buyer.name
 | &nbsp; has confirmed the inspection date you set
-= @armor_order.inspection_date
+= @armor_order.inspection_date_by_buyer
 
 | Now you can create order
 br
-= link_to 'Go To Checkout Page', product_checkout_url(id: @product.id, armor_order_id: @armor_order.id, inspection_date_by_seller: true) 
+= link_to 'Go To Checkout Page', product_checkout_url(product_id: @product.id, armor_order_id: @armor_order.id, inspection_date_by_seller: true)
