@@ -23,7 +23,7 @@ class ArmorOrdersController < ApplicationController
   end
 
   def set_inspection_date
-    armor_order = ArmorOrder.find_by_id(params[:armor_order_id])
+    product = Product.unexpired.find(params[:product_id])
 
     inspection_date = DateTime.new(
                                     params["armor_order"]["inspection_date_by_buyer(1i)"].to_i,
@@ -32,9 +32,9 @@ class ArmorOrdersController < ApplicationController
                                     params["armor_order"]["inspection_date_by_buyer(4i)"].to_i,
                                     params["armor_order"]["inspection_date_by_buyer(5i)"].to_i
                                   )
-    product = Product.unexpired.find(params[:product_id])
 
-    if armor_order.seller == current_user
+    armor_order = ArmorOrder.create
+    if product.user == current_user
       set_inspection_date_notify_buyer(armor_order, inspection_date, product)
     else
       set_inspection_date_notify_seller(armor_order, inspection_date, product)

@@ -71,7 +71,7 @@ class ProductsController < ApplicationController
     if params["armor_order_id"].present?
       @armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
     else
-      @armor_order = ArmorOrder.create
+      @armor_order = ArmorOrder.new
     end
     # set_order_details(@armor_order, @data)
     @armor_profile = current_user.armor_profile.present? ? current_user.armor_profile : ArmorProfile.new

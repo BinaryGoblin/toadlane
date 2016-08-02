@@ -287,7 +287,7 @@
           span aria-hidden="true"  &times;
         h4.modal-title Set Inspection Date
       .modal-body
-        = form_for @armor_order, url: armor_order_set_inspection_date_path(armor_order_id: @armor_order.id, product_id: @product.id), method: :post  do |f|
+        = form_for @armor_order, url: set_inspection_date_armor_orders_path(product_id: @product.id), method: :post  do |f|
           .offer-from-until
             .offer-item
               label.lg.required Select Inspection Date
