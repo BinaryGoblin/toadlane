@@ -53,7 +53,9 @@ class Dashboard::ProductsController < DashboardController
       videos = product_params.extract!(:videos_attributes)
     end
 
-    @product = current_user.products.new(product_params.merge!(start_date: start_date).merge!(end_date: end_date).except(:images_attributes, :certificates_attributes, :videos_attributes))
+    negotiable = product_params["negotiable"] == "1" ? true : false
+
+    @product = current_user.products.new(product_params.merge!(start_date: start_date).merge!(end_date: end_date).merge!(negotiable: negotiable).except(:images_attributes, :certificates_attributes, :videos_attributes))
 
     respond_to do |format|
       if @product.save
@@ -153,8 +155,10 @@ class Dashboard::ProductsController < DashboardController
       inspection_date_for_delete = params["product"].extract!(:inspection_date_delete)
     end
 
+    negotiable = product_params["negotiable"] == "1" ? true : false
+
     respond_to do |format|
-      if @product.update(product_params.merge!(start_date: start_date).merge!(end_date: end_date).except(:images_attributes,
+      if @product.update(product_params.merge!(start_date: start_date).merge!(end_date: end_date).merge!(negotiable: negotiable).except(:images_attributes,
         :images_attributes_delete, :certificates_attributes, :certificates_attributes_delete, :videos_attributes, :videos_attributes_delete, :pricebreaks_delete))
 
         if images
@@ -221,11 +225,11 @@ class Dashboard::ProductsController < DashboardController
         #   end
         # end
 
-        if inspection_date_for_delete
-          inspection_date_for_delete[:inspection_date_delete].each do |inspection_date|
-            @product.inspection_dates.find(inspection_date).destroy
-          end
-        end
+        # if inspection_date_for_delete
+        #   inspection_date_for_delete[:inspection_date_delete].each do |inspection_date|
+        #     @product.inspection_dates.find(inspection_date).destroy
+        #   end
+        # end
 
         format.html { redirect_to path }
       else
@@ -284,7 +288,7 @@ class Dashboard::ProductsController < DashboardController
     end
 
     def product_params
-      params.require(:product).permit(:id, :name, :description, :user_id, :unit_price, :status_action, :status, :status_characteristic, :start_date, :end_date,
+      params.require(:product).permit(:id, :name, :negotiable, :description, :user_id, :unit_price, :status_action, :status, :status_characteristic, :start_date, :end_date,
                                       :inspection_date, :amount, :sold_out, :dimension_width, :dimension_height, :dimension_depth, :dimension_weight, :main_category,
                                       :pricebreaks_attributes, :shipping_estimates_attributes, :shipping_estimates_delete, :sku,
                                       :slug, :images_attributes => [], :images_attributes_delete => [], :certificates_attributes => [], :certificates_attributes_delete => [], :videos_attributes => [], :videos_attributes_delete => [], :shipping_estimates_attributes => [ :id, :cost, :description, :product_id, :_destroy, :type ],

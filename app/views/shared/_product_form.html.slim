@@ -214,23 +214,27 @@
               label Time:
               = time_select :product, :end_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
     hr
+    .form-group
+      = f.check_box :negotiable, :checked => @product.negotiable
+      span
+        | &nbsp;Donot let buyers to add inspection date?
     label.lg Inspection Dates:
     ul.inspectiondates
       - if @product.inspection_dates.any?
-        - @product.inspection_dates.each_with_index do |date, index|
+        - @product.inspection_dates.each_with_index do |inspection_date, index|
           li.inspectiondate
             .index= index+1
             .offer-item
               .offer-date
                 label Date:
-                = date_select :inspection_date, :date, { order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+                = date_select :inspection_date, :date, { :default => inspection_date.date, order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" , :value => inspection_date.date }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
 
               .offer-time
                 label Time:
-                = time_select :inspection_date, :date, { ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" }, { data: { behavior: 'Select' } }
+                = time_select :inspection_date, :date, { :default => inspection_date.date, ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" , :value => inspection_date.date}, { data: { behavior: 'Select' } }
 
               span.btn.btn-default.remove= fa_icon 'trash-o'
-              .hide: input type="checkbox" name="product[inspection_date_delete][]" value="#{date.id}"
+              .hide: input type="checkbox" name="product[inspection_date_delete][]" value="#{inspection_date.id}"
       - else
         li.inspectiondate
           .index 1
