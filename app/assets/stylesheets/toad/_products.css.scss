@@ -543,9 +543,20 @@ $sell-color: #FF8724;
       border-radius: 5px;
       margin-bottom: 29px;
       margin-left: 3%;
-      width: 46.3333%;
       height: 96px;
       float: left;
+    }
+  }
+
+  .pricebreaks{
+    li{
+      width: 31.3333%;
+    }
+  }
+
+  .inspectiondates{
+    li{
+      width: 46.3333%;
     }
   }
 
