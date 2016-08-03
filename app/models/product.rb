@@ -50,6 +50,7 @@ class Product < ActiveRecord::Base
   has_many :pricebreaks, -> { order(quantity: :asc) }, autosave: true, dependent: :destroy
   has_many :shipping_estimates, dependent: :destroy
   has_many :certificates, dependent: :destroy
+  has_many :inspection_dates
 
   accepts_nested_attributes_for :shipping_estimates,
     :allow_destroy => true,
