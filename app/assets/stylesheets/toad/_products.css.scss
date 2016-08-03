@@ -528,7 +528,8 @@ $sell-color: #FF8724;
     }
   }
 
-  .pricebreaks {
+  .pricebreaks,
+  .inspectiondates {
     list-style: none;
     padding: 0;
     margin: 0 0 -29px -3%;
@@ -542,13 +543,14 @@ $sell-color: #FF8724;
       border-radius: 5px;
       margin-bottom: 29px;
       margin-left: 3%;
-      width: 30.3333%;
+      width: 46.3333%;
       height: 96px;
       float: left;
     }
   }
 
-  .pricebreak {
+  .pricebreak,
+  .inspectiondate {
     border-color: #cccfd3;
     background: white;
     padding-top: 16px;
@@ -586,7 +588,12 @@ $sell-color: #FF8724;
     }
   }
 
-  .add-pricebreak {
+  .inspectiondate .offer-item .remove{
+    margin-left: 15px;
+    margin-top: 24px;
+  }
+
+  .add-pricebreak, .add-inspectiondate {
     border-color: $buy-color;
     text-align: center;
     font-size: 14px;
