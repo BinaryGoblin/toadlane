@@ -588,9 +588,14 @@ $sell-color: #FF8724;
     }
   }
 
-  .inspectiondate .offer-item .remove{
-    margin-left: 15px;
-    margin-top: 24px;
+  .inspectiondate {
+    .offer-item .remove{
+      margin-left: 15px;
+      margin-top: 24px;
+    }
+    select[data-behavior=Select]{
+      display: inline;
+    }
   }
 
   .add-pricebreak, .add-inspectiondate {

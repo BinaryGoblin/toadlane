@@ -214,6 +214,54 @@
               label Time:
               = time_select :product, :end_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
     hr
+    label.lg Inspection Dates:
+    ul.inspectiondates
+      - if @product.inspection_dates.any?
+        - @product.inspection_dates.each_with_index do |date, index|
+          li.inspectiondate
+            .index= index+1
+            .offer-item
+              .offer-date
+                label Date:
+                = date_select :inspection_date, :date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+
+              .offer-time
+                label Time:
+                = time_select :inspection_date, :date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+
+              span.btn.btn-default.remove= fa_icon 'trash-o'
+              .hide: input type="checkbox" name="product[pricebreaks_delete][]" value="#{pb.id}"
+      - else
+        li.inspectiondate
+          .index 1
+          .offer-item
+            .offer-date
+              label Date:
+              = date_select :inspection_date, :date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+
+            .offer-time
+              label Time:
+              = time_select :inspection_date, :date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+
+            span.btn.btn-default.remove= fa_icon 'trash-o'
+
+      li.add-inspectiondate data-behavior="InspectionDate"= fa_icon 'plus', text: 'Add another Inspection Date'
+
+    script#template-inspectiondate type="text/template"
+      li.inspectiondate
+        .index 2
+        .offer-item
+          .offer-date
+            label Date:
+            = date_select :inspection_date, :date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+
+          .offer-time
+            label Time:
+            = time_select :inspection_date, :date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+
+          span.btn.btn-default.remove= fa_icon 'trash-o'
+
+    hr
     .price-stock.clearfix
       .unit
         = f.label :unit_price, 'Base unit price (USD):', class: 'required lg'
