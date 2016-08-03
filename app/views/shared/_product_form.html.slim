@@ -223,25 +223,25 @@
             .offer-item
               .offer-date
                 label Date:
-                = date_select :inspection_date, :date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+                = date_select :inspection_date, :date, { order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
 
               .offer-time
                 label Time:
-                = time_select :inspection_date, :date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+                = time_select :inspection_date, :date, { ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" }, { data: { behavior: 'Select' } }
 
               span.btn.btn-default.remove= fa_icon 'trash-o'
-              .hide: input type="checkbox" name="product[pricebreaks_delete][]" value="#{pb.id}"
+              .hide: input type="checkbox" name="product[inspection_date_delete][]" value="#{date.id}"
       - else
         li.inspectiondate
           .index 1
           .offer-item
             .offer-date
               label Date:
-              = date_select :inspection_date, :date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+              = date_select :inspection_date, :date, { order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
 
             .offer-time
               label Time:
-              = time_select :inspection_date, :date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+              = time_select :inspection_date, :date, { ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" }, { data: { behavior: 'Select' } }
 
             span.btn.btn-default.remove= fa_icon 'trash-o'
 
@@ -253,11 +253,11 @@
         .offer-item
           .offer-date
             label Date:
-            = date_select :inspection_date, :date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+            = date_select :inspection_date, :date, { order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
 
           .offer-time
             label Time:
-            = time_select :inspection_date, :date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+            = time_select :inspection_date, :date, { ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" }, { data: { behavior: 'Select' } }
 
           span.btn.btn-default.remove= fa_icon 'trash-o'
 

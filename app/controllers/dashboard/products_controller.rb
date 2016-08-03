@@ -89,6 +89,14 @@ class Dashboard::ProductsController < DashboardController
           path = dashboard_products_path
         end
 
+        if params["product"]["inspection_date_attributes"].present?
+          inspection_attributes = params["product"]["inspection_date_attributes"]
+          inspection_attributes.each do |inspection_attribute|
+            inspection_date = DateTime.new(inspection_attribute["date(1i)"].to_i, inspection_attribute["date(2i)"].to_i, inspection_attribute["date(3i)"].to_i, inspection_attribute["date(4i)"].to_i, inspection_attribute["date(5i)"].to_i)
+            @product.inspection_dates.create({date: inspection_date, creator_type: "seller", product_id: @product.id})
+          end
+        end
+
         format.html { redirect_to path }
       else
         format.html { render action: 'new' }
@@ -139,6 +147,10 @@ class Dashboard::ProductsController < DashboardController
 
     if product_params[:pricebreaks_delete].present?
       pricebreak_for_delete = product_params.extract!(:pricebreaks_delete)
+    end
+
+    if params["product"]["inspection_date_delete"].present?
+      inspection_date_for_delete = params["product"].extract!(:inspection_date_delete)
     end
 
     respond_to do |format|
@@ -199,6 +211,20 @@ class Dashboard::ProductsController < DashboardController
           path = edit_dashboard_product_path(@product)
         else
           path = dashboard_products_path
+        end
+
+        # if params["product"]["inspection_date_attributes"].present?
+        #   inspection_attributes = params["product"]["inspection_date_attributes"]
+        #   inspection_attributes.each do |inspection_attribute|
+        #     inspection_date = DateTime.new(inspection_attribute["date(1i)"].to_i, inspection_attribute["date(2i)"].to_i, inspection_attribute["date(3i)"].to_i, inspection_attribute["date(4i)"].to_i, inspection_attribute["date(5i)"].to_i)
+        #     @product.inspection_dates.create({date: inspection_date, creator_type: "seller", product_id: @product.id})
+        #   end
+        # end
+
+        if inspection_date_for_delete
+          inspection_date_for_delete[:inspection_date_delete].each do |inspection_date|
+            @product.inspection_dates.find(inspection_date).destroy
+          end
         end
 
         format.html { redirect_to path }
