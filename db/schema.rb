@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160801082034) do
+ActiveRecord::Schema.define(version: 20160803051328) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -296,6 +296,16 @@ ActiveRecord::Schema.define(version: 20160801082034) do
   add_index "impressions", ["impressionable_type", "message", "impressionable_id"], name: "impressionable_type_message_index", using: :btree
   add_index "impressions", ["user_id"], name: "index_impressions_on_user_id", using: :btree
 
+  create_table "inspection_dates", force: :cascade do |t|
+    t.datetime "date"
+    t.string   "creator_type"
+    t.integer  "product_id"
+    t.integer  "order_id"
+    t.boolean  "approved"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
   create_table "mailboxer_conversation_opt_outs", force: :cascade do |t|
     t.integer "unsubscriber_id"
     t.string  "unsubscriber_type"
@@ -390,6 +400,7 @@ ActiveRecord::Schema.define(version: 20160801082034) do
     t.integer  "type",                            default: 0
     t.integer  "views_count",                     default: 0
     t.datetime "deleted_at"
+    t.boolean  "negotiable"
   end
 
   add_index "products", ["deleted_at"], name: "index_products_on_deleted_at", using: :btree
