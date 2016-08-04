@@ -80,7 +80,6 @@ ActiveRecord::Schema.define(version: 20160804053936) do
     t.string   "payment_release_url"
     t.datetime "inspection_date_by_seller"
     t.datetime "inspection_date_by_buyer"
-    t.boolean  "default_payment",                                default: false
   end
 
   create_table "armor_profiles", force: :cascade do |t|
@@ -91,6 +90,7 @@ ActiveRecord::Schema.define(version: 20160804053936) do
     t.datetime "updated_at"
     t.boolean  "confirmed_email"
     t.boolean  "agreed_terms"
+    t.boolean  "default_payment",            default: false
   end
 
   add_index "armor_profiles", ["user_id"], name: "index_armor_profiles_on_user_id", using: :btree
