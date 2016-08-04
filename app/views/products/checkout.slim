@@ -20,18 +20,11 @@
             th amount
 
         tbody
-          = render partial: 'order_details', locals: { product: @product, armor_order: @armor_order, data: @data }
+          = render partial: 'products/shared/order_details', locals: { product: @product, armor_order: @armor_order, data: @data }
 
     .col-md-12.checkout-payment-gateway
       - if @armor_order.uri.present?
-          button.btn.btn-primary data-target="#paymentInstructionModal" data-toggle="modal" View Payment Details
-          #paymentInstructionModal.modal.fade aria-hidden="true" aria-labelledby="paymentInstructionModalLabel" role="dialog" tabindex="-1"
-            .modal-dialog
-              .modal-content
-                .modal-header
-                  button.close aria-hidden="true" data-dismiss="modal" type="button"  &times;
-                  h4#paymentInstructionModalLabel.modal-title Payoneer Payout Preference
-                iframe allowtransparency="true" height="600" width="475" frameborder="0" src="#{@armor_order.uri}"
+          = render partial: 'products/shared/payment_instruction_pop_up', locals: { armor_order: @armor_order }
 
           = link_to "View Order", dashboard_order_path(@armor_order, type: 'armor' ), class: "btn btn-primary pull-right"
       - else
@@ -244,75 +237,11 @@
                       = f.submit 'Place Order', class: "btn btn-primary"
           - if @product.armor_present?
             #armor.tab-pane role="tabpanel" class=('active' if @product.armor_only_present?)
-              - if current_user.armor_profile.armor_account_id.nil?
-                | You have to create Armor Profile first.
-                = render partial: 'armor_account_create', :locals => { :product => @product, :user => current_user, :armor_profile => @armor_profile, :armor_order => @armor_order }
-
-              - else
-                -if @armor_order.inspection_date_by_seller && @armor_order.inspection_date_approved_by_seller == true
-                  - if @armor_profile.armor_account_id.present? && @armor_order.uri.nil?
-                    = form_for @armor_order do |f|
-                      - if @armor_order.inspection_date_by_seller.present?
-                        .form-group
-                          = f.check_box :inspection_date_approved_by_seller, :checked => @armor_order.inspection_date_approved_by_buyer, :required => true
-                          span
-                            | &nbsp;Approve inspection date i.e (#{@armor_order.inspection_date_by_seller})&nbsp;
-                        .form-group
-                          a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here
-                          span
-                          | &nbsp;to set inspection date
+              = render partial: 'products/shared/armor_payment', :locals => { armor_order: @armor_order,
+                                                                      armor_profile: @armor_profile,
+                                                                      user: current_user,
+                                                                      data: @data,
+                                                                      product: @product}
 
 
-                      = f.submit 'Create Order', class: "btn btn-primary"
-              - if @product.inspection_dates.any?
-                = form_for @armor_order, url: set_inspection_date_armor_orders_path(product_id: @product.id), method: :post  do |f|
-                  = f.hidden_field :total, :value => number_with_precision(@product.unit_price, precision: 2, delimiter: '')
-                  = f.hidden_field :product_id, :value => @product.id
-                  = f.hidden_field :unit_price, :value => number_with_precision(@product.unit_price, precision: 2, delimiter: '')
-                  = f.hidden_field :count, :value => @data[:quantity], class: 'calc-quantity'
-
-                  = f.hidden_field :fee, :value => '0'
-                  = f.hidden_field :rebate, :value => '0'
-                  = f.hidden_field :rebate_percent, :value => '0'
-                  = f.hidden_field :shipping_cost, :value => '0'
-
-                  = f.collection_radio_buttons(:inspection_date_id, @product.inspection_dates, :id, :get_inspection_date) do |b, index|
-                    tr
-                      td
-                        = b.label { b.radio_button(:"checked" => (b.object.id == @product.inspection_dates.first.id)) + b.text }
-                        br
-                //.form-group
-                  //a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here
-                  //span
-                  //| &nbsp;to set inspection date
-
-#setInpsectionDateModal.modal.fade aria-hidden="true" aria-labelledby="setInpsectionDateModalLabel" role="dialog" tabindex="-1"
-  .modal-dialog
-    .modal-content
-      .modal-header
-        button.close aria-label="Close" data-dismiss="modal" type="button"
-          span aria-hidden="true"  &times;
-        h4.modal-title Set Inspection Date
-      .modal-body
-        = form_for @armor_order, url: set_inspection_date_armor_orders_path(product_id: @product.id), method: :post  do |f|
-          = f.hidden_field :total, :value => number_with_precision(@product.unit_price, precision: 2, delimiter: '')
-          = f.hidden_field :product_id, :value => @product.id
-          = f.hidden_field :unit_price, :value => number_with_precision(@product.unit_price, precision: 2, delimiter: '')
-          = f.hidden_field :count, :value => @data[:quantity], class: 'calc-quantity'
-
-          = f.hidden_field :fee, :value => '0'
-          = f.hidden_field :rebate, :value => '0'
-          = f.hidden_field :rebate_percent, :value => '0'
-          = f.hidden_field :shipping_cost, :value => '0'
-          .offer-from-until
-            .offer-item
-              label.lg.required Select Inspection Date
-              .offer-date
-                label Date:
-                = date_select :armor_order, :inspection_date_by_buyer, { :default => Date.today, order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
-
-              .offer-time
-                label Time:
-                = time_select :armor_order, :inspection_date_by_buyer, { :default => Time.now, ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
-          button.btn.btn-secondary data-dismiss="modal" type="button"  Close
-          = f.submit 'Save', class: "btn btn-primary"
+= render partial: 'products/shared/set_inspection_date_by_byer', :locals => { product: @product, data: @data, armor_order: @armor_order }
