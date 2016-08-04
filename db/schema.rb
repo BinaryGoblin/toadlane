@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160803051328) do
+ActiveRecord::Schema.define(version: 20160804053936) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,6 +80,7 @@ ActiveRecord::Schema.define(version: 20160803051328) do
     t.string   "payment_release_url"
     t.datetime "inspection_date_by_seller"
     t.datetime "inspection_date_by_buyer"
+    t.boolean  "default_payment",                                default: false
   end
 
   create_table "armor_profiles", force: :cascade do |t|
