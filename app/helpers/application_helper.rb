@@ -148,7 +148,7 @@ module ApplicationHelper
       if index == 0
         trs += content_tag :tr do
           concat content_tag :td, needed.to_s + ' - ' + (pricebreak.quantity - 1).to_s
-          concat content_tag :td, '$ ' + unit_price.to_s
+          concat content_tag :td, number_to_currency(unit_price)
           concat content_tag :td, needed.to_s + ' needed'
         end
       end
@@ -172,7 +172,7 @@ module ApplicationHelper
       end
 
       tr_first = (pricebreak.quantity).to_s + ' - ' + last_quantity
-      tr_second = '$ ' + pricebreak.price.to_s
+      tr_second = number_to_currency(pricebreak.price)
       tr_third = (pricebreak.quantity).to_s + ' needed'
 
       needed = pricebreak.quantity
