@@ -84,7 +84,7 @@
 
               .pull-right
                 span.text-right Totals:
-                .price data-unit-price="#{number_with_precision(@product.unit_price, precision: 0, delimiter: '')}" #{number_to_currency(@product.unit_price, :unit => "$", precision: 0)}/Unit
+                .price data-unit-price="#{number_with_precision(@product.unit_price, precision: 0, delimiter: '')}" #{number_to_currency(@product.unit_price, :unit => "$", precision: 2)}/Unit
 
             ul
               li
