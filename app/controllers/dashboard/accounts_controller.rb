@@ -36,12 +36,8 @@ class Dashboard::AccountsController < DashboardController
       client = ArmorService.new
       email_confirmed = armor_params["confirmed_email"]
       agreed_terms = armor_params["agreed_terms"] == "1" ? true : false
-      default_payment = armor_params["default_payment"] == "1" ? true : false
 
-      current_user.armor_profile.update_attributes({
-        agreed_terms: agreed_terms,
-        default_payment: default_payment
-      })
+      current_user.armor_profile.update_attribute(:agreed_terms, agreed_terms)
 
       phone_number = Phonelib.parse(armor_params["phone"])
 
@@ -119,6 +115,15 @@ class Dashboard::AccountsController < DashboardController
       redirect_to product_checkout_path(product_id: params[:product_id], armor_order_id: params[:armor_order_id], armor_profile_id: armor_profile.id), :flash => { :notice => "Your email has been confirmed successfully. fill up other details to create armor profile" }
     else
       redirect_to dashboard_accounts_path(armor_profile_id: armor_profile.id), :flash => { :notice => "Your email has been confirmed successfully. fill up other details to create armor profile" }
+    end
+  end
+
+  def update_armor_profile
+    default_payment = armor_params["default_payment"] == "1" ? true : false
+    if current_user.armor_profile.update_attribute(:default_payment, default_payment)
+      redirect_to dashboard_accounts_path(armor_profile_id: current_user.armor_profile.id), :flash => { :notice => "You have successfully updated the default payment method." }
+    else
+      redirect_to dashboard_accounts_path(armor_profile_id: current_user.armor_profile.id)
     end
   end
 
