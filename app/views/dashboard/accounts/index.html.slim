@@ -76,7 +76,7 @@
                 .row
                   .col-md-6
                     .form-group
-                      - if current_user.armor_profile.nil?
+                      - if current_user.armor_profile.nil? 
                         = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path, class: ".link link-ulined"
                       = f.hidden_field :confirmed_email, :value => current_user.try(:armor_profile).try(:confirmed_email)
 

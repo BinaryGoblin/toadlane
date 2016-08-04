@@ -81,10 +81,14 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def send_confirmation_email
-    product = Product.find_by_id(params[:product_id])
-    armor_order = ArmorOrder.find_by_id(params[:armor_order_id])
+    product = Product.find_by_id(params[:product_id]) if params[:product_id].present?
+    armor_order = ArmorOrder.find_by_id(params[:armor_order_id]) if params[:armor_order_id].present?
     email = UserMailer.send_confirmation_email(current_user, product, armor_order).deliver_now
-    redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :notice => "Confirmation email has been sent. Please check your email." }
+    if product.present? && armor_order.present?
+      redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :notice => "Confirmation email has been sent. Please check your email." }
+    else
+      redirect_to dashboard_accounts_path, :flash => { :notice => "Confirmation email has been sent. Please check your email." }
+    end
   end
 
   def update
@@ -104,7 +108,12 @@ class Dashboard::AccountsController < DashboardController
     else
       armor_profile = ArmorProfile.new
     end
-    redirect_to product_checkout_path(product_id: params[:product_id], armor_order_id: params[:armor_order_id], armor_profile_id: armor_profile.id), :flash => { :notice => "Your email has been confirmed successfully. fill up other details to create armor profile" }
+
+    if params[:product_id].present? && params[:armor_order_id].present?
+      redirect_to product_checkout_path(product_id: params[:product_id], armor_order_id: params[:armor_order_id], armor_profile_id: armor_profile.id), :flash => { :notice => "Your email has been confirmed successfully. fill up other details to create armor profile" }
+    else
+      redirect_to dashboard_accounts_path(armor_profile_id: armor_profile.id), :flash => { :notice => "Your email has been confirmed successfully. fill up other details to create armor profile" }
+    end
   end
 
   private
