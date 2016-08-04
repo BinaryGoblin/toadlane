@@ -81,6 +81,15 @@
 
     &:last-child {
       color: #5c8f10;
+      font-size: 15px;
+    }
+
+    &:first-child {
+      font-size: 15px;
+    }
+
+    &:nth-child(even) {
+      padding-top: 5px;
     }
   }
 
