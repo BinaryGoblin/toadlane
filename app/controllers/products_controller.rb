@@ -64,6 +64,7 @@ class ProductsController < ApplicationController
     @fee = Fee.find_by(:module_name => "Stripe").value
     @stripe_order = StripeOrder.new
     @green_order = GreenOrder.new
+    @amg_order = AmgOrder.new
   end
 
   def subregion_options

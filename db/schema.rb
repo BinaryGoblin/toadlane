@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160802092633) do
+ActiveRecord::Schema.define(version: 20160803092715) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,34 @@ ActiveRecord::Schema.define(version: 20160802092633) do
   end
 
   add_index "addresses", ["user_id"], name: "index_addresses_on_user_id", using: :btree
+
+  create_table "amg_orders", force: :cascade do |t|
+    t.integer  "buyer_id"
+    t.integer  "seller_id"
+    t.integer  "product_id"
+    t.integer  "status"
+    t.float    "unit_price"
+    t.integer  "count"
+    t.float    "fee"
+    t.float    "rebate"
+    t.float    "total"
+    t.string   "summary"
+    t.text     "description"
+    t.string   "tracking_number"
+    t.boolean  "deleted"
+    t.float    "shipping_cost"
+    t.string   "address_name"
+    t.string   "address_city"
+    t.string   "address_state"
+    t.string   "address_zip"
+    t.string   "address_country"
+    t.integer  "shipping_estimate_id"
+    t.integer  "address_id"
+    t.string   "transaction_id"
+    t.string   "authorization_code"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
 
   create_table "amg_profiles", force: :cascade do |t|
     t.string   "amg_api_key"

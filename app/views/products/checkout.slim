@@ -49,6 +49,8 @@
             a aria-controls="stripe" data-toggle="tab" href="#stripe" role="tab"  Stripe (Credit Card)
           li role="presentation" class=('active' if @green_order.routing_number.present?)
             a aria-controls="green" data-toggle="tab" href="#green" role="tab"  Green (eCheck)
+          li role="presentation"
+            a aria-controls="amg" data-toggle="tab" href="#amg" role="tab" Advanced Merchant Group
       .tab-content
         - if @product.stripe_present?
           #stripe.tab-pane role="tabpanel" class=('active' if !@green_order.routing_number.present?)
@@ -231,3 +233,112 @@
                     = f.hidden_field :buyer_id, value: @product.user.id
 
                     = f.submit 'Place Order', class: "btn btn-primary"
+        - if @product.amg_present?
+          #amg.tab-pane role="tabpanel"
+            = form_for(@amg_order, remote: true) do |f|
+              -if current_user && !current_user.addresses.nil?
+                table.table data-behavior="assignShippingAddress"
+                  thead
+                    tr
+                      th shipping address
+                  tbody
+                    - amg_shipping_addresses = Address.where(:user => current_user).order('created_at')
+                    = f.collection_radio_buttons(:address_id, amg_shipping_addresses, :id, :get_inline_address) do |b|
+                      tr
+                        td
+                          = b.label { b.radio_button(:"data-behavior" => "AssignShipping", :"checked" => (b.object.id == amg_shipping_addresses.first.id)) + b.text }
+                    tr
+                      td
+                        = radio_button 'amg_order', :address_id, "-1", default: true, 'data-behavior' => "AssignShipping", id: 'amg_order_address_id__1'
+                        = label :address_id, " Enter new address", for: 'amg_order_address_id__1'
+              table.table
+                - if !@product.shipping_estimates.nil?
+                  thead
+                    tr
+                      th shipping method
+                  tbody
+                    - amg_shipping_estimates = ShippingEstimate.where(:product => @product).order('created_at')
+                    = f.collection_radio_buttons(:shipping_estimate_id, amg_shipping_estimates, :id, :get_label) do |b|
+                      tr
+                        td
+                          = b.label { b.radio_button(:"data-behavior" => "EstimateShipping", :"data-cost" => b.object.cost, :"data-type" => b.object.type, :"checked" => (b.object.id == amg_shipping_estimates.first.id)) + b.text }
+              .amgDetails.form-horizontal
+                h2 Enter your check details below
+                .form-group
+                  = f.label :name, 'Name *', class: 'control-label col-sm-4'
+                  .col-sm-8
+                    = f.text_field :name, class: 'form-control', :value => "#{current_user.try(:name)}", required: true
+                .form-group
+                  = f.label :phone, 'Phone *', class: 'control-label col-sm-4'
+                  .col-sm-8
+                    = f.text_field :phone, class: 'form-control', :value => "#{current_user.try(:formatted_phone)}", required: true
+                    p.help-block Your 10-digit phone number in the format 999-999-9999.
+                - amg_address = current_user.try(:addresses).try(:last)
+                - f.object.address_country = amg_address.try(:country)
+                .form-group
+                  = f.label :address_country, "Country *", class: "control-label col-sm-4"
+                  .col-sm-8
+                    = f.select :address_country, region_options_for_select(only_us_and_canada, f.object.address_country), {prompt: 'Please select a country'}, class: 'form-control', required: true
+                .form-group
+                  = f.label :address_state, "State *", class: "control-label col-sm-4"
+                  .col-sm-8
+                    = render partial: 'products/subregion_select', locals: {parent_region: f.object.address_country, user_state: get_state(amg_address.try(:state))}
+                .form-group
+                  = f.label :address_city, 'City *', class: 'control-label col-sm-4'
+                  .col-sm-8
+                    = f.text_field :address_city, class: 'form-control', :value => "#{amg_address.try(:city)}", required: true
+                .form-group
+                  = f.label :address_zip, 'Zip *', class: 'control-label col-sm-4'
+                  .col-sm-8
+                    = f.text_field :address_zip, class: 'form-control', :value => "#{amg_address.try(:zip)}", required: true
+                .form-group
+                  = f.label :address1, 'Address1 *', class: 'control-label col-sm-4'
+                  .col-sm-8
+                    = f.text_field :address1, class: 'form-control', :value => "#{amg_address.try(:line1)}", required: true
+              .payment-button.text-right
+                = f.hidden_field :product_id, :value => @product.id
+                = f.hidden_field :unit_price, :value => number_with_precision(@product.unit_price, precision: 2, delimiter: '')
+                = f.hidden_field :total, :value => number_with_precision(@product.unit_price, precision: 2, delimiter: '')
+                = f.hidden_field :count, :value => '1'
+                = f.hidden_field :summary, :value => 'products to ' + @product.status_characteristic
+                = f.hidden_field :description, :value => strip_tags(@product.description)
+
+                = f.hidden_field :fee, :value => '0'
+                = f.hidden_field :rebate, :value => '0'
+                = f.hidden_field :rebate_percent, :value => '0'
+                = f.hidden_field :shipping_cost, :value => '0'
+
+                - if current_user
+                  - if @product.status_characteristic == 'sell'
+                    = f.hidden_field :seller_id, :value => @product.user.id
+                    = f.hidden_field :buyer_id, :value => current_user.id || 0
+
+                    button.btn.btn-default type="button" data-dismiss="modal" Cancel
+
+                    = f.submit 'Place Order', class: "btn btn-primary"
+
+                  - else
+                    = f.hidden_field :seller_id, value: current_user.id
+                    = f.hidden_field :buyer_id, value: @product.user.id
+
+                    = f.submit 'Place Order', class: "btn btn-primary"
+          #form_order_safe.modal.fade tabindex="-1" role="dialog"
+            form#amg_payment_form action="#"
+              .modal-dialog: .modal-content
+                .modal-header
+                  .pull-right data-dismiss="modal"= fa_icon 'close'
+                  h4.modal-title Your Payment Information
+
+                .modal-body
+                  .form-group
+                    = label_tag 'billing-cc-number', 'Billing CC Number: *'
+                    = text_field_tag 'billing-cc-number', nil, class: 'form-control'
+                  .form-group
+                    = label_tag 'billing-cc-exp', 'Billing CC Number: *'
+                    = text_field_tag 'billing-cc-exp', nil, class: 'form-control'
+                  .form-group
+                    = label_tag 'billing-cvv', 'Billing CVV:'
+                    = text_field_tag 'billing-cvv', nil, class: 'form-control'
+
+                .modal-footer
+                  = submit_tag 'Submit', class: 'btn btn-success', data: { disable_with: 'Please wait...' }

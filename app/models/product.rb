@@ -84,6 +84,10 @@ class Product < ActiveRecord::Base
     user.green_profile.present?
   end
 
+  def amg_present?
+    user.amg_profile.present?
+  end
+
   def stripe_present?
     user.stripe_profile.present?
   end
