@@ -5,16 +5,16 @@ class Dashboard::AccountsController < DashboardController
     set_user
     set_green_profile
     set_profile_for_armor
-    if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
-      client = ArmorService.new
-      account_id = current_user.armor_profile.armor_account_id
-      user_id = current_user.armor_profile.armor_user_id
-      response = client.accounts.bankaccounts(account_id).all
-      uri = response.data[:path]
-      auth_data = {     'uri' => uri,     'action' => 'create' }
-      result = client.users(account_id).authentications(user_id).create(auth_data)
-      @url = result.data[:body]["url"]
-    end
+    # if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
+    #   client = ArmorService.new
+    #   account_id = current_user.armor_profile.armor_account_id
+    #   user_id = current_user.armor_profile.armor_user_id
+    #   response = client.accounts.bankaccounts(account_id).all
+    #   uri = response.data[:path]
+    #   auth_data = {     'uri' => uri,     'action' => 'create' }
+    #   result = client.users(account_id).authentications(user_id).create(auth_data)
+    #   @url = result.data[:body]["url"]
+    # end
   end
 
   def create_green_profile
@@ -36,7 +36,13 @@ class Dashboard::AccountsController < DashboardController
       client = ArmorService.new
       email_confirmed = armor_params["confirmed_email"]
       agreed_terms = armor_params["agreed_terms"] == "1" ? true : false
-      current_user.armor_profile.update_attribute(:agreed_terms, agreed_terms)
+      default_payment = armor_params["default_payment"] == "1" ? true : false
+
+      current_user.armor_profile.update_attributes({
+        agreed_terms: agreed_terms,
+        default_payment: default_payment
+      })
+
       phone_number = Phonelib.parse(armor_params["phone"])
 
       current_user.update_attributes({

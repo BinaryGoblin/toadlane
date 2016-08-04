@@ -38,6 +38,7 @@ Toad::Application.routes.draw do
         get :set_armor_profile
         post :create_green_profile
         post :create_armor_profile
+        post :update_armor_profile
         get :send_confirmation_email
       end
     end

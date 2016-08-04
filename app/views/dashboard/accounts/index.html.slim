@@ -65,8 +65,16 @@
             h4 Armor:
             - if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
               p <b>Status:</b> <span class="success">You are connected to Armor.</span>
+              = form_for @armor_profile, url: update_armor_profile_dashboard_accounts_path, method: "post" do |f|
+                .row
+                  .col-md-8
+                    br
+                    = f.check_box :default_payment, :checked => current_user.try(:armor_profile).try(:default_payment)
+                    span
+                      |  Default payment
             - else
               p <b>Status:</b> <span class="warning">You are not connected to Armor.</span>
+
             - if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
               | Now create or login to Payoneer
               br
@@ -76,7 +84,7 @@
                 .row
                   .col-md-6
                     .form-group
-                      - if current_user.armor_profile.nil? 
+                      - if current_user.armor_profile.nil?
                         = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path, class: ".link link-ulined"
                       = f.hidden_field :confirmed_email, :value => current_user.try(:armor_profile).try(:confirmed_email)
 
@@ -146,6 +154,8 @@
                         |  I agree to the&nbsp;
                         a href="https://app.armorpayments.com/terms/1052419" target="_BLANK" Terms and Conditions
                         | &nbsp;of Armor Payments.
+
+
                   br
                   = f.submit "Submit", class: "btn btn-primary"
       hr

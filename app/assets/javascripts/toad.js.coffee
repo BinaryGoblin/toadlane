@@ -94,6 +94,9 @@ $(document).ready ->
     $(".confirm-inspection-date-btn").hide()
 
 
+  $('.armor_profile_default_payment').click ->
+    debugger
+
   $('.related_searches a').click (event) ->
     event.preventDefault()
     rs = $(this).html()
