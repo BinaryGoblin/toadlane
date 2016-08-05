@@ -94,7 +94,7 @@ $(document).ready ->
     $(".confirm-inspection-date-btn").hide()
 
 
-  $('.iCheck-helper').click ->
+  $("form.edit_armor_profile input.defaultPaymentCheckbox").next().click ->
     $('form.edit_armor_profile').submit()
 
   $('.related_searches a').click (event) ->

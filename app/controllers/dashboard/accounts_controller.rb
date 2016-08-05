@@ -43,38 +43,42 @@ class Dashboard::AccountsController < DashboardController
 
       current_user.update_attributes({
         name: armor_params["name"],
-        phone: phone_number,
-        company: armor_params["company"],
+        phone: armor_params["phone"],
+        company: armor_params["company"]
       })
 
-      if armor_params["addresses"].present?
-        current_user.addresses.create(armor_params["addresses"])
-        selected_address = current_user.addresses.first
+      if current_user.valid?
+
+        if armor_params["addresses"].present?
+          current_user.addresses.create(armor_params["addresses"])
+          selected_address = current_user.addresses.first
+        else
+          selected_address = current_user.addresses.find_by_id(armor_params[:address_id])
+        end
+
+        account_data = {
+                          "company" => armor_params["company"],
+                          "user_name" => armor_params["name"],
+                          "user_email" => armor_params["email"],
+                          "user_phone" => phone_number.international,
+                          "address" => selected_address.line1.present? ? selected_address.line1 : selected_address.line2,
+                          "city" => selected_address.city,
+                          "state" => get_state(selected_address.state),
+                          "zip" => selected_address.zip,
+                          "country" => selected_address.country.downcase,
+                          "email_confirmed" => email_confirmed,
+                          "agreed_terms" => agreed_terms }
+
+        result = client.accounts.create(account_data)
+        current_user.armor_profile.update_attribute(:armor_account_id, result.data[:body]["account_id"])
+
+        users = client.users(current_user.armor_profile.armor_account_id).all
+        current_user.armor_profile.update_attribute(:armor_user_id, users.data[:body][0]["user_id"].to_i)
+
+        redirect_to :back, :flash => { :notice => "Armor Profile successfully created." }
       else
-        selected_address = current_user.addresses.find_by_id(armor_params[:address_id])
+        redirect_to :back, :flash => { :alert => "#{current_user.errors.full_messages.to_sentence}" }
       end
-
-
-      account_data = {
-                        "company" => armor_params["company"],
-                        "user_name" => armor_params["name"],
-                        "user_email" => armor_params["email"],
-                        "user_phone" => phone_number.international,
-                        "address" => selected_address.line1.present? ? selected_address.line1 : selected_address.line2,
-                        "city" => selected_address.city,
-                        "state" => get_state(selected_address.state),
-                        "zip" => selected_address.zip,
-                        "country" => selected_address.country.downcase,
-                        "email_confirmed" => email_confirmed,
-                        "agreed_terms" => agreed_terms }
-
-      result = client.accounts.create(account_data)
-      current_user.armor_profile.update_attribute(:armor_account_id, result.data[:body]["account_id"])
-
-      users = client.users(current_user.armor_profile.armor_account_id).all
-      current_user.armor_profile.update_attribute(:armor_user_id, users.data[:body][0]["user_id"].to_i)
-
-      redirect_to :back, :flash => { :notice => "Armor Profile successfully created." }
     else
       redirect_to :back
     end

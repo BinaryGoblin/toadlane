@@ -69,7 +69,7 @@
                 .row
                   .col-md-8
                     br
-                    = f.check_box :default_payment, :checked => current_user.try(:armor_profile).try(:default_payment)
+                    = f.check_box :default_payment, :checked => current_user.try(:armor_profile).try(:default_payment), :class => "defaultPaymentCheckbox"
                     span
                       |  Default payment
             - else
