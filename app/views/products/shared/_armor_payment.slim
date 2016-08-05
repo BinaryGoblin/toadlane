@@ -1,6 +1,10 @@
 - if user.armor_profile.armor_account_id.nil?
   | You have to create Armor Profile first.
-  = render partial: 'armor_account_create', :locals => { :product => product, :user => user, :armor_profile => armor_profile, :armor_order => armor_order }
+  = render partial: 'products/shared/armor_account_create',
+            :locals => { :product => product,
+                          :user => user,
+                          :armor_profile => armor_profile,
+                          :armor_order => armor_order }
 
 - else
   -if armor_order.inspection_date_by_seller && armor_order.inspection_date_approved_by_seller == true
