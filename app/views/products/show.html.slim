@@ -116,6 +116,7 @@
               - else
                 = pricebreak_table @product.pricebreaks, @product.unit_price, desired
 
+          .white-panel.wp-table
             - if current_user.present?
               - if current_user.profile_complete?
                 -if @product.status_characteristic == 'sell'
@@ -126,7 +127,20 @@
                     = hidden_field_tag :shipping_cost
                     = hidden_field_tag :rebate
                     = hidden_field_tag :rebate_percent
-                    input.btn.btn-success.btn-lg.checkout value="Proceed to checkout" type="submit"
+                    - if @product.owner_default_payment_armor? &&@product.inspection_dates.present?
+                      .inspection_date_select
+                        p
+                          | Select Inpsection Date:
+                        br
+                        = collection_radio_buttons(:inspection_date, :inspection_date_id, @product.inspection_dates, :id, :get_inspection_date) do |b, index|
+                          tr
+                            td
+                              = b.label { b.radio_button(:"checked" => (b.object.id == @product.inspection_dates.first.id)) + b.text }
+                              br
+                    - if @product.user == current_user
+                      input.btn.btn-success.btn-lg.checkout.disabled value="Checkout" type="submit"
+                    - else
+                      input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
                 -else
                   .text-center= link_to 'Make Sale', '#', class: 'btn btn-success-sell btn-lg checkout', data: {  toggle: 'modal', target: '#stripe_form_checkout'  }
               - else

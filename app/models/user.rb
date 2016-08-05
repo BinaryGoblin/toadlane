@@ -172,6 +172,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def default_payment_armor?
+    armor_profile.default_payment == true
+  end
+
   private
   def associate_api_user
     if armor_api_account_exists?

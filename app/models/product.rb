@@ -102,4 +102,8 @@ class Product < ActiveRecord::Base
     sold_out = (self.sold_out.present? ? self.sold_out : 0)
     self.amount - sold_out
   end
+
+  def owner_default_payment_armor?
+    user.default_payment_armor?
+  end
 end
