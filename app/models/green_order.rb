@@ -33,6 +33,9 @@
 class GreenOrder < ActiveRecord::Base
   MAX_AMOUNT = 25000.00
 
+  # Used to breakdown and deduct the amount from max for Green By Phone
+  PRICE_BREAK_MULTIPLIER = 98.25
+
   belongs_to :buyer, class_name: 'User', foreign_key: 'buyer_id'
   belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'
   belongs_to :product
@@ -136,7 +139,7 @@ class GreenOrder < ActiveRecord::Base
       index = 1
       until amount == 0 do
         if amount > GreenOrder::MAX_AMOUNT
-          amount_to_transfer = GreenOrder::MAX_AMOUNT - ( index * 100.00 )
+          amount_to_transfer = GreenOrder::MAX_AMOUNT - ( index * GreenOrder::PRICE_BREAK_MULTIPLIER )
         else
           amount_to_transfer = amount
         end
