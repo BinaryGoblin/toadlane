@@ -7,15 +7,15 @@
         h4.modal-title Set Inspection Date
       .modal-body
         = form_for armor_order, url: set_inspection_date_armor_orders_path(product_id: product.id), method: :post  do |f|
-          = f.hidden_field :total, :value => number_with_precision(product.unit_price, precision: 2, delimiter: '')
-          = f.hidden_field :product_id, :value => product.id
-          = f.hidden_field :unit_price, :value => number_with_precision(product.unit_price, precision: 2, delimiter: '')
-          = f.hidden_field :count, :value => data[:quantity], class: 'calc-quantity'
+          //=# f.hidden_field :total, :value => number_with_precision(product.unit_price, precision: 2, delimiter: '')
+          //=# f.hidden_field :product_id, :value => product.id
+          //=# f.hidden_field :unit_price, :value => number_with_precision(product.unit_price, precision: 2, delimiter: '')
+          //=# f.hidden_field :count, :value => data[:quantity], class: 'calc-quantity'
 
-          = f.hidden_field :fee, :value => '0'
-          = f.hidden_field :rebate, :value => '0'
-          = f.hidden_field :rebate_percent, :value => '0'
-          = f.hidden_field :shipping_cost, :value => '0'
+          //=# f.hidden_field :fee, :value => '0'
+          //=# f.hidden_field :rebate, :value => '0'
+          //=# f.hidden_field :rebate_percent, :value => '0'
+          //=# f.hidden_field :shipping_cost, :value => '0'
           .offer-from-until
             .offer-item
               label.lg.required Select Inspection Date

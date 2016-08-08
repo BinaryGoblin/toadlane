@@ -32,27 +32,36 @@ class ArmorOrdersController < ApplicationController
                                     params["armor_order"]["inspection_date_by_buyer(4i)"].to_i,
                                     params["armor_order"]["inspection_date_by_buyer(5i)"].to_i
                                   )
+    armor_order = ArmorOrder.create({
+                                      buyer_id: current_user.id,
+                                      seller_id: product.user.id,
+                                      product_id: product.id,
+                                      inspection_date_by_buyer: inspection_date})
 
-    armor_order = ArmorOrder.create
-
-    additional_params = {
-
-      status_change: DateTime.now,
-      product_id: product.id,
-      buyer_id: current_user.id,
-      seller_id: product.user.id,
-      summary: product.name,
-      description: product.description,
-      amount: armor_order_params["total"],
-      unit_price: armor_order_params["unit_price"],
-      count: armor_order_params["count"],
-      fee: armor_order_params["fee"],
-      rebate: armor_order_params["rebate"],
-      rebate_price: armor_order_params["rebate_price"],
-      shipping_cost: armor_order_params["shipping_cost"],
-    }
-
-    armor_order.update_attributes(additional_params)
+    armor_order.inspection_dates.create({date: inspection_date, creator_type: "buyer", product_id: product.id, armor_order_id: armor_order.id})
+    #
+    # armor_order = ArmorOrder.create
+    #
+    # additional_params = {
+    #
+    #   status_change: DateTime.now,
+    #   product_id: product.id,
+    #   buyer_id: current_user.id,
+    #   seller_id: product.user.id,
+    #   summary: product.name,
+    #   description: product.description,
+    #   amount: armor_order_params["total"],
+    #   unit_price: armor_order_params["unit_price"],
+    #   count: armor_order_params["count"],
+    #   fee: armor_order_params["fee"],
+    #   rebate: armor_order_params["rebate"],
+    #   rebate_price: armor_order_params["rebate_price"],
+    #   shipping_cost: armor_order_params["shipping_cost"],
+    # }
+    #
+    # armor_order.update_attributes(additional_params)
+    #
+    binding.pry
 
     if product.user == current_user
       set_inspection_date_notify_buyer(armor_order, inspection_date, product)
@@ -162,18 +171,18 @@ class ArmorOrdersController < ApplicationController
     def set_inspection_date_notify_buyer(armor_order, inspection_date, product)
       if armor_order.update_attributes({inspection_date_by_seller: inspection_date , inspection_date_approved_by_seller: true})
         UserMailer.send_inspection_date_set_notification_to_buyer(armor_order).deliver_now
-        redirect_to product_path(id: product.id), :flash => { :notice => 'New inspection date has been set and has been notified to buyer.'}
+        redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'New inspection date has been set and has been notified to buyer.'}
       else
-        redirect_to product_path(id: product.id), :flash => { :alert => armor_order.errors.full_messages.first}
+        redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :alert => armor_order.errors.full_messages.first}
       end
     end
 
     def set_inspection_date_notify_seller(armor_order, inspection_date, product)
       if armor_order.update_attributes({buyer_id: current_user.id, seller_id: product.user.id, product_id: product.id, inspection_date_by_buyer: inspection_date})
         UserMailer.send_inspection_date_set_notification_to_seller(armor_order).deliver_now
-        redirect_to product_checkout_path(product_id: armor_order.product.id, armor_order_id: armor_order.id), :flash => { :notice => 'Your request to set inspectiond date has been informed to the seller.'}
+        redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'Your request to set inspectiond date has been informed to the seller.'}
       else
-        redirect_to product_checkout_path(product_id: armor_order.product.id, armor_order_id: armor_order.id), :flash => { :alert => armor_order.errors.full_messages.first}
+        redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :alert => armor_order.errors.full_messages.first}
       end
     end
 

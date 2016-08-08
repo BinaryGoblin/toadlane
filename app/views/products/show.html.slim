@@ -120,7 +120,7 @@
             - if current_user.present?
               - if current_user.profile_complete?
                 -if @product.status_characteristic == 'sell'
-                  = form_tag(product_checkout_path(@product), method: :post, class: 'text-center') do
+                  = form_tag(product_checkout_path(product_id: @product, armor_order_id: params[:armor_order_id]), method: :post, class: 'text-center') do
                     = hidden_field_tag :total
                     = hidden_field_tag :count
                     = hidden_field_tag :fee
@@ -141,6 +141,10 @@
                       input.btn.btn-success.btn-lg.checkout.disabled value="Checkout" type="submit"
                     - else
                       input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
+
+                  a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here
+                  span
+                  | &nbsp;to set inspection date
                 -else
                   .text-center= link_to 'Make Sale', '#', class: 'btn btn-success-sell btn-lg checkout', data: {  toggle: 'modal', target: '#stripe_form_checkout'  }
               - else
@@ -254,5 +258,4 @@
 
 = render partial: 'modals', locals: { product: @product }
 
-- if params[:armor_order_id].present?
-  = render partial: 'set_inspection_date_by_seller', locals: { product: @product, armor_order: @armor_order }
+= render partial: 'products/shared/set_inspection_date_by_buyer', :locals => { product: @product, data: @data, armor_order: ArmorOrder.new }
