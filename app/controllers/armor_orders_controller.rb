@@ -77,55 +77,24 @@ class ArmorOrdersController < ApplicationController
   def update
     armor_order = ArmorOrder.find_by_id(params[:id])
     product = armor_order.product
-    inspection_date_approved_by_seller = armor_order_params["inspection_date_approved_by_seller"] == "1" ? true : false
 
-    additional_params = {
-      inspection_date_approved_by_seller: inspection_date_approved_by_seller,
-      inspection_date_approved_by_buyer: true
-    }
+    if params[:armor_order].present?
+      inspection_date_approved_by_seller = armor_order_params["inspection_date_approved_by_seller"] == "1" ? true : false
 
-    if armor_order.update_attributes(additional_params)
+      additional_params = {
+        inspection_date_approved_by_seller: inspection_date_approved_by_seller,
+        inspection_date_approved_by_buyer: true
+      }
 
-      api_armor_order_params = {
-        'seller_id'   => "#{product.user.armor_profile.armor_user_id}",
-        'buyer_id'    => "#{current_user.armor_profile.armor_user_id}",
-        'amount'      => armor_order.amount,
-        'summary'     => product.name,
-        'description' => product.description,
-        'inspection' => true,
-        'goodsmilestones'=>
-          [
-            {
-              'name': 'Order created',
-              'amount': 0,
-              'escrow': 0
-            },
-            {
-              'name': 'Goods inspected',
-              'amount': 0,
-              'escrow': 0
-            },
-            {
-              'name': 'Goods shipped',
-              'amount': 0,
-              'escrow': 0
-            },
-            {
-              'name': 'Order released',
-              'amount': armor_order.amount,
-              'escrow': armor_order.amount
-            }
-          ]
-        }
-
-      armor_order.create_armor_api_order(api_armor_order_params)
-
-      armor_order.get_armor_payment_instruction_url
+      armor_order.update_attributes!(additional_params)
+    end
 
       # redirect_to dashboard_orders_path(armor_order, type: 'armor'), :flash => { :notice => 'Armor Order was successfully created.'}
-      redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'Armor Order was successfully created.'}
-    else
+    if armor_order.errors.any?
       redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :alert => armor_order.errors.messages}
+    else
+      armor_order_api_create(armor_order, product)
+      redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'Armor Order was successfully created.'}
     end
   rescue ArmorService::BadResponseError => e
     redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :error => e.errors.values.flatten }
@@ -206,5 +175,43 @@ class ArmorOrdersController < ApplicationController
       else
         redirect_to product_checkout_path(product_id: armor_order.product.id, armor_order_id: armor_order.id), :flash => { :alert => armor_order.errors.full_messages.first}
       end
+    end
+
+    def armor_order_api_create(armor_order, product)
+      api_armor_order_params = {
+        'seller_id'   => "#{product.user.armor_profile.armor_user_id}",
+        'buyer_id'    => "#{current_user.armor_profile.armor_user_id}",
+        'amount'      => armor_order.amount,
+        'summary'     => product.name,
+        'description' => product.description,
+        'inspection' => true,
+        'goodsmilestones'=>
+          [
+            {
+              'name': 'Order created',
+              'amount': 0,
+              'escrow': 0
+            },
+            {
+              'name': 'Goods inspected',
+              'amount': 0,
+              'escrow': 0
+            },
+            {
+              'name': 'Goods shipped',
+              'amount': 0,
+              'escrow': 0
+            },
+            {
+              'name': 'Order released',
+              'amount': armor_order.amount,
+              'escrow': armor_order.amount
+            }
+          ]
+        }
+
+      armor_order.create_armor_api_order(api_armor_order_params)
+
+      armor_order.get_armor_payment_instruction_url
     end
 end
