@@ -47,6 +47,7 @@ class Behavior.CalculationProduct
     number.toFixed(2).toString()
 
   calculation: =>
+    nf = new Intl.NumberFormat()
     total  = 0
     rebate = 0
     quantity = parseInt @$quantity.val(), 10
@@ -99,11 +100,11 @@ class Behavior.CalculationProduct
 
     @$rebate.text @fixed rebatep
     @$pcs.text quantity
-    @$feePrice.text @fixed fees
-    @$shippingPrice.text @fixed shipping_cost
-    @$rebPrice.text @fixed rebate
-    @$cart.text @fixed cart
-    @$subTotal.text @fixed total
+    @$feePrice.text nf.format(@fixed fees)
+    @$shippingPrice.text nf.format(@fixed shipping_cost)
+    @$rebPrice.text nf.format(@fixed rebate)
+    @$cart.text nf.format(@fixed cart)
+    @$subTotal.text nf.format(@fixed total)
 
     @$stripeQuantity.text quantity
     @$stripeTotal.text @fixed cart
