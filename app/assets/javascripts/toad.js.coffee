@@ -158,3 +158,8 @@ $(document).ready ->
       "product[videos_attributes][]":
         required: false
         filesize: 5
+
+  $('form.create-api-order').submit ->
+    $(this).find(':submit').prop 'disabled', true
+    $('*').css 'cursor', 'wait'
+    return
