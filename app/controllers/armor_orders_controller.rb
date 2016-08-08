@@ -61,7 +61,6 @@ class ArmorOrdersController < ApplicationController
     #
     # armor_order.update_attributes(additional_params)
     #
-    binding.pry
 
     if product.user == current_user
       set_inspection_date_notify_buyer(armor_order, inspection_date, product)
@@ -77,9 +76,9 @@ class ArmorOrdersController < ApplicationController
 
     if armor_order.update_attributes({inspection_date_by_seller: armor_order.inspection_date_by_buyer, inspection_date_approved_by_seller: true})
       UserMailer.send_inspection_date_confirm_notification_to_buyer(armor_order).deliver_now
-      redirect_to product_path(id: product.id), :flash => { :notice => "Inspection date has been set to #{armor_order.inspection_date_by_seller} and has been informed to buyer."}
+      redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => "Inspection date has been set to #{armor_order.inspection_date_by_seller} and has been informed to buyer."}
     else
-      redirect_to product_path(id: product.id)
+      redirect_to product_path(id: product.id, armor_order_id: armor_order.id)
     end
   end
 

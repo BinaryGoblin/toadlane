@@ -6,9 +6,9 @@ class InspectionDate < ActiveRecord::Base
   scope :seller_added, -> { where(creator_type: "seller") }
   scope :buyer_added, -> { where(creator_type: "buyer") }
 
+  # gives August 09, 2016, 06:00 PM
   def get_inspection_date
     date.strftime("%B %d, %Y, %I:%M %p")
   end
-
 
 end

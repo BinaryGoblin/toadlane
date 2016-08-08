@@ -67,8 +67,25 @@ class ProductsController < ApplicationController
 
     @stripe_order = StripeOrder.new
     @green_order = GreenOrder.new
-    if params["armor_order_id"].present?
+
+    if params["armor_order_id"].present? && params["inspection_date"]["inspection_date_id"].present?
       @armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
+      @armor_order.update_attributes({
+        unit_price: @product.unit_price,
+        count: params[:count],
+        amount: params[:total],
+        summary: @product.name,
+        description: @product.description,
+        rebate_price: params[:rebate],
+        rebate_percent: params[:rebate_percent],
+        fee: params[:fee], # this is fee amount
+        rebate: params[:rebate_percent],
+        shipping_cost: params[:shipping_cost],
+        inspection_date_approved_by_seller: true,
+        inspection_date_approved_by_buyer: true
+        })
+      inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
+      inspection_date.update_attributes({armor_order_id: @armor_order.id, approved: true})
     elsif params["inspection_date"]["inspection_date_id"].present?
       @armor_order = ArmorOrder.create({
         buyer_id: current_user.id,
@@ -89,6 +106,8 @@ class ProductsController < ApplicationController
         })
       inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
       inspection_date.update_attributes({armor_order_id: @armor_order.id, approved: true})
+    elsif params["armor_order_id"].present?
+      @armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
     else
       @armor_order = ArmorOrder.new
     end
