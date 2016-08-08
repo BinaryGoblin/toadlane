@@ -4,7 +4,7 @@ class CreateInspectionDates < ActiveRecord::Migration
       t.datetime :date
       t.string :creator_type
       t.integer :product_id
-      t.integer :order_id
+      t.integer :armor_order_id
       t.boolean :approved
 
       t.timestamps null: false

@@ -301,10 +301,10 @@ ActiveRecord::Schema.define(version: 20160804053936) do
     t.datetime "date"
     t.string   "creator_type"
     t.integer  "product_id"
-    t.integer  "order_id"
+    t.integer  "armor_order_id"
     t.boolean  "approved"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
   create_table "mailboxer_conversation_opt_outs", force: :cascade do |t|
