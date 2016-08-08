@@ -88,7 +88,7 @@ class ProductsController < ApplicationController
         inspection_date_approved_by_buyer: true
         })
       inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
-      inspection_date.update_attributes({order_id: @armor_order.id, approved: true})
+      inspection_date.update_attributes({armor_order_id: @armor_order.id, approved: true})
     else
       @armor_order = ArmorOrder.new
     end
