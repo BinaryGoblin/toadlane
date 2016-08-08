@@ -91,7 +91,7 @@ class UserMailer < ActionMailer::Base
     @buyer = User.find_by_id(@armor_order.buyer_id)
     @product = Product.find_by_id(@armor_order.product_id)
 
-    mail to: @seller.email, subject: "#{@seller.name} has requested to set inspection date"
+    mail to: @seller.email, subject: "#{@buyer.name} has requested to set inspection date"
   end
 
   def send_inspection_date_set_notification_to_buyer(armor_order)
@@ -100,7 +100,7 @@ class UserMailer < ActionMailer::Base
     @buyer = User.find_by_id(@armor_order.buyer_id)
     @product = Product.find_by_id(@armor_order.product_id)
 
-    mail to: @buyer.email, subject: "#{@buyer.name} has responded to inspection date that you set"
+    mail to: @buyer.email, subject: "#{@seller.name} has responded to inspection date that you set"
   end
 
   def send_inspection_date_confirm_notification_to_buyer(armor_order)
@@ -109,6 +109,6 @@ class UserMailer < ActionMailer::Base
     @buyer = User.find_by_id(@armor_order.buyer_id)
     @product = Product.find_by_id(@armor_order.product_id)
 
-    mail to: @buyer.email, subject: "#{@buyer.name} has confirmed the inspection date"
+    mail to: @buyer.email, subject: "#{@seller.name} has confirmed the inspection date"
   end
 end
