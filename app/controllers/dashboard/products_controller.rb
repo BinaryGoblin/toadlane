@@ -217,13 +217,13 @@ class Dashboard::ProductsController < DashboardController
           path = dashboard_products_path
         end
 
-        # if params["product"]["inspection_date_attributes"].present?
-        #   inspection_attributes = params["product"]["inspection_date_attributes"]
-        #   inspection_attributes.each do |inspection_attribute|
-        #     inspection_date = DateTime.new(inspection_attribute["date(1i)"].to_i, inspection_attribute["date(2i)"].to_i, inspection_attribute["date(3i)"].to_i, inspection_attribute["date(4i)"].to_i, inspection_attribute["date(5i)"].to_i)
-        #     @product.inspection_dates.create({date: inspection_date, creator_type: "seller", product_id: @product.id})
-        #   end
-        # end
+        if params["product"]["inspection_date_attributes"].present? && @product.inspection_dates.empty?
+          inspection_attributes = params["product"]["inspection_date_attributes"]
+          inspection_attributes.each do |inspection_attribute|
+            inspection_date = DateTime.new(inspection_attribute["date(1i)"].to_i, inspection_attribute["date(2i)"].to_i, inspection_attribute["date(3i)"].to_i, inspection_attribute["date(4i)"].to_i, inspection_attribute["date(5i)"].to_i)
+            @product.inspection_dates.create({date: inspection_date, creator_type: "seller", product_id: @product.id})
+          end
+        end
 
         # if inspection_date_for_delete
         #   inspection_date_for_delete[:inspection_date_delete].each do |inspection_date|
