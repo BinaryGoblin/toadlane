@@ -106,4 +106,8 @@ class Product < ActiveRecord::Base
   def owner_default_payment_armor?
     user.default_payment_armor?
   end
+
+  def seller_set_inspection_dates
+    inspection_dates.seller_added
+  end
 end

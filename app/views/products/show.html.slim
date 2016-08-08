@@ -132,7 +132,7 @@
                         p
                           | Select Inpsection Date:
                         br
-                        = collection_radio_buttons(:inspection_date, :inspection_date_id, @product.inspection_dates, :id, :get_inspection_date) do |b, index|
+                        = collection_radio_buttons(:inspection_date, :inspection_date_id, @product.seller_set_inspection_dates, :id, :get_inspection_date) do |b, index|
                           tr
                             td
                               = b.label { b.radio_button(:"checked" => (b.object.id == @product.inspection_dates.first.id)) + b.text }
