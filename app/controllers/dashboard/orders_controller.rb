@@ -81,12 +81,11 @@ class Dashboard::OrdersController < DashboardController
   end
 
   def orders_under_inspection
-    armor_orders = ArmorOrder.where(buyer_id: current_user.id,
-                                inspection_date_approved_by_seller: true,
-                                inspection_date_approved_by_buyer: true)
+    @orders = current_user.armor_orders.processing.incomplete_inspection
+  end
 
-    @orders = armor_orders.where(inspection_complete: false)
-    # @armor_order =  ArmorOrder.find_by_id(params[:armor_order_id]) if params[:armor_order_id].present?
+  def orders_inspection_complete
+    @orders = current_user.armor_orders.completed.complete_inspection
   end
 
   private

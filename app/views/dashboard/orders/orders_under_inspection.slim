@@ -18,8 +18,8 @@
           = link 'Bought', dashboard_orders_path(bought_or_sold: 'bought', type: params['type']), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
         - if params[:type] == "armor"
           td
-            = link 'Incomplete', orders_under_inspection_dashboard_orders_path(bought_or_sold: 'bought', type: params['type']), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-            = link 'Complete', orders_inspection_complete_dashboard_orders_path(bought_or_sold: 'bought', type: params['type']), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
+          = link 'Incomplete', orders_under_inspection_dashboard_orders_path(bought_or_sold: 'bought', type: params['type']), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
+          = link 'Complete', orders_inspection_complete_dashboard_orders_path(bought_or_sold: 'bought', type: params['type']), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
 
   .table-responsive
     table.table data-behavior="TableCheckbox" data-options='{"paramName":"orders_ids"}'
@@ -32,7 +32,7 @@
           th Unit price:
           th Quantity:
           th Order Total:
-          th.text-center Details
+          th.text-center Action
 
       tbody
         - @orders.each do |order|
@@ -52,7 +52,8 @@
             -if order.instance_of? GreenOrder
               td= number_to_currency(order.total, :unit => "$", precision: 2)
             td.text-center
-              = link_to 'View', '#modal_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
+              = link_to 'Complete Inspection', armor_order_complete_inspection_path(order.id)
+              //=# link_to 'View', '#modal_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
               - if is_cancellable?(order)
                 | &nbsp;
                 = link_to 'Cancel Order', cancel_order_dashboard_orders_path(id: order.id, type: params['type']), method: :get, remote: true, data: {confirm: 'Are you sure?'}, class: 'view'

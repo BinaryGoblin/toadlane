@@ -37,6 +37,9 @@ class ArmorOrder < ActiveRecord::Base
 
   # validates_presence_of :unit_price, :account_id
 
+  scope :incomplete_inspection, -> { where(inspection_complete: false) }
+  scope :complete_inspection, -> { where(inspection_complete: true) }
+
   scope :for_dashboard, -> (page, per_page) do
     where(deleted: false)
     .order('created_at DESC')

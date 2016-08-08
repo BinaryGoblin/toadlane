@@ -10,6 +10,7 @@ Toad::Application.routes.draw do
       post :set_inspection_date, to: 'armor_orders#set_inspection_date', as: 'set_inspection_date'
     end
     post :confirm_inspection_date_by_seller
+    get :complete_inspection
   end
 
   resources :stripe_orders do
@@ -52,7 +53,6 @@ Toad::Application.routes.draw do
         post :inactive_cascade
         get '/:id/viewers', to: 'products#viewers', as: 'viewers'
       end
-      get :complete_inspection
     end
 
     resources :orders, only: [:index, :show] do
@@ -60,6 +60,7 @@ Toad::Application.routes.draw do
         delete :delete_cascade
         get :cancel_order
         get :orders_under_inspection
+        get :orders_inspection_complete
       end
     end
 

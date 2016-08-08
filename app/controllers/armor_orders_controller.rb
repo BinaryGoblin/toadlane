@@ -116,7 +116,7 @@ class ArmorOrdersController < ApplicationController
                     "confirm" => true }
 
     response = client.orders(armor_order.seller_account_id).update(armor_order.order_id, action_data)
-    armor_order.update_attribute(:inspection_complete, true)
+    armor_order.update_attributes({inspection_complete: true, status: 'completed'})
 
     # shipping details
     account_id = armor_order.seller.armor_profile.armor_account_id
@@ -144,9 +144,9 @@ class ArmorOrdersController < ApplicationController
     result = client.users(buyer_account_id).authentications(buyer_user_id).create(auth_data)
     armor_order.update_attribute(:payment_release_url, result.data[:body]["url"])
 
-    redirect_to products_under_inspection_dashboard_products_path(payment_release_url: armor_order.payment_release_url, type: 'complete'), :flash => { :notice => "Completed inspection and released fund" }
+    redirect_to orders_under_inspection_dashboard_orders_path(bought_or_sold: 'bought', type: 'armor'), :flash => { :notice => "Completed inspection and released fund" }
   rescue ArmorService::BadResponseError => e
-    redirect_to products_under_inspection_dashboard_products_path(type: 'incomplete'), :flash => { :error => e.errors.values.flatten }
+    redirect_to orders_under_inspection_dashboard_orders_path(bought_or_sold: 'bought', type: 'armor'), :flash => { :error => e.errors.values.flatten }
   end
 
   private
