@@ -79,4 +79,8 @@ class ArmorOrder < ActiveRecord::Base
     response = client.users(buyer.armor_profile.armor_account_id).authentications(buyer.armor_profile.armor_user_id).create(auth_data)
     self.update_attribute(:uri, response.data[:body]["url"])
   end
+
+  def selected_inspection_date
+    inspection_dates.approved.first
+  end
 end
