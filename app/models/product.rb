@@ -110,4 +110,8 @@ class Product < ActiveRecord::Base
   def seller_set_inspection_dates
     inspection_dates.seller_added
   end
+
+  def negotiable?
+    self.negotiable == true
+  end
 end

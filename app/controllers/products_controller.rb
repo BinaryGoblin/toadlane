@@ -68,7 +68,7 @@ class ProductsController < ApplicationController
     @stripe_order = StripeOrder.new
     @green_order = GreenOrder.new
 
-    if params["armor_order_id"].present? && params["inspection_date"]["inspection_date_id"].present?
+    if params["armor_order_id"].present? && params["inspection_date"].present? && params["inspection_date"]["inspection_date_id"].present?
       @armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
       @armor_order.update_attributes({
         unit_price: @product.unit_price,
@@ -86,7 +86,7 @@ class ProductsController < ApplicationController
         })
       inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
       inspection_date.update_attributes({armor_order_id: @armor_order.id, approved: true})
-    elsif params["inspection_date"]["inspection_date_id"].present?
+    elsif params["inspection_date"].present? && params["inspection_date"]["inspection_date_id"].present?
       @armor_order = ArmorOrder.create({
         buyer_id: current_user.id,
         seller_id: @product.user.id,

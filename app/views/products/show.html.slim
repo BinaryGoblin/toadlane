@@ -152,10 +152,11 @@
                     - else
                       input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
 
-                  - unless params[:armor_order_id].present? && params[:inspection_date_by_seller] == "true"
-                    a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here
-                    span
-                    | &nbsp;to set inspection date
+                  - if @product.negotiable?
+                    - unless params[:armor_order_id].present? && params[:inspection_date_by_seller] == "true"
+                      a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here
+                      span
+                      | &nbsp;to set inspection date
                 -else
                   .text-center= link_to 'Make Sale', '#', class: 'btn btn-success-sell btn-lg checkout', data: {  toggle: 'modal', target: '#stripe_form_checkout'  }
               - else
