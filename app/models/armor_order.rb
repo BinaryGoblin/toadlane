@@ -91,4 +91,14 @@ class ArmorOrder < ActiveRecord::Base
   def inspection_date_not_marked
     inspection_dates.not_marked_approved.first
   end
+
+  def buyer_requested_inspection_date
+    inspection_dates.buyer_set_inspection_date.first.get_inspection_date
+  end
+
+  # this is the inspection date added by seller after rejecting
+  # # inspection date added by buyer
+  def seller_added_inspection_date
+    inspection_dates.seller_set_inspection_date.first.get_inspection_date
+  end
 end
