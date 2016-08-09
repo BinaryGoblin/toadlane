@@ -115,4 +115,10 @@ class Product < ActiveRecord::Base
   def negotiable?
     self.negotiable == true
   end
+
+  # this is the inspection date added by seller after rejecting
+  # # inspection date added by buyer
+  def latest_seller_added_inspection_date
+    inspection_dates.seller_added.last.get_inspection_date
+  end
 end
