@@ -32,35 +32,23 @@ class ArmorOrdersController < ApplicationController
                                     params["armor_order"]["inspection_date_by_buyer(4i)"].to_i,
                                     params["armor_order"]["inspection_date_by_buyer(5i)"].to_i
                                   )
-    armor_order = ArmorOrder.create({
-                                      buyer_id: current_user.id,
-                                      seller_id: product.user.id,
-                                      product_id: product.id,
-                                      inspection_date_by_buyer: inspection_date})
 
-    armor_order.inspection_dates.create({date: inspection_date, creator_type: "buyer", product_id: product.id, armor_order_id: armor_order.id})
-    #
-    # armor_order = ArmorOrder.create
-    #
-    # additional_params = {
-    #
-    #   status_change: DateTime.now,
-    #   product_id: product.id,
-    #   buyer_id: current_user.id,
-    #   seller_id: product.user.id,
-    #   summary: product.name,
-    #   description: product.description,
-    #   amount: armor_order_params["total"],
-    #   unit_price: armor_order_params["unit_price"],
-    #   count: armor_order_params["count"],
-    #   fee: armor_order_params["fee"],
-    #   rebate: armor_order_params["rebate"],
-    #   rebate_price: armor_order_params["rebate_price"],
-    #   shipping_cost: armor_order_params["shipping_cost"],
-    # }
-    #
-    # armor_order.update_attributes(additional_params)
-    #
+    if params[:armor_order_id].present?
+      armor_order = ArmorOrder.find_by_id(params[:armor_order_id])
+      creator_type = "seller"
+    else
+      armor_order = ArmorOrder.create({
+                                        buyer_id: current_user.id,
+                                        seller_id: product.user.id,
+                                        product_id: product.id})
+
+      creator_type = "buyer"
+    end
+    armor_order.inspection_dates.create({
+                                          date: inspection_date,
+                                          creator_type: creator_type,
+                                          product_id: product.id,
+                                          armor_order_id: armor_order.id})
 
     if product.user == current_user
       set_inspection_date_notify_buyer(armor_order, inspection_date, product)

@@ -9,16 +9,6 @@
 - else
   -if armor_order.inspection_dates.present? && armor_order.selected_inspection_date.present?
     - if armor_profile.armor_account_id.present? && armor_order.uri.nil?
+      
       = form_tag armor_order, method: :put, :class => "create-api-order" do
-        - if armor_order.inspection_date_by_seller.present?
-          .form-group
-            = f.check_box :inspection_date_approved_by_seller, :checked => armor_order.inspection_date_approved_by_buyer, :required => true
-            span
-              | &nbsp;Approve inspection date i.e (#{armor_order.inspection_date_by_seller})&nbsp;
-          .form-group
-            a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here
-            span
-            | &nbsp;to set inspection date
-
-
         = submit_tag 'Create Order', class: "btn btn-primary"
