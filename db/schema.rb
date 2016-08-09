@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160804053936) do
+ActiveRecord::Schema.define(version: 20160809071756) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,36 +50,32 @@ ActiveRecord::Schema.define(version: 20160804053936) do
   add_index "armor_invoices", ["product_id"], name: "index_armor_invoices_on_product_id", using: :btree
 
   create_table "armor_orders", force: :cascade do |t|
-    t.integer  "buyer_id",                           limit: 8
-    t.integer  "seller_id",                          limit: 8
-    t.integer  "account_id",                         limit: 8
+    t.integer  "buyer_id",            limit: 8
+    t.integer  "seller_id",           limit: 8
+    t.integer  "account_id",          limit: 8
     t.integer  "product_id"
-    t.integer  "order_id",                           limit: 8
-    t.integer  "status",                                         default: 0
+    t.integer  "order_id",            limit: 8
+    t.integer  "status",                          default: 0
     t.float    "unit_price"
     t.integer  "count"
     t.float    "amount"
-    t.string   "summary",                            limit: 100
+    t.string   "summary",             limit: 100
     t.text     "description"
     t.integer  "invoice_num"
     t.integer  "purchase_order_num"
     t.datetime "status_change"
     t.string   "uri"
-    t.boolean  "deleted",                                        default: false
+    t.boolean  "deleted",                         default: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "taxes_price",                                    default: 0
-    t.integer  "rebate_price",                                   default: 0
-    t.integer  "rebate_percent",                                 default: 0
+    t.integer  "taxes_price",                     default: 0
+    t.integer  "rebate_price",                    default: 0
+    t.integer  "rebate_percent",                  default: 0
     t.float    "fee"
     t.float    "rebate"
     t.float    "shipping_cost"
-    t.boolean  "inspection_date_approved_by_seller",             default: false
-    t.boolean  "inspection_date_approved_by_buyer",              default: false
-    t.boolean  "inspection_complete",                            default: false
+    t.boolean  "inspection_complete",             default: false
     t.string   "payment_release_url"
-    t.datetime "inspection_date_by_seller"
-    t.datetime "inspection_date_by_buyer"
   end
 
   create_table "armor_profiles", force: :cascade do |t|

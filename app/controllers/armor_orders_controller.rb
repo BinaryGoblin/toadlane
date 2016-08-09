@@ -26,11 +26,11 @@ class ArmorOrdersController < ApplicationController
     product = Product.unexpired.find(params[:product_id])
 
     inspection_date = DateTime.new(
-                                    params["armor_order"]["inspection_date_by_buyer(1i)"].to_i,
-                                    params["armor_order"]["inspection_date_by_buyer(2i)"].to_i,
-                                    params["armor_order"]["inspection_date_by_buyer(3i)"].to_i,
-                                    params["armor_order"]["inspection_date_by_buyer(4i)"].to_i,
-                                    params["armor_order"]["inspection_date_by_buyer(5i)"].to_i
+                                    params["inspection_date"]["date(1i)"].to_i,
+                                    params["inspection_date"]["date(2i)"].to_i,
+                                    params["inspection_date"]["date(3i)"].to_i,
+                                    params["inspection_date"]["date(4i)"].to_i,
+                                    params["inspection_date"]["date(5i)"].to_i
                                   )
 
     if params[:armor_order_id].present?
@@ -59,10 +59,9 @@ class ArmorOrdersController < ApplicationController
 
   def confirm_inspection_date_by_seller
     armor_order = ArmorOrder.find_by_id(params[:armor_order_id])
-
     product = Product.unexpired.find(params[:product_id])
 
-    if armor_order.update_attributes({inspection_date_by_seller: armor_order.inspection_date_by_buyer, inspection_date_approved_by_seller: true})
+    if armor_order.inspection_date_not_marked.update_attribute(:approved, true)
       UserMailer.send_inspection_date_confirm_notification_to_buyer(armor_order).deliver_now
       redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => "Inspection date has been set to #{armor_order.inspection_date_by_seller} and has been informed to buyer."}
     else
@@ -74,22 +73,11 @@ class ArmorOrdersController < ApplicationController
     armor_order = ArmorOrder.find_by_id(params[:id])
     product = armor_order.product
 
-    if params[:armor_order].present?
-      inspection_date_approved_by_seller = armor_order_params["inspection_date_approved_by_seller"] == "1" ? true : false
+    armor_order_api_create(armor_order, product)
 
-      additional_params = {
-        inspection_date_approved_by_seller: inspection_date_approved_by_seller,
-        inspection_date_approved_by_buyer: true
-      }
-
-      armor_order.update_attributes!(additional_params)
-    end
-
-      # redirect_to dashboard_orders_path(armor_order, type: 'armor'), :flash => { :notice => 'Armor Order was successfully created.'}
     if armor_order.errors.any?
       redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :alert => armor_order.errors.messages}
     else
-      armor_order_api_create(armor_order, product)
       redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'Armor Order was successfully created.'}
     end
   rescue ArmorService::BadResponseError => e
@@ -156,7 +144,7 @@ class ArmorOrdersController < ApplicationController
     end
 
     def set_inspection_date_notify_buyer(armor_order, inspection_date, product)
-      if armor_order.update_attributes({inspection_date_by_seller: inspection_date , inspection_date_approved_by_seller: true})
+      if armor_order.inspection_date_not_marked.update_attribute(:approved, true)
         UserMailer.send_inspection_date_set_notification_to_buyer(armor_order).deliver_now
         redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'New inspection date has been set and has been notified to buyer.'}
       else
@@ -165,7 +153,8 @@ class ArmorOrdersController < ApplicationController
     end
 
     def set_inspection_date_notify_seller(armor_order, inspection_date, product)
-      if armor_order.update_attributes({buyer_id: current_user.id, seller_id: product.user.id, product_id: product.id, inspection_date_by_buyer: inspection_date})
+      if armor_order.update_attributes({buyer_id: current_user.id, seller_id: product.user.id, product_id: product.id})
+        armor_order.inspection_date_not_marked.update_attribute(:date, inspection_date)
         UserMailer.send_inspection_date_set_notification_to_seller(armor_order).deliver_now
         redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'Your request to set inspectiond date has been informed to the seller.'}
       else

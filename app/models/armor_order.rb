@@ -86,4 +86,8 @@ class ArmorOrder < ActiveRecord::Base
   def selected_inspection_date
     inspection_dates.approved.first
   end
+
+  def inspection_date_not_marked
+    inspection_dates.not_marked_approved.first
+  end
 end

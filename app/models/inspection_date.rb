@@ -3,6 +3,7 @@ class InspectionDate < ActiveRecord::Base
   belongs_to :armor_order, class_name: 'ArmorOrder', foreign_key: 'armor_order_id'
 
   scope :approved, -> { where(approved: true) }
+  scope :not_marked_approved, -> { where(approved: nil) }
   scope :seller_added, -> { where(creator_type: "seller") }
   scope :buyer_added, -> { where(creator_type: "buyer") }
 

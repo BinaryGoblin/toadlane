@@ -80,9 +80,7 @@ class ProductsController < ApplicationController
         rebate_percent: params[:rebate_percent],
         fee: params[:fee], # this is fee amount
         rebate: params[:rebate_percent],
-        shipping_cost: params[:shipping_cost],
-        inspection_date_approved_by_seller: true,
-        inspection_date_approved_by_buyer: true
+        shipping_cost: params[:shipping_cost]
         })
       inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
       inspection_date.update_attributes({armor_order_id: @armor_order.id, approved: true})
@@ -100,9 +98,7 @@ class ProductsController < ApplicationController
         rebate_percent: params[:rebate_percent],
         fee: params[:fee], # this is fee amount
         rebate: params[:rebate_percent],
-        shipping_cost: params[:shipping_cost],
-        inspection_date_approved_by_seller: true,
-        inspection_date_approved_by_buyer: true
+        shipping_cost: params[:shipping_cost]
         })
       inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
       inspection_date.update_attributes({armor_order_id: @armor_order.id, approved: true})
@@ -111,6 +107,7 @@ class ProductsController < ApplicationController
     else
       @armor_order = ArmorOrder.new
     end
+
     @armor_profile = current_user.armor_profile.present? ? current_user.armor_profile : ArmorProfile.new
   end
 
