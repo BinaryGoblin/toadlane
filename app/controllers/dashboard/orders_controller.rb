@@ -4,7 +4,7 @@ class Dashboard::OrdersController < DashboardController
   def index
     case params[:type]
     when 'armor'
-      @orders = current_user.armor_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page])
+      @orders = current_user.armor_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page]).with_order_id
     when 'stripe'
       @orders = current_user.stripe_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page])
     when 'green'

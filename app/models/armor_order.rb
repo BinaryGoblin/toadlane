@@ -39,6 +39,7 @@ class ArmorOrder < ActiveRecord::Base
 
   scope :incomplete_inspection, -> { where(inspection_complete: false) }
   scope :complete_inspection, -> { where(inspection_complete: true) }
+  scope :with_order_id, -> { where.not(order_id: nil) }
 
   scope :for_dashboard, -> (page, per_page) do
     where(deleted: false)

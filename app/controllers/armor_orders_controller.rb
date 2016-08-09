@@ -128,7 +128,7 @@ class ArmorOrdersController < ApplicationController
     result = client.users(buyer_account_id).authentications(buyer_user_id).create(auth_data)
     armor_order.update_attribute(:payment_release_url, result.data[:body]["url"])
 
-    redirect_to orders_under_inspection_dashboard_orders_path(bought_or_sold: 'bought', type: 'armor'), :flash => { :notice => "Completed inspection and released fund" }
+    redirect_to orders_inspection_complete_dashboard_orders_path(bought_or_sold: 'bought', type: 'armor'), :flash => { :notice => "Product has been marked as inspected." }
   rescue ArmorService::BadResponseError => e
     redirect_to orders_under_inspection_dashboard_orders_path(bought_or_sold: 'bought', type: 'armor'), :flash => { :error => e.errors.values.flatten }
   end
