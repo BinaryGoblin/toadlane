@@ -20,7 +20,7 @@ html[style="margin: 0;padding: 0;"]
           = get_email_or_name(@seller)
         .message-section style=("margin: 0;padding: 15px;background: #eee;border-radius: 3px;margin-bottom: 20px;")
           = get_email_or_name(@seller)
-          - if @armor_order.inspection_dates.buyer_set_inspection_date.present?
+          - if @armor_order.inspection_dates.buyer_added.present?
             | &nbsp;has accepted the inspection date that you set i.e&nbsp;
             strong
               = @armor_order.buyer_requested_inspection_date

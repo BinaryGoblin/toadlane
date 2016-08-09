@@ -5,7 +5,7 @@
         h4.modal-title Inspection Request Date For Product:: #{armor_order.product.name}
       .modal-body
         = armor_order.buyer.name.titleize
-        | &nbsp; has requested the inspection date to be #{armor_order.inspection_date_not_marked.date.strftime("%B %d, %Y, %I:%M %p")}
+        | &nbsp; has requested the inspection date to be #{armor_order.buyer_requested_inspection_date}
         p If you are okay then click Yes, and if you want to set a new inspection date&nbsp;
         = link_to "click here", "#", id: "set_new_inspection"
         | &nbsp;to set the inspection date below

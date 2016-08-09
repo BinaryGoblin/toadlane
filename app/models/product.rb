@@ -42,6 +42,7 @@ class Product < ActiveRecord::Base
 
   has_many :stripe_orders, dependent: :destroy
   has_many :green_orders, dependent: :destroy
+  has_many :armor_orders, dependent: :destroy
   has_many :product_categories
   has_many :categories, through: :product_categories, dependent: :destroy
   has_many :images, dependent: :destroy

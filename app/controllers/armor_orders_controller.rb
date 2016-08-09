@@ -61,9 +61,9 @@ class ArmorOrdersController < ApplicationController
     armor_order = ArmorOrder.find_by_id(params[:armor_order_id])
     product = Product.unexpired.find(params[:product_id])
 
-    if armor_order.inspection_date_not_marked.update_attribute(:approved, true)
+    if armor_order.inspection_dates.buyer_added.first.update_attribute(:approved, true)
       UserMailer.send_inspection_date_confirm_notification_to_buyer(armor_order).deliver_now
-      redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => "Inspection date has been set to #{armor_order.inspection_date_by_seller} and has been informed to buyer."}
+      redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => "Inspection date has been set to #{armor_order.inspection_dates.buyer_added.first.get_inspection_date} and has been informed to buyer."}
     else
       redirect_to product_path(id: product.id, armor_order_id: armor_order.id)
     end
