@@ -27,7 +27,7 @@
 #
 
 class ArmorOrder < ActiveRecord::Base
-  has_many :inspection_dates
+  has_many :inspection_dates, dependent: :destroy
   belongs_to :buyer, class_name: 'User', foreign_key: 'buyer_id'
   belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'
   belongs_to :product
