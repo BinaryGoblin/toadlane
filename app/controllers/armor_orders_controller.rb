@@ -50,7 +50,7 @@ class ArmorOrdersController < ApplicationController
                                             creator_type: "buyer",
                                             armor_order_id: armor_order.id})
     end
-    binding.pry
+    
     if armor_order.errors.any?
       redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :alert => armor_order.errors.full_messages.first}
     else
