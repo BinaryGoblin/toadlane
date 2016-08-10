@@ -111,3 +111,34 @@ div
           td: b $ #{number_with_precision(order.amount, precision: 2, delimiter: '')}
         - if order.instance_of? GreenOrder
           td: b $ #{number_with_precision(order.total, precision: 2, delimiter: '')}
+  - if order.instance_of? GreenOrder
+    table.table-checkout style="margin-top: 20px;"
+      thead
+        tr
+          th Check Number
+          th Check ID
+          th Result Description
+          th Amount
+      tbody
+        tr
+          td
+            = order.check_number
+          td
+            = order.check_id
+          td
+            | Check Accepted
+          td
+            - if order.total > GreenOrder::MAX_AMOUNT
+              = GreenOrder::MAX_AMOUNT
+            - else
+              = order.total
+        - order.green_checks.each do |gc|
+          tr
+            td
+              = gc.check_number
+            td
+              = gc.check_id
+            td
+              = gc.result_description
+            td
+              = gc.amount

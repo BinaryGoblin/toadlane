@@ -147,9 +147,9 @@ module ApplicationHelper
 
       if index == 0
         trs += content_tag :tr do
-          concat content_tag :td, needed.to_s + ' - ' + (pricebreak.quantity - 1).to_s
-          concat content_tag :td, '$ ' + unit_price.to_s
-          concat content_tag :td, needed.to_s + ' needed'
+          concat content_tag :td, number_with_delimiter(needed) + ' - ' + (number_with_delimiter(pricebreak.quantity - 1))
+          concat content_tag :td, number_to_currency(unit_price)
+          concat content_tag :td, number_with_delimiter(needed) + ' needed'
         end
       end
 
@@ -171,9 +171,9 @@ module ApplicationHelper
         last_quantity = ''
       end
 
-      tr_first = (pricebreak.quantity).to_s + ' - ' + last_quantity
-      tr_second = '$ ' + pricebreak.price.to_s
-      tr_third = (pricebreak.quantity).to_s + ' needed'
+      tr_first = number_with_delimiter((pricebreak.quantity)) + ' - ' + number_with_delimiter(last_quantity)
+      tr_second = number_to_currency(pricebreak.price)
+      tr_third = number_with_delimiter((pricebreak.quantity)) + ' needed'
 
       needed = pricebreak.quantity
 
