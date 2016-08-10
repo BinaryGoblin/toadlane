@@ -234,6 +234,8 @@
                   label Time:
                   = time_select :inspection_date, :date, { :default => inspection_date.date, ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" , :value => inspection_date.date}, { data: { behavior: 'Select' } }
 
+                input type="hidden" name="product[inspection_date_attributes][][id]" value="#{inspection_date.id}"
+
                 span.btn.btn-default.remove= fa_icon 'trash-o'
                 .hide: input type="checkbox" name="product[inspection_date_delete][]" value="#{inspection_date.id}"
         - else

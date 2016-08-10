@@ -112,9 +112,8 @@ class Dashboard::ProductsController < DashboardController
     start_date = DateTime.new(product_params["start_date(1i)"].to_i, product_params["start_date(2i)"].to_i, product_params["start_date(3i)"].to_i, product_params["start_date(4i)"].to_i, product_params["start_date(5i)"].to_i)
     end_date = DateTime.new(product_params["end_date(1i)"].to_i, product_params["end_date(2i)"].to_i, product_params["end_date(3i)"].to_i, product_params["end_date(4i)"].to_i, product_params["end_date(5i)"].to_i)
 
-
     if product_params[:pricebreaks_attributes].present?
-      product_params[:pricebreaks_attributes] =  parse_pricebrakes product_params[:pricebreaks_attributes]
+      product_params[:pricebreaks_attributes] = parse_pricebrakes product_params[:pricebreaks_attributes]
     end
 
     @product.categories.delete_all
@@ -217,19 +216,24 @@ class Dashboard::ProductsController < DashboardController
           path = dashboard_products_path
         end
 
-        if params["product"]["inspection_date_attributes"].present? && @product.inspection_dates.empty?
+        if params["product"]["inspection_date_attributes"].present?
           inspection_attributes = params["product"]["inspection_date_attributes"]
           inspection_attributes.each do |inspection_attribute|
             inspection_date = DateTime.new(inspection_attribute["date(1i)"].to_i, inspection_attribute["date(2i)"].to_i, inspection_attribute["date(3i)"].to_i, inspection_attribute["date(4i)"].to_i, inspection_attribute["date(5i)"].to_i)
-            @product.inspection_dates.create({date: inspection_date, creator_type: "seller", product_id: @product.id})
+            if inspection_attribute["id"].present?
+              existing_inspection_date = @product.inspection_dates.find_by_id(inspection_attribute["id"])
+              existing_inspection_date.update_attribute(:date, inspection_date)
+            else
+              @product.inspection_dates.create({date: inspection_date, creator_type: "seller", product_id: @product.id})
+            end
           end
         end
 
-        # if inspection_date_for_delete
-        #   inspection_date_for_delete[:inspection_date_delete].each do |inspection_date|
-        #     @product.inspection_dates.find(inspection_date).destroy
-        #   end
-        # end
+        if inspection_date_for_delete
+          inspection_date_for_delete[:inspection_date_delete].each do |inspection_date|
+            @product.inspection_dates.find_by_id(inspection_date).destroy
+          end
+        end
 
         format.html { redirect_to path }
       else
@@ -289,7 +293,7 @@ class Dashboard::ProductsController < DashboardController
 
     def product_params
       params.require(:product).permit(:id, :name, :negotiable, :description, :user_id, :unit_price, :status_action, :status, :status_characteristic, :start_date, :end_date,
-                                      :inspection_date, :amount, :sold_out, :dimension_width, :dimension_height, :dimension_depth, :dimension_weight, :main_category,
+                                      :amount, :sold_out, :dimension_width, :dimension_height, :dimension_depth, :dimension_weight, :main_category,
                                       :pricebreaks_attributes, :shipping_estimates_attributes, :shipping_estimates_delete, :sku,
                                       :slug, :images_attributes => [], :images_attributes_delete => [], :certificates_attributes => [], :certificates_attributes_delete => [], :videos_attributes => [], :videos_attributes_delete => [], :shipping_estimates_attributes => [ :id, :cost, :description, :product_id, :_destroy, :type ],
                                       :pricebreaks_attributes => [ :id, :quantity, :price, :product_id, :_destroy ],
