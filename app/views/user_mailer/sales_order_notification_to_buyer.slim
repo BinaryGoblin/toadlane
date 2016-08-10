@@ -22,6 +22,10 @@ html[style="margin: 0;padding: 0;"]
               h4.text-uppercase[style="margin: 0;padding: 0;"]
                 |  order #
                 = @order.id
+                - if @order.instance_of? ArmorOrder
+                  p
+                    | Armor Order Id #
+                    = @order.order_id
               div[style="margin: 0;padding: 0;"]
                 |  Date:&nbsp;
                 = @order.created_at.to_date
