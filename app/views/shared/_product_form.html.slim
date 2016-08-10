@@ -260,7 +260,7 @@
           .offer-item
             .offer-date
               label Date:
-              = date_select :inspection_date, :date, { order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+              = date_select :inspection_date, :date, { :default => DateTime.tomorrow, order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
 
             .offer-time
               label Time:
