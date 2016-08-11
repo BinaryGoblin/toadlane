@@ -119,7 +119,7 @@
           .white-panel.wp-table
             - if current_user.present?
               - if current_user.profile_complete?
-                -if @product.status_characteristic == 'sell'
+                -if @product.status_characteristic == 'sell' || strip_tags(time_left(@product.end_date)) != 'Time ended' || @product.user != current_user
                   = form_tag(product_checkout_path(product_id: @product, armor_order_id: params[:armor_order_id]), method: :post, class: 'text-center') do
                     = hidden_field_tag :total
                     = hidden_field_tag :count
@@ -127,6 +127,7 @@
                     = hidden_field_tag :shipping_cost
                     = hidden_field_tag :rebate
                     = hidden_field_tag :rebate_percent
+
                     - if @product.default_payment_armor? && @product.inspection_dates.present?
                       .inspection_date_select
                         - if params[:armor_order_id].present? && params[:inspection_date_by_seller] == "true"
@@ -147,9 +148,7 @@
                               td
                                 = b.label { b.radio_button(:"checked" => (b.object.id == @product.inspection_dates.first.id)) + b.text }
                                 br
-                    - if @product.user == current_user
-                      input.btn.btn-success.btn-lg.checkout.disabled value="Checkout" type="submit"
-                    - else
+
                       input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
 
                   - if @product.negotiable?
@@ -214,15 +213,16 @@
                   p
                     b ACTIVE ACCOUNTS:
                     br
-                    - if @product.user.green_profile.present?
-                      span.label.label-green
-                        | Green By Phone
-                    - if @product.user.stripe_profile.present?
-                      span.label.label-blue
-                        | Stripe
-                    - if @product.user.armor_profile.present?
+                    - if @product.default_payment == Product::PaymentOption[:armor]
                       span.label.label-orange
                         | Armor
+                    - elsif @product.default_payment == Product::PaymentOption[:green]
+                      span.label.label-green
+                        | Green By Phone
+                    - else
+                      - if @product.default_payment == Product::PaymentOption[:stripe]
+                        span.label.label-blue
+                          | Stripe
                 - if @product.user.benefits.reject{ |e| e.empty? }.present?
                   .sell
                     b SELL:
