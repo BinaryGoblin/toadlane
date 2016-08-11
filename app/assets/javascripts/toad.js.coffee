@@ -160,7 +160,7 @@ $(document).ready ->
     $('*').css 'cursor', 'wait'
     return
 
-  $('#product_default_payment').click ->
+  $('#product_default_payment').change ->
     if $('#product_default_payment').find(":selected").text() == "Inspect And Buy"
       $('.insert_inspection_dates').show()
     else

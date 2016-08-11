@@ -338,50 +338,33 @@
                            {:include_blank => 'Choose Payment Option'},
                            {:required => true, :class => 'select'}
 
-    .insert_inspection_dates[style="display:none;"]
-      - if current_user.armor_profile.default_payment == true
-        .form-group
-          = f.check_box :negotiable, :checked => @product.negotiable
-          span
-            | &nbsp;Let buyers to add inspection date?
-        label.lg Inspection Dates:
-        ul.inspectiondates
-          - if @product.inspection_dates.any?
-            - @product.inspection_dates.each_with_index do |inspection_date, index|
-              li.inspectiondate
-                .index= index+1
-                .offer-item
-                  .offer-date
-                    label Date:
-                    = date_select :inspection_date, :date, { :default => inspection_date.date, order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" , :value => inspection_date.date }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
-
-                  .offer-time
-                    label Time:
-                    = time_select :inspection_date, :date, { :default => inspection_date.date, ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" , :value => inspection_date.date}, { data: { behavior: 'Select' } }
-
-                  input type="hidden" name="product[inspection_date_attributes][][id]" value="#{inspection_date.id}"
-
-                  span.btn.btn-default.remove= fa_icon 'trash-o'
-                  .hide: input type="checkbox" name="product[inspection_date_delete][]" value="#{inspection_date.id}"
-          - else
+    .insert_inspection_dates style="display:none;"
+      .form-group
+        = f.check_box :negotiable, :checked => @product.negotiable
+        span
+          | &nbsp;Let buyers to add inspection date?
+      label.lg Inspection Dates:
+      ul.inspectiondates
+        - if @product.inspection_dates.any?
+          - @product.inspection_dates.each_with_index do |inspection_date, index|
             li.inspectiondate
-              .index 1
+              .index= index+1
               .offer-item
                 .offer-date
                   label Date:
-                  = date_select :inspection_date, :date, { :default => DateTime.tomorrow, order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+                  = date_select :inspection_date, :date, { :default => inspection_date.date, order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" , :value => inspection_date.date }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
 
                 .offer-time
                   label Time:
-                  = time_select :inspection_date, :date, { ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" }, { data: { behavior: 'Select' } }
+                  = time_select :inspection_date, :date, { :default => inspection_date.date, ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" , :value => inspection_date.date}, { data: { behavior: 'Select' } }
+
+                input type="hidden" name="product[inspection_date_attributes][][id]" value="#{inspection_date.id}"
 
                 span.btn.btn-default.remove= fa_icon 'trash-o'
-
-          li.add-inspectiondate data-behavior="InspectionDate"= fa_icon 'plus', text: 'Add another Inspection Date'
-
-        script#template-inspectiondate type="text/template"
+                .hide: input type="checkbox" name="product[inspection_date_delete][]" value="#{inspection_date.id}"
+        - else
           li.inspectiondate
-            .index 2
+            .index 1
             .offer-item
               .offer-date
                 label Date:
@@ -392,6 +375,22 @@
                 = time_select :inspection_date, :date, { ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" }, { data: { behavior: 'Select' } }
 
               span.btn.btn-default.remove= fa_icon 'trash-o'
+
+        li.add-inspectiondate data-behavior="InspectionDate"= fa_icon 'plus', text: 'Add another Inspection Date'
+
+      script#template-inspectiondate type="text/template"
+        li.inspectiondate
+          .index 2
+          .offer-item
+            .offer-date
+              label Date:
+              = date_select :inspection_date, :date, { :default => DateTime.tomorrow, order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+
+            .offer-time
+              label Time:
+              = time_select :inspection_date, :date, { ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" }, { data: { behavior: 'Select' } }
+
+            span.btn.btn-default.remove= fa_icon 'trash-o'
 
   .footer-actions: .fa-container: .wrap-sm
     = f.button fa_icon('check', text: 'Save & close'), value: 'close', class: 'btn btn-success pull-right'
