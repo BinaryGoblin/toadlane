@@ -188,7 +188,6 @@
                 span Select video
                 input type="file" name="product[videos_attributes][]" accept="video/*, video/3gpp, .mkv, video/x-flv, video/3gpp2, video/mpeg, .m2v"
     hr
-
     .row
       .col-md-6
         .offer-from-until
@@ -213,9 +212,7 @@
             .offer-time
               label Time:
               = time_select :product, :end_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
-
-
-      hr
+    hr
     .price-stock.clearfix
       .unit
         = f.label :unit_price, 'Base unit price (USD):', class: 'required lg'

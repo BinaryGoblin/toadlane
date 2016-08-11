@@ -127,7 +127,7 @@
                     = hidden_field_tag :shipping_cost
                     = hidden_field_tag :rebate
                     = hidden_field_tag :rebate_percent
-                    - if @product.owner_default_payment_armor? && @product.inspection_dates.present?
+                    - if @product.default_payment_armor? && @product.inspection_dates.present?
                       .inspection_date_select
                         - if params[:armor_order_id].present? && params[:inspection_date_by_seller] == "true"
                           p

@@ -165,7 +165,7 @@ $(document).ready ->
     return
 
   $('#product_default_payment').click ->
-    if $('#product_default_payment').find(":selected").text() == "Armor"
+    if $('#product_default_payment').find(":selected").text() == "Inspect And Buy"
       $('.insert_inspection_dates').show()
     else
       $('.insert_inspection_dates').hide()

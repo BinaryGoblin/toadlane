@@ -35,6 +35,12 @@ class Product < ActiveRecord::Base
   acts_as_paranoid
   is_impressionable :counter_cache => true, :column_name => :views_count, :unique => :user_id
 
+  PaymentOption = {
+    armor: 'Inspect And Buy',
+    green: 'Echeck',
+    stripe: 'Credit Card'
+  }
+
   belongs_to :user
 
   self.inheritance_column = nil # So that the :type enum doesn't complain about Single Table Inheritance
@@ -75,9 +81,9 @@ class Product < ActiveRecord::Base
 
   def available_payments
     ap = []
-    ap << "Credit Card" if user.stripe_profile.present?
-    ap << "eCheck" if user.green_profile.present?
-    ap << "Armor" if user.armor_profile.present?
+    ap << PaymentOption[:stripe] if user.stripe_profile.present?
+    ap << PaymentOption[:green] if user.green_profile.present?
+    ap << PaymentOption[:armor] if user.armor_profile.present?
     ap
   end
 
@@ -106,8 +112,8 @@ class Product < ActiveRecord::Base
     self.amount - sold_out
   end
 
-  def owner_default_payment_armor?
-    user.default_payment_armor?
+  def default_payment_armor?
+    default_payment == PaymentOption[:armor]
   end
 
   def seller_set_inspection_dates
