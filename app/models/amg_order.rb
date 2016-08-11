@@ -9,6 +9,8 @@ class AmgOrder < ActiveRecord::Base
 
   attr_accessor :first_name, :last_name, :address1, :rebate_percent
 
+  before_create :default_delete_false
+
   scope :for_dashboard, -> (page, per_page) do
     where(deleted: false).order('created_at DESC').paginate(page: page, per_page: per_page)
   end
@@ -26,19 +28,26 @@ class AmgOrder < ActiveRecord::Base
     if seller.present? && amg_profile.present?
       api_params = amg_api_ready_params(
         amg_params,
+        product_id,
+        buyer_id,
         amount
       )
       amg_service = AmgService.new(
-        amg_profile.amg_api_key
+        amg_profile.username,
+        amg_profile.password
       )
-      amg_service.transaction_step1(api_params)
+      amg_service.direct_post(api_params)
     else
       {
-        "result" => "3",
-        "result-text" => "Seller not found or invalid AMG Profile",
-        "transaction-id" => "",
-        "result-code" => "",
-        "form-url" => ""
+        "response" => "3",
+        "responsetext" => "Seller not found or invalid AMG Profile",
+        "authcode" => "",
+        "transactionid" => "",
+        "avsresponse" => "",
+        "cvvresponse" => "",
+        "orderid" => "",
+        "type" => "sale",
+        "response_code" => ""
       }
     end
   end
@@ -53,19 +62,26 @@ class AmgOrder < ActiveRecord::Base
     self.save
   end
 
+  def default_delete_false
+    self.deleted ||= false
+  end
+
   private_class_method
     def self.amg_api_ready_params(amg_params, product_id, buyer_id, amount)
       api_ready_params = {}
-      api_ready_params["redirect-url"] = "#{root_url}products/#{product_id}/checkout/amg"
-      api_ready_params["descriptor"] = "#{amg_params[:name]}"
-      api_ready_params["descriptor-phone"] = "#{amg_params[:phone]}"
-      api_ready_params["descriptor-address"] = "#{amg_params[:address1]}"
-      api_ready_params["descriptor-city"] = "#{amg_params[:address_city]}"
-      api_ready_params["descriptor-state"] = "#{amg_params[:address_state].try(:upcase)}"
-      api_ready_params["descriptor-postal"] = "#{amg_params[:address_zip]}"
-      api_ready_params["descriptor-country"] = "#{amg_params[:address_country]}"
+      api_ready_params["type"] = "sale"
+      api_ready_params["first_name"] = "#{amg_params[:first_name]}"
+      api_ready_params["last_name"] = "#{amg_params[:last_name]}"
+      api_ready_params["address1"] = "#{amg_params[:address1]}"
+      api_ready_params["city"] = "#{amg_params[:address_city]}"
+      api_ready_params["state"] = "#{amg_params[:address_state].try(:upcase)}"
+      api_ready_params["zipcode"] = "#{amg_params[:address_zip]}"
+      api_ready_params["country"] = "#{amg_params[:address_country]}"
+      api_ready_params["ccnumber"] = "#{amg_params['billing-cc-number']}"
+      api_ready_params["ccexp"] = "#{amg_params['billing-cc-exp']}"
+      api_ready_params["cvv"] = "#{amg_params['billing-cvv']}"
       api_ready_params["amount"] = "#{amount}"
-      api_ready_params["order-date"] = "#{Time.now.strftime("%m/%d/%Y")}"
+      api_ready_params["order_description"] = "p:#{product_id}u:#{buyer_id}t:#{Time.now.to_i}"
       api_ready_params
     end
 end

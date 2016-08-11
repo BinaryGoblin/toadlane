@@ -43,8 +43,11 @@
             p A simple payments solution for your business and your customers
             = form_for @amg_profile, url: create_amg_profile_dashboard_accounts_path do |f|
               .form-group
-                = f.label :amg_api_key, "AMG API Key:"
-                = f.text_field :amg_api_key, class: "form-control", required: true
+                = f.label :username, "AMG Username:"
+                = f.text_field :username, class: "form-control", required: true
+              .form-group
+                = f.label :password, "AMG Password:"
+                = f.password_field :password, class: "form-control", required: true
               = f.submit "Submit", class: "btn btn-primary"
             - if @user.amg_profile.nil?
               p <b>Status:</b> <span class="warning">You are not connected to Advanced Merchant Group.</span>

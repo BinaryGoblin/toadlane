@@ -1,21 +1,22 @@
 class AmgService
   include HTTParty
   if Rails.env.production?
-    base_uri 'https://secure.advancedmerchantgroupgateway.com/api/v2/three-step'
+    base_uri 'https://secure.advancedmerchantgroupgateway.com/api'
   else
-    base_uri 'https://secure.advancedmerchantgroupgateway.com/api/v2/three-step'
+    base_uri 'https://secure.advancedmerchantgroupgateway.com/api'
   end
 
-  attr_accessor :api_key
+  attr_accessor :username, :password
 
-  def initialize(api_key)
-    self.api_key = api_key
+  def initialize(username, password)
+    self.username = username
+    self.password = password
   end
 
-  def transaction_step1(params = {})
-    params["api-key"] = "#{api_key}"
-    response = self.class.post("/sale", { body: params })
-    response_hash = Hash.from_xml(response.body)
-    response_hash["response"]
+  def direct_post(params = {})
+    params["username"] = "#{username}"
+    params["password"] = "#{password}"
+    response = self.class.post("/transact.php", { body: params })
+    Rack::Utils.parse_nested_query(response)
   end
 end

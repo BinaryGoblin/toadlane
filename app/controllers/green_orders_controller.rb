@@ -113,6 +113,7 @@ class GreenOrdersController < ApplicationController
     }
     @fee = Fee.find_by(:module_name => 'Stripe').value
     @stripe_order = StripeOrder.new
+    @amg_order = AmgOrder.new
     @green_order = GreenOrder.new(green_order_params)
   end
 

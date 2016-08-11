@@ -7,11 +7,9 @@ class AmgOrdersController < ApplicationController
   end
 
   def create
-    binding.pry
     response = make_amg_request
-    if response['result'] == '1'
-      @form_url = response['form-url']
-      # handle_successful_response(amg_order_params, response)
+    if response['response'] == '1'
+      handle_successful_response(amg_order_params, response)
     else
       render_on_failure(response)
     end
@@ -20,8 +18,10 @@ class AmgOrdersController < ApplicationController
   private
 
   def make_amg_request
+    amg_params_including_billing = amg_params
+    amg_params_including_billing.merge!(params.slice('billing-cc-number', 'billing-cc-exp', 'billing-cvv'))
     AmgOrder.make_request(
-      amg_params,
+      amg_params_including_billing,
       amg_order_params[:seller_id],
       amg_order_params[:product_id],
       amg_order_params[:buyer_id],
@@ -32,8 +32,8 @@ class AmgOrdersController < ApplicationController
   def amg_order_params
     @amg_order_params ||= params.require(:amg_order).permit(
       :id,
-      :name,
-      :phone,
+      :first_name,
+      :last_name,
       :address1,
       :buyer_id,
       :seller_id,
@@ -66,8 +66,8 @@ class AmgOrdersController < ApplicationController
   def amg_params
     params.require(:amg_order).permit(
       :id,
-      :name,
-      :phone,
+      :first_name,
+      :last_name,
       :address1,
       :address_city,
       :address_state,
@@ -106,7 +106,7 @@ class AmgOrdersController < ApplicationController
 
   def render_on_failure(response)
     prepare_rendering_data
-    flash[:alert] = "AMG Response: #{response['ResultDescription']}"
+    flash[:alert] = "AMG Response: #{response['responsetext']}"
     render 'products/checkout'
   end
 
@@ -120,11 +120,17 @@ class AmgOrdersController < ApplicationController
   end
 
   def send_after_order_emails(amg_order)
-    UserMailer.sales_order_notification_to_seller(amg_order).deliver_now
-    UserMailer.sales_order_notification_to_buyer(amg_order).deliver_now
+    UserMailer.sales_order_notification_to_seller(amg_order).deliver_later
+    UserMailer.sales_order_notification_to_buyer(amg_order).deliver_later
+  end
+
+  def update_amg_order_params(amg_order_params, response)
+    amg_order_params[:transaction_id] = response['transactionid']
+    amg_order_params[:authorization_code] = response['authcode']
   end
 
   def handle_successful_response(amg_order_params, response)
+    update_amg_order_params(amg_order_params, response)
     create_address(amg_order_params)
     @amg_order = AmgOrder.new(amg_order_params)
     if @amg_order.save
