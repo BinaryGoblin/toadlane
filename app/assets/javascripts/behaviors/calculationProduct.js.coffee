@@ -46,8 +46,10 @@ class Behavior.CalculationProduct
   fixed: (number) =>
     number.toFixed(2).toString()
 
+  number_to_currency: (amount) =>
+    amount.replace /(\d)(?=(\d{3})+(?!\d))/g, "$1,"
+
   calculation: =>
-    nf = new Intl.NumberFormat()
     total  = 0
     rebate = 0
     quantity = parseInt @$quantity.val(), 10
@@ -100,11 +102,11 @@ class Behavior.CalculationProduct
 
     @$rebate.text @fixed rebatep
     @$pcs.text quantity
-    @$feePrice.text nf.format(@fixed fees)
-    @$shippingPrice.text nf.format(@fixed shipping_cost)
-    @$rebPrice.text nf.format(@fixed rebate)
-    @$cart.text nf.format(@fixed cart)
-    @$subTotal.text nf.format(@fixed total)
+    @$feePrice.text @number_to_currency(@fixed fees)
+    @$shippingPrice.text @number_to_currency(@fixed shipping_cost)
+    @$rebPrice.text @number_to_currency(@fixed rebate)
+    @$cart.text @number_to_currency(@fixed cart)
+    @$subTotal.text @number_to_currency(@fixed total)
 
     @$stripeQuantity.text quantity
     @$stripeTotal.text @fixed cart

@@ -18,12 +18,18 @@ class GreenOrdersController < ApplicationController
   private
 
   def make_green_request
+    amount = 0.00
+    if green_order_params[:total].to_f > GreenOrder::MAX_AMOUNT
+      amount = GreenOrder::MAX_AMOUNT
+    else
+      amount = green_order_params[:total]
+    end
     GreenOrder.make_request(
       green_params,
       green_order_params[:seller_id],
       green_order_params[:product_id],
       green_order_params[:buyer_id],
-      green_order_params[:total]
+      amount
     )
   end
 
@@ -127,8 +133,8 @@ class GreenOrdersController < ApplicationController
   end
 
   def send_after_order_emails(green_order)
-    UserMailer.sales_order_notification_to_seller(green_order).deliver_now
-    UserMailer.sales_order_notification_to_buyer(green_order).deliver_now
+    UserMailer.sales_order_notification_to_seller(green_order).deliver_later
+    UserMailer.sales_order_notification_to_buyer(green_order).deliver_later
   end
 
   def update_green_order_params(green_order_params, response)
@@ -141,6 +147,7 @@ class GreenOrdersController < ApplicationController
     create_address(green_order_params)
     @green_order = GreenOrder.new(green_order_params)
     if @green_order.save
+      @green_order.process_checks_breakdown if (@green_order.total > GreenOrder::MAX_AMOUNT)
       @green_order.place_order
       send_after_order_emails(@green_order)
       redirect_to dashboard_order_path(

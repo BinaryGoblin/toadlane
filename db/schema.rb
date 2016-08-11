@@ -220,6 +220,17 @@ ActiveRecord::Schema.define(version: 20160811051417) do
     t.datetime "updated_at",                          null: false
   end
 
+  create_table "green_checks", force: :cascade do |t|
+    t.string   "result"
+    t.string   "result_description"
+    t.string   "check_number"
+    t.string   "check_id"
+    t.integer  "green_order_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.float    "amount"
+  end
+
   create_table "green_orders", force: :cascade do |t|
     t.integer  "buyer_id"
     t.integer  "seller_id"
