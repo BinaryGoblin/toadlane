@@ -122,15 +122,6 @@ class Dashboard::AccountsController < DashboardController
     end
   end
 
-  def update_armor_profile
-    default_payment = armor_params["default_payment"] == "1" ? true : false
-    if current_user.armor_profile.update_attribute(:default_payment, default_payment)
-      redirect_to dashboard_accounts_path(armor_profile_id: current_user.armor_profile.id), :flash => { :notice => "You have successfully updated the default payment method." }
-    else
-      redirect_to dashboard_accounts_path(armor_profile_id: current_user.armor_profile.id)
-    end
-  end
-
   private
     def set_user
       @user = current_user

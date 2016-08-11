@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160811035238) do
+ActiveRecord::Schema.define(version: 20160811051417) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,7 +86,6 @@ ActiveRecord::Schema.define(version: 20160811035238) do
     t.datetime "updated_at"
     t.boolean  "confirmed_email"
     t.boolean  "agreed_terms"
-    t.boolean  "default_payment",            default: false
   end
 
   add_index "armor_profiles", ["user_id"], name: "index_armor_profiles_on_user_id", using: :btree

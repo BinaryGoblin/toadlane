@@ -93,10 +93,6 @@ $(document).ready ->
     $(".set_inspection_date").show()
     $(".confirm-inspection-date-btn").hide()
 
-
-  $("form.edit_armor_profile input.defaultPaymentCheckbox").next().click ->
-    $('form.edit_armor_profile').submit()
-
   $('.related_searches a').click (event) ->
     event.preventDefault()
     rs = $(this).html()
