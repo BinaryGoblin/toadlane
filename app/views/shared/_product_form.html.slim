@@ -333,7 +333,7 @@
     hr
     .form-group
       label Sell Product using::
-      = f.select :default_payment, options_for_select(@product.available_payments,
+      = f.select :default_payment, options_for_select(current_user.available_payments,
                             :selected => @product.default_payment),
                            {:include_blank => 'Choose Payment Option'},
                            {:required => true, :class => 'select'}

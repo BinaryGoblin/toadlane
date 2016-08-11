@@ -35,7 +35,7 @@ class Product < ActiveRecord::Base
   acts_as_paranoid
   is_impressionable :counter_cache => true, :column_name => :views_count, :unique => :user_id
 
-  PaymentOption = {
+  PaymentOptions = {
     armor: 'Inspect And Buy',
     green: 'Echeck',
     stripe: 'Credit Card'
@@ -81,9 +81,9 @@ class Product < ActiveRecord::Base
 
   def available_payments
     ap = []
-    ap << PaymentOption[:stripe] if user.stripe_profile.present?
-    ap << PaymentOption[:green] if user.green_profile.present?
-    ap << PaymentOption[:armor] if user.armor_profile.present?
+    ap << PaymentOptions[:stripe] if user.stripe_profile.present?
+    ap << PaymentOptions[:green] if user.green_profile.present?
+    ap << PaymentOptions[:armor] if user.armor_profile.present?
     ap
   end
 
@@ -113,7 +113,7 @@ class Product < ActiveRecord::Base
   end
 
   def default_payment_armor?
-    default_payment == PaymentOption[:armor]
+    default_payment == PaymentOptions[:armor]
   end
 
   def seller_set_inspection_dates

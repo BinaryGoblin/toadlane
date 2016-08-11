@@ -176,6 +176,14 @@ class User < ActiveRecord::Base
     armor_profile.default_payment == true
   end
 
+  def available_payments
+    ap = []
+    ap << Product::PaymentOptions[:stripe] if self.stripe_profile.present?
+    ap << Product::PaymentOptions[:green] if self.green_profile.present?
+    ap << Product::PaymentOptions[:armor] if self.armor_profile.present?
+    ap
+  end
+
   private
   def associate_api_user
     if armor_api_account_exists?

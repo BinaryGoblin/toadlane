@@ -213,14 +213,14 @@
                   p
                     b ACTIVE ACCOUNTS:
                     br
-                    - if @product.default_payment == Product::PaymentOption[:armor]
+                    - if @product.default_payment == Product::PaymentOptions[:armor]
                       span.label.label-orange
                         | Armor
-                    - elsif @product.default_payment == Product::PaymentOption[:green]
+                    - elsif @product.default_payment == Product::PaymentOptions[:green]
                       span.label.label-green
                         | Green By Phone
                     - else
-                      - if @product.default_payment == Product::PaymentOption[:stripe]
+                      - if @product.default_payment == Product::PaymentOptions[:stripe]
                         span.label.label-blue
                           | Stripe
                 - if @product.user.benefits.reject{ |e| e.empty? }.present?
