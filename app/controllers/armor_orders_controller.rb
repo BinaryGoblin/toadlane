@@ -50,7 +50,7 @@ class ArmorOrdersController < ApplicationController
                                             creator_type: "buyer",
                                             armor_order_id: armor_order.id})
     end
-    
+
     if armor_order.errors.any?
       redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :alert => armor_order.errors.full_messages.first}
     else
@@ -185,5 +185,16 @@ class ArmorOrdersController < ApplicationController
       armor_order.create_armor_api_order(api_armor_order_params)
 
       armor_order.get_armor_payment_instruction_url
+
+      # # TODO: remove this when sending to production This is for adding amount to escrow
+      client = ArmorService.new
+      account_id = product.user.armor_profile.armor_account_id
+      action_data = {
+                      "action" => "add_payment",
+                      "confirm" => true,
+                      "source_account_id" => current_user.armor_profile.armor_account_id, # The account_id of the party making the payment
+                      "amount" => 10000 }
+      result = client.orders(account_id).update(armor_order.order_id, action_data)
+
     end
 end
