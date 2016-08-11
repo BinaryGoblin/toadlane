@@ -7,7 +7,7 @@ class AmgOrder < ActiveRecord::Base
   belongs_to :shipping_estimate
   belongs_to :address
 
-  attr_accessor :name, :phone, :address1, :rebate_percent
+  attr_accessor :first_name, :last_name, :address1, :rebate_percent
 
   scope :for_dashboard, -> (page, per_page) do
     where(deleted: false).order('created_at DESC').paginate(page: page, per_page: per_page)

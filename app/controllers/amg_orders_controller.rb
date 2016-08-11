@@ -7,6 +7,7 @@ class AmgOrdersController < ApplicationController
   end
 
   def create
+    binding.pry
     response = make_amg_request
     if response['result'] == '1'
       @form_url = response['form-url']

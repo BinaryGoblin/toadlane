@@ -117,7 +117,7 @@ $(document).ready ->
 
     country_code = $(this).val()
 
-    url = "/products/subregion_options?parent_region=#{country_code}"
+    url = "/products/subregion_options?parent_region=#{country_code}&parent_object_sym=green_order"
     select_wrapper.load(url)
 
   $('select#amg_order_address_country').change (event) ->
@@ -127,7 +127,7 @@ $(document).ready ->
 
     country_code = $(this).val()
 
-    url = "/products/subregion_options?parent_region=#{country_code}"
+    url = "/products/subregion_options?parent_region=#{country_code}&parent_object_sym=amg_order"
     select_wrapper.load(url)
 
   $('form#new_green_order').validate
@@ -146,6 +146,22 @@ $(document).ready ->
       "green_order[account_number]":
         required: true
         number: true
+    submitHandler: (form) ->
+      $(this).find('input[type=submit]').prop 'disabled', true
+      form.submit()
+      return
+
+  $('form#new_amg_order').validate
+    rules:
+      "amg_order[email_address]":
+        required: true
+        validEmail: true
+      "amg_order[address_zip]":
+        required: true
+        zipcode: true
+      "billing-cc-number":
+        required: true
+        creditcard: true
     submitHandler: (form) ->
       $(this).find('input[type=submit]').prop 'disabled', true
       form.submit()
