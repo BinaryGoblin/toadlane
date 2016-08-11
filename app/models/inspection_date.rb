@@ -21,7 +21,7 @@ class InspectionDate < ActiveRecord::Base
   scope :seller_added, -> { where(creator_type: "seller") }
   scope :buyer_added, -> { where(creator_type: "buyer") }
 
-  validate :inspection_date_validator, :on => :create
+  # validate :inspection_date_validator, :on => :create
 
   # gives August 09, 2016, 06:00 PM
   def get_inspection_date

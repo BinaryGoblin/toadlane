@@ -55,7 +55,13 @@ class Dashboard::ProductsController < DashboardController
 
     negotiable = product_params["negotiable"] == "1" ? true : false
 
-    @product = current_user.products.new(product_params.merge!(start_date: start_date).merge!(end_date: end_date).merge!(negotiable: negotiable).except(:images_attributes, :certificates_attributes, :videos_attributes))
+    @product = current_user.products.new(product_params.merge!(start_date: start_date)
+                                          .merge!(end_date: end_date)
+                                          .merge!(negotiable: negotiable)
+                                          .merge!(default_payment: params["product"]["default_payment"])
+                                          .except(:images_attributes,
+                                                  :certificates_attributes,
+                                                  :videos_attributes))
 
     respond_to do |format|
       if @product.save
@@ -157,8 +163,12 @@ class Dashboard::ProductsController < DashboardController
     negotiable = product_params["negotiable"] == "1" ? true : false
 
     respond_to do |format|
-      if @product.update(product_params.merge!(start_date: start_date).merge!(end_date: end_date).merge!(negotiable: negotiable).except(:images_attributes,
-        :images_attributes_delete, :certificates_attributes, :certificates_attributes_delete, :videos_attributes, :videos_attributes_delete, :pricebreaks_delete))
+      if @product.update(product_params.merge!(start_date: start_date)
+                  .merge!(end_date: end_date).merge!(negotiable: negotiable)
+                  .merge!(default_payment: params["product"]["default_payment"])
+                  .except(:images_attributes, :images_attributes_delete,
+                          :certificates_attributes, :certificates_attributes_delete,
+                          :videos_attributes, :videos_attributes_delete, :pricebreaks_delete))
 
         if images
           images[:images_attributes].each do |image|

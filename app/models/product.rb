@@ -27,6 +27,7 @@
 #  views_count           :integer          default(0)
 #  deleted_at            :datetime
 #  negotiable            :boolean
+#  default_payment       :string
 #
 
 class Product < ActiveRecord::Base

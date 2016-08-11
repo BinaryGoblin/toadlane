@@ -163,3 +163,9 @@ $(document).ready ->
     $(this).find(':submit').prop 'disabled', true
     $('*').css 'cursor', 'wait'
     return
+
+  $('#product_default_payment').click ->
+    if $('#product_default_payment').find(":selected").text() == "Armor"
+      $('.insert_inspection_dates').show()
+    else
+      $('.insert_inspection_dates').hide()
