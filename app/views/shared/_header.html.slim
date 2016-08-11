@@ -1,16 +1,16 @@
 header.header.navbar-default: .wrap
   = link_to image_tag('logo-header.png'), '/', class: 'logo'
-  button.navbar-toggle.collapsed aria-expanded="false" data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button" 
+  button.navbar-toggle.collapsed aria-expanded="false" data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button"
     span.sr-only Toggle navigation
     span.icon-bar
     span.icon-bar
     span.icon-bar
-  
+
   .collapse.navbar-collapse#bs-example-navbar-collapse-1
 
     .header-user.pull-right
       - if current_user
-        = link_to 'Sell Now', new_dashboard_product_path, class: 'btn btn-default'
+        = link_to 'Sell', new_dashboard_product_path, class: 'btn btn-default'
         - notifications = get_user_notifications
         - if notifications > 0
           = link_to "My Profile (#{notifications})", dashboard_messages_path, class: 'btn btn-success'
