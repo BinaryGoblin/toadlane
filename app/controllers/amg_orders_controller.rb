@@ -106,7 +106,7 @@ class AmgOrdersController < ApplicationController
 
   def render_on_failure(response)
     prepare_rendering_data
-    flash[:alert] = "AMG Response: #{response['responsetext']}"
+    flash[:alert] = "#{response['responsetext']}"
     render 'products/checkout'
   end
 

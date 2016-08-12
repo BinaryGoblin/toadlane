@@ -46,11 +46,11 @@
           | Choose a desired Payment Gateway
         ul.nav.nav-tabs role="tablist"
           li role="presentation" class=('active' if !@green_order.routing_number.present?)
-            a aria-controls="stripe" data-toggle="tab" href="#stripe" role="tab"  Stripe (Credit Card)
+            a aria-controls="stripe" data-toggle="tab" href="#stripe" role="tab"  Stripe
           li role="presentation" class=('active' if @green_order.routing_number.present?)
-            a aria-controls="green" data-toggle="tab" href="#green" role="tab"  Green (eCheck)
+            a aria-controls="green" data-toggle="tab" href="#green" role="tab"  eCheck
           li role="presentation"
-            a aria-controls="amg" data-toggle="tab" href="#amg" role="tab" Advanced Merchant Group
+            a aria-controls="amg" data-toggle="tab" href="#amg" role="tab" Credit Card
       .tab-content
         - if @product.stripe_present?
           #stripe.tab-pane role="tabpanel" class=('active' if !@green_order.routing_number.present?)

@@ -119,7 +119,7 @@ class GreenOrdersController < ApplicationController
 
   def render_on_failure(response)
     prepare_rendering_data
-    flash[:alert] = "GreenByPhone Response: #{response['ResultDescription']}"
+    flash[:alert] = "#{response['ResultDescription']}"
     render 'products/checkout'
   end
 
