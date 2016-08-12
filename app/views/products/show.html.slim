@@ -189,6 +189,9 @@
                     - if @product.user.stripe_profile.present?
                       span.label.label-blue
                         | Stripe
+                    - if @product.user.amg_profile.present?
+                      span.label.label-dark-blue
+                        | AMG
                 - if @product.user.benefits.reject{ |e| e.empty? }.present?
                   .sell
                     b SELL:
