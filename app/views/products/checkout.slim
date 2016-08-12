@@ -263,7 +263,7 @@
                         td
                           = b.label { b.radio_button(:"data-behavior" => "EstimateShipping", :"data-cost" => b.object.cost, :"data-type" => b.object.type, :"checked" => (b.object.id == amg_shipping_estimates.first.id)) + b.text }
               .amgDetails.form-horizontal
-                h2 Enter your check details below
+                h2 Enter your payment details below, none of the sensitive information will be saved within our system
                 .form-group
                   = f.label :first_name, 'First Name *', class: 'control-label col-sm-4'
                   .col-sm-8
