@@ -147,7 +147,7 @@ $(document).ready ->
         required: true
         number: true
     submitHandler: (form) ->
-      $(this).find('input[type=submit]').prop 'disabled', true
+      $('form#new_green_order').find('input[type=submit]').prop 'disabled', true
       form.submit()
       return
 
@@ -163,7 +163,7 @@ $(document).ready ->
         required: true
         creditcard: true
     submitHandler: (form) ->
-      $(this).find('input[type=submit]').prop 'disabled', true
+      $('form#new_amg_order').find('input[type=submit]').prop 'disabled', true
       form.submit()
       return
 
