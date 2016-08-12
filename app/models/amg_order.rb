@@ -64,6 +64,7 @@ class AmgOrder < ActiveRecord::Base
 
   def default_delete_false
     self.deleted ||= false
+    self.status ||= 0
   end
 
   private_class_method

@@ -140,6 +140,10 @@ class AmgOrdersController < ApplicationController
         @amg_order,
         type: 'amg'
       ), notice: 'Your order was successfully placed.'
+    else
+      prepare_rendering_data
+      flash[:alert] = "#{@amg_order.errors.full_messages.to_sentence}"
+      render 'products/checkout'
     end
   end
 end
