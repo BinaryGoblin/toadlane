@@ -6,7 +6,7 @@ class Behavior.AssignShippingAddress
     @$stripeButtonScript  = $ '.stripe-button'
 
     @$radioButton.click => do @assign
-    
+
   assign: =>
     if @$radioButton.val() >= 0
       @$stripeButtonScript.attr 'data-shipping-address', false
