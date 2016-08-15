@@ -1,5 +1,6 @@
 class Dashboard::AccountsController < DashboardController
   include ProductHelper
+  before_action :set_armor_service, only: [:create_armor_profile]
 
   def index
     set_user
@@ -33,7 +34,6 @@ class Dashboard::AccountsController < DashboardController
 
   def create_armor_profile
     if current_user.armor_profile.present?
-      client = ArmorService.new
       agreed_terms = armor_params['agreed_terms'] == '1' ? true : false
 
       current_user.armor_profile.update_attribute(:agreed_terms, agreed_terms)
@@ -123,6 +123,10 @@ class Dashboard::AccountsController < DashboardController
   end
 
   private
+
+  def set_armor_service
+    @client = ArmorService.new
+  end
   def set_user
     @user = current_user
   end
@@ -168,15 +172,15 @@ class Dashboard::AccountsController < DashboardController
     end
   end
 
-  def retrieve_account_user_id
+  def retrieve_account_user_id(armor_params)
     selected_address = create_update_address(armor_params)
 
     account_data = set_account_data(armor_params, agreed_terms, selected_address)
 
-    result = client.accounts.create(account_data)
+    result = @client.accounts.create(account_data)
     current_user.armor_profile.update_attribute(:armor_account_id, result.data[:body]['account_id'])
 
-    users = client.users(current_user.armor_profile.armor_account_id).all
+    users = @client.users(current_user.armor_profile.armor_account_id).all
     current_user.armor_profile.update_attribute(:armor_user_id, users.data[:body][0]['user_id'].to_i)
 
     if curernt_user.armor_profile.armor_account_id.present? &&
