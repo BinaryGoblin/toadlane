@@ -116,7 +116,16 @@ class ArmorOrdersController < ApplicationController
                       "carrier_id" => 8,
                       "tracking_id" => "z1234567890",
                       "description" => "Shipped via UPS ground in a protective box." }
-    result = client.orders(account_id).shipments(order_id).create(action_data)
+    client.orders(account_id).shipments(order_id).create(action_data)
+
+    # # TODO: remove this when sending to production This is for adding amount to escrow
+    account_id = armor_order.product.user.armor_profile.armor_account_id
+    action_data = {
+                    "action" => "add_payment",
+                    "confirm" => true,
+                    "source_account_id" => current_user.armor_profile.armor_account_id, # The account_id of the party making the payment
+                    "amount" => armor_order.amount }
+    client.orders(account_id).update(armor_order.order_id, action_data)
 
     # release fund by buyer
     seller_account_id = armor_order.seller_account_id
@@ -185,16 +194,5 @@ class ArmorOrdersController < ApplicationController
       armor_order.create_armor_api_order(api_armor_order_params)
 
       armor_order.get_armor_payment_instruction_url
-
-      # # TODO: remove this when sending to production This is for adding amount to escrow
-      client = ArmorService.new
-      account_id = product.user.armor_profile.armor_account_id
-      action_data = {
-                      "action" => "add_payment",
-                      "confirm" => true,
-                      "source_account_id" => current_user.armor_profile.armor_account_id, # The account_id of the party making the payment
-                      "amount" => 10000 }
-      result = client.orders(account_id).update(armor_order.order_id, action_data)
-
     end
 end
