@@ -45,7 +45,7 @@ class Dashboard::AccountsController < DashboardController
       })
 
       if current_user.valid?
-        retrieve_account_user_id(armor_params)
+        retrieve_account_user_id(armor_params, agreed_terms)
         redirect_to :back, :flash => { :notice => "Armor Profile successfully created." }
       else
         redirect_to :back, :flash => { :alert => "#{current_user.errors.full_messages.to_sentence}" }
@@ -172,7 +172,7 @@ class Dashboard::AccountsController < DashboardController
     end
   end
 
-  def retrieve_account_user_id(armor_params)
+  def retrieve_account_user_id(armor_params, agreed_terms)
     selected_address = create_update_address(armor_params)
 
     account_data = set_account_data(armor_params, agreed_terms, selected_address)
@@ -183,13 +183,13 @@ class Dashboard::AccountsController < DashboardController
     users = @client.users(current_user.armor_profile.armor_account_id).all
     current_user.armor_profile.update_attribute(:armor_user_id, users.data[:body][0]['user_id'].to_i)
 
-    if curernt_user.armor_profile.armor_account_id.present? &&
-      curernt_user.armor_profile.armor_user_id.present?
+    if current_user.armor_profile.armor_account_id.present? &&
+      current_user.armor_profile.armor_user_id.present?
       UserMailer.send_armor_profile_created_notification(current_user).deliver_now
     end
   end
 
-  def set_account_data(armor_params, selected_address, agreed_terms)
+  def set_account_data(armor_params, agreed_terms, selected_address)
     phone_number = Phonelib.parse(armor_params['phone'])
     {
       'company' => armor_params['company'],
