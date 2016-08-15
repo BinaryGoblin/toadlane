@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160815041423) do
+ActiveRecord::Schema.define(version: 20160815085136) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(version: 20160815041423) do
     t.boolean  "inspection_complete",             default: false
     t.string   "payment_release_url"
     t.boolean  "payment_release",                 default: false
+    t.boolean  "funds_in_escrow",                 default: false
   end
 
   create_table "armor_profiles", force: :cascade do |t|
