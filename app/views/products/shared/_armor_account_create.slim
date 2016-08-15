@@ -24,8 +24,8 @@
 
       .col-md-6
         .form-group
-          = f.label :company, 'Company:'
-          = f.text_field :company, class: 'form-control', :value => "#{user.try(:company)}"
+          = f.label :company, 'Company:', class: 'required'
+          = f.text_field :company, class: 'form-control', :value => "#{user.try(:company)}", required: true
 
         .form-group
           = f.label :email, 'Email:', class: 'required'
@@ -51,7 +51,7 @@
           .col-md-6
             .form-group
               = ff.label :name, 'Address Name:', class: 'required'
-              = ff.text_field :name, class: 'form-control'
+              = ff.text_field :name, class: 'form-control', required: true
 
             .form-group
               = ff.label :line1, 'Address Line 1:', class: 'required'
