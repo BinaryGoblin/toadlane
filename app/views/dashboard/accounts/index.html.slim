@@ -19,6 +19,20 @@
             p <b>Status:</b> <span class="warning">You are not connected to Stripe.</span>
           - else
             p <b>Status:</b> <span class="success">You are connected to Stripe.</span>
+          - if @user.stripe_profile.nil?
+            - if Rails.env.development?
+              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
+                                                                                           :redirect_uri => "http://localhost:3000/users/auth/stripe_connect/callback")
+            - else
+              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect)
+          - else
+            - if Rails.env.development?
+              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
+                                                                                           :stripe_landing => "login",
+                                                                                           :redirect_uri => "http://localhost:3000/users/auth/stripe_connect/callback")
+            - else
+              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
+                                                                                           :stripe_landing => "login")
           hr
           .account-green
             h4 Green By Phone:
@@ -55,19 +69,4 @@
                 | Apply to be a merchant
             - else
               p <b>Status:</b> <span class="success">You are connected to Advanced Merchant Group.</span>
-        .col-md-4
-          - if @user.stripe_profile.nil?
-            - if Rails.env.development?
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
-                                                                                           :redirect_uri => "http://localhost:3000/users/auth/stripe_connect/callback")
-            - else
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect)
-          - else
-            - if Rails.env.development?
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
-                                                                                           :stripe_landing => "login",
-                                                                                           :redirect_uri => "http://localhost:3000/users/auth/stripe_connect/callback")
-            - else
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
-                                                                                           :stripe_landing => "login")
       hr
