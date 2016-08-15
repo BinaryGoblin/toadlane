@@ -84,7 +84,7 @@ class UserMailer < ActionMailer::Base
     @armor_order = armor_order
     @user = user
 
-    mail to: user.email, subject: "Confirm email"
+    mail to: @user.email, subject: "Confirm email"
   end
 
   def send_inspection_date_set_notification_to_seller(armor_order)
@@ -112,5 +112,11 @@ class UserMailer < ActionMailer::Base
     @product = Product.find_by_id(@armor_order.product_id)
 
     mail to: @buyer.email, subject: "#{@seller.name} has confirmed the inspection date"
+  end
+
+  def send_armor_profile_created_notification(user)
+    @user = user
+
+    mail to: @user.email, subject: "Armor Profile Successfully Created"
   end
 end

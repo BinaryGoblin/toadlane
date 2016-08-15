@@ -178,6 +178,11 @@ class Dashboard::AccountsController < DashboardController
 
     users = client.users(current_user.armor_profile.armor_account_id).all
     current_user.armor_profile.update_attribute(:armor_user_id, users.data[:body][0]['user_id'].to_i)
+
+    if curernt_user.armor_profile.armor_account_id.present? &&
+      curernt_user.armor_profile.armor_user_id.present?
+      UserMailer.send_armor_profile_created_notification(current_user).deliver_now
+    end
   end
 
   def set_account_data(armor_params, selected_address, agreed_terms)
