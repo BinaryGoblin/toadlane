@@ -30,6 +30,7 @@
 #  inspection_complete :boolean          default(FALSE)
 #  payment_release_url :string
 #  payment_release     :boolean          default(FALSE)
+#  funds_in_escrow     :boolean          default(FALSE)
 #
 
 class ArmorOrder < ActiveRecord::Base
