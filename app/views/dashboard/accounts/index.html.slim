@@ -19,6 +19,20 @@
             p <b>Status:</b> <span class="warning">You are not connected to Stripe.</span>
           - else
             p <b>Status:</b> <span class="success">You are connected to Stripe.</span>
+          - if @user.stripe_profile.nil?
+            - if Rails.env.development?
+              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
+                                                                                           :redirect_uri => "http://localhost:3000/users/auth/stripe_connect/callback")
+            - else
+              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect)
+          - else
+            - if Rails.env.development?
+              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
+                                                                                           :stripe_landing => "login",
+                                                                                           :redirect_uri => "http://localhost:3000/users/auth/stripe_connect/callback")
+            - else
+              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
+                                                                                           :stripe_landing => "login")
           hr
           .account-green
             h4 Green By Phone:
@@ -37,19 +51,22 @@
                 | Apply to be a merchant
             - else
               p <b>Status:</b> <span class="success">You are connected to Green By Phone.</span>
-        .col-md-4
-          - if @user.stripe_profile.nil?
-            - if Rails.env.development?
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
-                                                                                           :redirect_uri => "http://localhost:3000/users/auth/stripe_connect/callback")
+          hr
+          .account-amg
+            h4 Advanced Merchant Group
+            p A simple payments solution for your business and your customers
+            = form_for @amg_profile, url: create_amg_profile_dashboard_accounts_path do |f|
+              .form-group
+                = f.label :username, "AMG Username:"
+                = f.text_field :username, class: "form-control", required: true
+              .form-group
+                = f.label :password, "AMG Password:"
+                = f.password_field :password, class: "form-control", required: true
+              = f.submit "Submit", class: "btn btn-primary"
+            - if @user.amg_profile.nil?
+              p <b>Status:</b> <span class="warning">You are not connected to Advanced Merchant Group.</span>
+              a.link.link-ulined href="https://amgsecurepay.com/clientlogin/" target="_blank"
+                | Apply to be a merchant
             - else
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect)
-          - else
-            - if Rails.env.development?
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
-                                                                                           :stripe_landing => "login",
-                                                                                           :redirect_uri => "http://localhost:3000/users/auth/stripe_connect/callback")
-            - else
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
-                                                                                           :stripe_landing => "login")
+              p <b>Status:</b> <span class="success">You are connected to Advanced Merchant Group.</span>
       hr

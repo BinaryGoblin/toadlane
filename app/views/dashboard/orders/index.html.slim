@@ -11,9 +11,10 @@
         td
           = link 'Stripe Orders', dashboard_orders_path(bought_or_sold: params['bought_or_sold'], type: 'stripe'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
           = link 'Green Orders', dashboard_orders_path(bought_or_sold: params['bought_or_sold'], type: 'green'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
+          = link 'Amg Orders', dashboard_orders_path(bought_or_sold: params['bought_or_sold'], type: 'amg'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
           / TODO this is disabled until we re-integrate armor payments
             = link 'Armor Payments Orders', dashboard_orders_path(bought_or_sold: params['bought_or_sold'], type: 'armor'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-        td    
+        td
           = link_to 'All', dashboard_orders_path(type: params['type']), class: 'btn btn-default pull-right', _class_active: 'btn-success'
           = link 'Sold', dashboard_orders_path(bought_or_sold: 'sold', type: params['type']), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
           = link 'Bought', dashboard_orders_path(bought_or_sold: 'bought', type: params['type']), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
@@ -47,6 +48,8 @@
             -if order.instance_of? ArmorOrder
               td= number_to_currency(order.amount, :unit => "$", precision: 2)
             -if order.instance_of? GreenOrder
+              td= number_to_currency(order.total, :unit => "$", precision: 2)
+            -if order.instance_of? AmgOrder
               td= number_to_currency(order.total, :unit => "$", precision: 2)
             td.text-center
               = link_to 'View', '#modal_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }

@@ -24,6 +24,9 @@
 #  taxes_price        :integer          default(0)
 #  rebate_price       :integer          default(0)
 #  rebate_percent     :integer          default(0)
+#  fee                :float
+#  rebate             :float
+#  shipping_cost      :float
 #
 
 class ArmorOrder < ActiveRecord::Base
