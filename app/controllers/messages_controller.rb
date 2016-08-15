@@ -8,10 +8,10 @@ class MessagesController < ApplicationController
     receiver = User.find message_params[:user_id]
     receipt = current_user.send_message receiver, message_params[:body], message_params[:subject]
     MessageMailer.new_message(receiver,
-                                message_params[:body],
-                                message_params[:subject],
-                                current_user,
-                                receipt.notification.conversation.id).deliver
+      message_params[:body],
+      message_params[:subject],
+      current_user,
+    receipt.notification.conversation.id).deliver
     redirect_to :back
   end
 
@@ -25,10 +25,10 @@ class MessagesController < ApplicationController
         receiver_id = conversation.messages.where.not(sender_id: sender.id).first.sender_id
         receiver = User.find_by_id(receiver_id)
         MessageMailer.new_message(receiver,
-                                    params["message"]["TextBody"],
-                                    params["message"]["Subject"],
-                                    sender,
-                                    conversation.id).deliver
+          params["message"]["TextBody"],
+          params["message"]["Subject"],
+          sender,
+        conversation.id).deliver
       end
       render nothing: true, status: 200
     else
@@ -37,7 +37,7 @@ class MessagesController < ApplicationController
   end
 
   private
-    def message_params
-      params.require(:message).permit(:user_id, :subject, :body)
-    end
+  def message_params
+    params.require(:message).permit(:user_id, :subject, :body)
+  end
 end

@@ -52,7 +52,11 @@
             -if order.instance_of? GreenOrder
               td= number_to_currency(order.total, :unit => "$", precision: 2)
             td.text-center
-              a.html5lightbox.btn.btn-primary data-height="411" data-width="730" href="#{order.payment_release_url}" Release Payment
+              - if order.payment_release == false
+                a.html5lightbox.btn.btn-primary data-height="411" data-width="730" href="#{order.payment_release_url}" Release Payment
+              - else
+                span.label
+                  | Payment Released
 
 .footer-actions: .fa-container: .wrap-sm
 

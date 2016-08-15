@@ -1,7 +1,7 @@
 class ArmorOrdersController < ApplicationController
   before_action :check_if_user_active
   before_action :set_armor_order, only: [:show, :edit, :update, :destroy]
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, except: [:armor_webhooks]
   before_action :check_terms_of_service
   before_action :set_armor_service, only: [:complete_inspection]
 
@@ -124,12 +124,21 @@ class ArmorOrdersController < ApplicationController
       "amount" => armor_order.amount
     }
     @client.orders(account_id).update(armor_order.order_id, action_data)
+    # # Till here TODO: REMOVE THIS BEFORE PUSHING
 
     release_fund_by_buyer(armor_order)
 
     redirect_to orders_inspection_complete_dashboard_orders_path(bought_or_sold: 'bought', type: 'armor'), :flash => { :notice => "Product has been marked as inspected." }
   rescue ArmorService::BadResponseError => e
     redirect_to orders_under_inspection_dashboard_orders_path(bought_or_sold: 'bought', type: 'armor'), :flash => { :error => e.errors.values.flatten }
+  end
+
+  def armor_webhooks
+    if params["order"]["status_name"] == "Payment Released"
+      armor_order = ArmorOrder.find_by_order_id(params["order"]["order_id"])
+      armor_order.update_attribute(:payment_release, true)
+    end
+    render nothing: true, status: 200
   end
 
   private

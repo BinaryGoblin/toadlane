@@ -8,6 +8,7 @@ Toad::Application.routes.draw do
   resources :armor_orders, except: [:edit, :new] do
     collection do
       post :set_inspection_date, to: 'armor_orders#set_inspection_date', as: 'set_inspection_date'
+      post :armor_webhooks
     end
     post :confirm_inspection_date_by_seller
     get :complete_inspection
