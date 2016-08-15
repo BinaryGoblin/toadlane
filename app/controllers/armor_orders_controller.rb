@@ -3,6 +3,7 @@ class ArmorOrdersController < ApplicationController
   before_action :set_armor_order, only: [:show, :edit, :update, :destroy]
   before_filter :authenticate_user!
   before_action :check_terms_of_service
+  before_action :set_armor_service, only: [:complete_inspection]
 
   def index
     @armor_orders = ArmorOrder.all
@@ -100,15 +101,15 @@ class ArmorOrdersController < ApplicationController
 
   def complete_inspection
     armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
-    client = ArmorService.new
+
     action_data = {
       "action" => "completeinspection",
     "confirm" => true }
 
-    response = client.orders(armor_order.seller_account_id).update(armor_order.order_id, action_data)
+    @client.orders(armor_order.seller_account_id).update(armor_order.order_id, action_data)
     armor_order.update_attributes({inspection_complete: true, status: 'completed'})
 
-    create_order_shipments(armor_order, client)
+    create_order_shipments(armor_order)
 
     # # TODO: remove this when sending to production This is for adding amount to escrow
     account_id = armor_order.product.user.armor_profile.armor_account_id
@@ -117,9 +118,9 @@ class ArmorOrdersController < ApplicationController
       "confirm" => true,
       "source_account_id" => current_user.armor_profile.armor_account_id, # The account_id of the party making the payment
     "amount" => armor_order.amount }
-    client.orders(account_id).update(armor_order.order_id, action_data)
+    @client.orders(account_id).update(armor_order.order_id, action_data)
 
-    release_fund_by_buyer(armor_order, client)
+    release_fund_by_buyer(armor_order)
 
     redirect_to orders_inspection_complete_dashboard_orders_path(bought_or_sold: 'bought', type: 'armor'), :flash => { :notice => "Product has been marked as inspected." }
   rescue ArmorService::BadResponseError => e
@@ -183,10 +184,10 @@ class ArmorOrdersController < ApplicationController
       "carrier_id" => 8,
       "tracking_id" => "z1234567890",
     "description" => "Shipped via UPS ground in a protective box." }
-    client.orders(account_id).shipments(order_id).create(action_data)
+    @client.orders(account_id).shipments(order_id).create(action_data)
   end
 
-  def release_fund_by_buyer(armor_order, client)
+  def release_fund_by_buyer(armor_order)
     # release fund by buyer
     seller_account_id = armor_order.seller_account_id
     order_response = client.orders(seller_account_id).get(armor_order.order_id)
@@ -200,7 +201,11 @@ class ArmorOrdersController < ApplicationController
       'uri' => order_uri,
     'action' => 'release' }
 
-    result = client.users(buyer_account_id).authentications(buyer_user_id).create(auth_data)
+    result = @client.users(buyer_account_id).authentications(buyer_user_id).create(auth_data)
     armor_order.update_attribute(:payment_release_url, result.data[:body]["url"])
+  end
+
+  def set_armor_service
+    @client = ArmorService.new
   end
 end
