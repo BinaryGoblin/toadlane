@@ -82,7 +82,9 @@ class UserMailer < ActionMailer::Base
   def send_confirmation_email(user, product = nil, armor_order = nil)
     @product = product
     @armor_order = armor_order
-    mail to: user.email, subject: "Confirmation email"
+    @user = user
+
+    mail to: user.email, subject: "Confirm email"
   end
 
   def send_inspection_date_set_notification_to_seller(armor_order)
