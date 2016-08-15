@@ -29,6 +29,7 @@
 #  shipping_cost       :float
 #  inspection_complete :boolean          default(FALSE)
 #  payment_release_url :string
+#  payment_release     :boolean          default(FALSE)
 #
 
 class ArmorOrder < ActiveRecord::Base
