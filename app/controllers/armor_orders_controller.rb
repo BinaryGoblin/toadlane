@@ -39,17 +39,20 @@ class ArmorOrdersController < ApplicationController
       product.inspection_dates.create({
         date: inspection_date,
         creator_type: "seller",
-      product_id: product.id})
+        product_id: product.id
+      })
     else
       armor_order = ArmorOrder.create({
         buyer_id: current_user.id,
         seller_id: product.user.id,
-      product_id: product.id})
+        product_id: product.id
+      })
 
       armor_order.inspection_dates.create({
         date: inspection_date,
         creator_type: "buyer",
-      armor_order_id: armor_order.id})
+        armor_order_id: armor_order.id
+      })
     end
 
     if armor_order.errors.any?
@@ -104,7 +107,8 @@ class ArmorOrdersController < ApplicationController
 
     action_data = {
       "action" => "completeinspection",
-    "confirm" => true }
+      "confirm" => true
+    }
 
     @client.orders(armor_order.seller_account_id).update(armor_order.order_id, action_data)
     armor_order.update_attributes({inspection_complete: true, status: 'completed'})
@@ -117,7 +121,8 @@ class ArmorOrdersController < ApplicationController
       "action" => "add_payment",
       "confirm" => true,
       "source_account_id" => current_user.armor_profile.armor_account_id, # The account_id of the party making the payment
-    "amount" => armor_order.amount }
+      "amount" => armor_order.amount
+    }
     @client.orders(account_id).update(armor_order.order_id, action_data)
 
     release_fund_by_buyer(armor_order)
@@ -183,7 +188,8 @@ class ArmorOrdersController < ApplicationController
       "user_id" => armor_order.seller.armor_profile.armor_user_id,
       "carrier_id" => 8,
       "tracking_id" => "z1234567890",
-    "description" => "Shipped via UPS ground in a protective box." }
+      "description" => "Shipped via UPS ground in a protective box."
+    }
     @client.orders(account_id).shipments(order_id).create(action_data)
   end
 
@@ -199,7 +205,8 @@ class ArmorOrdersController < ApplicationController
 
     auth_data = {
       'uri' => order_uri,
-    'action' => 'release' }
+      'action' => 'release'
+    }
 
     result = @client.users(buyer_account_id).authentications(buyer_user_id).create(auth_data)
     armor_order.update_attribute(:payment_release_url, result.data[:body]["url"])
