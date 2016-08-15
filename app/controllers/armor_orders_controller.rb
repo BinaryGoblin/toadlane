@@ -26,29 +26,29 @@ class ArmorOrdersController < ApplicationController
     product = Product.unexpired.find(params[:product_id])
 
     inspection_date = DateTime.new(
-                                    params["inspection_date"]["date(1i)"].to_i,
-                                    params["inspection_date"]["date(2i)"].to_i,
-                                    params["inspection_date"]["date(3i)"].to_i,
-                                    params["inspection_date"]["date(4i)"].to_i,
-                                    params["inspection_date"]["date(5i)"].to_i
-                                  )
+      params["inspection_date"]["date(1i)"].to_i,
+      params["inspection_date"]["date(2i)"].to_i,
+      params["inspection_date"]["date(3i)"].to_i,
+      params["inspection_date"]["date(4i)"].to_i,
+      params["inspection_date"]["date(5i)"].to_i
+    )
 
     if params[:armor_order_id].present?
       armor_order = ArmorOrder.find_by_id(params[:armor_order_id])
       product.inspection_dates.create({
-                                            date: inspection_date,
-                                            creator_type: "seller",
-                                            product_id: product.id})
+        date: inspection_date,
+        creator_type: "seller",
+      product_id: product.id})
     else
       armor_order = ArmorOrder.create({
-                                        buyer_id: current_user.id,
-                                        seller_id: product.user.id,
-                                        product_id: product.id})
+        buyer_id: current_user.id,
+        seller_id: product.user.id,
+      product_id: product.id})
 
       armor_order.inspection_dates.create({
-                                            date: inspection_date,
-                                            creator_type: "buyer",
-                                            armor_order_id: armor_order.id})
+        date: inspection_date,
+        creator_type: "buyer",
+      armor_order_id: armor_order.id})
     end
 
     if armor_order.errors.any?
@@ -102,31 +102,91 @@ class ArmorOrdersController < ApplicationController
     armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
     client = ArmorService.new
     action_data = {
-                    "action" => "completeinspection",
-                    "confirm" => true }
+      "action" => "completeinspection",
+    "confirm" => true }
 
     response = client.orders(armor_order.seller_account_id).update(armor_order.order_id, action_data)
     armor_order.update_attributes({inspection_complete: true, status: 'completed'})
 
-    # shipping details
-    account_id = armor_order.seller.armor_profile.armor_account_id
-    order_id = armor_order.order_id
-    action_data = {
-                      "user_id" => armor_order.seller.armor_profile.armor_user_id,
-                      "carrier_id" => 8,
-                      "tracking_id" => "z1234567890",
-                      "description" => "Shipped via UPS ground in a protective box." }
-    client.orders(account_id).shipments(order_id).create(action_data)
+    create_order_shipments(armor_order, client)
 
     # # TODO: remove this when sending to production This is for adding amount to escrow
     account_id = armor_order.product.user.armor_profile.armor_account_id
     action_data = {
-                    "action" => "add_payment",
-                    "confirm" => true,
-                    "source_account_id" => current_user.armor_profile.armor_account_id, # The account_id of the party making the payment
-                    "amount" => armor_order.amount }
+      "action" => "add_payment",
+      "confirm" => true,
+      "source_account_id" => current_user.armor_profile.armor_account_id, # The account_id of the party making the payment
+    "amount" => armor_order.amount }
     client.orders(account_id).update(armor_order.order_id, action_data)
 
+    release_fund_by_buyer(armor_order, client)
+
+    redirect_to orders_inspection_complete_dashboard_orders_path(bought_or_sold: 'bought', type: 'armor'), :flash => { :notice => "Product has been marked as inspected." }
+  rescue ArmorService::BadResponseError => e
+    redirect_to orders_under_inspection_dashboard_orders_path(bought_or_sold: 'bought', type: 'armor'), :flash => { :error => e.errors.values.flatten }
+  end
+
+  private
+  def set_armor_order
+    @armor_order = ArmorOrder.find(params[:id])
+  end
+
+  def armor_order_params
+    params.require(:armor_order).permit!
+    #(:seller_id, :buyer_id, :order_id, :account_id, :status, :amount, :summary, :description, :invoice_num, :purchase_order_num, :status_change, :uri)
+  end
+
+  def armor_order_api_create(armor_order, product)
+    api_armor_order_params = {
+      'seller_id'   => "#{product.user.armor_profile.armor_user_id}",
+      'buyer_id'    => "#{current_user.armor_profile.armor_user_id}",
+      'amount'      => armor_order.amount,
+      'summary'     => product.name,
+      'description' => product.description,
+      'inspection' => true,
+      'goodsmilestones'=>
+      [
+        {
+          'name': 'Order created',
+          'amount': 0,
+          'escrow': 0
+        },
+        {
+          'name': 'Goods inspected',
+          'amount': 0,
+          'escrow': 0
+        },
+        {
+          'name': 'Goods shipped',
+          'amount': 0,
+          'escrow': 0
+        },
+        {
+          'name': 'Order released',
+          'amount': armor_order.amount,
+          'escrow': armor_order.amount
+        }
+      ]
+    }
+
+    armor_order.create_armor_api_order(api_armor_order_params)
+
+    armor_order.get_armor_payment_instruction_url
+  end
+
+  def create_order_shipments(armor_order)
+    # shipping details
+    account_id = armor_order.seller.armor_profile.armor_account_id
+    order_id = armor_order.order_id
+    action_data = {
+      "user_id" => armor_order.seller.armor_profile.armor_user_id,
+      "carrier_id" => 8,
+      "tracking_id" => "z1234567890",
+    "description" => "Shipped via UPS ground in a protective box." }
+    client.orders(account_id).shipments(order_id).create(action_data)
+  end
+
+  def release_fund_by_buyer(armor_order, client)
     # release fund by buyer
     seller_account_id = armor_order.seller_account_id
     order_response = client.orders(seller_account_id).get(armor_order.order_id)
@@ -137,62 +197,10 @@ class ArmorOrdersController < ApplicationController
     buyer_user_id = armor_order.buyer.armor_profile.armor_user_id
 
     auth_data = {
-                  'uri' => order_uri,
-                  'action' => 'release' }
+      'uri' => order_uri,
+    'action' => 'release' }
 
     result = client.users(buyer_account_id).authentications(buyer_user_id).create(auth_data)
     armor_order.update_attribute(:payment_release_url, result.data[:body]["url"])
-
-    redirect_to orders_inspection_complete_dashboard_orders_path(bought_or_sold: 'bought', type: 'armor'), :flash => { :notice => "Product has been marked as inspected." }
-  rescue ArmorService::BadResponseError => e
-    redirect_to orders_under_inspection_dashboard_orders_path(bought_or_sold: 'bought', type: 'armor'), :flash => { :error => e.errors.values.flatten }
   end
-
-  private
-    def set_armor_order
-      @armor_order = ArmorOrder.find(params[:id])
-    end
-
-    def armor_order_params
-      params.require(:armor_order).permit!
-      #(:seller_id, :buyer_id, :order_id, :account_id, :status, :amount, :summary, :description, :invoice_num, :purchase_order_num, :status_change, :uri)
-    end
-
-    def armor_order_api_create(armor_order, product)
-      api_armor_order_params = {
-        'seller_id'   => "#{product.user.armor_profile.armor_user_id}",
-        'buyer_id'    => "#{current_user.armor_profile.armor_user_id}",
-        'amount'      => armor_order.amount,
-        'summary'     => product.name,
-        'description' => product.description,
-        'inspection' => true,
-        'goodsmilestones'=>
-          [
-            {
-              'name': 'Order created',
-              'amount': 0,
-              'escrow': 0
-            },
-            {
-              'name': 'Goods inspected',
-              'amount': 0,
-              'escrow': 0
-            },
-            {
-              'name': 'Goods shipped',
-              'amount': 0,
-              'escrow': 0
-            },
-            {
-              'name': 'Order released',
-              'amount': armor_order.amount,
-              'escrow': armor_order.amount
-            }
-          ]
-        }
-
-      armor_order.create_armor_api_order(api_armor_order_params)
-
-      armor_order.get_armor_payment_instruction_url
-    end
 end

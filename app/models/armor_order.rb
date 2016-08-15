@@ -83,8 +83,8 @@ class ArmorOrder < ActiveRecord::Base
     payement_response = client.orders(seller_account_id).paymentinstructions(self.order_id).all
     payement_instruction_uri = payement_response.data[:body]["uri"]
     auth_data =
-              { 'uri' => payement_instruction_uri,
-                'action' => 'view' }
+    { 'uri' => payement_instruction_uri,
+    'action' => 'view' }
     response = client.users(buyer.armor_profile.armor_account_id).authentications(buyer.armor_profile.armor_user_id).create(auth_data)
     self.update_attribute(:uri, response.data[:body]["url"])
   end
@@ -100,6 +100,5 @@ class ArmorOrder < ActiveRecord::Base
   def buyer_requested_inspection_date
     inspection_dates.buyer_added.last.get_inspection_date
   end
-
 
 end
