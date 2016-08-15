@@ -3,7 +3,7 @@ class ArmorOrdersController < ApplicationController
   before_action :set_armor_order, only: [:show, :edit, :update, :destroy]
   before_filter :authenticate_user!, except: [:armor_webhooks]
   before_action :check_terms_of_service
-  before_action :set_armor_service, only: [:complete_inspection]
+  before_action :set_armor_service, only: [:complete_inspection, :update]
 
   def index
     @armor_orders = ArmorOrder.all
@@ -134,8 +134,14 @@ class ArmorOrdersController < ApplicationController
   end
 
   def armor_webhooks
+    armor_order = ArmorOrder.find_by_order_id(params["order"]["order_id"])
+    if params["order"]["available_balance"] >= params["order"]["amount"] ||
+      params["order"]["balance"] >= params["order"]["amount"]
+      armor_order.update_attribute(:funds_in_escrow, true)
+    else
+      UserMailer.send_funds_to_escrow_notification_to_buyer(armor_order.buyer, armor_order).deliver_now
+    end
     if params["order"]["status_name"] == "Payment Released"
-      armor_order = ArmorOrder.find_by_order_id(params["order"]["order_id"])
       armor_order.update_attribute(:payment_release, true)
     end
     render nothing: true, status: 200
@@ -187,6 +193,17 @@ class ArmorOrdersController < ApplicationController
     armor_order.create_armor_api_order(api_armor_order_params)
 
     armor_order.get_armor_payment_instruction_url
+
+    # # TODO: remove this when sending to production This is for adding amount to escrow
+    account_id = armor_order.product.user.armor_profile.armor_account_id
+    action_data = {
+      "action" => "add_payment",
+      "confirm" => true,
+      "source_account_id" => current_user.armor_profile.armor_account_id, # The account_id of the party making the payment
+      "amount" => armor_order.amount
+    }
+    @client.orders(account_id).update(armor_order.order_id, action_data)
+    # # Till here TODO: REMOVE THIS BEFORE PUSHING
   end
 
   def create_order_shipments(armor_order)

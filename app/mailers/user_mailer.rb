@@ -119,4 +119,11 @@ class UserMailer < ActionMailer::Base
 
     mail to: @user.email, subject: "Armor Profile Successfully Created"
   end
+
+  def send_funds_to_escrow_notification_to_buyer(user, armor_order)
+    @buyer = user
+    @order = armor_order
+
+    mail to: @buyer.email, subject: "Reminder to send funds in escrow"
+  end
 end
