@@ -1,19 +1,20 @@
 class Dashboard::AccountsController < DashboardController
   include ProductHelper
-  before_action :set_armor_service, only: [:create_armor_profile]
+  before_action :set_armor_service, only: [:index, :create_armor_profile]
 
   def index
     set_user
     set_green_profile
     set_profile_for_armor
-    if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
-      client = ArmorService.new
+    retrieve_payoneer_create_url
+    if current_user.armor_profile.present? &&
+      current_user.armor_profile.armor_account_id.present?
       account_id = current_user.armor_profile.armor_account_id
       user_id = current_user.armor_profile.armor_user_id
-      response = client.accounts.bankaccounts(account_id).all
+      response = @client.accounts.bankaccounts(account_id).all
       uri = response.data[:path]
       auth_data = {     'uri' => uri,     'action' => 'create' }
-      result = client.users(account_id).authentications(user_id).create(auth_data)
+      result = @client.users(account_id).authentications(user_id).create(auth_data)
       @url = result.data[:body]["url"]
     end
   end
@@ -204,5 +205,22 @@ class Dashboard::AccountsController < DashboardController
       'email_confirmed' => armor_params['confirmed_email'],
       'agreed_terms' => agreed_terms
     }
+  end
+
+  def retrieve_payoneer_create_url
+    if current_user.armor_profile.present? &&
+      current_user.armor_profile.armor_account_id.present?
+      account_id = current_user.armor_profile.armor_account_id
+      user_id = current_user.armor_profile.armor_user_id
+      response = @client.accounts.bankaccounts(account_id).all
+      uri = response.data[:path]
+
+      auth_data = {
+        'uri' => uri,
+        'action' => 'create'
+      }
+      result = @client.users(account_id).authentications(user_id).create(auth_data)
+      @url = result.data[:body]["url"]
+    end
   end
 end
