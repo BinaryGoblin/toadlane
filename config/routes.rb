@@ -41,6 +41,8 @@ Toad::Application.routes.draw do
         post :create_green_profile
         post :create_armor_profile
         get :send_confirmation_email
+        get :check_valid_phone_number
+        get :check_valid_state
       end
     end
 

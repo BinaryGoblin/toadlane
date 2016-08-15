@@ -165,3 +165,25 @@ $(document).ready ->
       $('.insert_inspection_dates').show()
     else
       $('.insert_inspection_dates').hide()
+
+  $('form.edit_armor_profile').validate
+    rules:
+      "armor_profile[phone]":
+        required: true
+        remote:
+          url: "/dashboard/accounts/check_valid_phone_number"
+          type: "GET"
+      "armor_profile[addresses][state]":
+        required: true
+        remote:
+          url: "/dashboard/accounts/check_valid_state"
+          type: "GET"
+    messages:
+      "armor_profile[phone]":
+        remote: "Phone number is not valid."
+      "armor_profile[addresses][state]":
+        remote: "State is not valid. "
+    submitHandler: (form) ->
+      $(this).find('input[type=submit]').prop 'disabled', true
+      form.submit()
+      return
