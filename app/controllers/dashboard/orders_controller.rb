@@ -81,15 +81,15 @@ class Dashboard::OrdersController < DashboardController
   end
 
   def orders_under_inspection
-    @orders = current_user.armor_orders.processing.incomplete_inspection
+    @orders = current_user.armor_orders.processing.incomplete_inspection.order('id ASC')
   end
 
   def orders_inspection_complete
-    @orders = current_user.armor_orders.completed.complete_inspection
+    @orders = current_user.armor_orders.completed.complete_inspection.order('id ASC')
   end
 
   private
-   def get_order_status
+  def get_order_status
     @orders = ArmorOrder.where(deleted: false).own_orders(current_user.id)
     if @orders.any?
       client = ArmorService.new
@@ -98,10 +98,10 @@ class Dashboard::OrdersController < DashboardController
         begin
           result = client.orders(current_user.armor_account_id).get(order.order_id)
         rescue
-        ensure
+          ensure
           order.update(status: result.data[:body]['status'].to_i) if result
         end
       end
     end
-   end
+  end
 end

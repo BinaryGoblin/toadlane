@@ -52,11 +52,13 @@
             -if order.instance_of? GreenOrder
               td= number_to_currency(order.total, :unit => "$", precision: 2)
             td.text-center
-              - if order.payment_release == false
-                a.html5lightbox.btn.btn-primary data-height="411" data-width="730" href="#{order.payment_release_url}" Release Payment
-              - else
+              - if order.funds_in_escrow == false
+                | Funds are not transfered to escrow yet.
+              - elsif order.payment_release == true
                 span.label
                   | Payment Released
+              - else
+                a.html5lightbox.btn.btn-primary data-height="411" data-width="730" href="#{order.payment_release_url}" Release Payment
 
 .footer-actions: .fa-container: .wrap-sm
 
