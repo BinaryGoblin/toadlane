@@ -36,7 +36,7 @@ class ProductsController < ApplicationController
   end
 
   def deals
-# TODO
+    # TODO
   end
 
   def for_sale
@@ -81,7 +81,7 @@ class ProductsController < ApplicationController
         fee: params[:fee], # this is fee amount
         rebate: params[:rebate_percent],
         shipping_cost: params[:shipping_cost]
-        })
+      })
       inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
       inspection_date.update_attributes({armor_order_id: @armor_order.id, approved: true})
     elsif params["inspection_date"].present? && params["inspection_date"]["inspection_date_id"].present?
@@ -99,7 +99,7 @@ class ProductsController < ApplicationController
         fee: params[:fee], # this is fee amount
         rebate: params[:rebate_percent],
         shipping_cost: params[:shipping_cost]
-        })
+      })
       inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
       inspection_date.update_attributes({armor_order_id: @armor_order.id, approved: true})
     elsif params["armor_order_id"].present?
@@ -109,6 +109,7 @@ class ProductsController < ApplicationController
     end
 
     @armor_profile = current_user.armor_profile.present? ? current_user.armor_profile : ArmorProfile.new
+    @amg_order = AmgOrder.new
   end
 
   def subregion_options
@@ -121,17 +122,17 @@ class ProductsController < ApplicationController
   end
 
   private
-    def set_product
-      @product = Product.find(params[:id])
-    end
+  def set_product
+    @product = Product.find(params[:id])
+  end
 
-    def set_order_details(armor_order, data)
-      armor_order.rebate_percentage = data[:rebate_percent]
-      armor_order.quantity = data[:quantity]
-      armor_order.order_amount = data[:total]
-      armor_order.rebate = data[:rebate]
-      armor_order.fee_percent = data[:fee]
-      armor_order.fee_price = data[:fee_amount]
-      armor_order.shipping_cost = data[:shipping_cost]
-    end
+  def set_order_details(armor_order, data)
+    armor_order.rebate_percentage = data[:rebate_percent]
+    armor_order.quantity = data[:quantity]
+    armor_order.order_amount = data[:total]
+    armor_order.rebate = data[:rebate]
+    armor_order.fee_percent = data[:fee]
+    armor_order.fee_price = data[:fee_amount]
+    armor_order.shipping_cost = data[:shipping_cost]
+  end
 end

@@ -22,6 +22,8 @@ Toad::Application.routes.draw do
 
   resources :green_orders
 
+  resources :amg_orders
+
   get 'print/invoice.:id', to: 'print#invoice', as: 'print/invoice'
 
   get 'search/autocomplete'
@@ -43,6 +45,7 @@ Toad::Application.routes.draw do
         get :send_confirmation_email
         get :check_valid_phone_number
         get :check_valid_state
+        post :create_amg_profile
       end
     end
 

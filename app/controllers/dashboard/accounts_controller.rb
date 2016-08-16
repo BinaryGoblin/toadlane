@@ -7,16 +7,7 @@ class Dashboard::AccountsController < DashboardController
     set_green_profile
     set_profile_for_armor
     retrieve_payoneer_create_url
-    if current_user.armor_profile.present? &&
-      current_user.armor_profile.armor_account_id.present?
-      account_id = current_user.armor_profile.armor_account_id
-      user_id = current_user.armor_profile.armor_user_id
-      response = @client.accounts.bankaccounts(account_id).all
-      uri = response.data[:path]
-      auth_data = {     'uri' => uri,     'action' => 'create' }
-      result = @client.users(account_id).authentications(user_id).create(auth_data)
-      @url = result.data[:body]["url"]
-    end
+    set_amg_profile
   end
 
   def create_green_profile
@@ -69,11 +60,29 @@ class Dashboard::AccountsController < DashboardController
     end
   end
 
+  def create_amg_profile
+    if amg_params.present?
+      amg_profile = AmgProfile.new(amg_params)
+      if amg_profile.valid?
+        current_user.amg_profile = amg_profile
+        redirect_to dashboard_accounts_path, :flash => { :notice => "AMG Profile successfully created." }
+      else
+        redirect_to dashboard_accounts_path, :flash => { :alert => "#{amg_profile.errors.full_messages.to_sentence}" }
+      end
+    else
+      redirect_to dashboard_accounts_path, :flash => { :alert => "AMG Profile not created, please try again." }
+    end
+  end
+
   def update
-    if green_params.present?
+    if params[:green_profile].present?
       green_profile = current_user.green_profile
       green_profile.update_attributes(green_params)
       redirect_to dashboard_accounts_path, :flash => { :notice => "Green Profile successfully updated." }
+    elsif params[:amg_profile].present?
+      amg_profile = current_user.amg_profile
+      amg_profile.update_attributes(amg_params)
+      redirect_to dashboard_accounts_path, :flash => { :notice => "AMG Profile successfully updated." }
     end
   end
 
@@ -190,6 +199,19 @@ class Dashboard::AccountsController < DashboardController
     end
   end
 
+  def set_amg_profile
+    current_amg_profile = current_user.amg_profile
+    if current_amg_profile.present?
+      @amg_profile = current_amg_profile
+    else
+      @amg_profile = AmgProfile.new
+    end
+  end
+
+  def user_params
+    params.require(:user).permit!
+  end
+
   def set_account_data(armor_params, agreed_terms, selected_address)
     phone_number = Phonelib.parse(armor_params['phone'])
     {
@@ -222,5 +244,9 @@ class Dashboard::AccountsController < DashboardController
       result = @client.users(account_id).authentications(user_id).create(auth_data)
       @url = result.data[:body]["url"]
     end
+  end
+
+  def amg_params
+    params.require(:amg_profile).permit!
   end
 end

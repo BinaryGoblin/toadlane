@@ -46,18 +46,19 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :confirmable,
-         :recoverable, :rememberable, :trackable, :validatable,
-         :omniauthable
+  :recoverable, :rememberable, :trackable, :validatable,
+  :omniauthable
 
   has_one :stripe_profile
   has_one :green_profile
   has_one :armor_profile, class_name: 'ArmorProfile', foreign_key: :user_id
+  has_one :amg_profile
   has_one :stripe_customer
   has_many :products
   has_many :addresses
   accepts_nested_attributes_for :addresses,
-    :allow_destroy => true,
-    :reject_if => lambda { |a| (a[:name].empty? && a[:line1].empty? && a[:line2].empty? && a[:city].empty? && a[:state].empty? && a[:zip].empty?) }
+  :allow_destroy => true,
+  :reject_if => lambda { |a| (a[:name].empty? && a[:line1].empty? && a[:line2].empty? && a[:city].empty? && a[:state].empty? && a[:zip].empty?) }
   validates :terms_of_service, :inclusion => {:in => [true, false]}
   validates :name, presence: true, on: :create
   has_many :requests_of_sender, class_name: 'Request', foreign_key: :sender_id
@@ -66,15 +67,15 @@ class User < ActiveRecord::Base
   has_one :certificate, dependent: :destroy
 
   has_and_belongs_to_many :roles,
-                          :join_table => :users_roles,
-                          :foreign_key => 'user_id',
-                          :association_foreign_key => 'role_id'
+  :join_table => :users_roles,
+  :foreign_key => 'user_id',
+  :association_foreign_key => 'role_id'
 
   has_attached_file :asset, styles: {
-                                small: '155x155#',
-                                medium: '240x225#'
-                              },
-                              default_url: '/assets/avatar/:style/missing.png'
+    small: '155x155#',
+    medium: '240x225#'
+  },
+  default_url: '/assets/avatar/:style/missing.png'
   do_not_validate_attachment_file_type :asset
 
   before_destroy { roles.clear }
@@ -126,6 +127,16 @@ class User < ActiveRecord::Base
       GreenOrder.where(seller_id: self.id)
     else
       GreenOrder.where('buyer_id = ? OR seller_id = ?', self.id, self.id)
+    end
+  end
+
+  def amg_orders(type=nil)
+    if type == 'bought'
+      AmgOrder.where(buyer_id: self.id)
+    elsif type == 'sold'
+      AmgOrder.where(seller_id: self.id)
+    else
+      AmgOrder.where('buyer_id = ? OR seller_id = ?', self.id, self.id)
     end
   end
 

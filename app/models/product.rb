@@ -51,6 +51,7 @@ class Product < ActiveRecord::Base
   has_many :stripe_orders, dependent: :destroy
   has_many :green_orders, dependent: :destroy
   has_many :armor_orders, dependent: :destroy
+  has_many :amg_orders, dependent: :destroy
   has_many :product_categories
   has_many :categories, through: :product_categories, dependent: :destroy
   has_many :images, dependent: :destroy
@@ -62,8 +63,8 @@ class Product < ActiveRecord::Base
   has_many :inspection_dates, dependent: :destroy
 
   accepts_nested_attributes_for :shipping_estimates,
-    :allow_destroy => true,
-    :reject_if => lambda { |a| (a[:cost].blank? && a[:description].blank?) }
+  :allow_destroy => true,
+  :reject_if => lambda { |a| (a[:cost].blank? && a[:description].blank?) }
   belongs_to :category, class_name: "Category", foreign_key: :main_category
 
   accepts_nested_attributes_for :product_categories
@@ -93,6 +94,10 @@ class Product < ActiveRecord::Base
 
   def green_present?
     user.green_profile.present?
+  end
+
+  def amg_present?
+    user.amg_profile.present?
   end
 
   def stripe_present?
