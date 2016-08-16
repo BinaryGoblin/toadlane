@@ -134,6 +134,8 @@ class ArmorOrdersController < ApplicationController
         end
         if params["order"]["status_name"] == "Payment Released"
           armor_order.update_attribute(:payment_release, true)
+          UserMailer.send_payment_released_notification_to_buyer(armor_order).deliver_now
+          UserMailer.send_payment_released_notification_to_seller(armor_order).deliver_now
         end
       end
     end

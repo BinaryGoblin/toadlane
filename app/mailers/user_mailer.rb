@@ -126,4 +126,20 @@ class UserMailer < ActionMailer::Base
 
     mail to: @buyer.email, subject: "Reminder to send funds in escrow"
   end
+
+  def send_payment_released_notification_to_buyer(armor_order)
+    @order = armor_order
+    @buyer = @order.buyer
+    @seller = @order.seller
+
+    mail to: @buyer.email, subject: "You have released payment for order #{@order.order_id}"
+  end
+
+  def send_payment_released_notification_to_seller(armor_order)
+    @order = armor_order
+    @seller = @order.seller
+    @buyer = @order.buyer
+
+    mail to: @seller.email, subject: "Payment released by #{@buyer.name} for order #{@order.order_id}"
+  end
 end

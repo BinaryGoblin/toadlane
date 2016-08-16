@@ -12,9 +12,9 @@ div
           p
             - if order.instance_of? StripeOrder
             - if order.instance_of? ArmorOrder
-                div
-                  | Armor Order Id #
-                  = order.order_id
+              div
+                | Armor Order Id #
+                = order.order_id
           div Date: #{order.created_at.strftime('%m-%d-%Y')}
 
 
