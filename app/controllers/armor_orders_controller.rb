@@ -115,17 +115,6 @@ class ArmorOrdersController < ApplicationController
 
     create_order_shipments(armor_order)
 
-    # # TODO: remove this when sending to production This is for adding amount to escrow
-    account_id = armor_order.product.user.armor_profile.armor_account_id
-    action_data = {
-      "action" => "add_payment",
-      "confirm" => true,
-      "source_account_id" => current_user.armor_profile.armor_account_id, # The account_id of the party making the payment
-      "amount" => armor_order.amount
-    }
-    @client.orders(account_id).update(armor_order.order_id, action_data)
-    # # Till here TODO: REMOVE THIS BEFORE PUSHING
-
     release_fund_by_buyer(armor_order)
 
     redirect_to orders_inspection_complete_dashboard_orders_path(bought_or_sold: 'bought', type: 'armor'), :flash => { :notice => "Product has been marked as inspected." }
@@ -169,8 +158,8 @@ class ArmorOrdersController < ApplicationController
       [
         {
           'name': 'Order created',
-          'amount': 0,
-          'escrow': 0
+          'amount': armor_order.amount,
+          'escrow': armor_order.amount
         },
         {
           'name': 'Goods inspected',
@@ -184,8 +173,8 @@ class ArmorOrdersController < ApplicationController
         },
         {
           'name': 'Order released',
-          'amount': armor_order.amount,
-          'escrow': armor_order.amount
+          'amount': 0,
+          'escrow': 0
         }
       ]
     }
@@ -193,17 +182,6 @@ class ArmorOrdersController < ApplicationController
     armor_order.create_armor_api_order(api_armor_order_params)
 
     armor_order.get_armor_payment_instruction_url
-
-    # # TODO: remove this when sending to production This is for adding amount to escrow
-    account_id = armor_order.product.user.armor_profile.armor_account_id
-    action_data = {
-      "action" => "add_payment",
-      "confirm" => true,
-      "source_account_id" => current_user.armor_profile.armor_account_id, # The account_id of the party making the payment
-      "amount" => armor_order.amount
-    }
-    @client.orders(account_id).update(armor_order.order_id, action_data)
-    # # Till here TODO: REMOVE THIS BEFORE PUSHING
   end
 
   def create_order_shipments(armor_order)
