@@ -123,15 +123,19 @@ class ArmorOrdersController < ApplicationController
   end
 
   def armor_webhooks
-    armor_order = ArmorOrder.find_by_order_id(params["order"]["order_id"])
-    if params["order"]["available_balance"] >= params["order"]["amount"] ||
-      params["order"]["balance"] >= params["order"]["amount"]
-      armor_order.update_attribute(:funds_in_escrow, true)
-    else
-      UserMailer.send_funds_to_escrow_notification_to_buyer(armor_order.buyer, armor_order).deliver_now
-    end
-    if params["order"]["status_name"] == "Payment Released"
-      armor_order.update_attribute(:payment_release, true)
+    if params["order"].present? && params["order"]["order_id"]
+      armor_order = ArmorOrder.find_by_order_id(params["order"]["order_id"])
+      if armor_order.present?
+        if params["order"]["available_balance"] >= params["order"]["amount"] ||
+          params["order"]["balance"] >= params["order"]["amount"]
+          armor_order.update_attribute(:funds_in_escrow, true)
+        else
+          UserMailer.send_funds_to_escrow_notification_to_buyer(armor_order.buyer, armor_order).deliver_now
+        end
+        if params["order"]["status_name"] == "Payment Released"
+          armor_order.update_attribute(:payment_release, true)
+        end
+      end
     end
     render nothing: true, status: 200
   end
