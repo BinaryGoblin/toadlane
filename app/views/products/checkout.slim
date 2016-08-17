@@ -29,7 +29,7 @@
                               data: @data }
 
     .col-md-12.checkout-payment-gateway
-      - if @armor_order.uri.present?
+      - if @armor_order.present? && @armor_order.uri.present?
           = render partial: 'products/shared/payment_instruction_pop_up',
                     locals: { armor_order: @armor_order }
 
