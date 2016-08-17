@@ -126,7 +126,7 @@ class ArmorOrdersController < ApplicationController
     if params["order"].present? && params["order"]["order_id"]
       armor_order = ArmorOrder.find_by_order_id(params["order"]["order_id"])
       if armor_order.present?
-        if params["order"]["available_balance"] >= params["order"]["amount"] ||
+        if params["order"]["available_balance"] >= params["order"]["amount"] &&
           params["order"]["balance"] >= params["order"]["amount"]
           armor_order.update_attribute(:funds_in_escrow, true)
         else
