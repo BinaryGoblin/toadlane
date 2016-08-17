@@ -1,3 +1,35 @@
+# == Schema Information
+#
+# Table name: amg_orders
+#
+#  id                   :integer          not null, primary key
+#  buyer_id             :integer
+#  seller_id            :integer
+#  product_id           :integer
+#  status               :integer
+#  unit_price           :float
+#  count                :integer
+#  fee                  :float
+#  rebate               :float
+#  total                :float
+#  summary              :string
+#  description          :text
+#  tracking_number      :string
+#  deleted              :boolean
+#  shipping_cost        :float
+#  address_name         :string
+#  address_city         :string
+#  address_state        :string
+#  address_zip          :string
+#  address_country      :string
+#  shipping_estimate_id :integer
+#  address_id           :integer
+#  transaction_id       :string
+#  authorization_code   :string
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#
+
 class AmgOrder < ActiveRecord::Base
   include Rails.application.routes.url_helpers
 
