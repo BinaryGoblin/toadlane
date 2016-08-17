@@ -53,6 +53,7 @@ class User < ActiveRecord::Base
   has_one :green_profile
   has_one :armor_profile, class_name: 'ArmorProfile', foreign_key: :user_id
   has_one :amg_profile
+  has_one :emb_profile
   has_one :stripe_customer
   has_many :products
   has_many :addresses

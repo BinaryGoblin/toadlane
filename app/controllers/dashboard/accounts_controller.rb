@@ -8,6 +8,7 @@ class Dashboard::AccountsController < DashboardController
     set_profile_for_armor
     retrieve_payoneer_create_url
     set_amg_profile
+    set_emb_profile
   end
 
   def create_green_profile
@@ -74,6 +75,20 @@ class Dashboard::AccountsController < DashboardController
     end
   end
 
+  def create_emb_profile
+    if emb_params.present?
+      emb_profile = EmbProfile.new(emb_params)
+      if emb_profile.valid?
+        current_user.emb_profile = emb_profile
+        redirect_to dashboard_accounts_path, :flash => { :notice => "EMB Profile successfully created." }
+      else
+        redirect_to dashboard_accounts_path, :flash => { :alert => "#{emb_profile.errors.full_messages.to_sentence}" }
+      end
+    else
+      redirect_to dashboard_accounts_path, :flash => { :alert => "EMB Profile not created, please try again." }
+    end
+  end
+
   def update
     if params[:green_profile].present?
       green_profile = current_user.green_profile
@@ -83,6 +98,10 @@ class Dashboard::AccountsController < DashboardController
       amg_profile = current_user.amg_profile
       amg_profile.update_attributes(amg_params)
       redirect_to dashboard_accounts_path, :flash => { :notice => "AMG Profile successfully updated." }
+    elsif params[:emb_profile].present?
+      emb_profile = current_user.emb_profile
+      emb_profile.update_attributes(emb_params)
+      redirect_to dashboard_accounts_path, :flash => { :notice => "EMB Profile successfully updated." }
     end
   end
 
@@ -208,6 +227,15 @@ class Dashboard::AccountsController < DashboardController
     end
   end
 
+  def set_emb_profile
+    current_emb_profile = current_user.emb_profile
+    if current_emb_profile.present?
+      @emb_profile = current_emb_profile
+    else
+      @emb_profile = EmbProfile.new
+    end
+  end
+
   def user_params
     params.require(:user).permit!
   end
@@ -248,5 +276,9 @@ class Dashboard::AccountsController < DashboardController
 
   def amg_params
     params.require(:amg_profile).permit!
+  end
+
+  def emb_params
+    params.require(:emb_profile).permit!
   end
 end

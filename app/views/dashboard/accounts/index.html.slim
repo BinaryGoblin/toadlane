@@ -98,3 +98,23 @@
             - else
               p <b>Status:</b> <span class="success">You are connected to Advanced Merchant Group.</span>
       hr
+      .row.account-list-table
+        .col-md-8
+          .account-amg
+            h4 e Merchant Broker
+            p We Are High Risk Merchant Account Specialists
+            = form_for @emb_profile, url: create_emb_profile_dashboard_accounts_path do |f|
+              .form-group
+                = f.label :username, "EMB Username:"
+                = f.text_field :username, class: "form-control", required: true
+              .form-group
+                = f.label :password, "EMB Password:"
+                = f.password_field :password, class: "form-control", required: true
+              = f.submit "Submit", class: "btn btn-primary"
+            - if @user.emb_profile.nil?
+              p <b>Status:</b> <span class="warning">You are not connected to e Merchant Broker.</span>
+              a.link.link-ulined href="https://onlineapp.emerchantbroker.com/control/main" target="_blank"
+                | Apply to be a merchant
+            - else
+              p <b>Status:</b> <span class="success">You are connected to e Merchant Broker.</span>
+      hr
