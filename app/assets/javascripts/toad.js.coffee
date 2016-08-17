@@ -103,7 +103,7 @@ $(document).ready ->
   $("#green_order_phone").mask("999-999-9999");
 
   if $('.vp-calculation-checkout').is(':visible')
-    $('input[name="stripe_order[shipping_estimate_id]"]:first').trigger('click');
+    $('input[name="stripe_order[shipping_estimate_id]"]:first, input[name="green_order[shipping_estimate_id]"]:first, input[name="amg_order[shipping_estimate_id]"]:first, input[name="emb_order[shipping_estimate_id]"]:first').trigger('click');
 
   jQuery.validator.addMethod 'zipcode', ((value, element) ->
     @optional(element) or /^\d{5}(?:-\d{4})?$/.test(value)
