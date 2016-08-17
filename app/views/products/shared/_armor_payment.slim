@@ -1,4 +1,4 @@
-- if user.armor_profile.armor_account_id.nil?
+- if user.armor_profile.nil?
   | You have to create Armor Profile first.
   = render partial: 'products/shared/armor_account_create',
             :locals => { :product => product,
@@ -9,6 +9,6 @@
 - else
   -if armor_order.inspection_dates.present? && armor_order.selected_inspection_date.present?
     - if armor_profile.armor_account_id.present? && armor_order.uri.nil?
-      
+
       = form_tag armor_order, method: :put, :class => "create-api-order" do
         = submit_tag 'Create Order', class: "btn btn-primary"
