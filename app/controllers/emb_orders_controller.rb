@@ -7,11 +7,26 @@ class EmbOrdersController < ApplicationController
   end
 
   def create
-    response = make_emb_request
-    if response['response'] == '1'
-      handle_successful_response(emb_order_params, response)
-    else
+    if emb_order_params[:total].to_f > 750
+      response = {
+        "response" => "3",
+        "responsetext" => "The amount can't exceed $750",
+        "authcode" => "",
+        "transactionid" => "",
+        "avsresponse" => "",
+        "cvvresponse" => "",
+        "orderid" => "",
+        "type" => "sale",
+        "response_code" => ""
+      }
       render_on_failure(response)
+    else
+      response = make_emb_request
+      if response['response'] == '1'
+        handle_successful_response(emb_order_params, response)
+      else
+        render_on_failure(response)
+      end
     end
   end
 
