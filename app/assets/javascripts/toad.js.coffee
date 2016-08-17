@@ -138,6 +138,16 @@ $(document).ready ->
     url = "/products/subregion_options?parent_region=#{country_code}&parent_object_sym=amg_order"
     select_wrapper.load(url)
 
+  $('select#emb_order_address_country').change (event) ->
+    select_wrapper = $('.order_state_code_wrapper')
+
+    $('select', select_wrapper).attr('disabled', true)
+
+    country_code = $(this).val()
+
+    url = "/products/subregion_options?parent_region=#{country_code}&parent_object_sym=emb_order"
+    select_wrapper.load(url)
+
   $('form#new_green_order').validate
     rules:
       "green_order[email_address]":
@@ -172,6 +182,22 @@ $(document).ready ->
         creditcard: true
     submitHandler: (form) ->
       $('form#new_amg_order').find('input[type=submit]').prop 'disabled', true
+      form.submit()
+      return
+
+  $('form#new_emb_order').validate
+    rules:
+      "emb_order[email_address]":
+        required: true
+        validEmail: true
+      "emb_order[address_zip]":
+        required: true
+        zipcode: true
+      "billing-cc-number":
+        required: true
+        creditcard: true
+    submitHandler: (form) ->
+      $('form#new_emb_order').find('input[type=submit]').prop 'disabled', true
       form.submit()
       return
 

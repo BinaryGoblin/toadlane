@@ -53,7 +53,13 @@
                     :locals => { amg_order: @amg_order,
                                   user: current_user,
                                   product: @product}
-                                  
+
+        - if @product.default_payment_emb?
+          = render partial: 'products/shared/emb_payment_tab',
+                    :locals => { emb_order: @emb_order,
+                                  user: current_user,
+                                  product: @product}
+
         - if @product.default_payment_armor?
           = render partial: 'products/shared/armor_payment',
                     :locals => { armor_order: @armor_order,

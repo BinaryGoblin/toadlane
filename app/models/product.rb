@@ -54,6 +54,7 @@ class Product < ActiveRecord::Base
   has_many :green_orders, dependent: :destroy
   has_many :armor_orders, dependent: :destroy
   has_many :amg_orders, dependent: :destroy
+  has_many :emb_orders, dependent: :destroy
   has_many :product_categories
   has_many :categories, through: :product_categories, dependent: :destroy
   has_many :images, dependent: :destroy
@@ -102,6 +103,10 @@ class Product < ActiveRecord::Base
     user.amg_profile.present?
   end
 
+  def emb_present?
+    user.emb_profile.present?
+  end
+
   def stripe_present?
     user.stripe_profile.present?
   end
@@ -133,6 +138,10 @@ class Product < ActiveRecord::Base
 
   def default_payment_amg?
     default_payment == PaymentOptions[:amg]
+  end
+
+  def default_payment_emb?
+    default_payment == PaymentOptions[:emb]
   end
 
   def seller_set_inspection_dates

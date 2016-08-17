@@ -86,6 +86,9 @@ div
         - if order.instance_of? AmgOrder
           td colspan="3" #{number_with_precision(order.rebate, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
           td -$ #{number_with_precision(order.rebate, precision: 2, delimiter: '')}
+        - if order.instance_of? EmbOrder
+          td colspan="3" #{number_with_precision(order.rebate, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
+          td -$ #{number_with_precision(order.rebate, precision: 2, delimiter: '')}
 
       tr
         td colspan="3" Fees
@@ -96,6 +99,8 @@ div
         - if order.instance_of? GreenOrder
           td $ #{number_with_precision(order.fee, precision: 2, delimiter: '')}
         - if order.instance_of? AmgOrder
+          td $ #{number_with_precision(order.fee, precision: 2, delimiter: '')}
+        - if order.instance_of? EmbOrder
           td $ #{number_with_precision(order.fee, precision: 2, delimiter: '')}
 
       - if order.instance_of? StripeOrder
@@ -110,6 +115,10 @@ div
         tr
           td colspan="3" Shipping
           td $ #{number_with_precision(order.shipping_cost, precision: 2, delimiter: '')}
+      - if order.instance_of? EmbOrder
+        tr
+          td colspan="3" Shipping
+          td $ #{number_with_precision(order.shipping_cost, precision: 2, delimiter: '')}
 
       tr
         td.no-border colspan="2"
@@ -121,6 +130,8 @@ div
         - if order.instance_of? GreenOrder
           td: b $ #{number_with_precision(order.total, precision: 2, delimiter: '')}
         - if order.instance_of? AmgOrder
+          td: b $ #{number_with_precision(order.total, precision: 2, delimiter: '')}
+        - if order.instance_of? EmbOrder
           td: b $ #{number_with_precision(order.total, precision: 2, delimiter: '')}
   - if order.instance_of? GreenOrder
     table.table-checkout style="margin-top: 20px;"

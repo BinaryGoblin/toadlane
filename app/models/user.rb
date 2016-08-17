@@ -141,6 +141,16 @@ class User < ActiveRecord::Base
     end
   end
 
+  def emb_orders(type=nil)
+    if type == 'bought'
+      EmbOrder.where(buyer_id: self.id)
+    elsif type == 'sold'
+      EmbOrder.where(seller_id: self.id)
+    else
+      EmbOrder.where('buyer_id = ? OR seller_id = ?', self.id, self.id)
+    end
+  end
+
   def refund_requests(type=nil)
     if type == 'bought'
       RefundRequest.where(buyer_id: self.id)
