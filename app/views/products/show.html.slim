@@ -151,7 +151,7 @@
                     - if @product.default_payment.present?
                       input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
 
-                  - if @product.negotiable?
+                  - if @product.default_payment_armor? && @product.negotiable?
                     - unless params[:armor_order_id].present? && params[:inspection_date_by_seller] == "true"
                       a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here
                       span
