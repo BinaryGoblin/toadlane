@@ -148,7 +148,7 @@
                               td
                                 = b.label { b.radio_button(:"checked" => (b.object.id == @product.inspection_dates.first.id)) + b.text }
                                 br
-                    - if @product.default_payment.nil?
+                    - if @product.default_payment.present?
                       input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
 
                   - if @product.negotiable?
