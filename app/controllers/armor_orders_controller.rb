@@ -59,9 +59,9 @@ class ArmorOrdersController < ApplicationController
       redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :alert => armor_order.errors.full_messages.first}
     else
       if product.user == current_user
-        UserMailer.send_inspection_date_set_notification_to_buyer(armor_order).deliver_now
+        UserMailer.send_inspection_date_set_notification_to_buyer(armor_order).deliver_later
       else
-        UserMailer.send_inspection_date_set_notification_to_seller(armor_order).deliver_now
+        UserMailer.send_inspection_date_set_notification_to_seller(armor_order).deliver_later
       end
       redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'Your request to set inspectiond date has been informed to the seller.'}
     end
@@ -72,7 +72,7 @@ class ArmorOrdersController < ApplicationController
     product = Product.unexpired.find(params[:product_id])
 
     if armor_order.inspection_dates.buyer_added.first.update_attribute(:approved, true)
-      UserMailer.send_inspection_date_confirm_notification_to_buyer(armor_order).deliver_now
+      UserMailer.send_inspection_date_confirm_notification_to_buyer(armor_order).deliver_later
       redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => "Inspection date has been set to #{armor_order.inspection_dates.buyer_added.first.get_inspection_date} and has been informed to buyer."}
     else
       redirect_to product_path(id: product.id, armor_order_id: armor_order.id)
@@ -130,12 +130,12 @@ class ArmorOrdersController < ApplicationController
           params["order"]["balance"] >= params["order"]["amount"]
           armor_order.update_attribute(:funds_in_escrow, true)
         else
-          UserMailer.send_funds_to_escrow_notification_to_buyer(armor_order.buyer, armor_order).deliver_now
+          UserMailer.send_funds_to_escrow_notification_to_buyer(armor_order.buyer, armor_order).deliver_later
         end
         if params["order"]["status_name"] == "Payment Released"
           armor_order.update_attribute(:payment_release, true)
-          UserMailer.send_payment_released_notification_to_buyer(armor_order).deliver_now
-          UserMailer.send_payment_released_notification_to_seller(armor_order).deliver_now
+          UserMailer.send_payment_released_notification_to_buyer(armor_order).deliver_later
+          UserMailer.send_payment_released_notification_to_seller(armor_order).deliver_later
         end
       end
     end
