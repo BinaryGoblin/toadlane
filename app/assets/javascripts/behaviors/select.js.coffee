@@ -22,9 +22,9 @@ class Behavior.Select
       xhr && xhr.abort()
       xhr = $.ajax
         url: '/categories/' + id + '/sub_categories',
-        success: (results) -> 
+        success: (results) ->
           callback results.sub_categories
-        error: -> 
+        error: ->
           callback()
 
   initSubCategory: (subcat) ->

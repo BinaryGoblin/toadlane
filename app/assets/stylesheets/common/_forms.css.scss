@@ -179,7 +179,13 @@ select[data-behavior=Select] {
   margin-left: 3px;
 }
 
-.insert_inspection_dates, .account-armor
- .checkbox label {
-  padding-left: 0px;
+.insert_inspection_dates, .account-armor{
+  .checkbox label {
+    padding-left: 0px;
+  }
+}
+
+.insert_inspection_dates select
+{
+  font-size: 11px;
 }
