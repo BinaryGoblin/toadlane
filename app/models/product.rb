@@ -39,7 +39,8 @@ class Product < ActiveRecord::Base
     armor: 'Fly And Buy',
     green: 'Echeck',
     stripe: 'Stripe',
-    amg: 'Credit Card'
+    amg: 'Credit Card',
+    emb: 'Credit Card (EMB)'
   }
 
   belongs_to :user
