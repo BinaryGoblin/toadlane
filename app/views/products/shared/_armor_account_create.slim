@@ -1,15 +1,6 @@
 = form_for armor_profile, url: create_armor_profile_dashboard_accounts_path, method: "post" do |f|
-  .row
-    .col-md-6
-      .form-group
-        - if controller.controller_name == "accounts" && user.armor_profile.nil?
-          = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path, class: "link link-ulined"
 
-        - if controller.controller_name == "products" && armor_profile.confirmed_email == false
-          // this is for when the buyer creates armor profile in checkout page
-          = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path(product_id: product.id , armor_profile_id: armor_profile.id, armor_order_id: armor_order.id), class: "link link-ulined"
-
-        = f.hidden_field :confirmed_email, :value => user.try(:armor_profile).try(:confirmed_email)
+  = f.hidden_field :confirmed_email, :value => user.try(:armor_profile).try(:confirmed_email)
 
   - if user.armor_profile.present? && user.armor_profile.confirmed_email == true
     .row

@@ -125,6 +125,9 @@ class ProductsController < ApplicationController
   private
   def set_product
     @product = Product.find(params[:id])
+    if @product.default_payment.nil?
+      @product.update_attribute(:default_payment, @product.available_payments.first)
+    end
   end
 
   def set_order_details(armor_order, data)
