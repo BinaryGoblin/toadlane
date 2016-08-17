@@ -35,32 +35,33 @@
 
           = link_to "View Order", dashboard_order_path(@armor_order, type: 'armor' ), class: "btn btn-primary pull-right"
       - else
-        - if @product.default_payment_stripe?
-          = render partial: 'products/shared/stripe_payment_tab',
-                    :locals => { stripe_order: @stripe_order,
-                                  user: current_user,
-                                  data: @data,
-                                  product: @product}
+        .tab-content
+          - if @product.default_payment_stripe?
+            = render partial: 'products/shared/stripe_payment_tab',
+                      :locals => { stripe_order: @stripe_order,
+                                    user: current_user,
+                                    data: @data,
+                                    product: @product}
 
-        - if @product.default_payment_green?
-          = render partial: 'products/shared/green_payment_tab',
-                    :locals => { green_order: @green_order,
-                                  user: current_user,
-                                  product: @product}
+          - if @product.default_payment_green?
+            = render partial: 'products/shared/green_payment_tab',
+                      :locals => { green_order: @green_order,
+                                    user: current_user,
+                                    product: @product}
 
-        - if @product.default_payment_amg?
-          = render partial: 'products/shared/amg_payment_tab',
-                    :locals => { amg_order: @amg_order,
-                                  user: current_user,
-                                  product: @product}
-                                  
-        - if @product.default_payment_armor?
-          = render partial: 'products/shared/armor_payment',
-                    :locals => { armor_order: @armor_order,
-                                  armor_profile: @armor_profile,
-                                  user: current_user,
-                                  data: @data,
-                                  product: @product}
+          - if @product.default_payment_amg?
+            = render partial: 'products/shared/amg_payment_tab',
+                      :locals => { amg_order: @amg_order,
+                                    user: current_user,
+                                    product: @product}
+
+          - if @product.default_payment_armor?
+            = render partial: 'products/shared/armor_payment',
+                      :locals => { armor_order: @armor_order,
+                                    armor_profile: @armor_profile,
+                                    user: current_user,
+                                    data: @data,
+                                    product: @product}
 
 = render partial: 'products/shared/set_inspection_date_by_buyer',
             :locals => { product: @product, data: @data, armor_order: @armor_order }

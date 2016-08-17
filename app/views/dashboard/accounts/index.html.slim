@@ -73,6 +73,9 @@
               br
               a.html5lightbox.btn.btn-primary data-height="411" data-width="730" href="#{@url}" Payoneer Account
             - else
+              - if current_user.armor_profile.nil?
+                = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path, class: "link link-ulined"
+
               = render partial: 'products/shared/armor_account_create',
                         :locals => {  :user => current_user,
                                       :armor_profile => @armor_profile,

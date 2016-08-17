@@ -1,5 +1,10 @@
 - if user.armor_profile.nil?
   | You have to create Armor Profile first.
+
+  // this is for when the buyer creates armor profile in checkout page
+  - if controller.controller_name == "products"
+    = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path(product_id: product.id , armor_profile_id: armor_profile.id, armor_order_id: armor_order.id), class: "link link-ulined"
+- elsif user.armor_profile.present? && user.armor_profile.confirmed_email == true
   = render partial: 'products/shared/armor_account_create',
             :locals => { :product => product,
                           :user => user,
