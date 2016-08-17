@@ -187,7 +187,7 @@ $(document).ready ->
     return
 
   $('#product_default_payment').change ->
-    if $('#product_default_payment').find(":selected").text() == "Inspect And Buy"
+    if $('#product_default_payment').find(":selected").text() == "Fly And Buy"
       $('.insert_inspection_dates').show()
     else
       $('.insert_inspection_dates').hide()

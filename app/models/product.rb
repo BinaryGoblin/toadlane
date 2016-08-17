@@ -36,9 +36,10 @@ class Product < ActiveRecord::Base
   is_impressionable :counter_cache => true, :column_name => :views_count, :unique => :user_id
 
   PaymentOptions = {
-    armor: 'Inspect And Buy',
+    armor: 'Fly And Buy',
     green: 'Echeck',
-    stripe: 'Credit Card'
+    stripe: 'Stripe',
+    amg: 'Credit Card'
   }
 
   belongs_to :user
@@ -119,6 +120,16 @@ class Product < ActiveRecord::Base
 
   def default_payment_armor?
     default_payment == PaymentOptions[:armor]
+  end
+
+  def default_payment_stripe?
+    default_payment == PaymentOptions[:stripe]
+  end
+  def default_payment_green?
+    default_payment == PaymentOptions[:green]
+  end
+  def default_payment_amg?
+    default_payment == PaymentOptions[:amg]
   end
 
   def seller_set_inspection_dates
