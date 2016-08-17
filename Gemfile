@@ -51,6 +51,7 @@ gem 'commontator', '~> 4.11.1'
 
 gem 'postmark-rails', '>= 0.10.0'
 
+# Added for validating phone number as armor uses this library
 gem 'phonelib', '~> 0.6.2'
 
 # Dev - debugging group
