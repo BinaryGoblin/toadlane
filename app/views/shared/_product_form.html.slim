@@ -339,10 +339,9 @@
                            {:required => true, :class => 'select'}
 
     .insert_inspection_dates style="#{get_style(@product)}"
-      .form-group
+      .checkbox: label
         = f.check_box :negotiable, :checked => @product.negotiable
-        span
-          | &nbsp;Let buyers add inspection date
+        | &nbsp;Let buyer add inspection date
       label.lg Inspection Dates:
       ul.inspectiondates
         - if @product.inspection_dates.any?
