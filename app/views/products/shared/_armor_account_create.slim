@@ -73,13 +73,12 @@
             .form-group
               = ff.label :country, 'Country:', class: 'required'
               = ff.country_select 'country', [ 'US', 'GB' ], { iso_codes: true }, { class: 'form-control' }
-    .row
-      .col-md-8
-        br
-        = f.check_box :agreed_terms, :checked => user.try(:armor_profile).try(:agreed_terms), :required => true
-        span
-          |  I agree to the&nbsp;
-          a href="https://app.armorpayments.com/terms/1052419" target="_BLANK" Terms and Conditions
-          | &nbsp;of Armor Payments.
+    .form-group
+      .checkbox: label
+        = f.check_box :agreed_terms, required: true
+        = f.label :agreed_terms, 'I agree to the'
+        | &nbsp;
+        a href="https://app.armorpayments.com/terms/#{Rails.application.secrets['armor_api_key']}" target="_BLANK" Terms and Conditions
+        | &nbsp;of Armor Payments.
     br
     = f.submit "Submit", class: "btn btn-primary"

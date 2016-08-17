@@ -209,7 +209,9 @@ $(document).ready ->
         remote: "Phone number is not valid."
       "armor_profile[addresses][state]":
         remote: "State is not valid. "
-    submitHandler: (form) ->
-      $(this).find('input[type=submit]').prop 'disabled', true
-      form.submit()
+    errorPlacement: (error, element) ->
+      if element.attr('name') == "armor_profile[agreed_terms]"
+        error.insertAfter(element.parent().parent())
+      else
+        error.insertAfter element
       return
