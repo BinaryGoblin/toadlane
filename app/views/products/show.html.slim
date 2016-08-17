@@ -227,6 +227,8 @@
                           | AMG
                     - else
                         | Payment option has not been selected by the seller for this product.
+                  - if current_user == @product.user
+                    | You can now choose a payment method for a product
                 - if @product.user.benefits.reject{ |e| e.empty? }.present?
                   .sell
                     b SELL:
