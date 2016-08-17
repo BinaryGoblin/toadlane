@@ -338,7 +338,7 @@
                            {:include_blank => 'Choose Payment Option'},
                            {:required => true, :class => 'select'}
 
-    .insert_inspection_dates style="display:none;"
+    .insert_inspection_dates style="#{get_style(@product)}"
       .form-group
         = f.check_box :negotiable, :checked => @product.negotiable
         span

@@ -125,9 +125,11 @@ class Product < ActiveRecord::Base
   def default_payment_stripe?
     default_payment == PaymentOptions[:stripe]
   end
+
   def default_payment_green?
     default_payment == PaymentOptions[:green]
   end
+
   def default_payment_amg?
     default_payment == PaymentOptions[:amg]
   end
@@ -137,7 +139,7 @@ class Product < ActiveRecord::Base
   end
 
   def negotiable?
-    self.negotiable == true
+    negotiable == true
   end
 
   # this is the inspection date added by seller after rejecting

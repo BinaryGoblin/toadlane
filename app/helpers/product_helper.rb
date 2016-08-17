@@ -105,4 +105,12 @@ module ProductHelper
     user_ids = user_ids.compact
     User.where(id: user_ids)
   end
+
+  def get_style(product)
+    if product.default_payment_armor?
+      "display:block;"
+    else
+      "display:none;"
+    end
+  end
 end
