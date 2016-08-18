@@ -342,7 +342,7 @@
       .form-group
         .checkbox: label
           = f.check_box :negotiable, :checked => @product.negotiable
-          | &nbsp;Let buyer add inspection date
+          | &nbsp;Allow buyer to suggest alternative inspection date
       label.lg Inspection Dates:
       ul.inspectiondates
         - if @product.inspection_dates.any?
