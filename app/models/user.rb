@@ -53,6 +53,7 @@ class User < ActiveRecord::Base
   has_one :green_profile
   has_one :armor_profile, class_name: 'ArmorProfile', foreign_key: :user_id
   has_one :amg_profile
+  has_one :emb_profile
   has_one :stripe_customer
   has_many :products
   has_many :addresses
@@ -140,6 +141,16 @@ class User < ActiveRecord::Base
     end
   end
 
+  def emb_orders(type=nil)
+    if type == 'bought'
+      EmbOrder.where(buyer_id: self.id)
+    elsif type == 'sold'
+      EmbOrder.where(seller_id: self.id)
+    else
+      EmbOrder.where('buyer_id = ? OR seller_id = ?', self.id, self.id)
+    end
+  end
+
   def refund_requests(type=nil)
     if type == 'bought'
       RefundRequest.where(buyer_id: self.id)
@@ -193,6 +204,7 @@ class User < ActiveRecord::Base
     ap << Product::PaymentOptions[:green] if green_profile.present?
     ap << Product::PaymentOptions[:armor] if armor_profile.present?
     ap << Product::PaymentOptions[:amg] if amg_profile.present?
+    ap << Product::PaymentOptions[:emb] if emb_profile.present?
     ap
   end
 

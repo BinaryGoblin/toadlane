@@ -229,6 +229,9 @@
                     - elsif @product.default_payment_amg?
                         span.label.label-dark-blue
                           | AMG
+                    - elsif @product.default_payment_emb?
+                        span.label.label-dark-blue
+                          | EMB
                     - else
                         | Payment option has not been selected by the seller for this product.
                   - if current_user == @product.user

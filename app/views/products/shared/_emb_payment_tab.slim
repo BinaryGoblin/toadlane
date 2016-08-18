@@ -1,31 +1,31 @@
-= form_for(amg_order, remote: true) do |f|
+= form_for(emb_order, remote: true) do |f|
   -if user && !user.addresses.nil?
     table.table data-behavior="assignShippingAddress"
       thead
         tr
           th shipping address
       tbody
-        - amg_shipping_addresses = Address.where(:user => user).order('created_at')
-        = f.collection_radio_buttons(:address_id, amg_shipping_addresses, :id, :get_inline_address) do |b|
+        - emb_shipping_addresses = Address.where(:user => user).order('created_at')
+        = f.collection_radio_buttons(:address_id, emb_shipping_addresses, :id, :get_inline_address) do |b|
           tr
             td
-              = b.label { b.radio_button(:"data-behavior" => "AssignShipping", :"checked" => (b.object.id == amg_shipping_addresses.first.id)) + b.text }
+              = b.label { b.radio_button(:"data-behavior" => "AssignShipping", :"checked" => (b.object.id == emb_shipping_addresses.first.id)) + b.text }
         tr
           td
-            = radio_button 'amg_order', :address_id, "-1", default: true, 'data-behavior' => "AssignShipping", id: 'amg_order_address_id__1'
-            = label :address_id, " Enter new address", for: 'amg_order_address_id__1'
+            = radio_button 'emb_order', :address_id, "-1", default: true, 'data-behavior' => "AssignShipping", id: 'emb_order_address_id__1'
+            = label :address_id, " Enter new address", for: 'emb_order_address_id__1'
   table.table
     - if !product.shipping_estimates.nil?
       thead
         tr
           th shipping method
       tbody
-        - amg_shipping_estimates = ShippingEstimate.where(:product => product).order('created_at')
-        = f.collection_radio_buttons(:shipping_estimate_id, amg_shipping_estimates, :id, :get_label) do |b|
+        - emb_shipping_estimates = ShippingEstimate.where(:product => product).order('created_at')
+        = f.collection_radio_buttons(:shipping_estimate_id, emb_shipping_estimates, :id, :get_label) do |b|
           tr
             td
-              = b.label { b.radio_button(:"data-behavior" => "EstimateShipping", :"data-cost" => b.object.cost, :"data-type" => b.object.type, :"checked" => (b.object.id == amg_shipping_estimates.first.id)) + b.text }
-  .amgDetails.form-horizontal
+              = b.label { b.radio_button(:"data-behavior" => "EstimateShipping", :"data-cost" => b.object.cost, :"data-type" => b.object.type, :"checked" => (b.object.id == emb_shipping_estimates.first.id)) + b.text }
+  .embDetails.form-horizontal
     .form-group
       = f.label :first_name, 'First Name *', class: 'control-label col-sm-4'
       .col-sm-8
@@ -34,8 +34,8 @@
       = f.label :last_name, 'Last Name *', class: 'control-label col-sm-4'
       .col-sm-8
         = f.text_field :last_name, class: 'form-control', :value => "#{user.try(:name).try(:split, " ").try(:last)}", required: true
-    - amg_address = user.try(:addresses).try(:last)
-    - f.object.address_country = amg_address.try(:country)
+    - emb_address = user.try(:addresses).try(:last)
+    - f.object.address_country = emb_address.try(:country)
     .form-group
       = f.label :address_country, "Country *", class: "control-label col-sm-4"
       .col-sm-8
@@ -43,19 +43,19 @@
     .form-group
       = f.label :address_state, "State *", class: "control-label col-sm-4"
       .col-sm-8
-        = render partial: 'products/subregion_select', locals: {parent_region: f.object.address_country, user_state: get_state(amg_address.try(:state)), parent_object_sym: "amg_order"}
+        = render partial: 'products/subregion_select', locals: {parent_region: f.object.address_country, user_state: get_state(emb_address.try(:state)), parent_object_sym: "emb_order"}
     .form-group
       = f.label :address_city, 'City *', class: 'control-label col-sm-4'
       .col-sm-8
-        = f.text_field :address_city, class: 'form-control', :value => "#{amg_address.try(:city)}", required: true
+        = f.text_field :address_city, class: 'form-control', :value => "#{emb_address.try(:city)}", required: true
     .form-group
       = f.label :address_zip, 'Zip *', class: 'control-label col-sm-4'
       .col-sm-8
-        = f.text_field :address_zip, class: 'form-control', :value => "#{amg_address.try(:zip)}", required: true
+        = f.text_field :address_zip, class: 'form-control', :value => "#{emb_address.try(:zip)}", required: true
     .form-group
       = f.label :address1, 'Address1 *', class: 'control-label col-sm-4'
       .col-sm-8
-        = f.text_field :address1, class: 'form-control', :value => "#{amg_address.try(:line1)}", required: true
+        = f.text_field :address1, class: 'form-control', :value => "#{emb_address.try(:line1)}", required: true
     .form-group
       = label_tag 'billing-cc-number', 'Billing CC Number: *', class: 'control-label col-sm-4'
       .col-sm-8

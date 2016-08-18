@@ -107,7 +107,7 @@ $(document).ready ->
   $("#green_order_phone").mask("999-999-9999");
 
   if $('.vp-calculation-checkout').is(':visible')
-    $('input[name="stripe_order[shipping_estimate_id]"]:first').trigger('click');
+    $('input[name="stripe_order[shipping_estimate_id]"]:first, input[name="green_order[shipping_estimate_id]"]:first, input[name="amg_order[shipping_estimate_id]"]:first, input[name="emb_order[shipping_estimate_id]"]:first').trigger('click');
 
   jQuery.validator.addMethod 'zipcode', ((value, element) ->
     @optional(element) or /^\d{5}(?:-\d{4})?$/.test(value)
@@ -140,6 +140,16 @@ $(document).ready ->
     country_code = $(this).val()
 
     url = "/products/subregion_options?parent_region=#{country_code}&parent_object_sym=amg_order"
+    select_wrapper.load(url)
+
+  $('select#emb_order_address_country').change (event) ->
+    select_wrapper = $('.order_state_code_wrapper')
+
+    $('select', select_wrapper).attr('disabled', true)
+
+    country_code = $(this).val()
+
+    url = "/products/subregion_options?parent_region=#{country_code}&parent_object_sym=emb_order"
     select_wrapper.load(url)
 
   $('form#new_green_order').validate
@@ -176,6 +186,22 @@ $(document).ready ->
         creditcard: true
     submitHandler: (form) ->
       $('form#new_amg_order').find('input[type=submit]').prop 'disabled', true
+      form.submit()
+      return
+
+  $('form#new_emb_order').validate
+    rules:
+      "emb_order[email_address]":
+        required: true
+        validEmail: true
+      "emb_order[address_zip]":
+        required: true
+        zipcode: true
+      "billing-cc-number":
+        required: true
+        creditcard: true
+    submitHandler: (form) ->
+      $('form#new_emb_order').find('input[type=submit]').prop 'disabled', true
       form.submit()
       return
 

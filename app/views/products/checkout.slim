@@ -29,7 +29,7 @@
                               data: @data }
 
     .col-md-12.checkout-payment-gateway
-      - if @armor_order.uri.present?
+      - if @armor_order.present? && @armor_order.uri.present?
           = render partial: 'products/shared/payment_instruction_pop_up',
                     locals: { armor_order: @armor_order }
 
@@ -47,12 +47,21 @@
             = render partial: 'products/shared/green_payment_tab',
                       :locals => { green_order: @green_order,
                                     user: current_user,
+                                    data: @data,
                                     product: @product}
 
           - if @product.default_payment_amg?
             = render partial: 'products/shared/amg_payment_tab',
                       :locals => { amg_order: @amg_order,
                                     user: current_user,
+                                    data: @data,
+                                    product: @product}
+
+          - if @product.default_payment_emb?
+            = render partial: 'products/shared/emb_payment_tab',
+                      :locals => { emb_order: @emb_order,
+                                    user: current_user,
+                                    data: @data,
                                     product: @product}
 
           - if @product.default_payment_armor?

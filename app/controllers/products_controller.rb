@@ -111,6 +111,7 @@ class ProductsController < ApplicationController
 
     @armor_profile = current_user.armor_profile.present? ? current_user.armor_profile : ArmorProfile.new
     @amg_order = AmgOrder.new
+    @emb_order = EmbOrder.new
   end
 
   def subregion_options
