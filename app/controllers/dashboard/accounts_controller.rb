@@ -3,6 +3,7 @@ class Dashboard::AccountsController < DashboardController
   before_action :set_armor_service, only: [:index, :create_armor_profile]
 
   def index
+    response.headers["X-FRAME-OPTIONS"] = "ALLOW-FROM https://sandbox.armorpayments.com"
     set_user
     set_green_profile
     set_profile_for_armor
