@@ -195,7 +195,7 @@ class Dashboard::AccountsController < DashboardController
 
     if current_user.armor_profile.armor_account_id.present? &&
       current_user.armor_profile.armor_user_id.present?
-      UserMailer.send_armor_profile_created_notification(current_user).deliver_now
+      UserMailer.send_armor_profile_created_notification(current_user).deliver_later
     end
   end
 
