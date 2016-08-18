@@ -71,7 +71,8 @@
             - if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
               | Now create or login to Payoneer
               br
-              a.html5lightbox.btn.btn-primary data-height="411" data-width="730" href="#{@url}" Payoneer Account
+              script src="https://sandbox.armorpayments.com/assets/js/modal.min.js" type="text/javascript"
+              button.btn.btn-primary onClick="armor.openModal('#{@url}')" Payoneer Account
             - else
               - if current_user.armor_profile.nil?
                 = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path, class: "link link-ulined"
