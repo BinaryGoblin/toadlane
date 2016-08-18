@@ -147,4 +147,8 @@ class Product < ActiveRecord::Base
   def latest_seller_added_inspection_date
     inspection_dates.seller_added.last.get_inspection_date
   end
+
+  def is_buyer_product_owner?(buyer)
+    buyer == self.user
+  end
 end
