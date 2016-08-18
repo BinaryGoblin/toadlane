@@ -1,4 +1,4 @@
-- if armor_order.buyer_id && armor_order.seller_id
+- if armor_order.present? && armor_order.buyer_id.present? && armor_order.seller_id.present?
   tr
     td= product.name
     td.stripe-quantity =armor_order.count
