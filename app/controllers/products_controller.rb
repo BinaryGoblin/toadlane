@@ -54,6 +54,7 @@ class ProductsController < ApplicationController
   def checkout
     return unless current_user.present?
     @product = Product.find(params[:product_id])
+
     @data = {
       total: params[:total],
       quantity: params[:count],

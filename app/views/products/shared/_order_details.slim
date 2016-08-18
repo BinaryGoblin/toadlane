@@ -7,11 +7,11 @@
 
   tr
     td colspan="3" <span class="stripe-rebate">#{armor_order.rebate_percent}</span>% rebate for purchasing <span class="stripe-quantity">#{armor_order.count}</span> pcs
-    td -$ <span class="stripe-rebate-price">#{armor_order.rebate}</span>
+    td -$ <span class="stripe-rebate-price">#{number_with_precision(armor_order.rebate_price, precision: 2, delimiter: '')}</span>
 
   tr
     td colspan="3" Toadlane Fee (<span class="calc-fees">#{data[:fee]}</span>%)
-    td $ <span class="stripe-fees-price">#{armor_order.fee}</span>
+    td $ <span class="stripe-fees-price">#{number_with_precision(armor_order.fee, precision: 2, delimiter: '')}</span>
 
   tr
     td Shipping Estimate
