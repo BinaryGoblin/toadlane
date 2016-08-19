@@ -31,7 +31,7 @@
             td
               span.label
                 = order.status
-            td= link_to order.product.name, product_path(order.product, cat_id: order.product.main_category), class: 'link link-ulined', target: '_blank'
+            td= link_to order.product.name.titleize, product_path(order.product, cat_id: order.product.main_category), class: 'link link-ulined', target: '_blank'
             td= order.count
             -if order.instance_of? ArmorOrder
               td= number_to_currency(order.amount, :unit => "$", precision: 2)
@@ -44,10 +44,12 @@
                 = link_to 'Cancel Order', cancel_order_dashboard_orders_path(id: order.id, type: params['type']), method: :get, remote: true, data: {confirm: 'Are you sure?'}, class: 'view'
               - elsif refund_requested?(order)
                 | &nbsp;
-                = link_to 'Refund Requested', dashboard_refund_requests_path(bought_or_sold: 'bought'), class: 'view'
+                = link_to 'Refund Requested', dashboard_refund_requests_path, class: 'view'
             td.text-center
               - if current_user == order.buyer && order.instance_of?(ArmorOrder) && order.not_inspected
-                = link_to 'Complete Inspection', armor_order_complete_inspection_path(order.id)
+                = link_to 'Complete Inspection', armor_order_complete_inspection_path(order.id), class: 'view'
+              - else
+                | -
             td.text-center
               - if order.instance_of? ArmorOrder
                 span.label.label-orange
