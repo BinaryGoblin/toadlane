@@ -133,7 +133,7 @@ class ArmorOrdersController < ApplicationController
           UserMailer.send_funds_to_escrow_notification_to_buyer(armor_order.buyer, armor_order).deliver_later
         end
         if params["order"]["status_name"] == "Payment Released"
-          armor_order.update_attributes({payment_release: true, status: 'placed'}})
+          armor_order.update_attributes({payment_release: true, status: 'placed'})
           UserMailer.send_payment_released_notification_to_buyer(armor_order).deliver_later
           UserMailer.send_payment_released_notification_to_seller(armor_order).deliver_later
         end
