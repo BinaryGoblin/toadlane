@@ -39,13 +39,6 @@ class ArmorOrder < ActiveRecord::Base
   belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'
   belongs_to :product
 
-  # attr_accessor :rebate_percentage, :quantity, :order_amount, :rebate, :fee_percent, :fee_price, :shipping_cost
-
-
-  # validates_presence_of :unit_price, :account_id
-
-  scope :incomplete_inspection, -> { where(inspection_complete: false) }
-  scope :complete_inspection, -> { where(inspection_complete: true) }
   scope :with_order_id, -> { where.not(order_id: nil) }
 
   scope :for_dashboard, -> (page, per_page) do
@@ -101,6 +94,10 @@ class ArmorOrder < ActiveRecord::Base
 
   def buyer_requested_inspection_date
     inspection_dates.buyer_added.last.get_inspection_date
+  end
+
+  def not_inspected
+    inspection_complete == false
   end
 
 end

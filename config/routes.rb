@@ -67,8 +67,6 @@ Toad::Application.routes.draw do
       collection do
         delete :delete_cascade
         get :cancel_order
-        get :orders_under_inspection
-        get :orders_inspection_complete
       end
     end
 

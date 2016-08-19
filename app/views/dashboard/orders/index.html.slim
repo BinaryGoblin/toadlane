@@ -17,10 +17,10 @@
           th Order ID:
           th Status:
           th Product name:
-          th Unit price:
           th Quantity:
           th Order Total:
           th.text-center Details
+          th.text-center Action
           th.text-center Type
 
       tbody
@@ -32,7 +32,6 @@
               span.label
                 = order.status
             td= link_to order.product.name, product_path(order.product, cat_id: order.product.main_category), class: 'link link-ulined', target: '_blank'
-            td= number_to_currency(order.unit_price, :unit => "$", precision: 2)
             td= order.count
             -if order.instance_of? ArmorOrder
               td= number_to_currency(order.amount, :unit => "$", precision: 2)
@@ -46,6 +45,9 @@
               - elsif refund_requested?(order)
                 | &nbsp;
                 = link_to 'Refund Requested', dashboard_refund_requests_path(bought_or_sold: 'bought'), class: 'view'
+            td.text-center
+              - if current_user == order.buyer && order.instance_of?(ArmorOrder) && order.not_inspected
+                = link_to 'Complete Inspection', armor_order_complete_inspection_path(order.id)
             td.text-center
               - if order.instance_of? ArmorOrder
                 span.label.label-orange

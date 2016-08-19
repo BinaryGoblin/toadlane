@@ -93,14 +93,6 @@ class Dashboard::OrdersController < DashboardController
     end
   end
 
-  def orders_under_inspection
-    @orders = current_user.armor_orders.processing.incomplete_inspection.order('id ASC')
-  end
-
-  def orders_inspection_complete
-    @orders = current_user.armor_orders.completed.complete_inspection.order('id ASC')
-  end
-
   private
   def get_order_status
     @orders = ArmorOrder.where(deleted: false).own_orders(current_user.id)

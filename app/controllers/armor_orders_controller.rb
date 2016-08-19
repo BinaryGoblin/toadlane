@@ -111,15 +111,15 @@ class ArmorOrdersController < ApplicationController
     }
 
     @client.orders(armor_order.seller_account_id).update(armor_order.order_id, action_data)
-    armor_order.update_attributes({inspection_complete: true, status: 'completed'})
+    armor_order.update_attribute(:inspection_complete, true)
 
     create_order_shipments(armor_order)
 
     release_fund_by_buyer(armor_order)
 
-    redirect_to orders_inspection_complete_dashboard_orders_path(bought_or_sold: 'bought', type: 'armor'), :flash => { :notice => "Product has been marked as inspected." }
+    redirect_to dashboard_orders_path, :flash => { :notice => "Product has been marked as inspected." }
   rescue ArmorService::BadResponseError => e
-    redirect_to orders_under_inspection_dashboard_orders_path(bought_or_sold: 'bought', type: 'armor'), :flash => { :error => e.errors.values.flatten }
+    redirect_to dashboard_orders_path, :flash => { :error => e.errors.values.flatten }
   end
 
   def armor_webhooks
@@ -133,7 +133,7 @@ class ArmorOrdersController < ApplicationController
           UserMailer.send_funds_to_escrow_notification_to_buyer(armor_order.buyer, armor_order).deliver_later
         end
         if params["order"]["status_name"] == "Payment Released"
-          armor_order.update_attribute(:payment_release, true)
+          armor_order.update_attributes({payment_release: true, status: 'completed'}})
           UserMailer.send_payment_released_notification_to_buyer(armor_order).deliver_later
           UserMailer.send_payment_released_notification_to_seller(armor_order).deliver_later
         end
