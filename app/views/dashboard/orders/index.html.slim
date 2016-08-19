@@ -62,6 +62,7 @@
               - else
                 | -
             td.text-center
+              // for displaying type of order
               - if order.instance_of? ArmorOrder
                 span.label.label-orange
                   | Armor
@@ -79,6 +80,13 @@
                     | EMB
               - else
                 | No type present
+              // for displaying bought and sold
+              - if current_user.id == order.buyer_id
+                span.label
+                  | Bought
+              - elsif current_user.id == order.seller_id
+                span.label.label-green
+                  | Sold
 
 .footer-actions: .fa-container: .wrap-sm
 
