@@ -2,20 +2,21 @@ class Dashboard::OrdersController < DashboardController
   # before_action :get_order_status, only: [:index]
 
   def index
-    case params[:type]
-    when 'armor'
-      @orders = current_user.armor_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page]).with_order_id
-    when 'stripe'
-      @orders = current_user.stripe_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page])
-    when 'green'
-      @orders = current_user.green_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page])
-    when 'amg'
-      @orders = current_user.amg_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page])
-    when 'emb'
-      @orders = current_user.emb_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page])
-    else
-      @orders = current_user.stripe_orders(params[:bought_or_sold]).for_dashboard(params[:page], params[:per_page])
-    end
+    orders = []
+    armor_orders = current_user.armor_orders.for_dashboard(params[:page], params[:per_page]).with_order_id
+    stripe_orders = current_user.stripe_orders.for_dashboard(params[:page], params[:per_page])
+    green_orders = current_user.green_orders.for_dashboard(params[:page], params[:per_page])
+    amg_orders = current_user.amg_orders.for_dashboard(params[:page], params[:per_page])
+    emb_orders = current_user.emb_orders.for_dashboard(params[:page], params[:per_page])
+
+    orders << armor_orders
+    orders << stripe_orders
+    orders << green_orders
+    orders << amg_orders
+    orders << emb_orders
+
+    # orders sorted by id
+    @orders = orders.flatten.sort_by{|order| order[:id]}
   end
 
   def show

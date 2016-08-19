@@ -8,20 +8,6 @@
           .selected-labels
             span Selected:
             = link_to 'Delete', delete_cascade_dashboard_orders_path, method: :delete, remote: true, data: {confirm: 'Are you sure?'}, class: 'label label-red'
-        td
-          = link 'Stripe Orders', dashboard_orders_path(bought_or_sold: params['bought_or_sold'], type: 'stripe'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-          = link 'Green Orders', dashboard_orders_path(bought_or_sold: params['bought_or_sold'], type: 'green'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-          = link 'Armor Orders', dashboard_orders_path(bought_or_sold: params['bought_or_sold'], type: 'armor'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-          = link 'Amg Orders', dashboard_orders_path(bought_or_sold: params['bought_or_sold'], type: 'amg'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-          = link 'Emb Orders', dashboard_orders_path(bought_or_sold: params['bought_or_sold'], type: 'emb'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-        td
-          = link_to 'All', dashboard_orders_path(type: params['type']), class: 'btn btn-default pull-right', _class_active: 'btn-success'
-          = link 'Sold', dashboard_orders_path(bought_or_sold: 'sold', type: params['type']), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-          = link 'Bought', dashboard_orders_path(bought_or_sold: 'bought', type: params['type']), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-        - if params[:type] == "armor"
-          td
-            = link 'Incomplete', orders_under_inspection_dashboard_orders_path(bought_or_sold: 'bought', type: params['type']), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-            = link 'Complete', orders_inspection_complete_dashboard_orders_path(bought_or_sold: 'bought', type: params['type']), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
 
   .table-responsive
     table.table data-behavior="TableCheckbox" data-options='{"paramName":"orders_ids"}'
@@ -35,6 +21,7 @@
           th Quantity:
           th Order Total:
           th.text-center Details
+          th.text-center Type
 
       tbody
         - @orders.each do |order|
@@ -47,15 +34,9 @@
             td= link_to order.product.name, product_path(order.product, cat_id: order.product.main_category), class: 'link link-ulined', target: '_blank'
             td= number_to_currency(order.unit_price, :unit => "$", precision: 2)
             td= order.count
-            -if order.instance_of? StripeOrder
-              td= number_to_currency(order.total, :unit => "$", precision: 2)
             -if order.instance_of? ArmorOrder
               td= number_to_currency(order.amount, :unit => "$", precision: 2)
-            -if order.instance_of? GreenOrder
-              td= number_to_currency(order.total, :unit => "$", precision: 2)
-            -if order.instance_of? AmgOrder
-              td= number_to_currency(order.total, :unit => "$", precision: 2)
-            -if order.instance_of? EmbOrder
+            -else
               td= number_to_currency(order.total, :unit => "$", precision: 2)
             td.text-center
               = link_to 'View', '#modal_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
@@ -65,6 +46,24 @@
               - elsif refund_requested?(order)
                 | &nbsp;
                 = link_to 'Refund Requested', dashboard_refund_requests_path(bought_or_sold: 'bought'), class: 'view'
+            td.text-center
+              - if order.instance_of? ArmorOrder
+                span.label.label-orange
+                  | Armor
+              - elsif order.instance_of? GreenOrder
+                span.label.label-green
+                  | Green By Phone
+              - elsif order.instance_of? StripeOrder
+                  span.label.label-blue
+                    | Stripe
+              - elsif order.instance_of? AmgrOrder
+                  span.label.label-dark-blue
+                    | AMG
+              - elsif order.instance_of? EmbOrder
+                  span.label.label-dark-blue
+                    | EMB
+              - else
+                | No type present
 
 .footer-actions: .fa-container: .wrap-sm
 
