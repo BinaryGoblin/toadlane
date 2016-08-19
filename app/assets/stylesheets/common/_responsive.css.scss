@@ -349,7 +349,8 @@
       }
     }
   }
-  .product-form .pricebreaks{
+  .product-form .pricebreaks,
+  .product-form .inspectiondates{
     margin: 0;
     li{
       margin-left: 0;
@@ -359,7 +360,8 @@
       padding: 10px;
       margin-bottom: 10px;
     }
-    .pricebreak{
+    .pricebreak,
+    .inspectiondate{
       position: relative;
       .btn.remove{
         position: absolute;

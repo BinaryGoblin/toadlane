@@ -1,10 +1,10 @@
 class ArmorService
   attr_accessor :client
-  
+
   def initialize(api_key: nil, api_secret: nil, sandbox: nil)
     self.client = ArmorPayments::API.new(
-      api_key       || Rails.application.secrets['armor_api_key'], 
-      api_secret    || Rails.application.secrets['armor_api_secret'], 
+      api_key       || Rails.application.secrets['armor_api_key'],
+      api_secret    || Rails.application.secrets['armor_api_secret'],
       if sandbox.nil? then !Rails.env.production? else sandbox end
     )
   end

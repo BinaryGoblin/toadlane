@@ -116,17 +116,50 @@
               - else
                 = pricebreak_table @product.pricebreaks, @product.unit_price, desired
 
+          .white-panel.wp-table
             - if current_user.present?
               - if current_user.profile_complete?
-                -if @product.status_characteristic == 'sell'
-                  = form_tag(product_checkout_path(@product), method: :post, class: 'text-center') do
+                -if @product.status_characteristic == 'sell' || strip_tags(time_left(@product.end_date)) != 'Time ended' || @product.user != current_user
+                  = form_tag(product_checkout_path(product_id: @product, armor_order_id: params[:armor_order_id]), method: :post, class: 'text-center') do
                     = hidden_field_tag :total
                     = hidden_field_tag :count
                     = hidden_field_tag :fee
                     = hidden_field_tag :shipping_cost
                     = hidden_field_tag :rebate
                     = hidden_field_tag :rebate_percent
-                    input.btn.btn-success.btn-lg.checkout value="Proceed to checkout" type="submit"
+
+                    - if @product.is_buyer_product_owner?(current_user)
+                      | You cannot buy your own product.
+                    - else
+                      - if @product.default_payment_armor? && @product.inspection_dates.present?
+                        .inspection_date_select
+                          - if params[:armor_order_id].present? && params[:inspection_date_by_seller] == "true"
+                            p
+                              | Select Inpsection Date:
+                            br
+                            = collection_radio_buttons(:inspection_date, :inspection_date_id, @armor_order.inspection_dates.buyer_added, :id, :get_inspection_date) do |b, index|
+                              tr
+                                td
+                                  = b.label { b.radio_button(:"checked" => (b.object.id == @armor_order.inspection_dates.buyer_added.first.id)) + b.text }
+                                  br
+                          - else
+                            p
+                              | Select Inpsection Date:
+                            br
+                            = collection_radio_buttons(:inspection_date, :inspection_date_id, @product.seller_set_inspection_dates, :id, :get_inspection_date) do |b, index|
+                              tr
+                                td
+                                  = b.label { b.radio_button(:"checked" => (b.object.id == @product.inspection_dates.first.id)) + b.text }
+                                  br
+                      - if @product.default_payment.present?
+                        input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
+
+                  - unless @product.is_buyer_product_owner?(current_user)
+                    - if @product.default_payment_armor? && @product.negotiable?
+                      - unless params[:armor_order_id].present? && params[:inspection_date_by_seller] == "true"
+                        a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here
+                        span
+                        | &nbsp;to set inspection date
                 -else
                   .text-center= link_to 'Make Sale', '#', class: 'btn btn-success-sell btn-lg checkout', data: {  toggle: 'modal', target: '#stripe_form_checkout'  }
               - else
@@ -182,16 +215,27 @@
 
                 .user_accounts
                   p
-                    b ACTIVE ACCOUNTS:
-                    - if @product.user.green_profile.present?
+                    b ACTIVE ACCOUNT:
+                    br
+                    - if @product.default_payment_armor?
+                      span.label.label-orange
+                        | Armor
+                    - elsif @product.default_payment_green?
                       span.label.label-green
                         | Green By Phone
-                    - if @product.user.stripe_profile.present?
-                      span.label.label-blue
-                        | Stripe
-                    - if @product.user.amg_profile.present?
-                      span.label.label-dark-blue
-                        | AMG
+                    - elsif @product.default_payment_stripe?
+                        span.label.label-blue
+                          | Stripe
+                    - elsif @product.default_payment_amg?
+                        span.label.label-dark-blue
+                          | AMG
+                    - elsif @product.default_payment_emb?
+                        span.label.label-dark-blue
+                          | EMB
+                    - else
+                        | Payment option has not been selected by the seller for this product.
+                  - if current_user == @product.user
+                    | You can now choose a payment method for a product
                 - if @product.user.benefits.reject{ |e| e.empty? }.present?
                   .sell
                     b SELL:
@@ -238,3 +282,8 @@
       .text-center= link_to 'See all related products', '#', class: 'btn btn-success'
 
 = render partial: 'modals', locals: { product: @product }
+
+= render partial: 'products/shared/set_inspection_date_by_buyer', :locals => { product: @product, data: @data, armor_order: ArmorOrder.new }
+
+- if params[:armor_order_id].present? && params[:buyer_request_inspection_date] == "true"
+  = render partial: 'set_inspection_date_by_seller', locals: { product: @product, armor_order: @armor_order }

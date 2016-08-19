@@ -51,6 +51,7 @@
               |  |
               = link_to 'Delete', dashboard_product_path(product), method: :delete, data: { confirm: 'Are you sure?' }, class: 'view view-red'
 
+
 .footer-actions: .fa-container: .wrap-sm
   .show-all
     - unless params[:count].present? || @products_count < 20

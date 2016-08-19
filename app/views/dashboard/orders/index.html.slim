@@ -8,16 +8,6 @@
           .selected-labels
             span Selected:
             = link_to 'Delete', delete_cascade_dashboard_orders_path, method: :delete, remote: true, data: {confirm: 'Are you sure?'}, class: 'label label-red'
-        td
-          = link 'Stripe Orders', dashboard_orders_path(bought_or_sold: params['bought_or_sold'], type: 'stripe'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-          = link 'Green Orders', dashboard_orders_path(bought_or_sold: params['bought_or_sold'], type: 'green'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-          = link 'Amg Orders', dashboard_orders_path(bought_or_sold: params['bought_or_sold'], type: 'amg'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-          / TODO this is disabled until we re-integrate armor payments
-            = link 'Armor Payments Orders', dashboard_orders_path(bought_or_sold: params['bought_or_sold'], type: 'armor'), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-        td
-          = link_to 'All', dashboard_orders_path(type: params['type']), class: 'btn btn-default pull-right', _class_active: 'btn-success'
-          = link 'Sold', dashboard_orders_path(bought_or_sold: 'sold', type: params['type']), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
-          = link 'Bought', dashboard_orders_path(bought_or_sold: 'bought', type: params['type']), _class: 'btn btn-default pull-right', _class_active: 'btn-success'
 
   .table-responsive
     table.table data-behavior="TableCheckbox" data-options='{"paramName":"orders_ids"}'
@@ -26,11 +16,12 @@
           th: input type="checkbox"
           th Order ID:
           th Status:
-          th Product name:
-          th Unit price:
+          th.text-center Product name:
           th Quantity:
           th Order Total:
-          th.text-center Details
+          th.text-center Details:
+          th.text-center Action:
+          th.text-center Type:
 
       tbody
         - @orders.each do |order|
@@ -40,17 +31,13 @@
             td
               span.label
                 = order.status
-            td= link_to order.product.name, product_path(order.product, cat_id: order.product.main_category), class: 'link link-ulined', target: '_blank'
-            td= number_to_currency(order.unit_price, :unit => "$", precision: 2)
-            td= order.count
-            -if order.instance_of? StripeOrder
-              td= number_to_currency(order.total, :unit => "$", precision: 2)
-            -if order.instance_of? ArmorOrder
-              td= number_to_currency(order.amount, :unit => "$", precision: 2)
-            -if order.instance_of? GreenOrder
-              td= number_to_currency(order.total, :unit => "$", precision: 2)
-            -if order.instance_of? AmgOrder
-              td= number_to_currency(order.total, :unit => "$", precision: 2)
+            td.text-center= link_to order.product.name.titleize, product_path(order.product, cat_id: order.product.main_category), class: 'link link-ulined', target: '_blank'
+            td.text-center= order.count
+            td.text-center
+              -if order.instance_of? ArmorOrder
+                = number_to_currency(order.amount, :unit => "$", precision: 2)
+              -else
+                = number_to_currency(order.total, :unit => "$", precision: 2)
             td.text-center
               = link_to 'View', '#modal_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
               - if is_cancellable?(order)
@@ -58,7 +45,48 @@
                 = link_to 'Cancel Order', cancel_order_dashboard_orders_path(id: order.id, type: params['type']), method: :get, remote: true, data: {confirm: 'Are you sure?'}, class: 'view'
               - elsif refund_requested?(order)
                 | &nbsp;
-                = link_to 'Refund Requested', dashboard_refund_requests_path(bought_or_sold: 'bought'), class: 'view'
+                = link_to 'Refund Requested', dashboard_refund_requests_path, class: 'view'
+            td.text-center
+              - if order.instance_of?(ArmorOrder)
+                - if current_user == order.buyer && order.not_inspected
+                  = link_to 'Complete Inspection', armor_order_complete_inspection_path(order.id), class: 'view'
+                - elsif order.funds_in_escrow == false
+                  | Funds are not transfered to escrow yet.
+                - elsif order.payment_release == true
+                  span.label
+                    | Payment Released
+                - elsif order.funds_in_escrow == true
+                  a.html5lightbox.btn.btn-primary data-height="411" data-width="730" href="#{order.payment_release_url}" Release Payment
+                - else
+                  | -
+              - else
+                | -
+            td.text-center
+              // for displaying type of order
+              - if order.instance_of? ArmorOrder
+                span.label.label-orange
+                  | Armor
+              - elsif order.instance_of? GreenOrder
+                span.label.label-green
+                  | Green By Phone
+              - elsif order.instance_of? StripeOrder
+                  span.label.label-blue
+                    | Stripe
+              - elsif order.instance_of? AmgOrder
+                  span.label.label-dark-blue
+                    | AMG
+              - elsif order.instance_of? EmbOrder
+                  span.label.label-dark-blue
+                    | EMB
+              - else
+                | No type present
+              // for displaying bought and sold
+              - if current_user.id == order.buyer_id
+                span.label
+                  | Bought
+              - elsif current_user.id == order.seller_id
+                span.label.label-green
+                  | Sold
 
 .footer-actions: .fa-container: .wrap-sm
 

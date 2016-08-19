@@ -5,7 +5,14 @@ Toad::Application.routes.draw do
   match "/404", :to => "errors#not_found", :via => :all
   match "/500", :to => "errors#internal_server_error", :via => :all
 
-  resources :armor_orders, except: [:update, :edit, :new]
+  resources :armor_orders, except: [:edit, :new] do
+    collection do
+      post :set_inspection_date, to: 'armor_orders#set_inspection_date', as: 'set_inspection_date'
+      post :armor_webhooks
+    end
+    post :confirm_inspection_date_by_seller
+    get :complete_inspection
+  end
 
   resources :stripe_orders do
     collection do
@@ -16,6 +23,8 @@ Toad::Application.routes.draw do
   resources :green_orders
 
   resources :amg_orders
+
+  resources :emb_orders
 
   get 'print/invoice.:id', to: 'print#invoice', as: 'print/invoice'
 
@@ -32,8 +41,14 @@ Toad::Application.routes.draw do
 
     resources :accounts do
       collection do
+        get :set_armor_profile
         post :create_green_profile
+        post :create_armor_profile
+        get :send_confirmation_email
+        get :check_valid_phone_number
+        get :check_valid_state
         post :create_amg_profile
+        post :create_emb_profile
       end
     end
 

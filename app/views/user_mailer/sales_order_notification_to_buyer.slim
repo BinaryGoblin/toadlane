@@ -21,45 +21,50 @@ html[style="margin: 0;padding: 0;"]
                 = image_tag get_image(@product.images.first.image(:small)), :class => "pro-img", :style => "background: #fff;border-color: #ccc;float: left;margin: 0;padding: 5px;height: 75px;vertical-align: middle;margin-right: 10px;border-radius: 5px;border: 1px solid #eaebec;"
               h4.text-uppercase[style="margin: 0;padding: 0;"]
                 |  order #
-                = @stripe_order.id
+                = @order.id
+                - if @order.instance_of? ArmorOrder
+                  p
+                    | Armor Order Id #
+                    = @order.order_id
               div[style="margin: 0;padding: 0;"]
                 |  Date:&nbsp;
-                = @stripe_order.created_at.to_date
+                = @order.created_at.to_date
           tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;border-bottom: none;"]
-            - if @stripe_order.address.present?
-              td[colspan="2" valign="top" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
-                h4.text-uppercase[style="margin: 0;padding: 0;"]
-                  |  Shipping Address:
-                br[style="margin: 0;padding: 0;"]
-                dl[style="margin: -5px 0;padding: 0;"]
-                  dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
-                    |  Name:
-                  dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
-                    = get_email_or_name(@buyer)
-                  dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
-                    |  Address:
-                  dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
-                    = @stripe_order.address.name
-                  dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
-                    |  Postal-Code:
-                  dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
-                    = @stripe_order.address.zip
-                  dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
-                    |  City:
-                  dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
-                    = @stripe_order.address.city
-                  dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
-                    |  State:
-                  dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
-                    = @stripe_order.address.state
-                  dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
-                    |  Country:
-                  dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
-                    = @stripe_order.address.country
-                  dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
-                    |  Phone:
-                  dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
-                    = @buyer.phone
+            td[colspan="2" valign="top" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
+              h4.text-uppercase[style="margin: 0;padding: 0;"]
+                |  Shipping Address:
+              br[style="margin: 0;padding: 0;"]
+              dl[style="margin: -5px 0;padding: 0;"]
+                dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
+                  |  Name:
+                dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
+                  = get_email_or_name(@buyer)
+                - if !@order.instance_of? ArmorOrder
+                  - if @order.address.present?
+                    dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
+                      |  Address:
+                    dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
+                      = @order.address.name
+                    dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
+                      |  Postal-Code:
+                    dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
+                      = @order.address.zip
+                    dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
+                      |  City:
+                    dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
+                      = @order.address.city
+                    dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
+                      |  State:
+                    dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
+                      = @order.address.state
+                    dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
+                      |  Country:
+                    dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
+                      = @order.address.country
+                dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
+                  |  Phone:
+                dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
+                  = @buyer.phone
             td[colspan="2" valign="top" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
               h4.text-uppercase[style="margin: 0;padding: 0;"]
                 |  Seller Information
@@ -89,28 +94,28 @@ html[style="margin: 0;padding: 0;"]
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
               = @product.name
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
-              = @stripe_order.count
+              = @order.count
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
-              = number_to_currency(@stripe_order.unit_price)
+              = number_to_currency(@order.unit_price)
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
-              = number_to_currency(get_amount_without_fees(@stripe_order))
+              = number_to_currency(get_amount_without_fees(@order))
           tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
             td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
-              = number_to_currency(@stripe_order.rebate)
-              | % rebate for purchasing #{@stripe_order.count} pcs
+              = number_to_currency(@order.rebate)
+              | % rebate for purchasing #{@order.count} pcs
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
               | -
-              = number_to_currency(@stripe_order.rebate)
+              = number_to_currency(@order.rebate)
           tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
             td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
               |  Fees
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
-              = number_to_currency(@stripe_order.fee)
+              = number_to_currency(@order.fee)
           tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
             td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
               |  Shipping
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
-              = number_to_currency(@stripe_order.shipping_cost)
+              = number_to_currency(@order.shipping_cost)
           tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;border-bottom: none;"]
             td.no-border[colspan="2" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
             td.text-center[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: center;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
@@ -118,7 +123,10 @@ html[style="margin: 0;padding: 0;"]
                 | Total:
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
               b[style="margin: 0;padding: 0;"]
-                = number_to_currency(@stripe_order.total)
+                - if @order.instance_of? ArmorOrder
+                  = number_to_currency(@order.amount)
+                - else
+                  = number_to_currency(@order.total)
       div[style="text-align: right;margin-top: 20px;margin: 0;padding: 0;"]
         a.btn[href="#{dashboard_orders_url}" style="margin: 0;padding: 7px 13px;color: white;border: 1px solid transparent;border-bottom-color: #3d6411;border-top-color: #59af0c;text-decoration: none;background-image: linear-gradient(to bottom, #59af0c 0%, #5c8f10 100%);background-repeat: repeat-x;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF59AF0C', endColorstr='#FF5C8F10', GradientType=0);border-radius: 3px;display: inline-block;"]
           | View All Orders

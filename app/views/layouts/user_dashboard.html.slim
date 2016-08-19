@@ -19,6 +19,7 @@ html
       .main-alert data-behavior="FlashMessages"= flash[:alert].upcase
     - elsif flash[:notice]
       .main-notice data-behavior="FlashMessages"= flash[:notice].upcase
+
     = render '/shared/header'
 
     .find-and-explore

@@ -46,18 +46,20 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :confirmable,
-         :recoverable, :rememberable, :trackable, :validatable,
-         :omniauthable
+  :recoverable, :rememberable, :trackable, :validatable,
+  :omniauthable
 
   has_one :stripe_profile
   has_one :green_profile
+  has_one :armor_profile, class_name: 'ArmorProfile', foreign_key: :user_id
   has_one :amg_profile
+  has_one :emb_profile
   has_one :stripe_customer
   has_many :products
   has_many :addresses
   accepts_nested_attributes_for :addresses,
-    :allow_destroy => true,
-    :reject_if => lambda { |a| (a[:name].empty? && a[:line1].empty? && a[:line2].empty? && a[:city].empty? && a[:state].empty? && a[:zip].empty?) }
+  :allow_destroy => true,
+  :reject_if => lambda { |a| (a[:name].empty? && a[:line1].empty? && a[:line2].empty? && a[:city].empty? && a[:state].empty? && a[:zip].empty?) }
   validates :terms_of_service, :inclusion => {:in => [true, false]}
   validates :name, presence: true, on: :create
   has_many :requests_of_sender, class_name: 'Request', foreign_key: :sender_id
@@ -66,20 +68,22 @@ class User < ActiveRecord::Base
   has_one :certificate, dependent: :destroy
 
   has_and_belongs_to_many :roles,
-                          :join_table => :users_roles,
-                          :foreign_key => 'user_id',
-                          :association_foreign_key => 'role_id'
+  :join_table => :users_roles,
+  :foreign_key => 'user_id',
+  :association_foreign_key => 'role_id'
 
   has_attached_file :asset, styles: {
-                                small: '155x155#',
-                                medium: '240x225#'
-                              },
-                              default_url: '/assets/avatar/:style/missing.png'
+    small: '155x155#',
+    medium: '240x225#'
+  },
+  default_url: '/assets/avatar/:style/missing.png'
   do_not_validate_attachment_file_type :asset
 
   before_destroy { roles.clear }
 
   serialize :benefits, Array
+
+  validate :validate_phone_number
 
   # after_create :associate_api_user
   # after_update :create_armor_api_account,
@@ -94,7 +98,7 @@ class User < ActiveRecord::Base
 
   # user should have at least one payment method to create products
   def has_payment_account?
-    self.stripe_profile.present? || self.green_profile.present?
+    self.stripe_profile.present? || self.green_profile.present? || self.armor_profile.present?
   end
 
   def armor_orders(type=nil)
@@ -137,6 +141,16 @@ class User < ActiveRecord::Base
     end
   end
 
+  def emb_orders(type=nil)
+    if type == 'bought'
+      EmbOrder.where(buyer_id: self.id)
+    elsif type == 'sold'
+      EmbOrder.where(seller_id: self.id)
+    else
+      EmbOrder.where('buyer_id = ? OR seller_id = ?', self.id, self.id)
+    end
+  end
+
   def refund_requests(type=nil)
     if type == 'bought'
       RefundRequest.where(buyer_id: self.id)
@@ -164,6 +178,34 @@ class User < ActiveRecord::Base
       phone_number = phone.split(//).last(10).join
       phone_extension = phone.split(phone_number).join
     end
+  end
+
+  def armor_account_id
+    armor_profile.armor_account_id
+  end
+
+  def validate_phone_number
+    if phone.present?
+      phone_number = Phonelib.parse(phone)
+
+      if !phone_number.valid?
+        errors.add(:phone, 'number is not valid')
+      end
+    end
+  end
+
+  def default_payment_armor?
+    armor_profile.default_payment == true
+  end
+
+  def available_payments
+    ap = []
+    ap << Product::PaymentOptions[:stripe] if stripe_profile.present?
+    ap << Product::PaymentOptions[:green] if green_profile.present?
+    ap << Product::PaymentOptions[:armor] if armor_profile.present?
+    ap << Product::PaymentOptions[:amg] if amg_profile.present?
+    ap << Product::PaymentOptions[:emb] if emb_profile.present?
+    ap
   end
 
   private

@@ -10,7 +10,7 @@ module EmailHelper
 
   def get_email_or_name(user)
     if user.name.present?
-      user.name
+      user.name.titleize
     else
       user.email
     end

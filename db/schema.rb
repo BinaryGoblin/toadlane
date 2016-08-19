@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160811082536) do
+ActiveRecord::Schema.define(version: 20160817095758) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,30 +87,34 @@ ActiveRecord::Schema.define(version: 20160811082536) do
   add_index "armor_invoices", ["product_id"], name: "index_armor_invoices_on_product_id", using: :btree
 
   create_table "armor_orders", force: :cascade do |t|
-    t.integer  "buyer_id",           limit: 8
-    t.integer  "seller_id",          limit: 8
-    t.integer  "account_id",         limit: 8
+    t.integer  "buyer_id",            limit: 8
+    t.integer  "seller_id",           limit: 8
+    t.integer  "account_id",          limit: 8
     t.integer  "product_id"
-    t.integer  "order_id",           limit: 8
-    t.integer  "status",                         default: 0
+    t.integer  "order_id",            limit: 8
+    t.integer  "status",                          default: 0
     t.float    "unit_price"
     t.integer  "count"
     t.float    "amount"
-    t.string   "summary",            limit: 100
+    t.string   "summary",             limit: 100
     t.text     "description"
     t.integer  "invoice_num"
     t.integer  "purchase_order_num"
     t.datetime "status_change"
     t.string   "uri"
-    t.boolean  "deleted",                        default: false
+    t.boolean  "deleted",                         default: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "taxes_price",                    default: 0
-    t.integer  "rebate_price",                   default: 0
-    t.integer  "rebate_percent",                 default: 0
+    t.integer  "taxes_price",                     default: 0
+    t.integer  "rebate_price",                    default: 0
+    t.integer  "rebate_percent",                  default: 0
     t.float    "fee"
     t.float    "rebate"
     t.float    "shipping_cost"
+    t.boolean  "inspection_complete",             default: false
+    t.string   "payment_release_url"
+    t.boolean  "payment_release",                 default: false
+    t.boolean  "funds_in_escrow",                 default: false
   end
 
   create_table "armor_profiles", force: :cascade do |t|
@@ -248,6 +252,42 @@ ActiveRecord::Schema.define(version: 20160811082536) do
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
+  create_table "emb_orders", force: :cascade do |t|
+    t.integer  "buyer_id"
+    t.integer  "seller_id"
+    t.integer  "product_id"
+    t.integer  "status",               default: 0
+    t.float    "unit_price"
+    t.integer  "count"
+    t.float    "fee"
+    t.float    "rebate"
+    t.float    "total"
+    t.string   "summary"
+    t.text     "description"
+    t.string   "tracking_number"
+    t.boolean  "deleted",              default: false, null: false
+    t.float    "shipping_cost"
+    t.string   "address_name"
+    t.string   "address_city"
+    t.string   "address_state"
+    t.string   "address_zip"
+    t.string   "address_country"
+    t.integer  "shipping_estimate_id"
+    t.integer  "address_id"
+    t.string   "transaction_id"
+    t.string   "authorization_code"
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+  end
+
+  create_table "emb_profiles", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "username"
+    t.string   "password"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "fees", force: :cascade do |t|
     t.string   "module_name"
     t.decimal  "value",       precision: 5, scale: 3
@@ -337,6 +377,16 @@ ActiveRecord::Schema.define(version: 20160811082536) do
   add_index "impressions", ["impressionable_type", "impressionable_id", "session_hash"], name: "poly_session_index", using: :btree
   add_index "impressions", ["impressionable_type", "message", "impressionable_id"], name: "impressionable_type_message_index", using: :btree
   add_index "impressions", ["user_id"], name: "index_impressions_on_user_id", using: :btree
+
+  create_table "inspection_dates", force: :cascade do |t|
+    t.datetime "date"
+    t.string   "creator_type"
+    t.integer  "product_id"
+    t.integer  "armor_order_id"
+    t.boolean  "approved"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
 
   create_table "mailboxer_conversation_opt_outs", force: :cascade do |t|
     t.integer "unsubscriber_id"
@@ -432,6 +482,8 @@ ActiveRecord::Schema.define(version: 20160811082536) do
     t.integer  "type",                            default: 0
     t.integer  "views_count",                     default: 0
     t.datetime "deleted_at"
+    t.boolean  "negotiable"
+    t.string   "default_payment"
   end
 
   add_index "products", ["deleted_at"], name: "index_products_on_deleted_at", using: :btree

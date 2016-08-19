@@ -5,6 +5,13 @@
     .alert.alert-danger.margin-top-20 role="alert"
       em
         = flash[:alert]
+  - if !flash[:error].nil?
+    .error-explanation
+      - if flash[:error].kind_of?(Array)
+        - flash[:error].each do |error|
+          = error
+      - else
+        = flash[:error]
   .row.margin-top-20
     .col-md-12
       table.table
@@ -16,320 +23,51 @@
             th amount
 
         tbody
-          tr
-            td= @product.name
-            td.stripe-quantity =@data[:quantity]
-            td data-unit-price="#{number_with_precision(@product.unit_price, precision: 0, delimiter: '')}" $ #{number_with_precision(@product.unit_price, precision: 2, delimiter: '')}
-            td $ <span class="stripe-unit-total">#{number_with_precision(get_subtotal(@product.unit_price, @data[:quantity]), precision: 2, delimiter: '')}</span>
+          = render partial: 'products/shared/order_details',
+                    locals: { product: @product,
+                              armor_order: @armor_order,
+                              data: @data }
 
-          tr
-            td colspan="3" <span class="stripe-rebate">#{@data[:rebate_percent]}</span>% rebate for purchasing <span class="stripe-quantity">#{@data[:quantity]}</span> pcs
-            td -$ <span class="stripe-rebate-price">#{@data[:rebate]}</span>
-
-          tr
-            td colspan="3" Toadlane Fee (<span class="calc-fees">#{@fee}</span>%)
-            td $ <span class="stripe-fees-price">#{@data[:fee_amount]}</span>
-
-          tr
-            td Shipping Estimate
-            td.stripe_quantity =@data[:quantity]
-            td $ <span class="calc-shipping" data-type="PerUnit">#{@data[:shipping_cost]}</span>
-            td $ <span class="stripe-shipping-price">#{number_with_precision(get_shipping_cost(@data[:quantity],@data[:shipping_cost]), precision: 2, delimiter: '')}</span>
-
-          tr
-            td.no-border colspan="2"
-            td.text-center: b.text-uppercase Total:
-            td: b $ <span class="stripe-total">#{number_with_precision(@data[:total], precision: 2, delimiter: '')}</span>
     .col-md-12.checkout-payment-gateway
-      - if @product.available_payments.count > 1
-        h2
-          | Choose a desired Payment Gateway
-        ul.nav.nav-tabs role="tablist"
-          li role="presentation" class=('active' if !@green_order.routing_number.present?)
-            a aria-controls="stripe" data-toggle="tab" href="#stripe" role="tab"  Stripe
-          li role="presentation" class=('active' if @green_order.routing_number.present?)
-            a aria-controls="green" data-toggle="tab" href="#green" role="tab"  eCheck
-          li role="presentation"
-            a aria-controls="amg" data-toggle="tab" href="#amg" role="tab" Credit Card
-      .tab-content
-        - if @product.stripe_present?
-          #stripe.tab-pane role="tabpanel" class=('active' if !@green_order.routing_number.present?)
-            = form_for @stripe_order do |f|
-              -if current_user && !current_user.addresses.nil?
-                table.table data-behavior="assignShippingAddress"
-                  thead
-                    tr
-                      th shipping address
-                  tbody
-                    - stripe_shipping_addresses = Address.where(:user => current_user).order('created_at')
-                    = f.collection_radio_buttons(:address_id, stripe_shipping_addresses, :id, :get_inline_address) do |b, index|
-                      tr
-                        td
-                          = b.label { b.radio_button(:"data-behavior" => "AssignShipping", :"checked" => (b.object.id == stripe_shipping_addresses.first.id)) + b.text }
-                    tr
-                      td
-                        = radio_button 'stripe_order', :address_id, "-1", default: true, 'data-behavior' => "AssignShipping", id: 'stripe_order_address_id__1'
-                        = label :address_id, " Enter new address", for: 'stripe_order_address_id__1'
-              table.table
-                - if !@product.shipping_estimates.nil?
-                  thead
-                    tr
-                      th shipping method
-                  tbody
-                    - stripe_shipping_estimates = ShippingEstimate.where(:product => @product).order('created_at')
-                    = f.collection_radio_buttons(:shipping_estimate_id, stripe_shipping_estimates, :id, :get_label) do |b|
-                      tr
-                        td
-                          = b.label { b.radio_button(:"data-behavior" => "EstimateShipping", :"data-cost" => b.object.cost, :"data-type" => b.object.type, :"checked" => (b.object.id == stripe_shipping_estimates.first.id)) + b.text }
-              .payment-button.text-right
-                = f.hidden_field :product_id, :value => @product.id
-                = f.hidden_field :unit_price, :value => number_with_precision(@product.unit_price, precision: 2, delimiter: '')
-                = f.hidden_field :total, :value => number_with_precision(@product.unit_price, precision: 2, delimiter: '')
-                = f.hidden_field :count, :value => @data[:quantity], class: 'calc-quantity'
-                = f.hidden_field :summary, :value => 'products to ' + @product.status_characteristic
-                = f.hidden_field :description, :value => strip_tags(@product.description)
+      - if @armor_order.present? && @armor_order.uri.present?
+          = render partial: 'products/shared/payment_instruction_pop_up',
+                    locals: { armor_order: @armor_order }
 
-                = f.hidden_field :fee, :value => '0'
-                = f.hidden_field :rebate, :value => '0'
-                = f.hidden_field :rebate_percent, :value => '0'
-                = f.hidden_field :shipping_cost, :value => '0'
+          = link_to "View Order", dashboard_order_path(@armor_order, type: 'armor' ), class: "btn btn-primary pull-right"
+      - else
+        .tab-content
+          - if @product.default_payment_stripe?
+            = render partial: 'products/shared/stripe_payment_tab',
+                      :locals => { stripe_order: @stripe_order,
+                                    user: current_user,
+                                    data: @data,
+                                    product: @product}
 
-                - if @product.status_characteristic == 'sell'
-                  = f.hidden_field :seller_id, :value => @product.user.id
-                  = f.hidden_field :buyer_id, :value => current_user.id || 0
+          - if @product.default_payment_green?
+            = render partial: 'products/shared/green_payment_tab',
+                      :locals => { green_order: @green_order,
+                                    user: current_user,
+                                    data: @data,
+                                    product: @product}
 
-                  button.btn.btn-default type="button" data-dismiss="modal" Cancel
-                  script.stripe-button[src="https://checkout.stripe.com/checkout.js"
-                    data-key="#{ Rails.configuration.stripe[:publishable_key] }"
-                    data-name="Toadlane.com"
-                    data-amount=0
-                      data-locale="auto"
-                    data-panel-label="Place Order"
-                    data-label="Place Order"
-                    data-zip-code="true"
-                    data-billing-address="true"
-                    data-shipping-address="true"
-                    data-email="#{ current_user.email }"]
+          - if @product.default_payment_amg?
+            = render partial: 'products/shared/amg_payment_tab',
+                      :locals => { amg_order: @amg_order,
+                                    user: current_user,
+                                    data: @data,
+                                    product: @product}
 
-                - else
-                    = f.hidden_field :seller_id, value: current_user.id
-                    = f.hidden_field :buyer_id, value: @product.user.id
+          - if @product.default_payment_emb?
+            = render partial: 'products/shared/emb_payment_tab',
+                      :locals => { emb_order: @emb_order,
+                                    user: current_user,
+                                    data: @data,
+                                    product: @product}
 
-                    button.btn.btn-default type="button" data-dismiss="modal" Cancel
-                    script.stripe-button[src="https://checkout.stripe.com/checkout.js"
-                      data-key="#{ Rails.configuration.stripe[:publishable_key] }"
-                      data-name="Toadlane.com"
-                      data-amount=0
-                      data-locale="auto"
-                      data-panel-label="Place Order"
-                      data-label="Place Order"
-                      data-zip-code="true"
-                      data-billing-address="true"
-                      data-shipping-address="true"
-                      data-email="#{ @product.user.email }"]
-        - if @product.green_present?
-          #green.tab-pane role="tabpanel" class=('active' if (@product.green_only_present? || @green_order.routing_number.present?))
-            = form_for @green_order do |f|
-              -if current_user && !current_user.addresses.nil?
-                table.table data-behavior="assignShippingAddress"
-                  thead
-                    tr
-                      th shipping address
-                  tbody
-                    - green_shipping_addresses = Address.where(:user => current_user).order('created_at')
-                    = f.collection_radio_buttons(:address_id, green_shipping_addresses, :id, :get_inline_address) do |b|
-                      tr
-                        td
-                          = b.label { b.radio_button(:"data-behavior" => "AssignShipping", :"checked" => (b.object.id == green_shipping_addresses.first.id)) + b.text }
-                    tr
-                      td
-                        = radio_button 'green_order', :address_id, "-1", default: true, 'data-behavior' => "AssignShipping", id: 'green_order_address_id__1'
-                        = label :address_id, " Enter new address", for: 'green_order_address_id__1'
-              table.table
-                - if !@product.shipping_estimates.nil?
-                  thead
-                    tr
-                      th shipping method
-                  tbody
-                    - green_shipping_estimates = ShippingEstimate.where(:product => @product).order('created_at')
-                    = f.collection_radio_buttons(:shipping_estimate_id, green_shipping_estimates, :id, :get_label) do |b|
-                      tr
-                        td
-                          = b.label { b.radio_button(:"data-behavior" => "EstimateShipping", :"data-cost" => b.object.cost, :"data-type" => b.object.type, :"checked" => (b.object.id == green_shipping_estimates.first.id)) + b.text }
-              .greenDetails.form-horizontal
-                h2 Enter your check details below
-                .form-group
-                  = f.label :name, 'Name *', class: 'control-label col-sm-4'
-                  .col-sm-8
-                    = f.text_field :name, class: 'form-control', :value => "#{current_user.try(:name)}", required: true
-                .form-group
-                  = f.label :email_address, 'Email Address *', class: 'control-label col-sm-4'
-                  .col-sm-8
-                    = f.email_field :email_address, class: 'form-control', :value => "#{current_user.try(:email)}", required: true
-                .form-group
-                  = f.label :phone, 'Phone *', class: 'control-label col-sm-4'
-                  .col-sm-8
-                    = f.text_field :phone, class: 'form-control', :value => "#{current_user.try(:formatted_phone)}", required: true
-                    p.help-block Your 10-digit phone number in the format 999-999-9999.
-                - green_address = current_user.try(:addresses).try(:last)
-                - f.object.address_country = green_address.try(:country)
-                .form-group
-                  = f.label :address_country, "Country *", class: "control-label col-sm-4"
-                  .col-sm-8
-                    = f.select :address_country, region_options_for_select(only_us_and_canada, f.object.address_country), {prompt: 'Please select a country'}, class: 'form-control', required: true
-                .form-group
-                  = f.label :address_state, "State *", class: "control-label col-sm-4"
-                  .col-sm-8
-                    = render partial: 'products/subregion_select', locals: {parent_region: f.object.address_country, user_state: get_state(green_address.try(:state)), parent_object_sym: "green_order"}
-                .form-group
-                  = f.label :address_city, 'City *', class: 'control-label col-sm-4'
-                  .col-sm-8
-                    = f.text_field :address_city, class: 'form-control', :value => "#{green_address.try(:city)}", required: true
-                .form-group
-                  = f.label :address_zip, 'Zip *', class: 'control-label col-sm-4'
-                  .col-sm-8
-                    = f.text_field :address_zip, class: 'form-control', :value => "#{green_address.try(:zip)}", required: true
-                .form-group
-                  = f.label :address1, 'Address1 *', class: 'control-label col-sm-4'
-                  .col-sm-8
-                    = f.text_field :address1, class: 'form-control', :value => "#{green_address.try(:line1)}", required: true
-                .form-group
-                  = f.label :address2, 'Address2', class: 'control-label col-sm-4'
-                  .col-sm-8
-                    = f.text_field :address2, class: 'form-control', :value => "#{green_address.try(:line2)}"
-                .form-group
-                  = f.label :routing_number, 'Routing Number *', class: 'control-label col-sm-4'
-                  .col-sm-8
-                    = f.text_field :routing_number, class: 'form-control', required: true, maxlength: 9
-                    p.help-block Your 9-digit bank routing number.
-                .form-group
-                  = f.label :account_number, 'Account Number *', class: 'control-label col-sm-4'
-                  .col-sm-8
-                    = f.text_field :account_number, class: 'form-control', required: true
-              .payment-button.text-right
-                = f.hidden_field :product_id, :value => @product.id
-                = f.hidden_field :unit_price, :value => number_with_precision(@product.unit_price, precision: 2, delimiter: '')
-                = f.hidden_field :total, :value => number_with_precision(@product.unit_price, precision: 2, delimiter: '')
-                = f.hidden_field :count, :value => '1'
-                = f.hidden_field :summary, :value => 'products to ' + @product.status_characteristic
-                = f.hidden_field :description, :value => strip_tags(@product.description)
-
-                = f.hidden_field :fee, :value => '0'
-                = f.hidden_field :rebate, :value => '0'
-                = f.hidden_field :rebate_percent, :value => '0'
-                = f.hidden_field :shipping_cost, :value => '0'
-
-                - if current_user
-                  - if @product.status_characteristic == 'sell'
-                    = f.hidden_field :seller_id, :value => @product.user.id
-                    = f.hidden_field :buyer_id, :value => current_user.id || 0
-
-                    button.btn.btn-default type="button" data-dismiss="modal" Cancel
-
-                    = f.submit 'Place Order', class: "btn btn-primary"
-
-                  - else
-                    = f.hidden_field :seller_id, value: current_user.id
-                    = f.hidden_field :buyer_id, value: @product.user.id
-
-                    = f.submit 'Place Order', class: "btn btn-primary"
-        - if @product.amg_present?
-          #amg.tab-pane role="tabpanel"
-            = form_for(@amg_order, remote: true) do |f|
-              -if current_user && !current_user.addresses.nil?
-                table.table data-behavior="assignShippingAddress"
-                  thead
-                    tr
-                      th shipping address
-                  tbody
-                    - amg_shipping_addresses = Address.where(:user => current_user).order('created_at')
-                    = f.collection_radio_buttons(:address_id, amg_shipping_addresses, :id, :get_inline_address) do |b|
-                      tr
-                        td
-                          = b.label { b.radio_button(:"data-behavior" => "AssignShipping", :"checked" => (b.object.id == amg_shipping_addresses.first.id)) + b.text }
-                    tr
-                      td
-                        = radio_button 'amg_order', :address_id, "-1", default: true, 'data-behavior' => "AssignShipping", id: 'amg_order_address_id__1'
-                        = label :address_id, " Enter new address", for: 'amg_order_address_id__1'
-              table.table
-                - if !@product.shipping_estimates.nil?
-                  thead
-                    tr
-                      th shipping method
-                  tbody
-                    - amg_shipping_estimates = ShippingEstimate.where(:product => @product).order('created_at')
-                    = f.collection_radio_buttons(:shipping_estimate_id, amg_shipping_estimates, :id, :get_label) do |b|
-                      tr
-                        td
-                          = b.label { b.radio_button(:"data-behavior" => "EstimateShipping", :"data-cost" => b.object.cost, :"data-type" => b.object.type, :"checked" => (b.object.id == amg_shipping_estimates.first.id)) + b.text }
-              .amgDetails.form-horizontal
-                .form-group
-                  = f.label :first_name, 'First Name *', class: 'control-label col-sm-4'
-                  .col-sm-8
-                    = f.text_field :first_name, class: 'form-control', :value => "#{current_user.try(:name).try(:split, " ").try(:first)}", required: true
-                .form-group
-                  = f.label :last_name, 'Last Name *', class: 'control-label col-sm-4'
-                  .col-sm-8
-                    = f.text_field :last_name, class: 'form-control', :value => "#{current_user.try(:name).try(:split, " ").try(:last)}", required: true
-                - amg_address = current_user.try(:addresses).try(:last)
-                - f.object.address_country = amg_address.try(:country)
-                .form-group
-                  = f.label :address_country, "Country *", class: "control-label col-sm-4"
-                  .col-sm-8
-                    = f.select :address_country, region_options_for_select(only_us_and_canada, f.object.address_country), {prompt: 'Please select a country'}, class: 'form-control', required: true
-                .form-group
-                  = f.label :address_state, "State *", class: "control-label col-sm-4"
-                  .col-sm-8
-                    = render partial: 'products/subregion_select', locals: {parent_region: f.object.address_country, user_state: get_state(amg_address.try(:state)), parent_object_sym: "amg_order"}
-                .form-group
-                  = f.label :address_city, 'City *', class: 'control-label col-sm-4'
-                  .col-sm-8
-                    = f.text_field :address_city, class: 'form-control', :value => "#{amg_address.try(:city)}", required: true
-                .form-group
-                  = f.label :address_zip, 'Zip *', class: 'control-label col-sm-4'
-                  .col-sm-8
-                    = f.text_field :address_zip, class: 'form-control', :value => "#{amg_address.try(:zip)}", required: true
-                .form-group
-                  = f.label :address1, 'Address1 *', class: 'control-label col-sm-4'
-                  .col-sm-8
-                    = f.text_field :address1, class: 'form-control', :value => "#{amg_address.try(:line1)}", required: true
-                .form-group
-                  = label_tag 'billing-cc-number', 'Billing CC Number: *', class: 'control-label col-sm-4'
-                  .col-sm-8
-                    = text_field_tag 'billing-cc-number', nil, class: 'form-control', required: true
-                .form-group
-                  = label_tag 'billing-cc-exp', 'Billing CC Exp: *', class: 'control-label col-sm-4'
-                  .col-sm-8
-                    = text_field_tag 'billing-cc-exp', nil, class: 'form-control', required: true
-                    p.help-block Your CC Expiry date in the format MMYY, MM/YY or MM-YY.
-                .form-group
-                  = label_tag 'billing-cvv', 'Billing CVV:', class: 'control-label col-sm-4'
-                  .col-sm-8
-                    = text_field_tag 'billing-cvv', nil, class: 'form-control'
-              .payment-button.text-right
-                = f.hidden_field :product_id, :value => @product.id
-                = f.hidden_field :unit_price, :value => number_with_precision(@product.unit_price, precision: 2, delimiter: '')
-                = f.hidden_field :total, :value => number_with_precision(@product.unit_price, precision: 2, delimiter: '')
-                = f.hidden_field :count, :value => '1'
-                = f.hidden_field :summary, :value => 'products to ' + @product.status_characteristic
-                = f.hidden_field :description, :value => strip_tags(@product.description)
-
-                = f.hidden_field :fee, :value => '0'
-                = f.hidden_field :rebate, :value => '0'
-                = f.hidden_field :rebate_percent, :value => '0'
-                = f.hidden_field :shipping_cost, :value => '0'
-
-                - if current_user
-                  - if @product.status_characteristic == 'sell'
-                    = f.hidden_field :seller_id, :value => @product.user.id
-                    = f.hidden_field :buyer_id, :value => current_user.id || 0
-
-                    button.btn.btn-default type="button" data-dismiss="modal" Cancel
-
-                    = f.submit 'Place Order', class: "btn btn-primary"
-
-                  - else
-                    = f.hidden_field :seller_id, value: current_user.id
-                    = f.hidden_field :buyer_id, value: @product.user.id
-
-                    = f.submit 'Place Order', class: "btn btn-primary"
+          - if @product.default_payment_armor?
+            = render partial: 'products/shared/armor_payment',
+                      :locals => { armor_order: @armor_order,
+                                    armor_profile: @armor_profile,
+                                    user: current_user,
+                                    data: @data,
+                                    product: @product}

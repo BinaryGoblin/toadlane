@@ -1,0 +1,20 @@
+- if user.armor_profile.nil?
+  | You have to create Armor Profile first.
+
+  // this is for when the buyer creates armor profile in checkout page
+  - if controller.controller_name == "products"
+    = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path(product_id: product.id , armor_profile_id: armor_profile.id, armor_order_id: armor_order.id), class: "link link-ulined"
+- elsif user.armor_profile.present? && user.armor_profile.confirmed_email == true && user.armor_profile.armor_account_id.nil?
+
+  = render partial: 'products/shared/armor_account_create',
+            :locals => { :product => product,
+                          :user => user,
+                          :armor_profile => armor_profile,
+                          :armor_order => armor_order }
+
+- else
+  -if armor_order.inspection_dates.present? && armor_order.selected_inspection_date.present?
+    - if armor_profile.armor_account_id.present? && armor_order.uri.nil?
+
+      = form_tag armor_order, method: :put, :class => "create-api-order" do
+        = submit_tag 'Place Order', class: "btn btn-primary"

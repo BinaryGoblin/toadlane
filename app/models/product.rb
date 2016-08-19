@@ -26,12 +26,22 @@
 #  type                  :integer          default(0)
 #  views_count           :integer          default(0)
 #  deleted_at            :datetime
+#  negotiable            :boolean
+#  default_payment       :string
 #
 
 class Product < ActiveRecord::Base
   acts_as_commontable
   acts_as_paranoid
   is_impressionable :counter_cache => true, :column_name => :views_count, :unique => :user_id
+
+  PaymentOptions = {
+    armor: 'Fly And Buy',
+    green: 'Echeck',
+    stripe: 'Stripe',
+    amg: 'Credit Card',
+    emb: 'Credit Card (EMB)'
+  }
 
   belongs_to :user
 
@@ -42,7 +52,9 @@ class Product < ActiveRecord::Base
 
   has_many :stripe_orders, dependent: :destroy
   has_many :green_orders, dependent: :destroy
+  has_many :armor_orders, dependent: :destroy
   has_many :amg_orders, dependent: :destroy
+  has_many :emb_orders, dependent: :destroy
   has_many :product_categories
   has_many :categories, through: :product_categories, dependent: :destroy
   has_many :images, dependent: :destroy
@@ -51,10 +63,11 @@ class Product < ActiveRecord::Base
   has_many :pricebreaks, -> { order(quantity: :asc) }, autosave: true, dependent: :destroy
   has_many :shipping_estimates, dependent: :destroy
   has_many :certificates, dependent: :destroy
+  has_many :inspection_dates, dependent: :destroy
 
   accepts_nested_attributes_for :shipping_estimates,
-    :allow_destroy => true,
-    :reject_if => lambda { |a| (a[:cost].blank? && a[:description].blank?) }
+  :allow_destroy => true,
+  :reject_if => lambda { |a| (a[:cost].blank? && a[:description].blank?) }
   belongs_to :category, class_name: "Category", foreign_key: :main_category
 
   accepts_nested_attributes_for :product_categories
@@ -72,8 +85,9 @@ class Product < ActiveRecord::Base
 
   def available_payments
     ap = []
-    ap << "Credit Card" if user.stripe_profile.present?
-    ap << "eCheck" if user.green_profile.present?
+    ap << PaymentOptions[:stripe] if user.stripe_profile.present?
+    ap << PaymentOptions[:green] if user.green_profile.present?
+    ap << PaymentOptions[:armor] if user.armor_profile.present?
     ap
   end
 
@@ -89,12 +103,62 @@ class Product < ActiveRecord::Base
     user.amg_profile.present?
   end
 
+  def emb_present?
+    user.emb_profile.present?
+  end
+
   def stripe_present?
     user.stripe_profile.present?
+  end
+
+  def armor_present?
+    user.armor_profile.present?
+  end
+
+  def armor_only_present?
+    user.armor_profile.present? && user.stripe_profile.nil? && user.green_profile.nil?
   end
 
   def remaining_amount
     sold_out = (self.sold_out.present? ? self.sold_out : 0)
     self.amount - sold_out
+  end
+
+  def default_payment_armor?
+    default_payment == PaymentOptions[:armor]
+  end
+
+  def default_payment_stripe?
+    default_payment == PaymentOptions[:stripe]
+  end
+
+  def default_payment_green?
+    default_payment == PaymentOptions[:green]
+  end
+
+  def default_payment_amg?
+    default_payment == PaymentOptions[:amg]
+  end
+
+  def default_payment_emb?
+    default_payment == PaymentOptions[:emb]
+  end
+
+  def seller_set_inspection_dates
+    inspection_dates.seller_added
+  end
+
+  def negotiable?
+    negotiable == true
+  end
+
+  # this is the inspection date added by seller after rejecting
+  # # inspection date added by buyer
+  def latest_seller_added_inspection_date
+    inspection_dates.seller_added.last.get_inspection_date
+  end
+
+  def is_buyer_product_owner?(buyer)
+    buyer == self.user
   end
 end

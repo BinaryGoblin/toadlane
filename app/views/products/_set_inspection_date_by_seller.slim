@@ -1,0 +1,32 @@
+#requestInspectionDateModal.modal.fade.in[style="display: block;"]
+  .modal-dialog
+    .modal-content
+      .modal-header
+        h4.modal-title Inspection Request Date For Product:: #{armor_order.product.name}
+      .modal-body
+        = armor_order.buyer.name.titleize
+        | &nbsp; has requested the inspection date to be #{armor_order.buyer_requested_inspection_date}
+        p If you are okay then click Yes, and if you want to set a new inspection date&nbsp;
+        = link_to "click here", "#", id: "set_new_inspection"
+        | &nbsp;to set the inspection date below
+
+        .set_inspection_date[style="display:none;"]
+          = form_for armor_order, url: set_inspection_date_armor_orders_path(armor_order_id: armor_order.id, product_id: product.id), method: :post  do |f|
+            .offer-from-until
+              .offer-item
+                label.lg.required Select Inspection Date
+                .offer-date
+                  label Date:
+                  = date_select :inspection_date, :date, { :default => Date.today, order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+
+                .offer-time
+                  label Time:
+                  = time_select :inspection_date, :date, { :default => Time.now, ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+            .modal-footer
+              = f.submit 'Save', class: "btn btn-primary"
+
+      .confirm-inspection-date-btn
+        .modal-footer
+          = link_to "Yes", armor_order_confirm_inspection_date_by_seller_path(product_id: product.id, armor_order_id: armor_order.id), class: 'btn btn-primary', method: :post
+
+.modal-backdrop.fade.in

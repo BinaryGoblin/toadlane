@@ -26,6 +26,8 @@
 #  type                  :integer          default(0)
 #  views_count           :integer          default(0)
 #  deleted_at            :datetime
+#  negotiable            :boolean
+#  default_payment       :string
 #
 
 FactoryGirl.define do

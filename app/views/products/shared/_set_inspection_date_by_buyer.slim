@@ -1,0 +1,21 @@
+#setInpsectionDateModal.modal.fade aria-hidden="true" aria-labelledby="setInpsectionDateModalLabel" role="dialog" tabindex="-1"
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close aria-label="Close" data-dismiss="modal" type="button"
+          span aria-hidden="true"  &times;
+        h4.modal-title Set Inspection Date
+      .modal-body
+        = form_for armor_order, url: set_inspection_date_armor_orders_path(product_id: product.id), method: :post  do |f|
+          .offer-from-until
+            .offer-item
+              label.lg.required Select Inspection Date
+              .offer-date
+                label Date:
+                = date_select :inspection_date, :date, { :default => Date.today, order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+
+              .offer-time
+                label Time:
+                = time_select :inspection_date, :date, { :default => Time.now, ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+          button.btn.btn-secondary data-dismiss="modal" type="button"  Close
+          = f.submit 'Save', class: "btn btn-primary"
