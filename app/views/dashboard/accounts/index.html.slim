@@ -58,29 +58,31 @@
                 | Apply to be a merchant
             - else
               p <b>Status:</b> <span class="success">You are connected to Green By Phone.</span>
-      hr
-      .row.account-list-table
-        .col-md-8
-          .account-armor#armor-profile-section
-            h4 Armor:
-            - if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
-              p <b>Status:</b> <span class="success">You are connected to Armor.</span>
-            - else
-              p <b>Status:</b> <span class="warning">You are not connected to Armor.</span>
 
-            - if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
-              | Now create or login to Payoneer
-              br
-              script src="https://sandbox.armorpayments.com/assets/js/modal.min.js" type="text/javascript"
-              button.btn.btn-primary onClick="armor.openModal('#{@url}')" Payoneer Account
-            - else
-              - if current_user.armor_profile.nil?
-                = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path, class: "link link-ulined"
+      // Commented for sending to production
+      / hr
+      / .row.account-list-table
+      /   .col-md-8
+      /     .account-armor#armor-profile-section
+      /       h4 Armor:
+      /       - if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
+      /         p <b>Status:</b> <span class="success">You are connected to Armor.</span>
+      /       - else
+      /         p <b>Status:</b> <span class="warning">You are not connected to Armor.</span>
 
-              = render partial: 'products/shared/armor_account_create',
-                        :locals => {  :user => current_user,
-                                      :armor_profile => @armor_profile,
-                                    }
+      /       - if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
+      /         | Now create or login to Payoneer
+      /         br
+      /         script src="https://sandbox.armorpayments.com/assets/js/modal.min.js" type="text/javascript"
+      /         button.btn.btn-primary onClick="armor.openModal('#{@url}')" Payoneer Account
+      /       - else
+      /         - if current_user.armor_profile.nil?
+      /           = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path, class: "link link-ulined"
+
+      /         = render partial: 'products/shared/armor_account_create',
+      /                   :locals => {  :user => current_user,
+      /                                 :armor_profile => @armor_profile,
+      /                               }
       hr
       .row.account-list-table
         .col-md-8
