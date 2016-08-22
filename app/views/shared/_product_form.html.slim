@@ -356,7 +356,7 @@
 
                 .offer-time
                   label Time:
-                  = time_select :inspection_date, :date, { :default => inspection_date.date, ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" , :value => inspection_date.date}, { class: "form-control" }
+                  = time_select :inspection_date, :date, { :ampm => true, :default => inspection_date.date, ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" , :value => inspection_date.date}, { class: "form-control" }
 
                 input type="hidden" name="product[inspection_date_attributes][][id]" value="#{inspection_date.id}"
 
@@ -372,7 +372,7 @@
 
               .offer-time
                 label Time:
-                = time_select :inspection_date, :date, { ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" }, { class: "form-control" }
+                = time_select :inspection_date, :date, { :ampm => true, ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" }, { class: "form-control" }
 
               span.btn.btn-default.remove= fa_icon 'trash-o'
 
@@ -388,7 +388,7 @@
 
             .offer-time
               label Time:
-              = time_select :inspection_date, :date, { ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" }, {class: "form-control" }
+              = time_select :inspection_date, :date, { :ampm => true, ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" }, {class: "form-control" }
 
             span.btn.btn-default.remove= fa_icon 'trash-o'
 
