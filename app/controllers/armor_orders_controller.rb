@@ -88,7 +88,7 @@ class ArmorOrdersController < ApplicationController
     if armor_order.errors.any?
       redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :alert => armor_order.errors.messages}
     else
-      redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'Armor Order was successfully created.'}
+      redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'Your order was successfully created.'}
     end
   rescue ArmorService::BadResponseError => e
     redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :error => e.errors.values.flatten }
