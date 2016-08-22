@@ -240,6 +240,8 @@ $(document).ready ->
       "armor_profile[addresses][state]":
         remote: "State is not valid. "
     errorPlacement: (error, element) ->
+      # this is done for displaying the error message for agreed_terms checkbox
+      # # below the checkbox 
       if element.attr('name') == "armor_profile[agreed_terms]"
         error.insertAfter(element.parent().parent())
       else
