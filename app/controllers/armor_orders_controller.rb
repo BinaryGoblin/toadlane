@@ -63,7 +63,7 @@ class ArmorOrdersController < ApplicationController
       else
         UserMailer.send_inspection_date_set_notification_to_seller(armor_order).deliver_later
       end
-      redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'Your request to set inspectiond date has been informed to the seller.'}
+      redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'Your requested inspection date has been submitted. You will be notified when the seller responds.'}
     end
   end
 
