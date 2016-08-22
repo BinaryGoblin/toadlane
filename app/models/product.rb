@@ -68,6 +68,10 @@ class Product < ActiveRecord::Base
   accepts_nested_attributes_for :shipping_estimates,
   :allow_destroy => true,
   :reject_if => lambda { |a| (a[:cost].blank? && a[:description].blank?) }
+
+  accepts_nested_attributes_for :inspection_dates,
+  :allow_destroy => true,
+  :reject_if => lambda { |a| (a[:date].blank? && a[:creator_type].blank?) }
   belongs_to :category, class_name: "Category", foreign_key: :main_category
 
   accepts_nested_attributes_for :product_categories
@@ -76,7 +80,6 @@ class Product < ActiveRecord::Base
   validates_numericality_of :unit_price, :amount, only_integer: false, greater_than: 0, less_than: 1000000
   validates_presence_of :end_date, :status_characteristic
   validates_presence_of :shipping_estimates
-
   searchkick autocomplete: ['name'], fields: [:name, :main_category]
 
   scope :unexpired, -> { where("end_date > ?", DateTime.now).where(status: true) }
