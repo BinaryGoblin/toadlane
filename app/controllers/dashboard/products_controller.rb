@@ -55,7 +55,17 @@ class Dashboard::ProductsController < DashboardController
 
     negotiable = product_params["negotiable"] == "1" ? true : false
 
-    @product = current_user.products.create(product_params.merge!(start_date: start_date).merge!(end_date: end_date).merge!(negotiable: negotiable).merge!(default_payment: params["product"]["default_payment"]).except(:images_attributes, :certificates_attributes, :videos_attributes))
+    @product = current_user.products.create(
+      product_params.merge!(start_date: start_date)
+      .merge!(end_date: end_date)
+      .merge!(negotiable: negotiable)
+      .merge!(default_payment: params["product"]["default_payment"])
+      .except(
+        :images_attributes,
+        :certificates_attributes,
+        :videos_attributes
+      )
+    )
 
     if params["product"]["inspection_date_attributes"].present?
       inspection_attributes = params["product"]["inspection_date_attributes"]
@@ -183,6 +193,7 @@ class Dashboard::ProductsController < DashboardController
         end
       end
     end
+
     respond_to do |format|
       if @product.valid?
 
