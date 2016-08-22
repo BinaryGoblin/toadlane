@@ -1,6 +1,6 @@
 .wrap-sm.margin-top-30.vp-calculation-checkout data-options='{"pricebreaks":#{@product.pricebreaks.collect { |p| { quantity: (p.quantity - 1), price: p.price } }.to_json},"maxquantity":#{@data[:available_product].present? ? @data[:available_product].to_s : '"Infinity"'}}'
   h1
-    | Checkout :: "#{@product.name}"
+    | Checkout
   - if flash[:alert].present?
     .alert.alert-danger.margin-top-20 role="alert"
       em
