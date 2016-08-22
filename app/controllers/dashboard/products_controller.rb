@@ -55,10 +55,18 @@ class Dashboard::ProductsController < DashboardController
 
     negotiable = product_params["negotiable"] == "1" ? true : false
 
-    @product = current_user.products.new(product_params.merge!(start_date: start_date).merge!(end_date: end_date).merge!(negotiable: negotiable).merge!(default_payment: params["product"]["default_payment"]).except(:images_attributes, :certificates_attributes, :videos_attributes))
+    @product = current_user.products.create(product_params.merge!(start_date: start_date).merge!(end_date: end_date).merge!(negotiable: negotiable).merge!(default_payment: params["product"]["default_payment"]).except(:images_attributes, :certificates_attributes, :videos_attributes))
+
+    if params["product"]["inspection_date_attributes"].present?
+      inspection_attributes = params["product"]["inspection_date_attributes"]
+      inspection_attributes.each do |inspection_attribute|
+        inspection_date = DateTime.new(inspection_attribute["date(1i)"].to_i, inspection_attribute["date(2i)"].to_i, inspection_attribute["date(3i)"].to_i, inspection_attribute["date(4i)"].to_i, inspection_attribute["date(5i)"].to_i)
+        @product.inspection_dates.create({date: inspection_date, creator_type: "seller", product_id: @product.id})
+      end
+    end
 
     respond_to do |format|
-      if @product.save
+      if @product.valid?
         if images
           images[:images_attributes].each do |image|
             data = { image: image }
@@ -89,14 +97,6 @@ class Dashboard::ProductsController < DashboardController
           path = edit_dashboard_product_path(@product)
         else
           path = dashboard_products_path
-        end
-
-        if params["product"]["inspection_date_attributes"].present?
-          inspection_attributes = params["product"]["inspection_date_attributes"]
-          inspection_attributes.each do |inspection_attribute|
-            inspection_date = DateTime.new(inspection_attribute["date(1i)"].to_i, inspection_attribute["date(2i)"].to_i, inspection_attribute["date(3i)"].to_i, inspection_attribute["date(4i)"].to_i, inspection_attribute["date(5i)"].to_i)
-            @product.inspection_dates.create({date: inspection_date, creator_type: "seller", product_id: @product.id})
-          end
         end
 
         format.html { redirect_to path }
@@ -156,8 +156,36 @@ class Dashboard::ProductsController < DashboardController
 
     negotiable = product_params["negotiable"] == "1" ? true : false
 
+    @product.update(product_params.merge!(start_date: start_date)
+      .merge!(end_date: end_date)
+      .merge!(negotiable: negotiable)
+      .merge!(default_payment: params["product"]["default_payment"])
+      .except(
+        :images_attributes,
+        :images_attributes_delete,
+        :certificates_attributes,
+        :certificates_attributes_delete,
+        :videos_attributes,
+        :videos_attributes_delete,
+        :pricebreaks_delete
+      )
+    )
+
+    if params["product"]["inspection_date_attributes"].present?
+      inspection_attributes = params["product"]["inspection_date_attributes"]
+      inspection_attributes.each do |inspection_attribute|
+        inspection_date = DateTime.new(inspection_attribute["date(1i)"].to_i, inspection_attribute["date(2i)"].to_i, inspection_attribute["date(3i)"].to_i, inspection_attribute["date(4i)"].to_i, inspection_attribute["date(5i)"].to_i)
+        if inspection_attribute["id"].present?
+          existing_inspection_date = @product.inspection_dates.find_by_id(inspection_attribute["id"])
+          existing_inspection_date.update_attribute(:date, inspection_date)
+        else
+          @product.inspection_dates.create({date: inspection_date, creator_type: "seller", product_id: @product.id})
+        end
+      end
+    end
+    binding.pry
     respond_to do |format|
-      if @product.update(product_params.merge!(start_date: start_date).merge!(end_date: end_date).merge!(negotiable: negotiable).merge!(default_payment: params["product"]["default_payment"]).except(:images_attributes, :images_attributes_delete, :certificates_attributes, :certificates_attributes_delete, :videos_attributes, :videos_attributes_delete, :pricebreaks_delete))
+      if @product.valid?
 
         if images
           images[:images_attributes].each do |image|
@@ -215,18 +243,7 @@ class Dashboard::ProductsController < DashboardController
           path = dashboard_products_path
         end
 
-        if params["product"]["inspection_date_attributes"].present?
-          inspection_attributes = params["product"]["inspection_date_attributes"]
-          inspection_attributes.each do |inspection_attribute|
-            inspection_date = DateTime.new(inspection_attribute["date(1i)"].to_i, inspection_attribute["date(2i)"].to_i, inspection_attribute["date(3i)"].to_i, inspection_attribute["date(4i)"].to_i, inspection_attribute["date(5i)"].to_i)
-            if inspection_attribute["id"].present?
-              existing_inspection_date = @product.inspection_dates.find_by_id(inspection_attribute["id"])
-              existing_inspection_date.update_attribute(:date, inspection_date)
-            else
-              @product.inspection_dates.create({date: inspection_date, creator_type: "seller", product_id: @product.id})
-            end
-          end
-        end
+
 
         if inspection_date_for_delete
           inspection_date_for_delete[:inspection_date_delete].each do |inspection_date|
@@ -298,7 +315,7 @@ class Dashboard::ProductsController < DashboardController
       :end_date, :amount, :sold_out, :dimension_width,
       :dimension_height, :dimension_depth,
       :dimension_weight, :main_category,
-      :pricebreaks_attributes,
+      :pricebreaks_attributes, :default_payment,
       :shipping_estimates_attributes,
       :shipping_estimates_delete, :sku,
       :slug, :images_attributes => [], :images_attributes_delete => [],
@@ -306,7 +323,7 @@ class Dashboard::ProductsController < DashboardController
       :videos_attributes => [], :videos_attributes_delete => [],
       :shipping_estimates_attributes => [ :id, :cost, :description, :product_id, :_destroy, :type ],
       :pricebreaks_attributes => [ :id, :quantity, :price, :product_id, :_destroy ],
-      :pricebreaks_delete => []
+      :pricebreaks_delete => [], :inspection_date_attributes => []
     )
   end
 

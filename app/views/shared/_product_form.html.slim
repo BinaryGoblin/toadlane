@@ -5,7 +5,10 @@
         h5= "#{pluralize(@product.errors.count, "error")} prohibited this test from being saved:"
         ul
           - @product.errors.full_messages.each do |message|
-            li = message
+            - if message == "Inspection dates is invalid"
+              li = "Inspection Date must be unique"
+            - else
+              li = message
 
     - if current_user.has_role?(:admin) or current_user.has_role?(:superadmin)
       - if @status_actions
