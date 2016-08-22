@@ -183,7 +183,6 @@ class Dashboard::ProductsController < DashboardController
         end
       end
     end
-    binding.pry
     respond_to do |format|
       if @product.valid?
 
@@ -242,8 +241,6 @@ class Dashboard::ProductsController < DashboardController
         else
           path = dashboard_products_path
         end
-
-
 
         if inspection_date_for_delete
           inspection_date_for_delete[:inspection_date_delete].each do |inspection_date|
