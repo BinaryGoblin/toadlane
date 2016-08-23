@@ -18,10 +18,10 @@ class ProductsController < ApplicationController
   end
 
   def show
-    if current_user.present? && !current_user.profile_complete?
-      redirect_to dashboard_profile_path, :flash => { :error => "You must complete your profile before you can view product details." }
-      return
-    end
+    # if current_user.present? && !current_user.profile_complete?
+    #   redirect_to dashboard_profile_path, :flash => { :error => "You must complete your profile before you can view product details." }
+    #   return
+    # end
     set_product
     @stripe_order = StripeOrder.new
     @fee = Fee.find_by(:module_name => "Stripe").value
