@@ -9,7 +9,7 @@
             = flash[:alert]
         = armor_order.buyer.name.titleize
         | &nbsp; has requested the inspection date to be #{armor_order.buyer_requested_inspection_date}
-        p If you are okay then click Yes, and if you want to set a new inspection date&nbsp;
+        p To confirm click yes. To reject and suggest a new inspection date 
         = link_to "click here", "#", id: "set_new_inspection"
         | &nbsp;to set the inspection date below
 
