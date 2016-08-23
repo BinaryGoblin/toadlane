@@ -43,25 +43,7 @@ class ApplicationController < ActionController::Base
       if current_user.has_role?(:superadmin) || current_user.has_role?(:admin)
         admin_root_path
       else
-        if current_user.has_role? :user
-          if current_user.terms_of_service != true
-            terms_of_service_path
-          else
-            if get_user_notifications > 0
-              if get_user_unread_message_notifications > 0
-                dashboard_messages_path
-              else
-                # TODO
-                # get_user_new_order_notifications
-                products_path
-              end
-            else
-              products_path
-            end
-          end
-        else
-          account_deactivated_path
-        end
+        redirect_path_for_user
       end
     else
       super
@@ -84,5 +66,36 @@ class ApplicationController < ActionController::Base
 
   def prepare_for_mobile
     prepend_view_path Rails.root + 'app' + 'views_mobile'
+  end
+
+  private
+  def redirect_to_concerned_path
+    if current_user.terms_of_service != true
+      terms_of_service_path
+    else
+      if get_user_notifications > 0
+        if get_user_unread_message_notifications > 0
+          dashboard_messages_path
+        else
+          # TODO
+          # get_user_new_order_notifications
+          products_path
+        end
+      else
+        products_path
+      end
+    end
+  end
+
+  def redirect_path_for_user
+    if current_user.has_role? :user
+      if session[:previous_url].present?
+        return session[:previous_url]
+      else
+        redirect_to_concerned_path
+      end
+    else
+      account_deactivated_path
+    end
   end
 end

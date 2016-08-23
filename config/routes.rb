@@ -119,7 +119,7 @@ Toad::Application.routes.draw do
     match '/checkout', to: 'products#checkout', :via => [:get, :post]
   end
 
-  devise_for :users, :controllers => { :registrations => "registrations", confirmations: 'confirmations', :omniauth_callbacks => "omniauth_callbacks" }
+  devise_for :users, :controllers => { :registrations => "registrations", confirmations: 'confirmations', :omniauth_callbacks => "omniauth_callbacks", :sessions => "users/sessions" }
 
   namespace :admin do
     resources :categories
