@@ -2,8 +2,11 @@
   .modal-dialog
     .modal-content
       .modal-header
-        h4.modal-title Inspection Request Date For Product:: #{armor_order.product.name}
+        h4.modal-title Inspection Date Request For:: #{armor_order.product.name}
       .modal-body
+        - if flash[:alert].present?
+          .error-explanation
+            = flash[:alert]
         = armor_order.buyer.name.titleize
         | &nbsp; has requested the inspection date to be #{armor_order.buyer_requested_inspection_date}
         p If you are okay then click Yes, and if you want to set a new inspection date&nbsp;

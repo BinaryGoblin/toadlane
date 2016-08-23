@@ -36,19 +36,19 @@ class ArmorOrdersController < ApplicationController
 
     if params[:armor_order_id].present?
       armor_order = ArmorOrder.find_by_id(params[:armor_order_id])
-      product.inspection_dates.create({
+      product.inspection_dates.create!({
         date: inspection_date,
         creator_type: "seller",
         product_id: product.id
       })
     else
-      armor_order = ArmorOrder.create({
+      armor_order = ArmorOrder.create!({
         buyer_id: current_user.id,
         seller_id: product.user.id,
         product_id: product.id
       })
 
-      armor_order.inspection_dates.create({
+      armor_order.inspection_dates.create!({
         date: inspection_date,
         creator_type: "buyer",
         armor_order_id: armor_order.id,
@@ -60,11 +60,18 @@ class ArmorOrdersController < ApplicationController
       redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :alert => armor_order.errors.full_messages.first}
     else
       if product.user == current_user
-        UserMailer.send_inspection_date_set_notification_to_buyer(armor_order).deliver_later
+        UserMailer.send_inspection_date_set_notification_to_buyer(armor_order).deliver_now
       else
-        UserMailer.send_inspection_date_set_notification_to_seller(armor_order).deliver_later
+        UserMailer.send_inspection_date_set_notification_to_seller(armor_order).deliver_now
       end
       redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'Your requested inspection date has been submitted. You will be notified when the seller responds.'}
+    end
+  rescue ActiveRecord::RecordInvalid => e
+    @errors = e.message.split(": ")[1]
+    if params[:armor_order_id].present?
+      redirect_to product_path(id: product.id, armor_order_id: armor_order.id, buyer_request_inspection_date: true), :flash => { :alert => @errors}
+    else
+      redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :alert => @errors}
     end
   end
 
@@ -72,7 +79,7 @@ class ArmorOrdersController < ApplicationController
     armor_order = ArmorOrder.find_by_id(params[:armor_order_id])
     product = Product.unexpired.find(params[:product_id])
 
-    if armor_order.inspection_dates.buyer_added.first.update_attribute(:approved, true)
+    if armor_order.inspection_dates.buyer_added.first.update_attributes({approved: true})
       UserMailer.send_inspection_date_confirm_notification_to_buyer(armor_order).deliver_later
       redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => "Inspection date has been set to #{armor_order.inspection_dates.buyer_added.first.get_inspection_date} and has been informed to buyer."}
     else
