@@ -51,7 +51,8 @@ class ArmorOrdersController < ApplicationController
       armor_order.inspection_dates.create({
         date: inspection_date,
         creator_type: "buyer",
-        armor_order_id: armor_order.id
+        armor_order_id: armor_order.id,
+        product_id: product.id
       })
     end
 
