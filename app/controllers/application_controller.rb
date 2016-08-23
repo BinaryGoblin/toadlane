@@ -90,7 +90,9 @@ class ApplicationController < ActionController::Base
   def redirect_path_for_user
     if current_user.has_role? :user
       if session[:previous_url].present?
-        return session[:previous_url]
+        previous_visited_url = session[:previous_url]
+        session.delete(:previous_url)
+        return previous_visited_url
       else
         redirect_to_concerned_path
       end
