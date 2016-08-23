@@ -81,7 +81,7 @@ class ArmorOrdersController < ApplicationController
 
     if armor_order.inspection_dates.buyer_added.first.update_attributes({approved: true})
       UserMailer.send_inspection_date_confirm_notification_to_buyer(armor_order).deliver_later
-      redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => "Inspection date has been set to #{armor_order.inspection_dates.buyer_added.first.get_inspection_date} and has been informed to buyer."}
+      redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => "Inspection date has been set to #{armor_order.inspection_dates.buyer_added.first.get_inspection_date}."}
     else
       redirect_to product_path(id: product.id, armor_order_id: armor_order.id)
     end
