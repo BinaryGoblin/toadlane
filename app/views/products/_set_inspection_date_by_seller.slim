@@ -15,13 +15,13 @@
             .offer-from-until
               .offer-item
                 label.lg.required Select Inspection Date
-                .offer-date
+                .date-offer
                   label Date:
-                  = date_select :inspection_date, :date, { :default => Date.today, order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+                  = date_select :inspection_date, :date, { :default => Date.today, order: [:month, :day, :year] }, { class: "form-control" }
 
                 .offer-time
                   label Time:
-                  = time_select :inspection_date, :date, { :default => Time.now, ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+                  = time_select :inspection_date, :date, {  :ampm => true, :default => Time.now, ignore_date: true, minute_step: 10 }, { class: "form-control" }
             .modal-footer
               = f.submit 'Save', class: "btn btn-primary"
 
