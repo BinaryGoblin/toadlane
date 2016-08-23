@@ -60,9 +60,9 @@ class ArmorOrdersController < ApplicationController
       redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :alert => armor_order.errors.full_messages.first}
     else
       if product.user == current_user
-        UserMailer.send_inspection_date_set_notification_to_buyer(armor_order).deliver_now
+        UserMailer.send_inspection_date_set_notification_to_buyer(armor_order).deliver_later
       else
-        UserMailer.send_inspection_date_set_notification_to_seller(armor_order).deliver_now
+        UserMailer.send_inspection_date_set_notification_to_seller(armor_order).deliver_later
       end
       redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'Your requested inspection date has been submitted. You will be notified when the seller responds.'}
     end
