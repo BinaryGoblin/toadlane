@@ -215,23 +215,23 @@
 
                 .user_accounts
                   p
-                    b ACTIVE ACCOUNT:
+                    b PAYMENT METHOD:
                     br
                     - if @product.default_payment_armor?
                       span.label.label-orange
-                        | Armor
+                        | Fly & Buy
                     - elsif @product.default_payment_green?
                       span.label.label-green
-                        | Green By Phone
+                        | Echeck
                     - elsif @product.default_payment_stripe?
-                        span.label.label-blue
-                          | Stripe
+                      span.label.label-blue
+                        | Stripe
                     - elsif @product.default_payment_amg?
-                        span.label.label-dark-blue
-                          | AMG
+                      span.label.label-dark-blue
+                        | AMG
                     - elsif @product.default_payment_emb?
-                        span.label.label-dark-blue
-                          | EMB
+                      span.label.label-dark-blue
+                        | EMB
                     - else
                         | Payment option has not been selected by the seller for this product.
                   - if current_user == @product.user
