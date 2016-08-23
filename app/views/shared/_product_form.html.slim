@@ -342,7 +342,8 @@
       = f.select :default_payment, options_for_select(current_user.available_payments,
                             :selected => @product.default_payment),
                            {:include_blank => 'Choose Payment Option'},
-                           {:required => true, :class => 'form-control'}
+                           {:required => controller_path == "admin/products" ? false : true,
+                            :class => 'form-control'}
 
     .insert_inspection_dates style="#{get_style(@product)}"
       .form-group
@@ -351,8 +352,8 @@
           | &nbsp;Allow buyer to suggest alternative inspection date
       label.lg Inspection Dates:
       ul.inspectiondates
-        - if @product.inspection_dates.any?
-          - @product.inspection_dates.each_with_index do |inspection_date, index|
+        - if @product.seller_set_inspection_dates.any?
+          - @product.seller_set_inspection_dates.each_with_index do |inspection_date, index|
             li.inspectiondate
               .index= index+1
               .offer-item
