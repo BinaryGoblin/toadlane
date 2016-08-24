@@ -79,9 +79,9 @@ class ArmorOrdersController < ApplicationController
     armor_order = ArmorOrder.find_by_id(params[:armor_order_id])
     product = Product.unexpired.find(params[:product_id])
 
-    if armor_order.inspection_dates.buyer_added.first.update_attributes({approved: true})
+    if armor_order.inspection_dates.buyer_added.last.update_attributes({approved: true})
       UserMailer.send_inspection_date_confirm_notification_to_buyer(armor_order).deliver_later
-      redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => "Inspection date has been set to #{armor_order.inspection_dates.buyer_added.first.get_inspection_date}."}
+      redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => "Inspection date has been set to #{armor_order.inspection_dates.buyer_added.last.get_inspection_date}."}
     else
       redirect_to product_path(id: product.id, armor_order_id: armor_order.id)
     end
@@ -197,7 +197,7 @@ class ArmorOrdersController < ApplicationController
 
     response = armor_order.create_armor_api_order(api_armor_order_params)
 
-    if !response.arguments.present? && response[:error].present?
+    if response.present? && response[:error].present?
       return response[:error]
     else
       armor_order.get_armor_payment_instruction_url

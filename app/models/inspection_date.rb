@@ -29,12 +29,17 @@ class InspectionDate < ActiveRecord::Base
   end
 
   def check_inspection_date
-    product = Product.find_by_id(self.product_id)
-    existing_dates_except_self = product.inspection_dates.where.not(id: self.id)
-    .where('date BETWEEN ? AND ?',
-      date.beginning_of_day,
-      date.end_of_day
-    )
+    product = Product.find_by_id(product_id)
+
+    if creator_type == "seller"
+      existing_dates_except_self = product.inspection_dates.seller_added
+      .where.not(id: id)
+      .where('date BETWEEN ? AND ?', date.beginning_of_day, date.end_of_day)
+    else
+      existing_dates_except_self = product.inspection_dates.where.not(id: id)
+      .where('date BETWEEN ? AND ?', date.beginning_of_day, date.end_of_day )
+    end
+
     if existing_dates_except_self.any?
       errors.add(:date, 'must be unique.')
     end
