@@ -132,6 +132,8 @@ $(document).ready ->
     url = "/products/subregion_options?parent_region=#{country_code}&parent_object_sym=green_order"
     select_wrapper.load(url)
 
+  $('.inspection_date_select').children().closest('label').find('input:first').prop("checked", true)
+
   $('select#amg_order_address_country').change (event) ->
     select_wrapper = $('.order_state_code_wrapper')
 
@@ -241,7 +243,7 @@ $(document).ready ->
         remote: "State is not valid. "
     errorPlacement: (error, element) ->
       # this is done for displaying the error message for agreed_terms checkbox
-      # # below the checkbox 
+      # # below the checkbox
       if element.attr('name') == "armor_profile[agreed_terms]"
         error.insertAfter(element.parent().parent())
       else
