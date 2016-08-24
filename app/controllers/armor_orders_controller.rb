@@ -197,10 +197,11 @@ class ArmorOrdersController < ApplicationController
 
     response = armor_order.create_armor_api_order(api_armor_order_params)
 
-    if response[:error].present?
+    if !response.arguments.present? && response[:error].present?
       return response[:error]
     else
       armor_order.get_armor_payment_instruction_url
+      return nil
     end
   end
 

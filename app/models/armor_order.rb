@@ -64,8 +64,8 @@ class ArmorOrder < ActiveRecord::Base
       self.update_attribute(:status, 'processing')
       product.sold_out += self.count
       self.product.save
-      UserMailer.sales_order_notification_to_seller(self).deliver_now
-      UserMailer.sales_order_notification_to_buyer(self).deliver_now
+      UserMailer.sales_order_notification_to_seller(self).deliver_later
+      UserMailer.sales_order_notification_to_buyer(self).deliver_later
     end
   end
   # handle_asynchronously :create_armor_api_order
