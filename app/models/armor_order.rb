@@ -59,6 +59,7 @@ class ArmorOrder < ActiveRecord::Base
     rescue ArmorService::BadResponseError => e
       self.update_attribute(:status, 'failed')
       Rails.logger.warn e.errors
+      return { :error => e }
     else
       self.update_attribute(:status, 'processing')
       product.sold_out += self.count

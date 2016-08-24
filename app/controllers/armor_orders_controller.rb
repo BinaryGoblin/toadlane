@@ -91,10 +91,12 @@ class ArmorOrdersController < ApplicationController
     armor_order = ArmorOrder.find_by_id(params[:id])
     product = armor_order.product
 
-    armor_order_api_create(armor_order, product)
+    response = armor_order_api_create(armor_order, product)
 
     if armor_order.errors.any?
       redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :alert => armor_order.errors.messages}
+    elsif response.errors.present?
+      redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :error => response.errors.values.flatten }
     else
       redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'Your order was successfully placed.'}
     end
@@ -193,9 +195,13 @@ class ArmorOrdersController < ApplicationController
       ]
     }
 
-    armor_order.create_armor_api_order(api_armor_order_params)
+    response = armor_order.create_armor_api_order(api_armor_order_params)
 
-    armor_order.get_armor_payment_instruction_url
+    if response[:error].present?
+      return response[:error]
+    else
+      armor_order.get_armor_payment_instruction_url
+    end
   end
 
   def create_order_shipments(armor_order)
