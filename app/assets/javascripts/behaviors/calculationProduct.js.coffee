@@ -78,7 +78,12 @@ class Behavior.CalculationProduct
 
     total = quantity * @unitPrice
 
-    fees              = total * (@fees || 0) / 100
+    if $('.user_accounts').children().find('span').text() == "Fly & Buy"
+      # TODO:: Fee is stated as $100 until fee algorithm is added
+      fees = 100  # ArmorFeeAmount
+    else
+      fees              = total * (@fees || 0) / 100
+
     if @$shippingEstimate.data('type') == 'PerUnit'
       shipping_per_unit = parseFloat @$shippingEstimate.text(), 2
       shipping_cost     = shipping_per_unit * quantity
