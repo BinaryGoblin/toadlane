@@ -95,7 +95,7 @@ class ArmorOrdersController < ApplicationController
 
     if armor_order.errors.any?
       redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :alert => armor_order.errors.messages}
-    elsif response.errors.present?
+    elsif response.present? && response.errors.present?
       redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :error => response.errors.values.flatten }
     else
       redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'Your order was successfully placed.'}
