@@ -6,6 +6,12 @@
         ul
           - @product.errors.full_messages.each do |message|
             li = message
+    - elsif @errors.present?
+      .error-explanation
+        h5= "Errors prohibited this test from being saved:"
+        ul
+          li = @errors
+
 
     - if current_user.has_role?(:admin) or current_user.has_role?(:superadmin)
       - if @status_actions
@@ -336,7 +342,8 @@
       = f.select :default_payment, options_for_select(current_user.available_payments,
                             :selected => @product.default_payment),
                            {:include_blank => 'Choose Payment Option'},
-                           {:required => true, :class => 'form-control'}
+                           {:required => controller_path == "admin/products" ? false : true,
+                            :class => 'form-control'}
 
     .insert_inspection_dates style="#{get_style(@product)}"
       .form-group
@@ -345,8 +352,8 @@
           | &nbsp;Allow buyer to suggest alternative inspection date
       label.lg Inspection Dates:
       ul.inspectiondates
-        - if @product.inspection_dates.any?
-          - @product.inspection_dates.each_with_index do |inspection_date, index|
+        - if @product.seller_set_inspection_dates.any?
+          - @product.seller_set_inspection_dates.each_with_index do |inspection_date, index|
             li.inspectiondate
               .index= index+1
               .offer-item
@@ -356,7 +363,7 @@
 
                 .offer-time
                   label Time:
-                  = time_select :inspection_date, :date, { :default => inspection_date.date, ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" , :value => inspection_date.date}, { class: "form-control" }
+                  = time_select :inspection_date, :date, { :ampm => true, :default => inspection_date.date, ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" , :value => inspection_date.date}, { class: "form-control" }
 
                 input type="hidden" name="product[inspection_date_attributes][][id]" value="#{inspection_date.id}"
 
@@ -372,7 +379,7 @@
 
               .offer-time
                 label Time:
-                = time_select :inspection_date, :date, { ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" }, { class: "form-control" }
+                = time_select :inspection_date, :date, { :ampm => true, ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" }, { class: "form-control" }
 
               span.btn.btn-default.remove= fa_icon 'trash-o'
 
@@ -388,7 +395,7 @@
 
             .offer-time
               label Time:
-              = time_select :inspection_date, :date, { ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" }, {class: "form-control" }
+              = time_select :inspection_date, :date, { :ampm => true, ignore_date: true, minute_step: 10, :prefix => "product[inspection_date_attributes][]" }, {class: "form-control" }
 
             span.btn.btn-default.remove= fa_icon 'trash-o'
 

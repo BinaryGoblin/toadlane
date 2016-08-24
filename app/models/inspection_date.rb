@@ -21,24 +21,30 @@ class InspectionDate < ActiveRecord::Base
   scope :seller_added, -> { where(creator_type: "seller") }
   scope :buyer_added, -> { where(creator_type: "buyer") }
 
-  # validate :inspection_date_validator, :on => :create
+  validate :check_inspection_date
 
   # gives August 09, 2016, 06:00 PM
   def get_inspection_date
     date.strftime("%B %d, %Y, %I:%M %p")
   end
 
-  def inspection_date_validator
-    if date.present?
-      product = Product.find_by_id(self.product_id)
-      previous_added_date = product.inspection_dates.select{ |inspection_date| inspection_date.date.to_date == date.to_date}
-      if previous_added_date.any?
-        errors.add(:date, 'must be greater than today.')
-      else
-        if date.to_date <= Date.today
-          errors.add(:date, 'must be greater than today.')
-        end
-      end
+  def check_inspection_date
+    product = Product.find_by_id(product_id)
+
+    if creator_type == "seller"
+      existing_dates_except_self = product.inspection_dates.seller_added
+      .where.not(id: id)
+      .where('date BETWEEN ? AND ?', date.beginning_of_day, date.end_of_day)
+    else
+      existing_dates_except_self = product.inspection_dates.where.not(id: id)
+      .where('date BETWEEN ? AND ?', date.beginning_of_day, date.end_of_day )
+    end
+
+    if existing_dates_except_self.any?
+      errors.add(:date, 'must be unique.')
+    end
+    if date.to_date <= Date.today
+      errors.add(:date, 'must be greater than today.')
     end
   end
 end

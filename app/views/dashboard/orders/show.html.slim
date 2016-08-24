@@ -1,6 +1,8 @@
 = render '/shared/tabs'
 
 .wrap-sm
+  .pull-right
+    = link_to "Close", dashboard_orders_path, class: "btn btn-success back-to-order-btn"
   .table-options
     table width="100%"
     table.table

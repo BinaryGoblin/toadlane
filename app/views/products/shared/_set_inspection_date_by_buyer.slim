@@ -7,15 +7,16 @@
         h4.modal-title Set Inspection Date
       .modal-body
         = form_for armor_order, url: set_inspection_date_armor_orders_path(product_id: product.id), method: :post  do |f|
-          .offer-from-until
+          .request_inspection_date
             .offer-item
               label.lg.required Select Inspection Date
-              .offer-date
+              .date-offer
                 label Date:
-                = date_select :inspection_date, :date, { :default => Date.today, order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+                = date_select :inspection_date, :date, { :default => Date.today, order: [:month, :day, :year] }, { class: "form-control" }
 
               .offer-time
                 label Time:
-                = time_select :inspection_date, :date, { :default => Time.now, ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+                = time_select :inspection_date, :date, { :ampm => true, :default => Time.now, ignore_date: true, minute_step: 10 }, { class: "form-control"}
+
           button.btn.btn-secondary data-dismiss="modal" type="button"  Close
           = f.submit 'Save', class: "btn btn-primary"

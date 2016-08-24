@@ -1080,3 +1080,27 @@ $sell-color: #FF8724;
 .product-carousel .bx-wrapper .product{
   margin: 20px 0 0;
 }
+
+.set_inspection_date{
+  .offer-from-until{
+    margin-top: 15px;
+    .offer-time{
+      margin-top: 10px;
+    }
+  }
+  .modal-footer{
+    padding: 0 15px 5px;
+
+    input{
+      margin-top: 10px;
+    }
+  }
+}
+
+.confirm-inspection-date-btn{
+  .modal-footer{
+    a{
+      margin-top: 10px;
+    }
+  }
+}

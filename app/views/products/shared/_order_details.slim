@@ -10,7 +10,11 @@
     td -$ <span class="stripe-rebate-price">#{number_with_precision(armor_order.rebate_price, precision: 2, delimiter: '')}</span>
 
   tr
-    td colspan="3" Toadlane Fee (<span class="calc-fees">#{data[:fee]}</span>%)
+    / TODO:: Fee is stated as $100 until fee algorithm is added
+    - if product.default_payment_armor?
+      td colspan="3" Toadlane Fee <span class="calc-fees"></span>
+    - else
+      td colspan="3" Toadlane Fee (<span class="calc-fees">#{data[:fee]}</span>%)
     td $ <span class="stripe-fees-price">#{number_with_precision(armor_order.fee, precision: 2, delimiter: '')}</span>
 
   tr
@@ -37,7 +41,11 @@
     td -$ <span class="stripe-rebate-price">#{data[:rebate]}</span>
 
   tr
-    td colspan="3" Toadlane Fee (<span class="calc-fees">#{data[:fee]}</span>%)
+    / TODO:: Fee is stated as $100 until fee algorithm is added
+    - if product.default_payment_armor?
+      td colspan="3" Toadlane Fee <span class="calc-fees"></span>
+    - else
+      td colspan="3" Toadlane Fee (<span class="calc-fees">#{data[:fee]}</span>%)
     td $ <span class="stripe-fees-price">#{data[:fee_amount]}</span>
 
   tr

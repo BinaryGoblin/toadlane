@@ -53,6 +53,7 @@ class ProductsController < ApplicationController
   # TODO Refactor 10018
   def checkout
     return unless current_user.present?
+    response.headers["X-FRAME-OPTIONS"] = "SAMEORIGIN"
     @product = Product.find(params[:product_id])
 
     @data = {

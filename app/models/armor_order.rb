@@ -59,12 +59,14 @@ class ArmorOrder < ActiveRecord::Base
     rescue ArmorService::BadResponseError => e
       self.update_attribute(:status, 'failed')
       Rails.logger.warn e.errors
+      return { :error => e }
     else
       self.update_attribute(:status, 'processing')
       product.sold_out += self.count
       self.product.save
-      UserMailer.sales_order_notification_to_seller(self).deliver_now
-      UserMailer.sales_order_notification_to_buyer(self).deliver_now
+      UserMailer.sales_order_notification_to_seller(self).deliver_later
+      UserMailer.sales_order_notification_to_buyer(self).deliver_later
+      return nil
     end
   end
   # handle_asynchronously :create_armor_api_order
