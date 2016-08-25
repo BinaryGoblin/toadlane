@@ -2,38 +2,42 @@
 #
 # Table name: armor_orders
 #
-#  id                  :integer          not null, primary key
-#  buyer_id            :integer
-#  seller_id           :integer
-#  account_id          :integer
-#  product_id          :integer
-#  order_id            :integer
-#  status              :integer          default(0)
-#  unit_price          :float
-#  count               :integer
-#  amount              :float
-#  summary             :string(100)
-#  description         :text
-#  invoice_num         :integer
-#  purchase_order_num  :integer
-#  status_change       :datetime
-#  uri                 :string
-#  deleted             :boolean          default(FALSE)
-#  created_at          :datetime
-#  updated_at          :datetime
-#  taxes_price         :integer          default(0)
-#  rebate_price        :integer          default(0)
-#  rebate_percent      :integer          default(0)
-#  fee                 :float
-#  rebate              :float
-#  shipping_cost       :float
-#  inspection_complete :boolean          default(FALSE)
-#  payment_release_url :string
-#  payment_release     :boolean          default(FALSE)
-#  funds_in_escrow     :boolean          default(FALSE)
+#  id                         :integer          not null, primary key
+#  buyer_id                   :integer
+#  seller_id                  :integer
+#  account_id                 :integer
+#  product_id                 :integer
+#  order_id                   :integer
+#  status                     :integer          default(0)
+#  unit_price                 :float
+#  count                      :integer
+#  amount                     :float
+#  summary                    :string(100)
+#  description                :text
+#  invoice_num                :integer
+#  purchase_order_num         :integer
+#  status_change              :datetime
+#  uri                        :string
+#  deleted                    :boolean          default(FALSE)
+#  created_at                 :datetime
+#  updated_at                 :datetime
+#  taxes_price                :integer          default(0)
+#  rebate_price               :integer          default(0)
+#  rebate_percent             :integer          default(0)
+#  fee                        :float
+#  rebate                     :float
+#  shipping_cost              :float
+#  inspection_complete        :boolean          default(FALSE)
+#  payment_release_url        :string
+#  payment_release            :boolean          default(FALSE)
+#  funds_in_escrow            :boolean          default(FALSE)
+#  seller_charged_fee         :float
+#  amount_after_fee_to_seller :float
 #
 
 class ArmorOrder < ActiveRecord::Base
+  # seller_charged_fee: this fee includes Armor Payments Fee along with Toadlane Fee which is added via Admin-> Fees
+  # amount_after_fee_to_seller: the amount(unit_price * count) after deducting seller_charged_fee.
   has_many :inspection_dates, dependent: :destroy
   belongs_to :buyer, class_name: 'User', foreign_key: 'buyer_id'
   belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'
