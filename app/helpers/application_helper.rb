@@ -248,9 +248,9 @@ module ApplicationHelper
   end
 
   def product_button_color(product)
-	  if product.present?
-	    product.status_characteristic == "sell" ? "btn btn-success" : "btn btn-success-sell"
-	  end
+    if product.present?
+      product.status_characteristic == "sell" ? "btn btn-success" : "btn btn-success-sell"
+    end
   end
 
   def get_user_notifications
@@ -277,5 +277,13 @@ module ApplicationHelper
 
   def refund_requested?(order)
     order.is_a?(GreenOrder) && order.status == "challenged" && current_user.id == order.buyer_id && order.refund_request.present?
+  end
+
+  def get_script_src
+    if Rails.env.production?
+      "https://app.armorpayments.com/assets/js/modal.min.js"
+    else
+      "https://sandbox.armorpayments.com/assets/js/modal.min.js"
+    end
   end
 end

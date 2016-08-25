@@ -73,7 +73,7 @@
             - if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
               | Connect your Payoneer account to send and receive funds through Armor Payments
               br
-              script src="https://app.armorpayments.com/assets/js/modal.min.js" type="text/javascript"
+              script src=get_script_src type="text/javascript"
               button.btn.btn-primary onClick="armor.openModal('#{@url}')" Payoneer Account
             
             - else
