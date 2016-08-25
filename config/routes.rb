@@ -20,8 +20,6 @@ Toad::Application.routes.draw do
     end
   end
 
-  resources :notifications, only: [:index]
-
   resources :green_orders
 
   resources :amg_orders
