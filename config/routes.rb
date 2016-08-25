@@ -37,6 +37,8 @@ Toad::Application.routes.draw do
   root 'static_pages#home'
 
   namespace :dashboard do
+    resources :notifications, only: [:index]
+
     resource :profile, only: [:update, :show]
 
     resources :accounts do
@@ -84,8 +86,6 @@ Toad::Application.routes.draw do
         post :trash
         post :untrash
       end
-
-      resources :notifications, only: [:index]
     end
 
     resources :shipments, only: [:index]

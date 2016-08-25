@@ -271,6 +271,16 @@ module ApplicationHelper
     end
   end
 
+  def get_user_unread_notifications
+    unread_notifications ||= current_user.notifications.where(read: 'false')
+
+    if unread_notifications
+      unread_notifications.count
+    else
+      0
+    end
+  end
+
   def is_cancellable?(order)
     order.is_a?(GreenOrder) && order.status == "placed" && current_user.id == order.buyer_id && order.refund_request.nil?
   end
