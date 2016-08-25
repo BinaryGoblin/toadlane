@@ -159,7 +159,9 @@ class ProductsController < ApplicationController
     toadlane_fee = amount * toadlane_fee_percentage / 100
 
     seller_charged_fee = armor_fee + toadlane_fee
-    amount_after_fee_to_seller = amount - seller_charged_fee
+
+    # armor_order.amount is the order amount
+    amount_after_fee_to_seller = armor_order.amount - seller_charged_fee
 
     armor_order.update_attributes({
       seller_charged_fee: seller_charged_fee,
