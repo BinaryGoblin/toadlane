@@ -86,6 +86,8 @@ Toad::Application.routes.draw do
         post :trash
         post :untrash
       end
+
+      resources :notifications, only: [:index]
     end
 
     resources :shipments, only: [:index]
