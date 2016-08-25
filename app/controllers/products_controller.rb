@@ -84,6 +84,7 @@ class ProductsController < ApplicationController
         rebate: params[:rebate_percent],
         shipping_cost: params[:shipping_cost]
       })
+      calculate_store_additional_armor_fee(@armor_order)
       inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
       inspection_date.update_attributes({armor_order_id: @armor_order.id, approved: true})
     elsif params["inspection_date"].present? && params["inspection_date"]["inspection_date_id"].present?
@@ -104,6 +105,7 @@ class ProductsController < ApplicationController
       })
       inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
       inspection_date.update_attributes({armor_order_id: @armor_order.id, approved: true})
+      calculate_store_additional_armor_fee(@armor_order)
     elsif params["armor_order_id"].present?
       @armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
     else
@@ -132,13 +134,36 @@ class ProductsController < ApplicationController
     end
   end
 
-  def set_order_details(armor_order, data)
-    armor_order.rebate_percentage = data[:rebate_percent]
-    armor_order.quantity = data[:quantity]
-    armor_order.order_amount = data[:total]
-    armor_order.rebate = data[:rebate]
-    armor_order.fee_percent = data[:fee]
-    armor_order.fee_price = data[:fee_amount]
-    armor_order.shipping_cost = data[:shipping_cost]
+  def calculate_armor_payments_fee(armor_order, amount)
+    # here amount is unit_price * count
+    if amount > 1000000
+      armor_fee = 6400 + ((amount-1000000)*0.0035)
+    elsif amount > 500000
+      armor_fee = 3900 + ((amount-500000)*0.005)
+    elsif amount > 50000
+      armor_fee = 525 + ((amount-50000)*0.0075)
+    elsif amount > 5000
+      armor_fee = 75 + ((amount-5000)*0.01)
+    else
+      armor_fee = [10, amount*0.015].max
+    end
+  end
+
+  # This is done just for displaying to the seller
+  # # Armor will charge in their backend
+  def calculate_store_additional_armor_fee(armor_order)
+    amount = armor_order.unit_price * armor_order.count
+
+    armor_fee = calculate_armor_payments_fee(armor_order, amount)
+    toadlane_fee_percentage = Fee.find_by(:module_name => "Armor Payments").value
+    toadlane_fee = amount * toadlane_fee_percentage / 100
+
+    seller_charged_fee = armor_fee + toadlane_fee
+    amount_after_fee_to_seller = amount - seller_charged_fee
+
+    armor_order.update_attributes({
+      seller_charged_fee: seller_charged_fee,
+      amount_after_fee_to_seller: amount_after_fee_to_seller
+    })
   end
 end
