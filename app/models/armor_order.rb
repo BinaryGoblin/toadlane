@@ -48,7 +48,7 @@ class ArmorOrder < ActiveRecord::Base
   end
 
   # not_started must be first (ie. at index 0) for the default value to be correct
-  enum status: %i{ not_started processing placed failed }
+  enum status: %i{ not_started processing placed failed cancelled}
 
   def create_armor_api_order(params)
     self.update_attribute(:status, 'processing')

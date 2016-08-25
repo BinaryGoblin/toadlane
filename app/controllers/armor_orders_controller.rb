@@ -146,6 +146,8 @@ class ArmorOrdersController < ApplicationController
           armor_order.update_attributes({payment_release: true, status: 'placed'})
           UserMailer.send_payment_released_notification_to_buyer(armor_order).deliver_later
           UserMailer.send_payment_released_notification_to_seller(armor_order).deliver_later
+        elsif params["order"]["status_name"] == "Order Cancelled"
+          armor_order.update_attribute(:status, 'cancelled')
         end
       end
     end
