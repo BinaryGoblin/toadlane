@@ -56,7 +56,7 @@ class Behavior.CalculationProduct
       fee = 200
     else if amount >= 500000 && amount < 1000000
       fee = 250
-    else if amount >= 1000000 && amount < 1000000
+    else if amount >= 1000000 && amount < 10000000
       fee = 350
     else if amount >= 10000000
       fee = 500
