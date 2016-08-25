@@ -84,7 +84,7 @@ class UserMailer < ActionMailer::Base
     @armor_order = armor_order
     @user = user
 
-    mail to: @user.email, subject: "Confirm email"
+    mail to: @user.email, subject: "Confirm your email for Fly & Buy"
   end
 
   def send_inspection_date_set_notification_to_seller(armor_order)
