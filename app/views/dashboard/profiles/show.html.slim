@@ -8,7 +8,7 @@
 
     - if @user.errors.any?
       .error-explanation
-        h5= "#{pluralize(@user.errors.count, "error")} data from being saved:"
+        h5= "Error:"
         ul
           - @user.errors.full_messages.each do |message|
             li = message

@@ -2,13 +2,13 @@
   .wrap-sm: .product-form
     - if @product.errors.any?
       .error-explanation
-        h5= "#{pluralize(@product.errors.count, "error")} prohibited this test from being saved:"
+        h5= "Error:"
         ul
           - @product.errors.full_messages.each do |message|
             li = message
     - elsif @errors.present?
       .error-explanation
-        h5= "Errors prohibited this test from being saved:"
+        h5= "Error:"
         ul
           li = @errors
 
