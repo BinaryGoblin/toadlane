@@ -64,6 +64,7 @@ class User < ActiveRecord::Base
   validates :name, presence: true, on: :create
   has_many :requests_of_sender, class_name: 'Request', foreign_key: :sender_id
   has_many :requests_of_receiver, class_name: 'Request', foreign_key: :receiver_id
+  has_many :notifications, dependent: :destroy
 
   has_one :certificate, dependent: :destroy
 
