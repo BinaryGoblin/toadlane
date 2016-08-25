@@ -14,4 +14,6 @@
         - @notifications.each do |notification|
           tr
             td= notification.title
-            td= time_ago_in_words notification.created_at
+            td
+              = time_ago_in_words notification.created_at
+              | &nbsp;ago
