@@ -49,6 +49,18 @@ class Behavior.CalculationProduct
   number_to_currency: (amount) =>
     amount.replace /(\d)(?=(\d{3})+(?!\d))/g, "$1,"
 
+  calculateToadlaneFee: (amount) =>
+    if amount < 100000
+      fee = 100
+    else if amount >= 100000 && amount < 500000
+      fee = 200
+    else if amount >= 500000 && amount < 1000000
+      fee = 250
+    else if amount >= 1000000 && amount < 1000000
+      fee = 350
+    else if amount >= 10000000
+      fee = 500
+
   calculation: =>
     total  = 0
     rebate = 0
@@ -79,8 +91,7 @@ class Behavior.CalculationProduct
     total = quantity * @unitPrice
 
     if $('.user_accounts').children().find('span').text() == "Fly & Buy"
-      # TODO:: Fee is stated as $100 until fee algorithm is added
-      fees = 100  # ArmorFeeAmount
+      fees = @calculateToadlaneFee(total)  # ArmorFeeAmount
     else
       fees              = total * (@fees || 0) / 100
 
