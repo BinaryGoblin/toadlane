@@ -1,2 +1,17 @@
-h1 Notifications#index
-p Find me in app/views/notifications/index.html.slim
+= render '/shared/tabs'
+
+.wrap-sm
+  .table-responsive
+    table.table data-behavior="TableCheckbox"
+      thead
+        tr
+          th Title:
+          / th Message:
+          th.text-right Date:
+          / th.text-right Actions:
+
+      tbody
+        - @notifications.each do |notification|
+          tr
+            td= notification.title
+            td= time_ago_in_words notification.created_at
