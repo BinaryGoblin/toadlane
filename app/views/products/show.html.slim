@@ -1,3 +1,14 @@
+.complete-profile-error.wrap-sm
+  - if !flash[:error].nil?
+    .error-explanation
+      | You must complete your&nbsp;
+      - if @product.default_payment_armor?
+        = link_to 'profile', dashboard_profile_path, class: 'view'
+        | &nbsp;to view Fly & Buy inspection dates.
+      - else
+        = link_to 'profile', dashboard_profile_path, class: 'view'
+        | &nbsp;to create orders.
+
 .actions-panel-product: .wrap-sm
   / = link_to 'Next product', '#', class: 'btn btn-default pull-right'
   / = link_to 'Previous', '#', class: 'btn btn-default pull-right'
@@ -122,55 +133,52 @@
 
           .white-panel.wp-table
             - if current_user.present?
-              - if current_user.profile_complete?
-                -if @product.status_characteristic == 'sell' || strip_tags(time_left(@product.end_date)) != 'Time ended' || @product.user != current_user
-                  = form_tag(product_checkout_path(product_id: @product, armor_order_id: params[:armor_order_id]), method: :post, class: 'text-center') do
-                    = hidden_field_tag :total
-                    = hidden_field_tag :count
-                    = hidden_field_tag :fee
-                    = hidden_field_tag :shipping_cost
-                    = hidden_field_tag :rebate
-                    = hidden_field_tag :rebate_percent
+              -if @product.status_characteristic == 'sell' || strip_tags(time_left(@product.end_date)) != 'Time ended' || @product.user != current_user
+                = form_tag(product_checkout_path(product_id: @product, armor_order_id: params[:armor_order_id]), method: :post, class: 'text-center') do
+                  = hidden_field_tag :total
+                  = hidden_field_tag :count
+                  = hidden_field_tag :fee
+                  = hidden_field_tag :shipping_cost
+                  = hidden_field_tag :rebate
+                  = hidden_field_tag :rebate_percent
 
-                    - if @product.is_buyer_product_owner?(current_user)
-                      | You cannot buy your own product.
-                    - else
-                      - if @product.default_payment_armor? && @product.inspection_dates.present?
-                        .inspection_date_select
-                          - if params[:armor_order_id].present? && params[:inspection_date_by_seller] == "true"
-                            p
-                              | Select Inpsection Date:
-                            br
-                            = collection_radio_buttons(:inspection_date, :inspection_date_id, @armor_order.inspection_dates.buyer_added, :id, :get_inspection_date) do |b, index|
-                              tr
-                                td
-                                  = b.label { b.radio_button(:"checked" => (b.object.id == @armor_order.inspection_dates.buyer_added.first.id)) + b.text }
-                                  br
-                          - else
-                            p
-                              | Select Inpsection Date:
-                            br
-                            = collection_radio_buttons(:inspection_date, :inspection_date_id, @product.seller_set_inspection_dates, :id, :get_inspection_date) do |b, index|
-                              tr
-                                td
-                                  = b.label { b.radio_button(:"checked" => (b.object.id == @product.inspection_dates.first.id)) + b.text }
-                                  br
-                      - if @product.default_payment.present?
-                        input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
+                  - if @product.is_buyer_product_owner?(current_user)
+                    | You cannot buy your own product.
+                  - else
+                    - if @product.default_payment_armor? && @product.inspection_dates.present?
+                      .inspection_date_select
+                        - if params[:armor_order_id].present? && params[:inspection_date_by_seller] == "true"
+                          p
+                            | Select Inpsection Date:
+                          br
+                          = collection_radio_buttons(:inspection_date, :inspection_date_id, @armor_order.inspection_dates.buyer_added, :id, :get_inspection_date) do |b, index|
+                            tr
+                              td
+                                = b.label { b.radio_button(:"checked" => (b.object.id == @armor_order.inspection_dates.buyer_added.first.id)) + b.text }
+                                br
+                        - else
+                          p
+                            | Select Inpsection Date:
+                          br
+                          = collection_radio_buttons(:inspection_date, :inspection_date_id, @product.seller_set_inspection_dates, :id, :get_inspection_date) do |b, index|
+                            tr
+                              td
+                                = b.label { b.radio_button(:"checked" => (b.object.id == @product.inspection_dates.first.id)) + b.text }
+                                br
+                    - if @product.default_payment.present?
+                      input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
 
-                  - unless @product.is_buyer_product_owner?(current_user)
-                    - if @product.default_payment_armor? && @product.negotiable?
-                      - unless params[:armor_order_id].present? && params[:inspection_date_by_seller] == "true"
+                - unless @product.is_buyer_product_owner?(current_user) 
+                  - if @product.default_payment_armor? && @product.negotiable?
+                    - unless params[:armor_order_id].present? && params[:inspection_date_by_seller] == "true"
+                      - if current_user.profile_complete?
                         a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here
-                        span
-                        | &nbsp;to set inspection date
-                -else
-                  .text-center= link_to 'Make Sale', '#', class: 'btn btn-success-sell btn-lg checkout', data: {  toggle: 'modal', target: '#stripe_form_checkout'  }
-              - else
-                .wrong.text-center
-                  |
-                    Please fill out your profile details. <br>
-                    Until your profile is complete, you will not be able to create orders.
+                      - else
+                        = link_to 'Click Here', set_inspection_date_armor_orders_path(product_id: @product.id)
+                      span
+                      | &nbsp;to set inspection date
+              -else
+                .text-center= link_to 'Make Sale', '#', class: 'btn btn-success-sell btn-lg checkout', data: {  toggle: 'modal', target: '#stripe_form_checkout'  }
             - else
               .wrong.text-center
                 | Please&nbsp;

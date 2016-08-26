@@ -26,45 +26,49 @@ class ArmorOrdersController < ApplicationController
   def set_inspection_date
     product = Product.unexpired.find(params[:product_id])
 
-    inspection_date = DateTime.new(
-      params["inspection_date"]["date(1i)"].to_i,
-      params["inspection_date"]["date(2i)"].to_i,
-      params["inspection_date"]["date(3i)"].to_i,
-      params["inspection_date"]["date(4i)"].to_i,
-      params["inspection_date"]["date(5i)"].to_i
-    )
+    if current_user.profile_complete?
+      inspection_date = DateTime.new(
+        params["inspection_date"]["date(1i)"].to_i,
+        params["inspection_date"]["date(2i)"].to_i,
+        params["inspection_date"]["date(3i)"].to_i,
+        params["inspection_date"]["date(4i)"].to_i,
+        params["inspection_date"]["date(5i)"].to_i
+      )
 
-    if params[:armor_order_id].present?
-      armor_order = ArmorOrder.find_by_id(params[:armor_order_id])
-      product.inspection_dates.create!({
-        date: inspection_date,
-        creator_type: "seller",
-        product_id: product.id
-      })
-    else
-      armor_order = ArmorOrder.create!({
-        buyer_id: current_user.id,
-        seller_id: product.user.id,
-        product_id: product.id
-      })
-
-      armor_order.inspection_dates.create!({
-        date: inspection_date,
-        creator_type: "buyer",
-        armor_order_id: armor_order.id,
-        product_id: product.id
-      })
-    end
-
-    if armor_order.errors.any?
-      redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :alert => armor_order.errors.full_messages.first}
-    else
-      if product.user == current_user
-        UserMailer.send_inspection_date_set_notification_to_buyer(armor_order).deliver_later
+      if params[:armor_order_id].present?
+        armor_order = ArmorOrder.find_by_id(params[:armor_order_id])
+        product.inspection_dates.create!({
+          date: inspection_date,
+          creator_type: "seller",
+          product_id: product.id
+        })
       else
-        UserMailer.send_inspection_date_set_notification_to_seller(armor_order).deliver_later
+        armor_order = ArmorOrder.create!({
+          buyer_id: current_user.id,
+          seller_id: product.user.id,
+          product_id: product.id
+        })
+
+        armor_order.inspection_dates.create!({
+          date: inspection_date,
+          creator_type: "buyer",
+          armor_order_id: armor_order.id,
+          product_id: product.id
+        })
       end
-      redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'Your requested inspection date has been submitted. You will be notified when the seller responds.'}
+
+      if armor_order.errors.any?
+        redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :alert => armor_order.errors.full_messages.first}
+      else
+        if product.user == current_user
+          UserMailer.send_inspection_date_set_notification_to_buyer(armor_order).deliver_later
+        else
+          UserMailer.send_inspection_date_set_notification_to_seller(armor_order).deliver_later
+        end
+        redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => 'Your requested inspection date has been submitted. You will be notified when the seller responds.'}
+      end
+    else
+      redirect_to product_path(id: product.id), :flash => { :error => "You must complete your profile to view Fly & Buy inspection dates." }
     end
   rescue ActiveRecord::RecordInvalid => e
     @errors = e.message.split(": ")[1]

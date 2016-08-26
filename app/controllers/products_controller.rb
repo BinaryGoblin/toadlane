@@ -52,9 +52,12 @@ class ProductsController < ApplicationController
 
   # TODO Refactor 10018
   def checkout
-    return unless current_user.present?
-    response.headers["X-FRAME-OPTIONS"] = "SAMEORIGIN"
     @product = Product.find(params[:product_id])
+    if current_user.present? && !current_user.profile_complete?
+      redirect_to product_path(@product), :flash => { :error => "You must complete your profile before you can view product details." }
+    end
+
+    response.headers["X-FRAME-OPTIONS"] = "SAMEORIGIN"
 
     @data = {
       total: params[:total],
