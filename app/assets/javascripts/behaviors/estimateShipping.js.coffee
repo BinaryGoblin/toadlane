@@ -52,6 +52,9 @@ class Behavior.EstimateShipping
   fixed: (number) =>
     number.toFixed(2).toString()
 
+  number_to_currency: (amount) =>
+    amount.replace /(\d)(?=(\d{3})+(?!\d))/g, "$1,"
+
   calculation: =>
     total  = 0
     rebate = 0
@@ -104,21 +107,21 @@ class Behavior.EstimateShipping
       @$footer.hide()
 
 
-    @$rebate.text @fixed rebatep
+    @$rebate.text @number_to_currency(@fixed rebatep)
     @$pcs.text quantity
-    @$feePrice.text @fixed fees
-    @$shippingPrice.text @fixed shipping_cost
-    @$rebPrice.text @fixed rebate
-    @$cart.text @fixed cart
+    @$feePrice.text @number_to_currency(@fixed fees)
+    @$shippingPrice.text @number_to_currency(@fixed shipping_cost)
+    @$rebPrice.text @number_to_currency(@fixed rebate)
+    @$cart.text @number_to_currency(@fixed cart)
 
     @$stripeQuantity.text quantity
-    @$stripeTotal.text @fixed cart
-    @$stripeUnitTotal.text @fixed @unitPrice * quantity
-    @$stripeRebate.text @fixed rebatep
-    @$stripeFees.text @fixed fees
-    @$stripeShipping.text @fixed parseFloat @$shippingEstimate.text(), 2
-    @$stripeShippingPrice.text @fixed shipping_cost
-    @$stripeRabetePrice.text @fixed rebate
+    @$stripeTotal.text @number_to_currency(@fixed cart)
+    @$stripeUnitTotal.text @number_to_currency(@fixed @unitPrice * quantity)
+    @$stripeRebate.text @number_to_currency(@fixed rebatep)
+    @$stripeFees.text @number_to_currency(@fixed fees)
+    @$stripeShipping.text @number_to_currency(@fixed parseFloat @$shippingEstimate.text(), 2)
+    @$stripeShippingPrice.text @number_to_currency(@fixed shipping_cost)
+    @$stripeRabetePrice.text @number_to_currency(@fixed rebate)
 
     @$stripeAmount.val cart.toFixed 2
     @$stripeCount.val quantity
