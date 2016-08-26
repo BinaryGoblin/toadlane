@@ -1,6 +1,6 @@
 class Dashboard::NotificationsController < DashboardController
   def index
-    @notifications = current_user.notifications
+    @notifications = current_user.notifications.order('created_at DESC')
     mark_as_read
   end
 
