@@ -122,6 +122,7 @@ class AmgOrdersController < ApplicationController
   def send_after_order_emails(amg_order)
     UserMailer.sales_order_notification_to_seller(amg_order).deliver_later
     UserMailer.sales_order_notification_to_buyer(amg_order).deliver_later
+    NotificationCreator.new(amg_order).after_order_created
   end
 
   def update_amg_order_params(amg_order_params, response)

@@ -71,16 +71,7 @@ class ArmorOrder < ActiveRecord::Base
       self.product.save
       UserMailer.sales_order_notification_to_seller(self).deliver_later
       UserMailer.sales_order_notification_to_buyer(self).deliver_later
-      buyer.notifications.create({
-        user_id: buyer.id,
-        armor_order_id: id,
-        title: "You have placed an order with Fly and Buy for product #{product.name}. Please check your email or view the order details in Order tab."
-      })
-      seller.notifications.create({
-        user_id: seller.id,
-        armor_order_id: id,
-        title: "#{buyer.name} have placed an order with Fly and Buy for product #{product.name}. Please check your email or view the order details in Order tab."
-      })
+      NotificationCreator.new(self).after_order_created
       return nil
     end
   end
