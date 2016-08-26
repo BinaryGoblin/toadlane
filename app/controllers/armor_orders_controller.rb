@@ -42,6 +42,7 @@ class ArmorOrdersController < ApplicationController
           creator_type: "seller",
           product_id: product.id
         })
+        NotificationCreator.new(armor_order).seller_set_inspection_date_to_buyer
       else
         armor_order = ArmorOrder.create!({
           buyer_id: current_user.id,
@@ -55,6 +56,7 @@ class ArmorOrdersController < ApplicationController
           armor_order_id: armor_order.id,
           product_id: product.id
         })
+        NotificationCreator.new(armor_order).buyer_request_inspection_date_to_seller
       end
 
       if armor_order.errors.any?
@@ -85,6 +87,7 @@ class ArmorOrdersController < ApplicationController
 
     if armor_order.inspection_dates.buyer_added.last.update_attributes({approved: true})
       UserMailer.send_inspection_date_confirm_notification_to_buyer(armor_order).deliver_later
+      NotificationCreator.new(armor_order).seller_confirm_date
       redirect_to product_path(id: product.id, armor_order_id: armor_order.id), :flash => { :notice => "Inspection date has been set to #{armor_order.inspection_dates.buyer_added.last.get_inspection_date}."}
     else
       redirect_to product_path(id: product.id, armor_order_id: armor_order.id)
