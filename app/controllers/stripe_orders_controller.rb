@@ -29,8 +29,8 @@ class StripeOrdersController < ApplicationController
 
       @stripe_order.process_payment()
 
-      UserMailer.sales_order_notification_to_seller(@stripe_order).deliver_now
-      UserMailer.sales_order_notification_to_buyer(@stripe_order).deliver_now
+      UserMailer.sales_order_notification_to_seller(@stripe_order).deliver_later
+      UserMailer.sales_order_notification_to_buyer(@stripe_order).deliver_later
       redirect_to dashboard_order_path(@stripe_order, :type => "stripe"), notice: "Your order was succesfully placed."
     else
       redirect_to product_checkout_path(stripe_order_params[:product_id], total: stripe_order_params[:total], count: stripe_order_params[:count], fee: stripe_order_params[:fee], shipping_cost: stripe_order_params[:shipping_cost], rebate: stripe_order_params[:rebate], rebate_percent: stripe_order_params[:rebate_percent]), alert: "#{@stripe_order.errors.full_messages.to_sentence}"
@@ -38,14 +38,14 @@ class StripeOrdersController < ApplicationController
   end
 
   private
-    def stripe_order_params
-      params.require(:stripe_order).permit(:id, :buyer_id, :seller_id, :product_id, :stripe_charge_id, :status, :unit_price, :count, :fee, :rebate, :total, :summary,
-                                           :description, :shipping_address, :shipping_request, :shipping_details, :tracking_number, :deleted, :shipping_cost,
-                                           :address_name, :address_city, :address_state, :address_country, :address_zip, :address_id, :shipping_estimate_id)
-    end
+  def stripe_order_params
+    params.require(:stripe_order).permit(:id, :buyer_id, :seller_id, :product_id, :stripe_charge_id, :status, :unit_price, :count, :fee, :rebate, :total, :summary,
+      :description, :shipping_address, :shipping_request, :shipping_details, :tracking_number, :deleted, :shipping_cost,
+    :address_name, :address_city, :address_state, :address_country, :address_zip, :address_id, :shipping_estimate_id)
+  end
 
-    def stripe_params
-      params.permit(:stripeToken, :stripeEmail, :stripeShippingName, :stripeShippingAddressLine1, :stripeShippingAddressLine2,
-                    :stripeShippingAddressZip, :stripeShippingAddressState, :stripeShippingAddressCity, :stripeShippingAddressCountry)
-    end
+  def stripe_params
+    params.permit(:stripeToken, :stripeEmail, :stripeShippingName, :stripeShippingAddressLine1, :stripeShippingAddressLine2,
+    :stripeShippingAddressZip, :stripeShippingAddressState, :stripeShippingAddressCity, :stripeShippingAddressCountry)
+  end
 end
