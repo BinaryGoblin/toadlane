@@ -1,18 +1,26 @@
 = render '/shared/tabs'
 
 .wrap-sm
+  .table-options
+    table width="100%"
+      tr
+        td
+          .selected-labels
+            span Selected:
+            = link_to 'Delete', delete_cascade_dashboard_notifications_path, method: :delete, remote: true, data: {confirm: 'Are you sure?'}, class: 'label label-red'
+
   .table-responsive
     table.table data-behavior="TableCheckbox"
       thead
         tr
+          th: input type="checkbox"
           th Title:
-          / th Message:
           th.text-right Date:
-          / th.text-right Actions:
 
       tbody
         - @notifications.each do |notification|
           tr
+            td: input type="checkbox" value="#{notification.id}"
             td= notification.title
             td
               = time_ago_in_words notification.created_at

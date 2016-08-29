@@ -13,6 +13,7 @@
 #  emb_order_id    :integer
 #  stripe_order_id :integer
 #  green_order_id  :integer
+#  deleted         :boolean          default(FALSE)
 #
 
 class Notification < ActiveRecord::Base

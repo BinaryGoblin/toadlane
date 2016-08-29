@@ -38,7 +38,11 @@ Toad::Application.routes.draw do
   root 'static_pages#home'
 
   namespace :dashboard do
-    resources :notifications, only: [:index]
+    resources :notifications, only: [:index] do
+      collection do
+        delete :delete_cascade
+      end
+    end
 
     resource :profile, only: [:update, :show]
 

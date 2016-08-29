@@ -10,7 +10,7 @@
             = link_to 'Delete', delete_cascade_dashboard_orders_path, method: :delete, remote: true, data: {confirm: 'Are you sure?'}, class: 'label label-red'
 
   .table-responsive
-    table.table data-behavior="TableCheckbox" data-options='{"paramName":"orders_ids"}'
+    table.table data-behavior="TableCheckbox" data-options='{"paramName":"order_details"}'
       thead
         tr
           th: input type="checkbox"
@@ -26,7 +26,7 @@
       tbody
         - @orders.each do |order|
           tr
-            td: input type="checkbox" value="#{order.id}"
+            td: input type="checkbox" value="#{order.id}" data-order-type="#{order.class.name}"
             td= order.id
             td
               span.label

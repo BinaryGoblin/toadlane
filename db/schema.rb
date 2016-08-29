@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160826073934) do
+ActiveRecord::Schema.define(version: 20160829043337) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -454,6 +454,7 @@ ActiveRecord::Schema.define(version: 20160826073934) do
     t.integer  "emb_order_id"
     t.integer  "stripe_order_id"
     t.integer  "green_order_id"
+    t.boolean  "deleted",         default: false
   end
 
   create_table "pricebreaks", force: :cascade do |t|

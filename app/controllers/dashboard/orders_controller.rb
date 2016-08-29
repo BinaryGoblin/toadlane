@@ -32,12 +32,27 @@ class Dashboard::OrdersController < DashboardController
   end
 
   def delete_cascade
-    if params[:orders_ids].present?
-      params[:orders_ids].each do |id|
-        ArmorOrder.find(id).update(deleted: true)
+    if params["order_details"].present?
+      params["order_details"].each do |order_detail|
+        splited_order_detail = order_detail.split(",")
+        order_id = splited_order_detail.first
+        order_type = splited_order_detail.second
+        case order_type
+        when 'StripeOrder'
+          @order = StripeOrder.find(order_id).update(deleted: true)
+        when 'ArmorOrder'
+          @order = ArmorOrder.find(order_id).update(deleted: true)
+        when 'GreenOrder'
+          @order = GreenOrder.find(order_id).update(deleted: true)
+        when 'AmgOrder'
+          @order = AmgOrder.find(order_id).update(deleted: true)
+        when 'EmbOrder'
+          @order = EmbOrder.find(order_id).update(deleted: true)
+        else
+          @order = StripeOrder.find(order_id).update(deleted: true)
+        end
       end
     end
-
     render json: :ok
   end
 
