@@ -19,11 +19,11 @@
         li Faster payout through Payoneer account
   - if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
     | Connect your&nbsp;
-    = link_to 'Payoneer Account', "#"
+    = link_to 'Payoneer Account', "javascript:void(0)", id: "armor-tabs"
     | &nbsp;to send and receive funds through Armor Payments
-    br
-    script src=get_script_src type="text/javascript"
-    button.btn.btn-primary onClick="armor.openModal('#{@url}')" Payoneer Account
+    .create-payoneer-btn style="margin-top: 15px;"
+      script src=get_script_src type="text/javascript"
+      button.btn.btn-primary onClick="armor.openModal('#{@url}')" Payoneer Account
   - else
     - if current_user.armor_profile.nil?
       = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path, class: "link link-ulined"
