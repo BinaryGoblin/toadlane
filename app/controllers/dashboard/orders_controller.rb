@@ -16,7 +16,8 @@ class Dashboard::OrdersController < DashboardController
     orders << emb_orders
 
     # orders sorted by id
-    @orders = orders.flatten.sort_by{|order| order[:id]}.reverse
+    orders = orders.flatten.sort_by{|order| order[:id]}.reverse
+    @orders = Kaminari.paginate_array(orders).page(params[:page]).per(15)
   end
 
   def show
