@@ -16,7 +16,7 @@ class Dashboard::OrdersController < DashboardController
     orders << emb_orders
 
     # orders sorted by id
-    @orders = orders.flatten.sort_by{|order| order[:id]}
+    @orders = orders.flatten.sort_by{|order| order[:id]}.reverse
   end
 
   def show
