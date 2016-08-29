@@ -17,3 +17,6 @@
             td
               = time_ago_in_words notification.created_at
               | &nbsp;ago
+
+center
+  = paginate @notifications
