@@ -9,15 +9,9 @@ class Dashboard::OrdersController < DashboardController
     amg_orders = current_user.amg_orders.for_dashboard(params[:page], params[:per_page])
     emb_orders = current_user.emb_orders.for_dashboard(params[:page], params[:per_page])
 
-    orders << armor_orders
-    orders << stripe_orders
-    orders << green_orders
-    orders << amg_orders
-    orders << emb_orders
+    orders =  armor_orders + stripe_orders + green_orders + amg_orders + emb_orders
 
-    # orders sorted by id
-    orders = orders.flatten.sort_by{|order| order[:id]}.reverse
-    @orders = Kaminari.paginate_array(orders).page(params[:page]).per(15)
+    @orders = orders.sort_by(&:created_at).reverse
   end
 
   def show
