@@ -25,4 +25,5 @@ class Notification < ActiveRecord::Base
   belongs_to :green_order
 
   scope :not_marked_read, -> { where(read: false) }
+  scope :not_deleted, -> { where(deleted: false) }
 end

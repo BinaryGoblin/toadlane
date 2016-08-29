@@ -10,7 +10,7 @@
             = link_to 'Delete', delete_cascade_dashboard_notifications_path, method: :delete, remote: true, data: {confirm: 'Are you sure?'}, class: 'label label-red'
 
   .table-responsive
-    table.table data-behavior="TableCheckbox"
+    table.table data-behavior="TableCheckbox" data-options='{"paramName":"notification_ids"}'
       thead
         tr
           th: input type="checkbox"
@@ -25,6 +25,3 @@
             td
               = time_ago_in_words notification.created_at
               | &nbsp;ago
-
-center
-  = paginate @notifications
