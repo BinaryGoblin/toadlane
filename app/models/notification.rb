@@ -18,4 +18,10 @@
 class Notification < ActiveRecord::Base
   belongs_to :user
   belongs_to :armor_order
+  belongs_to :amg_order
+  belongs_to :emb_order
+  belongs_to :stripe_order
+  belongs_to :green_order
+
+  scope :not_marked_read, -> { where(read: false) }
 end
