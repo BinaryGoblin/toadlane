@@ -1,0 +1,17 @@
+.account-green
+  h4 Green By Phone:
+  p Merchant Gateway, Verification Services, Consulting
+  = form_for green_profile, url: create_green_profile_dashboard_accounts_path do |f|
+    .form-group
+      = f.label :green_client_id, "Client ID:"
+      = f.text_field :green_client_id, class: "form-control", required: true
+    .form-group
+      = f.label :green_api_password, "API Password:"
+      = f.text_field :green_api_password, class: "form-control", required: true
+    = f.submit "Submit", class: "btn btn-primary"
+  - if @user.green_profile.nil?
+    p <b>Status:</b> <span class="warning">You are not connected to Green By Phone.</span>
+    a.link.link-ulined href="http://www.green.money/#!sign-up/i2m2l" target="_blank"
+      | Apply to be a merchant
+  - else
+    p <b>Status:</b> <span class="success">You are connected to Green By Phone.</span>
