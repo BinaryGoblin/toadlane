@@ -18,6 +18,5 @@
               = time_ago_in_words notification.created_at
               | &nbsp;ago
 
-- if @notifications.count > 5
-  center
-    = paginate @notifications
+center
+  = paginate @notifications
