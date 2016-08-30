@@ -431,6 +431,10 @@
     font-weight: 800;
     margin: 5px 0;
     display: block;
+
+    &:last-child {
+      margin-bottom: 15px;
+    }
   }
 
   .no-border {
