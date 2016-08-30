@@ -67,6 +67,7 @@
     .form-group
       .checkbox: label
         = f.check_box :agreed_terms, required: true
+        | &nbsp;
         = f.label :agreed_terms, 'I agree to the'
         | &nbsp;
         a href="https://app.armorpayments.com/terms/#{Rails.application.secrets['armor_api_key']}" target="_BLANK" Terms and Conditions
