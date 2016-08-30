@@ -1,21 +1,23 @@
 .tabs-for-armor style="display:none;"
   ul.nav.nav-tabs
     li.active
-      a data-toggle="tab" href="#1"  Escrow Payment
+      a data-toggle="tab" href="#escrow-describe"  Tab 1
     li
-      a data-toggle="tab" href="#2"  Fee
+      a data-toggle="tab" href="#fee"  Tab 2
     li
-      a data-toggle="tab" href="#3"  Pays fees for Payoneer
+      a data-toggle="tab" href="#pays-fees"  Tab 3
+      
   .tab-content
-    #1.tab-pane.active
-      h3 style="margin-top:10px;" What is escrow payment?
+    #escrow-describe.tab-pane.fade.in.active
+      h3 What is escrow payment?
       p Escrow payment reduces risks for buyers and sellers by using a trusted third party to hold funds
         from a buyer until goods have been delivered. Sellers can ship goods with confidence, knowing
         the buyer has paid, and buyers can be sure that the seller will not paid until they have received
         the goods
       p We have selected Payoneer Escrow for this service.
-    #2.tab-pane
-      h3 style="margin-top:10px;" What is the fee for Payoneer Escrow?
+      
+    #fee.tab-pane.fade
+      h3 What is the fee for Payoneer Escrow?
       p The Payoneer Escrow fee is based on the total value of the order, and will automatically be
         deducted from the funds held in escrow before they get released.
       p The escrow fee schedule is calculated as follows:
@@ -39,9 +41,9 @@
           is payable at the time the payment is released from escrow, and will be automatically
           deducted.
       p For more information about Armor Payments Escrow fees and how to calculate them, visit
-        http://armorpayments.com/fees. Payments to payees will be subject to the Payoneer account
+        <a href="http://armorpayments.com/fees">http://armorpayments.com/fees</a>. Payments to payees will be subject to the Payoneer account
         fee structure.
-
-    #3.tab-pane
-      h3 style="margin-top:10px;" Who pays the fees for Payoneer Escrow?
+    
+    #pays-fees.tab-pane.fade
+      h3 Who pays the fees for Payoneer Escrow?
       p These are seller fees. An additional buyer fee is charged by Toadlane.

@@ -1,4 +1,4 @@
-.account-armor#armor-profile-section
+.account-armor
   h4 Armor Payments:
   p  Set up an armor payments account to sell using the Fly & Buy method
   - if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
@@ -21,7 +21,7 @@
     | Connect your&nbsp;
     = link_to 'Payoneer Account', "javascript:void(0)", id: "armor-tabs"
     | &nbsp;to send and receive funds through Armor Payments
-    .create-payoneer-btn style="margin-top: 15px;"
+    .create-payoneer-btn
       script src=get_script_src type="text/javascript"
       button.btn.btn-primary onClick="armor.openModal('#{@url}')" Payoneer Account
   - else
