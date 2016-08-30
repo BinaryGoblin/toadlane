@@ -404,6 +404,7 @@
     text-transform: uppercase;
     border: 1px solid #cccfd3;
     padding: 6px 0 4px;
+    text-align: center;
   }
 
   td {
@@ -412,7 +413,7 @@
     font-size: 14px;
 
     &:last-child {
-      text-align: right;
+      text-align: left;
     }
   }
 
@@ -421,7 +422,7 @@
   }
 
   dt {
-    width: 90px;
+    width: 80px;
     float: left;
     clear: both;
   }

@@ -30,9 +30,6 @@ div
               dt Address:
               dd= order.buyer.addresses[0].line1 + (order.buyer.addresses[0].line2 || "")
 
-              dt Postal-Code:
-              dd= order.buyer.addresses[0].zip
-
               dt City:
               dd= order.buyer.addresses[0].city
 
@@ -41,6 +38,9 @@ div
 
               dt Country:
               dd= order.buyer.addresses[0].country
+
+              dt Postal-Code:
+              dd= order.buyer.addresses[0].zip
 
             dt Phone:
             dd= order.buyer.phone
