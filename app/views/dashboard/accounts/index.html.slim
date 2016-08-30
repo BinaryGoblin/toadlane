@@ -28,6 +28,7 @@
           = render partial: 'dashboard/accounts/accounts_partials/armor_payment',
                     :locals => {  :user => current_user,
                                   :armor_profile => @armor_profile,
+                                  :url => @url
                                 }
           = render partial: 'dashboard/accounts/accounts_partials/tab_for_armor'
         

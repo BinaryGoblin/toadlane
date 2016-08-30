@@ -23,7 +23,7 @@
     | &nbsp;to send and receive funds through Armor Payments
     .create-payoneer-btn
       script src=get_script_src type="text/javascript"
-      button.btn.btn-primary onClick="armor.openModal('#{@url}')" Payoneer Account
+      button.btn.btn-primary onClick="armor.openModal('#{url}')" Payoneer Account
   - else
     - if current_user.armor_profile.nil?
       = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path, class: "link link-ulined"
