@@ -6,17 +6,18 @@
   - else
     p <b>Status:</b> <span class="warning">You are not connected to Armor.</span>
 
-  .row
+  .row.escrow-benefit-content
     .col-md-2
       = image_tag 'armor-payment.png', width: '250'
       
-    .col-md-6.pull-right
+    .col-md-6.pull-right.benefit-content
       p We’ve partnered with Payoneer to provide secure online escrow payment protection for buyers and sellers. Payoneer Escrow offers:
       ul
         li Reduced payment risk for both buyers and sellers
         li Simple transaction flow
         li Transparent and fair dispute resolution platform
         li Faster payout through Payoneer account
+          
   - if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
     | Connect your&nbsp;
     = link_to 'Payoneer Account', "javascript:void(0)", id: "armor-tabs"
