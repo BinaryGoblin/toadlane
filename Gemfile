@@ -57,6 +57,8 @@ gem 'phonelib', '~> 0.6.2'
 # payment method PromisePay
 gem 'promisepay', '~> 1.1.0'
 
+gem 'iso_country_codes', '~> 0.7.5'
+
 # Dev - debugging group
 group :development do
   gem 'pry-rails'

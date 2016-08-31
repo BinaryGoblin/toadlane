@@ -217,6 +217,7 @@ GEM
     impressionist (1.5.1)
       httpclient (~> 2.2)
       nokogiri (~> 1.5)
+    iso_country_codes (0.7.5)
     jbuilder (2.2.16)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
@@ -478,6 +479,7 @@ DEPENDENCIES
   guard-rspec
   httparty (~> 0.13.7)
   impressionist (~> 1.5.1)
+  iso_country_codes (~> 0.7.5)
   jbuilder (~> 2.2.9)
   jquery-rails (~> 4.0.3)
   jquery-ui-rails (~> 5.0.3)
