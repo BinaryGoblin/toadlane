@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160829043337) do
+ActiveRecord::Schema.define(version: 20160831083655) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -504,6 +504,13 @@ ActiveRecord::Schema.define(version: 20160829043337) do
 
   add_index "products", ["deleted_at"], name: "index_products_on_deleted_at", using: :btree
   add_index "products", ["user_id"], name: "index_products_on_user_id", using: :btree
+
+  create_table "promise_accounts", force: :cascade do |t|
+    t.integer  "bank_account_id"
+    t.integer  "user_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
 
   create_table "refund_requests", force: :cascade do |t|
     t.integer  "green_order_id"
