@@ -60,38 +60,38 @@ class Dashboard::AccountsController < DashboardController
       phone_number = Phonelib.parse(current_user.phone)
       country = IsoCountryCodes.find(address.country)
 
-      existing_user = promise_pay_instance.client.users.find(current_user.id)
-      if !existing_user.present?
+      user = promise_pay_instance.client.users.find(current_user.id)
 
+      unless user.present?
         user = promise_pay_instance.client.users.create(
           id: current_user.id,
           first_name: current_user.first_name,
           last_name: current_user.last_name,
           email: current_user.email,
           company: current_user.company,
-          # mobile: phone_number.international,
-          mobile: '+9779843290209',
+          mobile: phone_number.international,
           address: address.line1,
           city: address.city,
           state: address.state,
           zip: address.zip,
           country: country.alpha3
         )
-      else
-        account_country = IsoCountryCodes.find(promise_params['country'])
-
-        binding.pry
-        a=promise_pay_instance.client.bank_accounts.create(
-          user_id: current_user.id,
-          bank_name: promise_params['bank_name'],
-          account_name: promise_params['account_name'],
-          routing_number: promise_params['routing_number'],
-          account_number: promise_params['account_number'],
-          account_type: promise_params['account_type'],
-          holder_type: promise_params['holder_type'],
-          country: account_country.alpha3
-        )
       end
+
+      credit_card = promise_pay_instance.client.card_accounts.create(
+        user_id: user.id,
+        full_name: user.full_name,
+        number: promise_params['account_number'],
+        expiry_month: promise_params['expiry_month'],
+        expiry_year: promise_params['expiry_year'],
+        cvv: promise_params['cvv']
+      )
+
+      PromiseAccount.create({
+        user_id: user.id,
+        credit_card_id: credit_card.id
+      })
+
     end
     redirect_to dashboard_accounts_path
   end

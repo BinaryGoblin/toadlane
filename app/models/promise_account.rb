@@ -12,4 +12,6 @@
 
 class PromiseAccount < ActiveRecord::Base
   belongs_to :user
+
+  attr_accessor :name, :account_number, :expiry_month, :expiry_year, :cvv
 end

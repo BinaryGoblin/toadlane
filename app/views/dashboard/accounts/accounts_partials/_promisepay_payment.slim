@@ -7,17 +7,9 @@
     .row
       .col-md-6
         .form-group
-          = f.label :name, 'Bank Name:', class: 'required'
-          = f.text_field :bank_name, class: 'form-control', required: true
-      .col-md-6
-        .form-group
           = f.label :name, 'Account Name:', class: 'required'
-          = f.text_field :account_name, class: 'form-control', required: true
-    .row
-      .col-md-6
-        .form-group
-          = f.label :name, 'Routing Number:', class: 'required'
-          = f.text_field :routing_number, class: 'form-control', required: true
+          = f.text_field :name, class: 'form-control', required: true
+          
       .col-md-6
         .form-group
           = f.label :name, 'Account Number:', class: 'required'
@@ -25,17 +17,17 @@
     .row
       .col-md-6
         .form-group
-          = f.label :name, 'Account Type:', class: 'required'
-          = f.text_field :account_type, class: 'form-control', required: true
+          = f.label :name, 'Expiry Month:', class: 'required'
+          = f.text_field :expiry_month, class: 'form-control', required: true
       .col-md-6
         .form-group
-          = f.label :name, 'Holder Type:', class: 'required'
-          = f.text_field :holder_type, class: 'form-control', required: true
+          = f.label :name, 'Expiry year:', class: 'required'
+          = f.text_field :expiry_year, class: 'form-control', required: true
     .row
       .col-md-6
         .form-group
-          = f.label :name, 'Country:', class: 'required'
-          = f.country_select :country, { iso_codes: true, include_blank: 'Select a country'  }, format: :with_alpha3, class: 'form-control', required: true
+          = f.label :name, 'CVV:', class: 'required'
+          = f.text_field :cvv, class: 'form-control', required: true
 
 
     = f.submit "Submit", class: "btn btn-primary"
