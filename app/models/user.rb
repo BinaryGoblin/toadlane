@@ -57,6 +57,7 @@ class User < ActiveRecord::Base
   has_one :stripe_customer
   has_many :products
   has_many :addresses
+  has_one :promise_account, class_name: 'ArmorProfile', foreign_key: :user_id
   accepts_nested_attributes_for :addresses,
   :allow_destroy => true,
   :reject_if => lambda { |a| (a[:name].empty? && a[:line1].empty? && a[:line2].empty? && a[:city].empty? && a[:state].empty? && a[:zip].empty?) }
