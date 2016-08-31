@@ -210,6 +210,14 @@ class User < ActiveRecord::Base
     ap
   end
 
+  def first_name
+    name.split(" ")[0]
+  end
+
+  def last_name
+    name.split(" ")[1]
+  end
+
   private
   def associate_api_user
     if armor_api_account_exists?
