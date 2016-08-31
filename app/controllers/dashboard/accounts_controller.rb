@@ -60,22 +60,24 @@ class Dashboard::AccountsController < DashboardController
       phone_number = Phonelib.parse(current_user.phone)
       country = IsoCountryCodes.find(address.country)
 
-      user = promise_pay_instance.client.users.find(current_user.id)
+      all_user_ids = promise_pay_instance.client.users.find_all.map &:id
 
-      unless user.present?
+      if all_user_ids.include? current_user.id.to_s
+        user = promise_pay_instance.client.users.find(current_user.id)
+      else
         user = promise_pay_instance.client.users.create(
-          id: current_user.id,
-          first_name: current_user.first_name,
-          last_name: current_user.last_name,
-          email: current_user.email,
-          company: current_user.company,
-          mobile: phone_number.international,
-          address: address.line1,
-          city: address.city,
-          state: address.state,
-          zip: address.zip,
-          country: country.alpha3
-        )
+                id: current_user.id,
+                first_name: current_user.first_name,
+                last_name: current_user.last_name,
+                email: current_user.email,
+                company: current_user.company,
+                mobile: phone_number.international,
+                address: address.line1,
+                city: address.city,
+                state: address.state,
+                zip: address.zip,
+                country: country.alpha3
+              )
       end
 
       credit_card = promise_pay_instance.client.card_accounts.create(
@@ -92,6 +94,11 @@ class Dashboard::AccountsController < DashboardController
         credit_card_id: credit_card.id
       })
 
+      if current_user.promise_account.present? && current_user.promise_account.credit_card_id.present?
+        flash[:notice] = "Credit Card successfully added."
+      else
+        flash[:alert] = "There was some problem adding credit card."
+      end
     end
     redirect_to dashboard_accounts_path
   end
