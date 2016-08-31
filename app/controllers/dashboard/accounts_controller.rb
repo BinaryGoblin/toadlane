@@ -7,9 +7,10 @@ class Dashboard::AccountsController < DashboardController
     set_user
     set_green_profile
     set_profile_for_armor
-    retrieve_payoneer_create_url
+    #retrieve_payoneer_create_url
     set_amg_profile
     set_emb_profile
+    set_promise_account
   end
 
   def create_green_profile
@@ -49,6 +50,50 @@ class Dashboard::AccountsController < DashboardController
     end
   rescue ArmorService::BadResponseError => e
     redirect_to :back, :flash => { :error => e.errors.values.flatten }
+  end
+
+  def create_promise_account
+    if current_user.promise_account.nil?
+      promise_pay_instance = PromisePayService.new
+
+      address = current_user.addresses.first
+      phone_number = Phonelib.parse(current_user.phone)
+      country = IsoCountryCodes.find(address.country)
+
+      existing_user = promise_pay_instance.client.users.find(current_user.id)
+      if !existing_user.present?
+
+        user = promise_pay_instance.client.users.create(
+          id: current_user.id,
+          first_name: current_user.first_name,
+          last_name: current_user.last_name,
+          email: current_user.email,
+          company: current_user.company,
+          # mobile: phone_number.international,
+          mobile: '+9779843290209',
+          address: address.line1,
+          city: address.city,
+          state: address.state,
+          zip: address.zip,
+          country: country.alpha3
+        )
+      else
+        account_country = IsoCountryCodes.find(promise_params['country'])
+
+        binding.pry
+        a=promise_pay_instance.client.bank_accounts.create(
+          user_id: current_user.id,
+          bank_name: promise_params['bank_name'],
+          account_name: promise_params['account_name'],
+          routing_number: promise_params['routing_number'],
+          account_number: promise_params['account_number'],
+          account_type: promise_params['account_type'],
+          holder_type: promise_params['holder_type'],
+          country: account_country.alpha3
+        )
+      end
+    end
+    redirect_to dashboard_accounts_path
   end
 
   def send_confirmation_email
@@ -181,6 +226,17 @@ class Dashboard::AccountsController < DashboardController
     end
   end
 
+  def set_promise_account
+    current_promise_account = current_user.promise_account
+    if current_promise_account.present?
+      @promise_account = current_promise_account
+    elsif params['promise_account_id'].present?
+      @promise_account = PromiseAccount.find_by_id(params['promise_account_id'])
+    else
+      @promise_account = PromiseAccount.new
+    end
+  end
+
   def user_params
     params.require(:user).permit!
   end
@@ -191,6 +247,10 @@ class Dashboard::AccountsController < DashboardController
 
   def armor_params
     params.require(:armor_profile).permit!
+  end
+
+  def promise_params
+    params.require(:promise_account).permit!
   end
 
   def create_update_address(armor_params)

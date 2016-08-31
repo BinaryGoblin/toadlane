@@ -57,6 +57,7 @@ Toad::Application.routes.draw do
         get :check_valid_state
         post :create_amg_profile
         post :create_emb_profile
+        post :create_promise_account
       end
     end
 
