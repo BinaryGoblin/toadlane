@@ -1,33 +1,37 @@
 .account-promisepay
   h4 PromisePay Payments:
-  p <b>Status:</b> <span class="warning">You are not connected to PromisePay.</span>
-  p <b>Status:</b> <span class="success">You are connected to PromisePay.</span>
+  - if user.promise_account.credit_card_id.present?
+    p <b>Status:</b> <span class="success">You have successfully added credit card.</span>
+  else
+    p <b>Status:</b> <span class="warning">You have not yet added credit card.</span>
 
-  = form_for promise_account, url: create_promise_account_dashboard_accounts_path, method: "post" do |f|
-    .row
-      .col-md-6
-        .form-group
-          = f.label :name, 'Account Name:', class: 'required'
-          = f.text_field :name, class: 'form-control', required: true
-          
-      .col-md-6
-        .form-group
-          = f.label :name, 'Account Number:', class: 'required'
-          = f.text_field :account_number, class: 'form-control', required: true
-    .row
-      .col-md-6
-        .form-group
-          = f.label :name, 'Expiry Month:', class: 'required'
-          = f.text_field :expiry_month, class: 'form-control', required: true
-      .col-md-6
-        .form-group
-          = f.label :name, 'Expiry year:', class: 'required'
-          = f.text_field :expiry_year, class: 'form-control', required: true
-    .row
-      .col-md-6
-        .form-group
-          = f.label :name, 'CVV:', class: 'required'
-          = f.text_field :cvv, class: 'form-control', required: true
+  -binding.pry
+  - if user.promise_account.present? && user.promise_account.credit_card_id.nil?
+    = form_for promise_account, url: create_promise_account_dashboard_accounts_path, method: "post" do |f|
+      .row
+        .col-md-6
+          .form-group
+            = f.label :name, 'Account Name:', class: 'required'
+            = f.text_field :name, class: 'form-control', required: true
+            
+        .col-md-6
+          .form-group
+            = f.label :name, 'Account Number:', class: 'required'
+            = f.text_field :account_number, class: 'form-control', required: true
+      .row
+        .col-md-6
+          .form-group
+            = f.label :name, 'Expiry Month:', class: 'required'
+            = f.text_field :expiry_month, class: 'form-control', required: true
+        .col-md-6
+          .form-group
+            = f.label :name, 'Expiry year:', class: 'required'
+            = f.text_field :expiry_year, class: 'form-control', required: true
+      .row
+        .col-md-6
+          .form-group
+            = f.label :name, 'CVV:', class: 'required'
+            = f.text_field :cvv, class: 'form-control', required: true
 
 
-    = f.submit "Submit", class: "btn btn-primary"
+      = f.submit "Submit", class: "btn btn-primary"
