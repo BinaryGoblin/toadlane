@@ -45,3 +45,7 @@
                                   :emb_profile => @emb_profile}
                     
       hr
+      .row.account-list-table
+        .col-md-8
+          = render partial: 'dashboard/accounts/accounts_partials/promisepay_payment',
+                    :locals => {  :user => @user}
