@@ -54,6 +54,9 @@ gem 'postmark-rails', '>= 0.10.0'
 # Added for validating phone number as armor uses this library
 gem 'phonelib', '~> 0.6.2'
 
+# payment method PromisePay
+gem 'promisepay', '~> 1.1.0'
+
 # Dev - debugging group
 group :development do
   gem 'pry-rails'
