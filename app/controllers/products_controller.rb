@@ -95,22 +95,6 @@ class ProductsController < ApplicationController
     end
   end
 
-  def create_item_in_promise(product)
-    amount_in_cent = (params[:count].to_f * product.unit_price) * 100
-    fees =
-    client.items.create(
-      id: product.id,
-      name: product.name,
-      amount: amount_in_cent, #amount in cent
-      payment_type: 1, # 1=> Escrow
-      buyer_id: current_user.id,
-      seller_id: product.user.id,
-      fee_ids: '36020976-f345-4d0f-b860-9c025ccce668',
-      description: 'Planting of natives, removal of tree stump.',
-      due_date: '22/04/2016'
-    )
-  end
-
   def calculate_armor_payments_fee(armor_order, amount)
     # here amount is unit_price * count
     if amount > 1000000
