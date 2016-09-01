@@ -105,10 +105,7 @@
                 span <span class="calc-rebate">0.00</span>% rebate for purchasing <span class="calc-pcs">0</span> pcs:
                 b.pull-right.calc-rebate-price 0.00
               li
-                / TODO:: Fee is stated as $100 until fee algorithm is added
-                - if @product.default_payment_armor?
-                  span Toadlane Fee <span class="calc-fees"></span>:
-                - elsif @product.default_payment_promisepay?
+                - if @product.default_payment_promisepay?
                   span Toadlane Fee <span class="calc-fees"></span>:
                 - else
                   span Toadlane Fee (<span class="calc-fees">#{@fee}</span>%):
@@ -147,7 +144,7 @@
                   - if @product.is_buyer_product_owner?(current_user)
                     | You cannot buy your own product.
                   - else
-                    - if @product.default_payment_armor? && @product.inspection_dates.present?
+                    - if @product.default_payment_promisepay? && @product.inspection_dates.present?
                       .inspection_date_select
                         - if params[:armor_order_id].present? && params[:inspection_date_by_seller] == "true"
                           p
@@ -170,13 +167,13 @@
                     - if @product.default_payment.present?
                       input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
 
-                - unless @product.is_buyer_product_owner?(current_user) 
+                - unless @product.is_buyer_product_owner?(current_user)
                   - if @product.default_payment_armor? && @product.negotiable?
-                    - unless params[:armor_order_id].present? && params[:inspection_date_by_seller] == "true"
+                    - unless params[:promise_order_id].present? && params[:inspection_date_by_seller] == "true"
                       - if current_user.profile_complete?
                         a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here
                       - else
-                        = link_to 'Click Here', set_inspection_date_armor_orders_path(product_id: @product.id)
+                        = link_to 'Click Here', set_inspection_date_promise_orders_path(product_id: @product.id)
                       span
                       | &nbsp;to set inspection date
               -else
