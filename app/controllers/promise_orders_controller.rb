@@ -1,0 +1,2 @@
+class PromiseOrdersController < ApplicationController
+end

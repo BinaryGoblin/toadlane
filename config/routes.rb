@@ -27,6 +27,8 @@ Toad::Application.routes.draw do
 
   resources :emb_orders
 
+  resources :promise_orders
+
   get 'print/invoice.:id', to: 'print#invoice', as: 'print/invoice'
 
   get 'search/autocomplete'
