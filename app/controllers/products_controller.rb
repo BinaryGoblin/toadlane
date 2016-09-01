@@ -73,49 +73,8 @@ class ProductsController < ApplicationController
     @stripe_order = StripeOrder.new
     @green_order = GreenOrder.new
 
-    if params["armor_order_id"].present? && params["inspection_date"].present? && params["inspection_date"]["inspection_date_id"].present?
-      @armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
-      @armor_order.update_attributes({
-        unit_price: @product.unit_price,
-        count: params[:count],
-        amount: params[:total],
-        summary: @product.name,
-        description: @product.description,
-        rebate_price: params[:rebate],
-        rebate_percent: params[:rebate_percent],
-        fee: params[:fee], # this is fee amount
-        rebate: params[:rebate_percent],
-        shipping_cost: params[:shipping_cost]
-      })
-      calculate_store_additional_armor_fee(@armor_order)
-      inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
-      inspection_date.update_attributes({armor_order_id: @armor_order.id, approved: true})
-    elsif params["inspection_date"].present? && params["inspection_date"]["inspection_date_id"].present?
-      @armor_order = ArmorOrder.create({
-        buyer_id: current_user.id,
-        seller_id: @product.user.id,
-        product_id: @product.id,
-        unit_price: @product.unit_price,
-        count: params[:count],
-        amount: params[:total],
-        summary: @product.name,
-        description: @product.description,
-        rebate_price: params[:rebate],
-        rebate_percent: params[:rebate_percent],
-        fee: params[:fee], # this is fee amount
-        rebate: params[:rebate_percent],
-        shipping_cost: params[:shipping_cost]
-      })
-      inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
-      inspection_date.update_attributes({armor_order_id: @armor_order.id, approved: true})
-      calculate_store_additional_armor_fee(@armor_order)
-    elsif params["armor_order_id"].present?
-      @armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
-    else
-      @armor_order = ArmorOrder.new
-    end
+    armor_order_process(@product)
 
-    @armor_profile = current_user.armor_profile.present? ? current_user.armor_profile : ArmorProfile.new
     @amg_order = AmgOrder.new
     @emb_order = EmbOrder.new
   end
@@ -170,5 +129,51 @@ class ProductsController < ApplicationController
       seller_charged_fee: seller_charged_fee,
       amount_after_fee_to_seller: amount_after_fee_to_seller
     })
+  end
+
+  def armor_order_process(product)
+    if params["armor_order_id"].present? && params["inspection_date"].present? && params["inspection_date"]["inspection_date_id"].present?
+      @armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
+      @armor_order.update_attributes({
+        unit_price: product.unit_price,
+        count: params[:count],
+        amount: params[:total],
+        summary: product.name,
+        description: product.description,
+        rebate_price: params[:rebate],
+        rebate_percent: params[:rebate_percent],
+        fee: params[:fee], # this is fee amount
+        rebate: params[:rebate_percent],
+        shipping_cost: params[:shipping_cost]
+      })
+      calculate_store_additional_armor_fee(@armor_order)
+      inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
+      inspection_date.update_attributes({armor_order_id: @armor_order.id, approved: true})
+    elsif params["inspection_date"].present? && params["inspection_date"]["inspection_date_id"].present?
+      @armor_order = ArmorOrder.create({
+        buyer_id: current_user.id,
+        seller_id: product.user.id,
+        product_id: product.id,
+        unit_price: product.unit_price,
+        count: params[:count],
+        amount: params[:total],
+        summary: product.name,
+        description: product.description,
+        rebate_price: params[:rebate],
+        rebate_percent: params[:rebate_percent],
+        fee: params[:fee], # this is fee amount
+        rebate: params[:rebate_percent],
+        shipping_cost: params[:shipping_cost]
+      })
+      inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
+      inspection_date.update_attributes({armor_order_id: @armor_order.id, approved: true})
+      calculate_store_additional_armor_fee(@armor_order)
+    elsif params["armor_order_id"].present?
+      @armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
+    else
+      @armor_order = ArmorOrder.new
+    end
+
+    @armor_profile = current_user.armor_profile.present? ? current_user.armor_profile : ArmorProfile.new
   end
 end
