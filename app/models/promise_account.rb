@@ -13,5 +13,6 @@
 class PromiseAccount < ActiveRecord::Base
   belongs_to :user
 
-  attr_accessor :name, :account_number, :expiry_month, :expiry_year, :cvv
+  attr_accessor :bank_name, :account_name, :routing_number, :account_number,
+                  :account_type, :holder_type, :country
 end

@@ -1,17 +1,27 @@
 .account-promisepay
   h4 PromisePay Payments:
   - if user.promise_account.present? && user.promise_account.credit_card_id.present?
-    p <b>Status:</b> <span class="success">You have successfully added credit card.</span>
+    p <b>Status:</b> <span class="success">You have successfully added bank account.</span>
   else
-    p <b>Status:</b> <span class="warning">You have not yet added credit card.</span>
+    p <b>Status:</b> <span class="warning">You have not yet added bank account.</span>
 
   - if user.promise_account.nil?
     = form_for promise_account, url: create_promise_account_dashboard_accounts_path, method: "post" do |f|
       .row
         .col-md-6
           .form-group
+            = f.label :name, 'Bank Name:', class: 'required'
+            = f.text_field :bank_name, class: 'form-control', required: true
+            
+        .col-md-6
+          .form-group
             = f.label :name, 'Account Name:', class: 'required'
-            = f.text_field :name, class: 'form-control', required: true
+            = f.text_field :account_name, class: 'form-control', required: true
+      .row
+        .col-md-6
+          .form-group
+            = f.label :name, 'Routing Number:', class: 'required'
+            = f.text_field :routing_number, class: 'form-control', required: true
             
         .col-md-6
           .form-group
@@ -20,17 +30,17 @@
       .row
         .col-md-6
           .form-group
-            = f.label :name, 'Expiry Month:', class: 'required'
-            = f.text_field :expiry_month, class: 'form-control', required: true
+            = f.label :name, 'Account Type:', class: 'required'
+            = f.text_field :account_type, class: 'form-control', required: true
         .col-md-6
           .form-group
-            = f.label :name, 'Expiry year:', class: 'required'
-            = f.text_field :expiry_year, class: 'form-control', required: true
+            = f.label :name, 'Holder Type:', class: 'required'
+            = f.text_field :holder_type, class: 'form-control', required: true
       .row
         .col-md-6
           .form-group
-            = f.label :name, 'CVV:', class: 'required'
-            = f.text_field :cvv, class: 'form-control', required: true
+              = f.label :country, 'Country:', class: 'required'
+              = f.country_select 'country', [ 'US', 'GB' ], { iso_codes: true }, { class: 'form-control' }
 
 
       = f.submit "Submit", class: "btn btn-primary"
