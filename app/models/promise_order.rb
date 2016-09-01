@@ -2,21 +2,22 @@
 #
 # Table name: promise_orders
 #
-#  id            :integer          not null, primary key
-#  buyer_id      :integer
-#  seller_id     :integer
-#  product_id    :integer
-#  status        :integer
-#  unit_price    :float
-#  count         :integer
-#  fee           :float
-#  rebate        :float
-#  rebate_price  :float
-#  amount        :float
-#  status_change :datetime
-#  deleted       :boolean          default(FALSE)
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id              :integer          not null, primary key
+#  buyer_id        :integer
+#  seller_id       :integer
+#  product_id      :integer
+#  status          :integer
+#  unit_price      :float
+#  count           :integer
+#  fee             :float
+#  rebate          :float
+#  rebate_price    :float
+#  amount          :float
+#  status_change   :datetime
+#  deleted         :boolean          default(FALSE)
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  promise_item_id :string
 #
 
 class PromiseOrder < ActiveRecord::Base
@@ -26,7 +27,24 @@ class PromiseOrder < ActiveRecord::Base
   belongs_to :product
   has_many :notifications, dependent: :destroy
 
+  TestPromiseSellerFeeID = {
+    ach_fee: '057ad7cd-8958-45f8-9584-8ae89406ca9b',
+    transaction_fee: '2008604d-b965-4186-8d06-1eed4584c106',
+    end_user_fee: 'c22d63cc-797e-49fc-a7e9-2255062e048f'
+  }
+
+  # TODO: need to add this when sending to production
+  ProductionPromiseSellerFeeID = {}
+
   def selected_inspection_date
     inspection_dates.approved.first
+  end
+
+  def promise_seller_fee_id
+    if Rails.env.production?
+      fee = ProductionPromiseSellerFeeID
+    else
+      fee = TestPromiseSellerFeeID
+    end
   end
 end
