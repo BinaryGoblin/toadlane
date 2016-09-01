@@ -25,15 +25,6 @@
       hr
       .row.account-list-table
         .col-md-8
-          = render partial: 'dashboard/accounts/accounts_partials/armor_payment',
-                    :locals => {  :user => current_user,
-                                  :armor_profile => @armor_profile,
-                                  :url => @url}
-          = render partial: 'dashboard/accounts/accounts_partials/tab_for_armor'
-        
-      hr
-      .row.account-list-table
-        .col-md-8
           = render partial: 'dashboard/accounts/accounts_partials/amg_payment',
                     :locals => {  :user => @user,
                                   :amg_profile => @amg_profile}
