@@ -49,6 +49,7 @@ class Behavior.CalculationProduct
   number_to_currency: (amount) =>
     amount.replace /(\d)(?=(\d{3})+(?!\d))/g, "$1,"
 
+  # this is for armor
   calculateToadlaneFee: (amount) =>
     if amount < 100000
       fee = 100
@@ -60,6 +61,15 @@ class Behavior.CalculationProduct
       fee = 350
     else if amount >= 10000000
       fee = 500
+
+  # this is for promisepay
+  calculatePayInToadlaneFee: (amount) =>
+    if amount < 1000000
+      fee = (amount * 2.9 / 100) + 0.30
+    else if amount >= 1000000 && amount < 2000000
+      fee = (amount * 2.7 / 100) + 0.30
+    else if amount >= 2000000
+      fee = (amount * 2.5 / 100) + 0.30
 
   calculation: =>
     total  = 0
@@ -92,6 +102,8 @@ class Behavior.CalculationProduct
 
     if $('.user_accounts').children().find('span').text() == "Fly & Buy"
       fees = @calculateToadlaneFee(total)  # ArmorFeeAmount
+    else if $('.user_accounts').children().find('span').text() == "PromisePay"
+      fees = @calculatePayInToadlaneFee(total)  # PromisePayToadlaneFeeAmount
     else
       fees              = total * (@fees || 0) / 100
 

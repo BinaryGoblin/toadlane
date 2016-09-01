@@ -148,6 +148,10 @@ class Product < ActiveRecord::Base
     default_payment == PaymentOptions[:emb]
   end
 
+  def default_payment_promisepay?
+    default_payment == PaymentOptions[:promisepay]
+  end
+
   def seller_set_inspection_dates
     inspection_dates.seller_added
   end
