@@ -5,7 +5,6 @@
   else
     p <b>Status:</b> <span class="warning">You have not yet added credit card.</span>
 
-  -binding.pry
   - if user.promise_account.present? && user.promise_account.credit_card_id.nil?
     = form_for promise_account, url: create_promise_account_dashboard_accounts_path, method: "post" do |f|
       .row
