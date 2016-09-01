@@ -1,6 +1,6 @@
 .account-promisepay
   h4 PromisePay Payments:
-  - if user.promise_account.credit_card_id.present?
+  - if user.promise_account.present? && user.promise_account.credit_card_id.present?
     p <b>Status:</b> <span class="success">You have successfully added credit card.</span>
   else
     p <b>Status:</b> <span class="warning">You have not yet added credit card.</span>
