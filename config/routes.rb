@@ -27,7 +27,7 @@ Toad::Application.routes.draw do
 
   resources :emb_orders
 
-  resources :promise_orders, except: [:edit, :new, :create, :update, :show, :index, :destroy] do
+  resources :promise_orders, except: [:edit, :new, :create, :show, :index, :destroy] do
     collection do
       post :set_inspection_date, to: 'promise_orders#set_inspection_date', as: 'set_inspection_date'
       get :set_inspection_date

@@ -25,4 +25,8 @@ class PromiseOrder < ActiveRecord::Base
   belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'
   belongs_to :product
   has_many :notifications, dependent: :destroy
+
+  def selected_inspection_date
+    inspection_dates.approved.first
+  end
 end

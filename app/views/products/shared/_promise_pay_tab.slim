@@ -1,0 +1,12 @@
+- if user.promise_account.nil?
+  = render partial: 'dashboard/accounts/accounts_partials/promisepay_payment',
+            :locals => {  :user => @user,
+                          :promise_account => @promise_account}
+  / - if controller.controller_name == "products"
+
+- else
+  / -if armor_order.inspection_dates.present? && armor_order.selected_inspection_date.present?
+  /   - if armor_profile.armor_account_id.present? && armor_order.uri.nil?
+  - if user.promise_account_exist?
+  = form_tag promise_order, method: :put do
+    = submit_tag 'Place Order', class: "btn btn-primary"

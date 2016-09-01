@@ -66,3 +66,9 @@
                                   user: current_user,
                                   data: @data,
                                   product: @product}
+                                  
+        - elsif @product.default_payment_promisepay?
+          = render partial: 'products/shared/promise_pay_tab',
+                    :locals => { user: current_user,
+                                  promise_order: @promise_order,
+                                  product: @product}
