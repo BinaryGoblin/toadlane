@@ -3,7 +3,7 @@
 # Table name: promise_accounts
 #
 #  id              :integer          not null, primary key
-#  bank_account_id :integer
+#  bank_account_id :string
 #  user_id         :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
