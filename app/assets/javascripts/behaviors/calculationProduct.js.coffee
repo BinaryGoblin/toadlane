@@ -88,7 +88,7 @@ class Behavior.CalculationProduct
     total = quantity * @unitPrice
 
     if $('.user_accounts').children().find('span').text() == "Fly & Buy"
-      fees = @calculatePayInToadlaneFee(total)  # PromisePayToadlaneFeeAmount
+      fees = 100  # PromisePayToadlaneFeeAmount for buyers
     else
       fees              = total * (@fees || 0) / 100
 
