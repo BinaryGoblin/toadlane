@@ -168,7 +168,7 @@
                       input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
 
                 - unless @product.is_buyer_product_owner?(current_user)
-                  - if @product.default_payment_armor? && @product.negotiable?
+                  - if @product.default_payment_promisepay? && @product.negotiable?
                     - unless params[:promise_order_id].present? && params[:inspection_date_by_seller] == "true"
                       - if current_user.profile_complete?
                         a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here

@@ -69,12 +69,12 @@ class ProductsController < ApplicationController
       available_product: @product.remaining_amount,
       fee: Fee.find_by(:module_name => "Stripe").value
     }
+    @promise_order, @promise_account = promise_order_process(@product)
 
     @stripe_order = StripeOrder.new
     @green_order = GreenOrder.new
 
     @emb_order = EmbOrder.new
-    @promise_order = PromiseOrder.new
   end
 
   def subregion_options
@@ -129,49 +129,46 @@ class ProductsController < ApplicationController
     })
   end
 
-  def armor_order_process(product)
-    if params["armor_order_id"].present? && params["inspection_date"].present? && params["inspection_date"]["inspection_date_id"].present?
-      @armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
-      @armor_order.update_attributes({
+  def promise_order_process(product)
+    if params["promise_order_id"].present? && params["inspection_date"].present? && params["inspection_date"]["inspection_date_id"].present?
+      promise_order = PromiseOrder.find_by_id(params["promise_order_id"])
+      promise_order.update_attributes({
         unit_price: product.unit_price,
         count: params[:count],
         amount: params[:total],
-        summary: product.name,
-        description: product.description,
         rebate_price: params[:rebate],
         rebate_percent: params[:rebate_percent],
-        fee: params[:fee], # this is fee amount
-        rebate: params[:rebate_percent],
-        shipping_cost: params[:shipping_cost]
+        fee: params[:fee] # this is fee amount
       })
-      calculate_store_additional_armor_fee(@armor_order)
+
       inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
-      inspection_date.update_attributes({armor_order_id: @armor_order.id, approved: true})
+      inspection_date.update_attributes({promise_order_id: promise_order.id, approved: true})
+
     elsif params["inspection_date"].present? && params["inspection_date"]["inspection_date_id"].present?
-      @armor_order = ArmorOrder.create({
+      promise_order = PromiseOrder.create({
         buyer_id: current_user.id,
         seller_id: product.user.id,
         product_id: product.id,
         unit_price: product.unit_price,
         count: params[:count],
         amount: params[:total],
-        summary: product.name,
-        description: product.description,
         rebate_price: params[:rebate],
-        rebate_percent: params[:rebate_percent],
-        fee: params[:fee], # this is fee amount
         rebate: params[:rebate_percent],
-        shipping_cost: params[:shipping_cost]
+        fee: params[:fee] # this is fee amount
       })
+
       inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
-      inspection_date.update_attributes({armor_order_id: @armor_order.id, approved: true})
-      calculate_store_additional_armor_fee(@armor_order)
-    elsif params["armor_order_id"].present?
-      @armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
+      inspection_date.update_attributes({promise_order_id: promise_order.id, approved: true})
+
+    elsif params["promise_order_id"].present?
+      promise_order = PromiseOrder.find_by_id(params["promise_order_id"])
     else
-      @armor_order = ArmorOrder.new
+      promise_order = PromiseOrder.new
     end
 
-    @armor_profile = current_user.armor_profile.present? ? current_user.armor_profile : ArmorProfile.new
+    promise_account = current_user.promise_account_exist? ? current_user.promise_account : PromiseAccount.new
+
+    [promise_order, promise_account]
   end
+
 end

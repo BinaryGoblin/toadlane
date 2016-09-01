@@ -220,6 +220,10 @@ class User < ActiveRecord::Base
     name.split(" ")[1]
   end
 
+  def promise_account_exist?
+    promise_account.present? && promise_account.bank_account_id.present?
+  end
+
   private
   def associate_api_user
     if armor_api_account_exists?

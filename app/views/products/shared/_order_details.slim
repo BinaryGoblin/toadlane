@@ -6,11 +6,11 @@
     td <span class="stripe-unit-total">#{number_to_currency(get_subtotal(promise_order.unit_price, promise_order.count))}</span>
 
   tr
-    td colspan="3" <span class="stripe-rebate">#{promise_order.rebate_percent}</span>% rebate for purchasing <span class="stripe-quantity">#{promise_order.count}</span> pcs
+    td colspan="3" <span class="stripe-rebate">#{promise_order.rebate}</span>% rebate for purchasing <span class="stripe-quantity">#{promise_order.count}</span> pcs
     td -<span class="stripe-rebate-price">#{number_to_currency(promise_order.rebate_price)}</span>
 
   tr
-    - if product.default_payment_armor?
+    - if product.default_payment_promisepay?
       td colspan="3" Toadlane Fee <span class="calc-fees"></span>
     - else
       td colspan="3" Toadlane Fee (<span class="calc-fees">#{data[:fee]}</span>%)
@@ -19,8 +19,8 @@
   tr
     td Shipping Estimate
     td.stripe_quantity =promise_order.count
-    td  <span class="calc-shipping" data-type="PerUnit">#{number_to_currency(promise_order.shipping_cost)}</span>
-    td  <span class="stripe-shipping-price">#{number_to_currency(get_shipping_cost(promise_order.count,promise_order.shipping_cost))}</span>
+    td  <span class="calc-shipping" data-type="PerUnit">#{number_to_currency(@data[:shipping_cost])}</span>
+    td  <span class="stripe-shipping-price">#{number_to_currency(get_shipping_cost(promise_order.count, @data[:shipping_cost]))}</span>
 
   tr
     td.no-border colspan="2"
