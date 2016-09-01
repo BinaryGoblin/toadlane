@@ -36,6 +36,8 @@ class PromiseOrder < ActiveRecord::Base
   # TODO: need to add this when sending to production
   ProductionPromiseSellerFeeID = {}
 
+  enum status: %i{ not_started pending payment_required completed cancelled}
+
   def selected_inspection_date
     inspection_dates.approved.first
   end

@@ -3,6 +3,9 @@ class PromiseOrdersController < ApplicationController
   def update
     promise_order = PromiseOrder.find_by_id(params[:id])
     product = promise_order.product
+    set_promise_pay_instance
+    create_item_in_promise(promise_order)
+
     redirect_to product_checkout_path(product_id: product.id, promise_order_id: promise_order.id)
   end
 
@@ -62,5 +65,42 @@ class PromiseOrdersController < ApplicationController
     else
       redirect_to product_path(id: product.id, promise_order_id: promise_order.id), :flash => { :alert => @errors}
     end
+  end
+
+  private
+
+  def set_promise_pay_instance
+    promise_pay_instance = PromisePayService.new
+    @client = promise_pay_instance.client
+  end
+
+  def create_item_in_promise(promise_order)
+    amount_in_cent = promise_order.amount * 100
+    fee_ids = seller_add_fees(promise_order)
+
+    items = @client.items.create(
+      id: promise_order.product_id,
+      name: promise_order.product.name,
+      amount: amount_in_cent, #amount in cent
+      payment_type: 1, # 1=> Escrow
+      buyer_id: promise_order.buyer.id,
+      seller_id: promise_order.seller.id,
+      fee_ids: fee_ids,
+      description: promise_order.product.description
+      # due_date: '22/04/2016'
+    )
+
+    if item.present? && item.status["state"] == "pending"
+      item.request_payment(id: item.id)
+      if item.state == "payment_required"
+      end
+    end
+  end
+
+  def seller_add_fees(promise_order)
+    fee_id_collection = promise_order.promise_seller_fee_id
+
+    fee_id_collection[:ach_fee] + ',' + fee_id_collection[:transaction_fee] +
+      ',' + fee_id_collection[:end_user_fee]
   end
 end
