@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160901051826) do
+ActiveRecord::Schema.define(version: 20160901052950) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -386,8 +386,9 @@ ActiveRecord::Schema.define(version: 20160901051826) do
     t.integer  "product_id"
     t.integer  "armor_order_id"
     t.boolean  "approved"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.integer  "promise_order_id"
   end
 
   create_table "mailboxer_conversation_opt_outs", force: :cascade do |t|
@@ -447,14 +448,15 @@ ActiveRecord::Schema.define(version: 20160901051826) do
     t.integer  "user_id"
     t.integer  "armor_order_id"
     t.string   "title"
-    t.boolean  "read",            default: false
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.boolean  "read",             default: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.integer  "amg_order_id"
     t.integer  "emb_order_id"
     t.integer  "stripe_order_id"
     t.integer  "green_order_id"
-    t.boolean  "deleted",         default: false
+    t.boolean  "deleted",          default: false
+    t.integer  "promise_order_id"
   end
 
   create_table "pricebreaks", force: :cascade do |t|
