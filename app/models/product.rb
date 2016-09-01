@@ -36,12 +36,11 @@ class Product < ActiveRecord::Base
   is_impressionable :counter_cache => true, :column_name => :views_count, :unique => :user_id
 
   PaymentOptions = {
-    armor: 'Fly And Buy',
     green: 'Echeck',
     stripe: 'Stripe',
     amg: 'Credit Card',
     emb: 'Credit Card (EMB)',
-    promisepay: 'Credit Card (Promise Pay)'
+    promisepay: 'Fly And Buy'
   }
 
   belongs_to :user
@@ -131,6 +130,10 @@ class Product < ActiveRecord::Base
 
   def default_payment_armor?
     default_payment == PaymentOptions[:armor]
+  end
+
+  def default_payment_promisepay?
+    default_payment == PaymentOptions[:promisepay]
   end
 
   def default_payment_stripe?

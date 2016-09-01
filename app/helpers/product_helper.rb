@@ -107,7 +107,7 @@ module ProductHelper
   end
 
   def get_style(product)
-    if product.default_payment_armor?
+    if product.default_payment_promisepay?
       "display:block;"
     else
       "display:none;"

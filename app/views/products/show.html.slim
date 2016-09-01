@@ -231,10 +231,7 @@
                   p
                     b PAYMENT METHOD:
                     br
-                    - if @product.default_payment_armor?
-                      span.label.label-orange
-                        | Fly & Buy
-                    - elsif @product.default_payment_green?
+                    - if @product.default_payment_green?
                       span.label.label-green
                         | Echeck
                     - elsif @product.default_payment_stripe?
@@ -248,7 +245,7 @@
                         | EMB
                     - elsif @product.user.promise_account.present?
                       span.label.label-orange
-                        | PromisePay
+                        | Fly & Buy
                     - else
                         | Payment option has not been selected by the seller for this product.
                   - if current_user == @product.user

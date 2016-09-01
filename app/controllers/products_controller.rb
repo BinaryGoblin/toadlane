@@ -73,10 +73,8 @@ class ProductsController < ApplicationController
     @stripe_order = StripeOrder.new
     @green_order = GreenOrder.new
 
-    armor_order_process(@product)
-
-    @amg_order = AmgOrder.new
     @emb_order = EmbOrder.new
+    @promise_order = PromiseOrder.new
   end
 
   def subregion_options
