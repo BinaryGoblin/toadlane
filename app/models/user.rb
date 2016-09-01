@@ -100,7 +100,8 @@ class User < ActiveRecord::Base
 
   # user should have at least one payment method to create products
   def has_payment_account?
-    self.stripe_profile.present? || self.green_profile.present? || self.armor_profile.present?
+    self.stripe_profile.present? || self.green_profile.present? ||
+        self.armor_profile.present? || self.promise_account.present?
   end
 
   def armor_orders(type=nil)
@@ -207,6 +208,7 @@ class User < ActiveRecord::Base
     ap << Product::PaymentOptions[:armor] if armor_profile.present?
     ap << Product::PaymentOptions[:amg] if amg_profile.present?
     ap << Product::PaymentOptions[:emb] if emb_profile.present?
+    ap << Product::PaymentOptions[:promisepay] if promise_account.present?
     ap
   end
 

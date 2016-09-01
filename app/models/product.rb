@@ -40,7 +40,8 @@ class Product < ActiveRecord::Base
     green: 'Echeck',
     stripe: 'Stripe',
     amg: 'Credit Card',
-    emb: 'Credit Card (EMB)'
+    emb: 'Credit Card (EMB)',
+    promisepay: 'Credit Card (Promise Pay)'
   }
 
   belongs_to :user

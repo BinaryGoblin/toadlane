@@ -244,6 +244,9 @@
                     - elsif @product.default_payment_emb?
                       span.label.label-dark-blue
                         | EMB
+                    - elsif @product.user.promise_account.present?
+                      span.label.label-orange
+                        | PromisePay
                     - else
                         | Payment option has not been selected by the seller for this product.
                   - if current_user == @product.user
