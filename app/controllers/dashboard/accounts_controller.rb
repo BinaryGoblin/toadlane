@@ -53,52 +53,49 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def create_promise_account
-    if current_user.promise_account.nil?
-      promise_pay_instance = PromisePayService.new
+    promise_pay_instance = PromisePayService.new
 
-      address = current_user.addresses.first
-      phone_number = Phonelib.parse(current_user.phone)
-      country = IsoCountryCodes.find(address.country)
+    address = current_user.addresses.first
+    phone_number = Phonelib.parse(current_user.phone)
+    country = IsoCountryCodes.find(address.country)
 
-      all_user_ids = promise_pay_instance.client.users.find_all.map &:id
+    all_user_ids = promise_pay_instance.client.users.find_all.map &:id
+    if all_user_ids.include? current_user.id.to_s
+      user = promise_pay_instance.client.users.find(current_user.id)
+    else
+      user = promise_pay_instance.client.users.create(
+              id: current_user.id,
+              first_name: current_user.first_name,
+              last_name: current_user.last_name,
+              email: current_user.email,
+              company: current_user.company,
+              mobile: phone_number.international,
+              address: address.line1,
+              city: address.city,
+              state: address.state,
+              zip: address.zip,
+              country: country.alpha3
+            )
+    end
 
-      if all_user_ids.include? current_user.id.to_s
-        user = promise_pay_instance.client.users.find(current_user.id)
-      else
-        user = promise_pay_instance.client.users.create(
-                id: current_user.id,
-                first_name: current_user.first_name,
-                last_name: current_user.last_name,
-                email: current_user.email,
-                company: current_user.company,
-                mobile: phone_number.international,
-                address: address.line1,
-                city: address.city,
-                state: address.state,
-                zip: address.zip,
-                country: country.alpha3
-              )
-      end
+    credit_card = promise_pay_instance.client.card_account.create(
+      user_id: user.id,
+      full_name: user.full_name,
+      number: promise_params['account_number'],
+      expiry_month: promise_params['expiry_month'],
+      expiry_year: promise_params['expiry_year'],
+      cvv: promise_params['cvv']
+    )
 
-      credit_card = promise_pay_instance.client.card_accounts.create(
-        user_id: user.id,
-        full_name: user.full_name,
-        number: promise_params['account_number'],
-        expiry_month: promise_params['expiry_month'],
-        expiry_year: promise_params['expiry_year'],
-        cvv: promise_params['cvv']
-      )
+    PromiseAccount.create({
+      user_id: user.id,
+      credit_card_id: credit_card.id
+    })
 
-      PromiseAccount.create({
-        user_id: user.id,
-        credit_card_id: credit_card.id
-      })
-
-      if current_user.promise_account.present? && current_user.promise_account.credit_card_id.present?
-        flash[:notice] = "Credit Card successfully added."
-      else
-        flash[:alert] = "There was some problem adding credit card."
-      end
+    if current_user.promise_account.present? && current_user.promise_account.credit_card_id.present?
+      flash[:notice] = "Credit Card successfully added."
+    else
+      flash[:alert] = "There was some problem adding credit card."
     end
     redirect_to dashboard_accounts_path
   end
