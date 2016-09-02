@@ -74,7 +74,9 @@ class PromiseOrdersController < ApplicationController
 
   def create_item_in_promise(promise_order)
     amount_in_cent = promise_order.amount * 100
-    fee_ids = seller_add_fees(promise_order)
+    fee_ids, seller_fee_amount = seller_add_fees(promise_order)
+
+
 
     item = @client.items.create(
       id: promise_order.id,
@@ -90,7 +92,15 @@ class PromiseOrdersController < ApplicationController
 
     if item.present? && item.status["state"] == "pending"
       item.request_payment(id: item.id)
-      if promise_order.update_attributes({status: item.state, promise_item_id: item.id })
+      if promise_order.update_attributes(
+            {
+              status: item.state,
+              promise_item_id: item.id,
+              seller_charged_fee: seller_fee_amount,
+              amount_after_fee_to_seller: promise_order.amount - seller_fee_amount
+            })
+        # UserMailer.sales_order_notification_to_seller(promise_order).deliver_later
+        # UserMailer.sales_order_notification_to_buyer(promise_order).deliver_later
         redirect_to dashboard_order_path(
           promise_order,
           type: 'promise'
@@ -110,9 +120,24 @@ class PromiseOrdersController < ApplicationController
   end
 
   def seller_add_fees(promise_order)
+    amount = promise_order.amount
     fee_id_collection = promise_order.promise_seller_fee_id
 
-    fee_id_collection[:ach_fee] + ',' + fee_id_collection[:transaction_fee] +
-      ',' + fee_id_collection[:end_user_fee]
+    fee_ids = fee_id_collection[:ach_fee] + ',' +
+              fee_id_collection[:transaction_fee] +
+              ',' + fee_id_collection[:end_user_fee]
+    # In promise we are saving fees in amount in cents even to percentage
+    # # the fee_type_id distinguishes if the fee is fixed or percentage or others
+    # # for details see https://reference.promisepay.com/#create-fee
+
+    ach_fee_percent = @client.fees.find(fee_id_collection[:ach_fee]).amount / 100.00
+    transaction_fee_percent = @client.fees.find(fee_id_collection[:transaction_fee]).amount / 100.00
+    end_user_fee_percent = @client.fees.find(fee_id_collection[:end_user_fee]).amount / 100.00
+
+    seller_fee_amount = amount * ach_fee_percent / 100 +
+                          amount * transaction_fee_percent / 100 +
+                          amount * end_user_fee_percent / 100
+
+    [fee_ids, seller_fee_amount]
   end
 end

@@ -34,7 +34,7 @@
             td.text-center= link_to order.product.name.titleize, product_path(order.product, cat_id: order.product.main_category), class: 'link link-ulined', target: '_blank'
             td.text-center= order.count
             td.text-center
-              -if order.instance_of? ArmorOrder
+              -if order.instance_of? PromiseOrder
                 = number_to_currency(order.amount, :unit => "$", precision: 2)
               -else
                 = number_to_currency(order.total, :unit => "$", precision: 2)
@@ -47,9 +47,9 @@
                 | &nbsp;
                 = link_to 'Refund Requested', dashboard_refund_requests_path, class: 'view'
             td.text-center
-              - if order.instance_of?(ArmorOrder)
+              - if order.instance_of?(PromiseOrder)
                 - if current_user == order.buyer && order.not_inspected
-                  = link_to 'Complete Inspection', armor_order_complete_inspection_path(order.id), class: 'view'
+                  = link_to 'Complete Inspection', promise_order_complete_inspection_path(order.id), class: 'view'
                 - elsif order.funds_in_escrow == false
                   | Funds are not transfered to escrow yet.
                 - elsif order.payment_release == true
@@ -63,9 +63,9 @@
                 | -
             td.text-center
               // for displaying type of order
-              - if order.instance_of? ArmorOrder
+              - if order.instance_of? PromiseOrder
                 span.label.label-orange
-                  | Armor
+                  | Promise
               - elsif order.instance_of? GreenOrder
                 span.label.label-green
                   | Green By Phone
