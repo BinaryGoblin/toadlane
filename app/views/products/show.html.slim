@@ -2,12 +2,8 @@
   - if !flash[:error].nil?
     .error-explanation
       | You must complete your&nbsp;
-      - if @product.default_payment_armor?
-        = link_to 'profile', dashboard_profile_path, class: 'view'
-        | &nbsp;to view Fly & Buy inspection dates.
-      - else
-        = link_to 'profile', dashboard_profile_path, class: 'view'
-        | &nbsp;to create orders.
+      = link_to 'profile', dashboard_profile_path, class: 'view'
+      | &nbsp;to create order.
 
 .actions-panel-product: .wrap-sm
   / = link_to 'Next product', '#', class: 'btn btn-default pull-right'

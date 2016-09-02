@@ -23,12 +23,15 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def create_promise_account
+    if current_user.present? && !current_user.profile_complete?
+      return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must complete your profile before you can create a bank account." }
+    end
+
     promise_pay_instance = PromisePayService.new
 
     address = current_user.addresses.first
     phone_number = Phonelib.parse(current_user.phone)
     country = IsoCountryCodes.find(address.country)
-
     all_user_ids = promise_pay_instance.client.users.find_all.map &:id
     if all_user_ids.include? current_user.id.to_s
       user = promise_pay_instance.client.users.find(current_user.id)

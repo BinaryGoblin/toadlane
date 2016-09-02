@@ -8,6 +8,11 @@
           = error
       - else
         = flash[:error]
+  - elsif !flash[:account_error].nil?
+    .error-explanation
+      | You must complete your&nbsp;
+      = link_to 'profile', dashboard_profile_path, class: 'view'
+      | &nbsp;to add bank account.
 
   .row.account-table
     .col-md-3
