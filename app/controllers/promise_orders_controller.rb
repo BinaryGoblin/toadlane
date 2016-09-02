@@ -78,22 +78,49 @@ class PromiseOrdersController < ApplicationController
     amount_in_cent = promise_order.amount * 100
     fee_ids = seller_add_fees(promise_order)
 
-    items = @client.items.create(
-      id: promise_order.product_id,
-      name: promise_order.product.name,
-      amount: amount_in_cent, #amount in cent
-      payment_type: 1, # 1=> Escrow
-      buyer_id: promise_order.buyer.id,
-      seller_id: promise_order.seller.id,
-      fee_ids: fee_ids,
-      description: promise_order.product.description
-      # due_date: '22/04/2016'
-    )
+    item_ids = @client.items.find_all.map &:id
+
+    if item_ids.include? promise_order.product_id
+      item = @client.items.find(promise_order.product_id)
+    else
+      item = @client.items.create(
+        id: promise_order.product_id,
+        name: promise_order.product.name,
+        amount: amount_in_cent, #amount in cent
+        payment_type: 1, # 1=> Escrow
+        buyer_id: promise_order.buyer.id,
+        seller_id: promise_order.seller.id,
+        fee_ids: fee_ids,
+        description: promise_order.product.description
+        # due_date: '22/04/2016' #not quite sure about this
+      )
+    end
 
     if item.present? && item.status["state"] == "pending"
       item.request_payment(id: item.id)
       if item.state == "payment_required"
+        if promise_order.update_attributes({state: item.state})
+          redirect_to dashboard_order_path(
+            promise_order,
+            type: 'promise'
+          ), notice: 'Your order was successfully placed.'
+        else
+          redirect_to product_checkout_path(
+            product_id: product.id,
+            promise_order_id: promise_order.id
+          ), :flash => { :alert => promise_order.errors.messages}
+        end
+      else
+        redirect_to product_checkout_path(
+          product_id: product.id,
+          promise_order_id: promise_order.id
+        ), :flash => { :alert => 'Your order cannot be placed.'}
       end
+    else
+      redirect_to product_checkout_path(
+        product_id: product.id,
+        promise_order_id: promise_order.id
+      ), :flash => { :alert => 'Your order cannot be placed.'}
     end
   end
 
