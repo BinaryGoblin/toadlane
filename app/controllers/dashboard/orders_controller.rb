@@ -3,13 +3,13 @@ class Dashboard::OrdersController < DashboardController
 
   def index
     orders = []
-    armor_orders = current_user.armor_orders.for_dashboard(params[:page], params[:per_page]).with_order_id
+    promise_orders = current_user.promise_orders.with_promise_item_id
     stripe_orders = current_user.stripe_orders.for_dashboard(params[:page], params[:per_page])
     green_orders = current_user.green_orders.for_dashboard(params[:page], params[:per_page])
     amg_orders = current_user.amg_orders.for_dashboard(params[:page], params[:per_page])
     emb_orders = current_user.emb_orders.for_dashboard(params[:page], params[:per_page])
 
-    orders =  armor_orders + stripe_orders + green_orders + amg_orders + emb_orders
+    orders =  promise_orders + stripe_orders + green_orders + amg_orders + emb_orders
 
     @orders = orders.sort_by(&:created_at).reverse
   end
@@ -26,6 +26,8 @@ class Dashboard::OrdersController < DashboardController
       @order = AmgOrder.find(params[:id])
     when 'emb'
       @order = EmbOrder.find(params[:id])
+    when 'promise'
+      @order = PromiseOrder.find(params[:id])
     else
       @order = StripeOrder.find(params[:id])
     end
