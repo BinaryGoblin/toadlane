@@ -74,7 +74,7 @@ class Dashboard::AccountsController < DashboardController
     else
       flash[:alert] = "There was some problem adding bank account."
     end
-    redirect_to dashboard_accounts_path
+    redirect_to request.referrer
   end
 
   def create_amg_profile
