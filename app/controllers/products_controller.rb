@@ -163,9 +163,13 @@ class ProductsController < ApplicationController
 
     elsif params["promise_order_id"].present?
       promise_order = PromiseOrder.find_by_id(params["promise_order_id"])
+    elsif request.get? && session[:promise_order_id].present?
+      promise_order = PromiseOrder.find_by_id(session[:promise_order_id])
     else
       promise_order = PromiseOrder.new
     end
+
+    session[:promise_order_id] = promise_order.id
 
     promise_account = current_user.promise_account_exist? ? current_user.promise_account : PromiseAccount.new
 
