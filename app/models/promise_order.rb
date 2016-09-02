@@ -2,22 +2,24 @@
 #
 # Table name: promise_orders
 #
-#  id              :integer          not null, primary key
-#  buyer_id        :integer
-#  seller_id       :integer
-#  product_id      :integer
-#  status          :integer
-#  unit_price      :float
-#  count           :integer
-#  fee             :float
-#  rebate          :float
-#  rebate_price    :float
-#  amount          :float
-#  status_change   :datetime
-#  deleted         :boolean          default(FALSE)
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  promise_item_id :string
+#  id                  :integer          not null, primary key
+#  buyer_id            :integer
+#  seller_id           :integer
+#  product_id          :integer
+#  status              :integer
+#  unit_price          :float
+#  count               :integer
+#  fee                 :float
+#  rebate              :float
+#  rebate_price        :float
+#  amount              :float
+#  status_change       :datetime
+#  deleted             :boolean          default(FALSE)
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  promise_item_id     :string
+#  inspection_complete :boolean          default(FALSE)
+#  funds_in_escrow     :boolean          default(FALSE)
 #
 
 class PromiseOrder < ActiveRecord::Base
@@ -36,6 +38,8 @@ class PromiseOrder < ActiveRecord::Base
   # TODO: need to add this when sending to production
   ProductionPromiseSellerFeeID = {}
 
+  scope :with_promise_item_id, -> { where.not(promise_item_id: nil) }
+
   enum status: %i{ not_started pending payment_required completed cancelled}
 
   def selected_inspection_date
@@ -48,5 +52,9 @@ class PromiseOrder < ActiveRecord::Base
     else
       fee = TestPromiseSellerFeeID
     end
+  end
+
+  def not_inspected
+    inspection_complete == false
   end
 end
