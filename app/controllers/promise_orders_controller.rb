@@ -76,8 +76,6 @@ class PromiseOrdersController < ApplicationController
     amount_in_cent = promise_order.amount * 100
     fee_ids, seller_fee_amount = seller_add_fees(promise_order)
 
-
-
     item = @client.items.create(
       id: promise_order.id,
       name: promise_order.product.name,
@@ -92,12 +90,14 @@ class PromiseOrdersController < ApplicationController
 
     if item.present? && item.status["state"] == "pending"
       item.request_payment(id: item.id)
+      amount_after_fee_to_seller = promise_order.amount - seller_fee_amount
+      
       if promise_order.update_attributes(
             {
               status: item.state,
               promise_item_id: item.id,
               seller_charged_fee: seller_fee_amount,
-              amount_after_fee_to_seller: promise_order.amount - seller_fee_amount
+              amount_after_fee_to_seller: amount_after_fee_to_seller
             })
         # UserMailer.sales_order_notification_to_seller(promise_order).deliver_later
         # UserMailer.sales_order_notification_to_buyer(promise_order).deliver_later

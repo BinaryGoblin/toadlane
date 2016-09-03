@@ -11,10 +11,10 @@ div
           h4.text-uppercase order ##{order.id}
           p
             - if order.instance_of? StripeOrder
-            - if order.instance_of? ArmorOrder
+            - if order.instance_of? PromiseOrder
               div
-                | Armor Order Id #
-                = order.order_id
+                | Promise Item Id #
+                = order.promise_item_id
           div Date: #{order.created_at.strftime('%m-%d-%Y')}
 
 
@@ -74,73 +74,40 @@ div
         td  #{number_to_currency(number_with_precision(order.count * order.unit_price, precision: 2, delimiter: ''))}
 
       tr
-        - if order.instance_of? StripeOrder
-          td colspan="3" #{number_with_precision(order.rebate, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
-          td - #{number_to_currency(number_with_precision(order.rebate, precision: 2, delimiter: ''))}
-        - if order.instance_of? ArmorOrder
-          td colspan="3" #{number_with_precision(order.rebate, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
-          td - #{number_to_currency(number_with_precision(order.rebate, precision: 2, delimiter: ''))}
-        - if order.instance_of? GreenOrder
-          td colspan="3" #{number_with_precision(order.rebate, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
-          td - #{number_to_currency(number_with_precision(order.rebate, precision: 2, delimiter: ''))}
-        - if order.instance_of? AmgOrder
-          td colspan="3" #{number_with_precision(order.rebate, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
-          td - #{number_to_currency(number_with_precision(order.rebate, precision: 2, delimiter: ''))}
-        - if order.instance_of? EmbOrder
-          td colspan="3" #{number_with_precision(order.rebate, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
+        td colspan="3" #{number_with_precision(order.rebate, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
+        - if order.instance_of? PromiseOrder
+          td - #{number_to_currency(number_with_precision(order.rebate_price, precision: 2, delimiter: ''))}
+        - else
           td - #{number_to_currency(number_with_precision(order.rebate, precision: 2, delimiter: ''))}
 
       tr
-        td colspan="3" Fees
-        - if order.instance_of? StripeOrder
+        td colspan="3" Toadlane Fee
+        - if order.instance_of? PromiseOrder
           td  #{number_to_currency(number_with_precision(order.fee, precision: 2, delimiter: ''))}
-        - if order.instance_of? ArmorOrder
-          td  #{number_to_currency(number_with_precision(order.fee, precision: 2, delimiter: ''))}
-        - if order.instance_of? GreenOrder
-          td  #{number_to_currency(number_with_precision(order.fee, precision: 2, delimiter: ''))}
-        - if order.instance_of? AmgOrder
-          td  #{number_to_currency(number_with_precision(order.fee, precision: 2, delimiter: ''))}
-        - if order.instance_of? EmbOrder
+        - else
           td  #{number_to_currency(number_with_precision(order.fee, precision: 2, delimiter: ''))}
 
-      - if order.instance_of? StripeOrder
+      - if order.instance_of? PromiseOrder
+        - if current_user == order.seller
+          tr
+            td colspan="3" Seller Charged Fees
+            td - #{number_to_currency(number_with_precision(order.seller_charged_fee, precision: 2, delimiter: ''))}
+      - else
         tr
           td colspan="3" Shipping
           td  #{number_to_currency(number_with_precision(order.shipping_cost, precision: 2, delimiter: ''))}
-      - if order.instance_of? GreenOrder
-        tr
-          td colspan="3" Shipping
-          td  #{number_to_currency(number_with_precision(order.shipping_cost, precision: 2, delimiter: ''))}
-      - if order.instance_of? AmgOrder
-        tr
-          td colspan="3" Shipping
-          td  #{number_to_currency(number_with_precision(order.shipping_cost, precision: 2, delimiter: ''))}
-      - if order.instance_of? EmbOrder
-        tr
-          td colspan="3" Shipping
-          td  #{number_to_currency(number_with_precision(order.shipping_cost, precision: 2, delimiter: ''))}
-      
-      - if order.instance_of? ArmorOrder
-        tr
-          td colspan="3" Armor Payment Fees
-          td  #{number_to_currency(number_with_precision(order.seller_charged_fee, precision: 2, delimiter: ''))}
 
       tr
         td.no-border colspan="2"
         td.text-center: b.text-uppercase Total:
-        - if order.instance_of? StripeOrder
-          td: b  #{number_to_currency(number_with_precision(order.total, precision: 2, delimiter: ''))}
-        - if order.instance_of? ArmorOrder
+        - if order.instance_of? PromiseOrder
           - if current_user == order.seller
             td: b  #{number_to_currency(number_with_precision(order.amount_after_fee_to_seller, precision: 2, delimiter: ''))}
           - else
             td: b  #{number_to_currency(number_with_precision(order.amount, precision: 2, delimiter: ''))}
-        - if order.instance_of? GreenOrder
+        - else
           td: b  #{number_to_currency(number_with_precision(order.total, precision: 2, delimiter: ''))}
-        - if order.instance_of? AmgOrder
-          td: b  #{number_to_currency(number_with_precision(order.total, precision: 2, delimiter: ''))}
-        - if order.instance_of? EmbOrder
-          td: b  #{number_to_currency(number_with_precision(order.total, precision: 2, delimiter: ''))}
+          
   - if order.instance_of? GreenOrder
     table.table-checkout style="margin-top: 20px;"
       thead
