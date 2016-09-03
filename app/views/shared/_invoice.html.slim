@@ -78,7 +78,7 @@ div
         - if order.instance_of? PromiseOrder
           td - #{number_to_currency(number_with_precision(order.rebate_price, precision: 2, delimiter: ''))}
         - else
-          td - #{number_to_currency(number_with_precision(order.rebate, precision: 2, delimiter: ''))}
+          td - #{number_to_currency(number_with_precision(get_amount_for_rebate(order), precision: 2, delimiter: ''))}
 
       tr
         td colspan="3" Toadlane Fee

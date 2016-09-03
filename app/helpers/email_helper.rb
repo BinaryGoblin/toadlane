@@ -16,7 +16,12 @@ module EmailHelper
     end
   end
 
-  def get_amount_without_fees(stripe_order)
-    stripe_order.unit_price * stripe_order.count
+  def get_amount_without_fees(order)
+    order.unit_price * order.count.to_f
+  end
+
+  def get_amount_for_rebate(order)
+    amount_without_fees = get_amount_without_fees(order)
+    amount_without_fees * order.rebate / 100
   end
 end

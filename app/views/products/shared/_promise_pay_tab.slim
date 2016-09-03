@@ -8,5 +8,5 @@
   / -if armor_order.inspection_dates.present? && armor_order.selected_inspection_date.present?
   /   - if armor_profile.armor_account_id.present? && armor_order.uri.nil?
   - if user.promise_account_exist?
-  = form_tag promise_order, method: :put do
+  = form_tag promise_order, method: :put, :class => "create-api-order" do
     = submit_tag 'Place Order', class: "btn btn-primary"

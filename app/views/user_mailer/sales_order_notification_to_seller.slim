@@ -22,10 +22,10 @@ html[style="margin: 0;padding: 0;"]
               h4.text-uppercase[style="margin: 0;padding: 0;"]
                 |  order #
                 = @order.id
-                - if @order.instance_of? ArmorOrder
+                - if @order.instance_of? PromiseOrder
                   p
-                    | Armor Order Id #
-                    = @order.order_id
+                    | Promise Item Id #
+                    = @order.promise_item_id
               div[style="margin: 0;padding: 0;"]
                 |  Date:&nbsp;
                 = @order.created_at.to_date
@@ -39,28 +39,28 @@ html[style="margin: 0;padding: 0;"]
                   |  Name:
                 dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
                   = get_email_or_name(@buyer)
-                - if !@order.instance_of? ArmorOrder
-                  - if @order.address.present?
-                    dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
-                      |  Address:
-                    dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
-                      = @order.address.name
-                    dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
-                      |  Postal-Code:
-                    dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
-                      = @order.address.zip
-                    dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
-                      |  City:
-                    dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
-                      = @order.address.city
-                    dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
-                      |  State:
-                    dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
-                      = @order.address.state
-                    dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
-                      |  Country:
-                    dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
-                      = @order.address.country
+
+                - if !@buyer.addresses[0].nil?
+                  dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
+                    |  Address:
+                  dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
+                    = @buyer.addresses[0].line1 + (@buyer.addresses[0].line2 || "")
+                  dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
+                    |  Postal-Code:
+                  dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
+                    = @buyer.addresses[0].zip
+                  dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
+                    |  City:
+                  dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
+                    = @buyer.addresses[0].city
+                  dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
+                    |  State:
+                  dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
+                    = @buyer.addresses[0].state
+                  dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
+                    |  Country:
+                  dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
+                    = @buyer.addresses[0].country
                 dt[style="margin: 0;padding: 0;width: 120px;float: left;clear: both;"]
                   |  Phone:
                 dd[style="margin: 5px 0;padding: 0;font-weight: 800;display: block;"]
@@ -105,24 +105,27 @@ html[style="margin: 0;padding: 0;"]
               | % rebate for purchasing #{@order.count} pcs
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
               | -
-              = number_to_currency(@order.rebate)
+              - if @order.instance_of? PromiseOrder
+                = number_to_currency(@order.rebate_price)
+              - else
+                = number_to_currency(get_amount_for_rebate(@order))
           tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
             td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
               |  Fees
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
               = number_to_currency(@order.fee)
           tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
-            td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
-              |  Shipping
-            td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
-              = number_to_currency(@order.shipping_cost)
-          - if @order.instance_of? ArmorOrder
-            tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
+            - if @order.instance_of? PromiseOrder
               td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
-                |  Armor Payment Fees
+                |  Seller Charged Fees
               td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
                 | -
                 = number_to_currency(@order.seller_charged_fee)
+            - else
+              td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
+                |  Shipping
+              td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
+                = number_to_currency(@order.shipping_cost)
           tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;border-bottom: none;"]
             td.no-border[colspan="2" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
             td.text-center[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: center;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
@@ -130,7 +133,7 @@ html[style="margin: 0;padding: 0;"]
                 | Total:
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
               b[style="margin: 0;padding: 0;"]
-                - if @order.instance_of? ArmorOrder
+                - if @order.instance_of? PromiseOrder
                   = number_to_currency(@order.amount_after_fee_to_seller)
                 - else
                   = number_to_currency(@order.total)

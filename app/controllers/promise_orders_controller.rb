@@ -4,7 +4,7 @@ class PromiseOrdersController < ApplicationController
     promise_order = PromiseOrder.find_by_id(params[:id])
     product = promise_order.product
     set_promise_pay_instance
-    create_item_in_promise(promise_order)
+    create_item_in_promise(product, promise_order)
   end
 
   def set_inspection_date
@@ -72,26 +72,26 @@ class PromiseOrdersController < ApplicationController
     @client = promise_pay_instance.client
   end
 
-  def create_item_in_promise(promise_order)
+  def create_item_in_promise(product, promise_order)
     amount_in_cent = promise_order.amount * 100
     fee_ids, seller_fee_amount = seller_add_fees(promise_order)
 
     item = @client.items.create(
       id: promise_order.id,
-      name: promise_order.product.name,
+      name: product.name,
       amount: amount_in_cent, #amount in cent
       payment_type: 1, # 1=> Escrow
       buyer_id: promise_order.buyer.id,
       seller_id: promise_order.seller.id,
       fee_ids: fee_ids,
-      description: promise_order.product.description
+      description: product.description
       # due_date: '22/04/2016' #not quite sure about this
     )
 
     if item.present? && item.status["state"] == "pending"
       item.request_payment(id: item.id)
       amount_after_fee_to_seller = promise_order.amount - seller_fee_amount
-      
+
       if promise_order.update_attributes(
             {
               status: item.state,
@@ -99,8 +99,10 @@ class PromiseOrdersController < ApplicationController
               seller_charged_fee: seller_fee_amount,
               amount_after_fee_to_seller: amount_after_fee_to_seller
             })
-        # UserMailer.sales_order_notification_to_seller(promise_order).deliver_later
-        # UserMailer.sales_order_notification_to_buyer(promise_order).deliver_later
+        product.sold_out += promise_order.count
+        product.save
+        UserMailer.sales_order_notification_to_seller(promise_order).deliver_later
+        UserMailer.sales_order_notification_to_buyer(promise_order).deliver_later
         redirect_to dashboard_order_path(
           promise_order,
           type: 'promise'

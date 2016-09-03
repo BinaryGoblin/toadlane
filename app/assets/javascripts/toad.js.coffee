@@ -104,12 +104,6 @@ $(document).ready ->
     $('form#search_form').submit()
     return
 
-  $('#armor-tabs').click (event) ->
-    if $(".tabs-for-armor").is(':visible')
-      $(".tabs-for-armor").hide()
-    else
-      $(".tabs-for-armor").show()
-
   $("#green_order_phone").mask("999-999-9999");
 
   if $('.vp-calculation-checkout').is(':visible')
