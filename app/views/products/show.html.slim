@@ -290,7 +290,9 @@
 
 = render partial: 'modals', locals: { product: @product }
 
-= render partial: 'products/shared/set_inspection_date_by_buyer', :locals => { product: @product, data: @data, armor_order: ArmorOrder.new }
+= render partial: 'products/shared/set_inspection_date_by_buyer',
+    :locals => { product: @product, data: @data, promise_order: @promise_order }
 
-- if params[:armor_order_id].present? && params[:buyer_request_inspection_date] == "true"
-  = render partial: 'set_inspection_date_by_seller', locals: { product: @product, armor_order: @armor_order }
+- if params[:promise_order_id].present? && params[:buyer_request_inspection_date] == "true"
+  = render partial: 'set_inspection_date_by_seller',
+      locals: { product: @product, promise_order: @promise_order }

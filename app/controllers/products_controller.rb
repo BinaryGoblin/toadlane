@@ -28,7 +28,11 @@ class ProductsController < ApplicationController
     commontator_thread_show(@product)
     @related_products = Product.unexpired.where(main_category: @product.main_category).where.not(id: @product.id)
 
-    @armor_order = ArmorOrder.find_by_id(params[:armor_order_id]) if params[:armor_order_id].present?
+    if params[:promise_order_id].present?
+      @promise_order = PromiseOrder.find_by_id(params[:promise_order_id])
+    else
+      @promise_order = PromiseOrder.new
+    end
   end
 
   def products

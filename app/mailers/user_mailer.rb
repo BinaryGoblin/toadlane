@@ -87,11 +87,11 @@ class UserMailer < ActionMailer::Base
     mail to: @user.email, subject: "Confirm your email for Fly & Buy"
   end
 
-  def send_inspection_date_set_notification_to_seller(armor_order)
-    @armor_order = armor_order
-    @seller = User.find_by_id(@armor_order.seller_id)
-    @buyer = User.find_by_id(@armor_order.buyer_id)
-    @product = Product.find_by_id(@armor_order.product_id)
+  def send_inspection_date_set_notification_to_seller(promise_order)
+    @promise_order = promise_order
+    @seller = User.find_by_id(@promise_order.seller_id)
+    @buyer = User.find_by_id(@promise_order.buyer_id)
+    @product = Product.find_by_id(@promise_order.product_id)
 
     mail to: @seller.email, subject: "#{@buyer.name} has requested to set inspection date"
   end
@@ -127,16 +127,16 @@ class UserMailer < ActionMailer::Base
     mail to: @buyer.email, subject: "Reminder to send funds in escrow"
   end
 
-  def send_payment_released_notification_to_buyer(armor_order)
-    @order = armor_order
+  def send_payment_released_notification_to_buyer(promise_order)
+    @order = promise_order
     @buyer = @order.buyer
     @seller = @order.seller
 
     mail to: @buyer.email, subject: "You have released payment for order #{@order.order_id}"
   end
 
-  def send_payment_released_notification_to_seller(armor_order)
-    @order = armor_order
+  def send_payment_released_notification_to_seller(promise_order)
+    @order = promise_order
     @seller = @order.seller
     @buyer = @order.buyer
 

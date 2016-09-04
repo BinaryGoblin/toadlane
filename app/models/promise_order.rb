@@ -65,4 +65,8 @@ class PromiseOrder < ActiveRecord::Base
       selected_inspection_date.date.to_date == Date.today
     end
   end
+
+  def buyer_requested_inspection_date
+    inspection_dates.buyer_added.last.get_inspection_date
+  end
 end
