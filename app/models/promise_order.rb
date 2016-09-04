@@ -45,7 +45,7 @@ class PromiseOrder < ActiveRecord::Base
   enum status: %i{ not_started pending payment_required completed cancelled}
 
   def selected_inspection_date
-    inspection_dates.approved.first
+    inspection_dates.approved.last
   end
 
   def promise_seller_fee_id
@@ -58,5 +58,11 @@ class PromiseOrder < ActiveRecord::Base
 
   def not_inspected
     inspection_complete == false
+  end
+
+  def inspection_date_today?
+    if selected_inspection_date.present? && selected_inspection_date.date.present?
+      selected_inspection_date.date.to_date == Date.today
+    end
   end
 end
