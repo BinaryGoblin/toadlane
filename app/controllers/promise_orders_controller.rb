@@ -65,6 +65,11 @@ class PromiseOrdersController < ApplicationController
     end
   end
 
+  def callbacks
+    binding.pry
+    render nothing: true, status: 200
+  end
+
   private
 
   def set_promise_pay_instance
@@ -103,6 +108,7 @@ class PromiseOrdersController < ApplicationController
         product.save
         UserMailer.sales_order_notification_to_seller(promise_order).deliver_later
         UserMailer.sales_order_notification_to_buyer(promise_order).deliver_later
+        NotificationCreator.new(promise_order).after_order_created
         redirect_to dashboard_order_path(
           promise_order,
           type: 'promise'
