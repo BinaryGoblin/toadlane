@@ -66,8 +66,25 @@ class PromiseOrdersController < ApplicationController
   end
 
   def callbacks
-    binding.pry
     render nothing: true, status: 200
+  end
+
+  def complete_inspection
+    promise_order = PromiseOrder.find_by_id(params["promise_order_id"])
+
+    action_data = {
+      "action" => "completeinspection",
+      "confirm" => true
+    }
+
+    @client.orders(promise_order.seller_account_id).update(promise_order.order_id, action_data)
+    promise_order.update_attribute(:inspection_complete, true)
+
+    create_order_shipments(promise_order)
+
+    release_fund_by_buyer(promise_order)
+
+    redirect_to dashboard_orders_path, :flash => { :notice => "Product has been marked as inspected." }
   end
 
   private
