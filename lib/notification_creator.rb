@@ -1,10 +1,10 @@
 class NotificationCreator
 
-  # order can be of any type i.e Armor, Green, Stripe, AMG and EMB
+  # order can be of any type i.e Promise, Green, Stripe, AMG and EMB
   attr_accessor :order
 
   ORDER_TYPE = {
-    ArmorOrder: 'Fly And Buy',
+    PromiseOrder: 'Fly And Buy',
     GreenOrder: 'Echeck',
     StripeOrder: 'Stripe',
     AmgOrder: 'Credit Card',
@@ -12,7 +12,7 @@ class NotificationCreator
   }
 
   ORDER_ID_TYPE = {
-    ArmorOrder: 'armor_order_id',
+    PromiseOrder: 'promise_order_id',
     GreenOrder: 'green_order_id',
     StripeOrder: 'stripe_order_id',
     AmgOrder: 'amg_order_id',
