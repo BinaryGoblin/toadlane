@@ -57,15 +57,11 @@
                 = link_to 'Refund Requested', dashboard_refund_requests_path, class: 'view'
             td.text-center
               - if order.instance_of?(PromiseOrder)
-                = link_to 'Complete Inspection', promise_order_complete_inspection_path(order.id), class: 'view'
                 - if current_user == order.buyer && order.not_inspected && order.inspection_date_today?
-                / - elsif order.funds_in_escrow == false
-                /   | Funds are not transfered to escrow yet.
+                  = link_to 'Complete Inspection', promise_order_complete_inspection_path(order.id), class: 'view'
                 - elsif order.payment_release == true
                   span.label
                     | Payment Released
-                / - elsif order.funds_in_escrow == true
-                /   a.html5lightbox.btn.btn-primary data-height="411" data-width="730" href="#{order.payment_release_url}" Release Payment
                 - else
                   | -
               - else

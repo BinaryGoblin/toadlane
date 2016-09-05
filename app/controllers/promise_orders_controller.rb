@@ -85,14 +85,12 @@ class PromiseOrdersController < ApplicationController
       )
       flash[:error] = e.message
     else
-      if c
-        promise_order.update_attributes(
-          inspection_complete: true,
-          payment_release: true,
-          status: item.state
-        )
-        flash[:notice] = "Product has been marked as inspected."
-      end
+      promise_order.update_attributes(
+        inspection_complete: true,
+        payment_release: true,
+        status: item.state
+      )
+      flash[:notice] = "Product has been marked as inspected."
     end
     redirect_to dashboard_orders_path
   end

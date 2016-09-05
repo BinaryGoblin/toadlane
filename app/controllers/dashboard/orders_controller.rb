@@ -104,21 +104,4 @@ class Dashboard::OrdersController < DashboardController
       format.js { render :template => 'shared/update_flash' }
     end
   end
-
-  private
-  def get_order_status
-    @orders = ArmorOrder.where(deleted: false).own_orders(current_user.id)
-    if @orders.any?
-      client = ArmorService.new
-
-      @orders.each do |order|
-        begin
-          result = client.orders(current_user.armor_account_id).get(order.order_id)
-        rescue
-          ensure
-          order.update(status: result.data[:body]['status'].to_i) if result
-        end
-      end
-    end
-  end
 end
