@@ -39,7 +39,7 @@
         .col-md-6
           .form-group
             = f.label :name, 'Holder Type:', class: 'required'
-            = f.select :account_type, options_for_select(PromiseAccount::HolderType),
+            = f.select :holder_type, options_for_select(PromiseAccount::HolderType),
                                  {:include_blank => 'Choose Holder type'},
                                  {:required => true,
                                   :class => 'form-control'}

@@ -213,7 +213,7 @@ $(document).ready ->
         required: false
         filesize: 5
 
-  $('form.create-api-order').submit ->
+  $('form.create-api-order, form.new_promise_account').submit ->
     $(this).find(':submit').prop 'disabled', true
     $('*').css 'cursor', 'wait'
     return
@@ -248,4 +248,33 @@ $(document).ready ->
         error.insertAfter(element.parent().parent())
       else
         error.insertAfter element
+      return
+
+  $('form#new_promise_account').validate
+    rules:
+      "promise_account[bank_name]":
+        required: true
+      "promise_account[account_name]":
+        required: true
+      "promise_account[routing_number]":
+        required: true
+        minlength: 9
+        maxlength: 9
+        number: true
+      "promise_account[account_number]":
+        required: true
+        minlength: 10
+        maxlength: 10
+        number: true
+    errorPlacement: (error, element) ->
+      # this is done for displaying the error message for DIRECT DEBIT AGREEMENT
+      # # below the checkbox
+      if element.attr('name') == "promise_account[direct_debit_agreement]"
+        error.insertAfter(element.parent().parent())
+      else
+        error.insertAfter element
+      return
+    submitHandler: (form) ->
+      $('form#new_promise_account').find('input[type=submit]').prop 'disabled', true
+      form.submit()
       return
