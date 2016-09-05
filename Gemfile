@@ -59,6 +59,8 @@ gem 'promisepay', '~> 1.1.0'
 
 gem 'iso_country_codes', '~> 0.7.5'
 
+gem 'whenever', :require => false
+
 # Dev - debugging group
 group :development do
   gem 'pry-rails'
