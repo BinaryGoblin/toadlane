@@ -12,7 +12,7 @@
         - flash[:error].each do |error|
           = error
       - else
-        = = flash[:error].scan(/[a-zA-Z0-9]+/).join(' ')
+        = flash[:error].scan(/[a-zA-Z0-9]+/).join(' ')
   .row.margin-top-20
     .col-md-12
       table.table
