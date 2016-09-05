@@ -16,4 +16,7 @@ class PromiseAccount < ActiveRecord::Base
 
   attr_accessor :bank_name, :account_name, :routing_number, :account_number,
                   :account_type, :holder_type, :country
+
+  AccountType = [ "Savings", "Checking"]
+  HolderType = [ "Personal", "Business"]
 end
