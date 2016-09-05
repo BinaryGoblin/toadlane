@@ -2,12 +2,13 @@
 #
 # Table name: promise_accounts
 #
-#  id              :integer          not null, primary key
-#  bank_account_id :string
-#  user_id         :integer
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  credit_card_id  :integer
+#  id                     :integer          not null, primary key
+#  bank_account_id        :string
+#  user_id                :integer
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  credit_card_id         :integer
+#  direct_debit_agreement :boolean          default(FALSE)
 #
 
 class PromiseAccount < ActiveRecord::Base
