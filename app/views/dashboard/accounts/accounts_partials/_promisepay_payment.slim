@@ -43,5 +43,13 @@
               = f.label :country, 'Country:', class: 'required'
               = f.country_select 'country', [ 'US', 'GB' ], { iso_codes: true }, { class: 'form-control' }
 
+      .form-group
+        .checkbox: label
+          = f.check_box :direct_debit_agreement, required: true
+          | &nbsp;
+          = f.label :Amount, 'I agree to the'
+          | &nbsp;
+          a href="https://promisepay.com/policies/direct-debit-request-service-agreement/" target="_BLANK" Direct Debit Agreement
+
 
       = f.submit "Submit", class: "btn btn-primary"

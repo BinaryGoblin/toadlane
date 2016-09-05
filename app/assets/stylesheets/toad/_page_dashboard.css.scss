@@ -453,4 +453,13 @@
       text-align: justify;
     }
   }
+  .account-promisepay{
+    .new_promise_account{
+      .form-group{
+        .checkbox label {
+          padding-left: 0px;
+        }
+      }
+    }
+  }
 }

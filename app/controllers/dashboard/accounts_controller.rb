@@ -64,9 +64,12 @@ class Dashboard::AccountsController < DashboardController
       country: country_for_bank.alpha3
     )
 
+    direct_debit_agreement = promise_params["direct_debit_agreement"] == "1"
+
     PromiseAccount.create({
       user_id: user.id,
-      bank_account_id: bank_account.id
+      bank_account_id: bank_account.id,
+      direct_debit_agreement: direct_debit_agreement
     })
 
     if current_user.promise_account.present? && current_user.promise_account.bank_account_id.present?
