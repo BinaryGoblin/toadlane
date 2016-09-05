@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160902103758) do
+ActiveRecord::Schema.define(version: 20160905044557) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -535,6 +535,7 @@ ActiveRecord::Schema.define(version: 20160902103758) do
     t.boolean  "funds_in_escrow",            default: false
     t.float    "seller_charged_fee"
     t.float    "amount_after_fee_to_seller"
+    t.boolean  "payment_release",            default: false
   end
 
   create_table "refund_requests", force: :cascade do |t|

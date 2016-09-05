@@ -22,6 +22,7 @@
 #  funds_in_escrow            :boolean          default(FALSE)
 #  seller_charged_fee         :float
 #  amount_after_fee_to_seller :float
+#  payment_release            :boolean          default(FALSE)
 #
 
 class PromiseOrder < ActiveRecord::Base
@@ -42,7 +43,7 @@ class PromiseOrder < ActiveRecord::Base
 
   scope :with_promise_item_id, -> { where.not(promise_item_id: nil) }
 
-  enum status: %i{ not_started pending payment_required completed cancelled}
+  enum status: %i{ not_started pending payment_required completed cancelled failed}
 
   def selected_inspection_date
     inspection_dates.approved.last
