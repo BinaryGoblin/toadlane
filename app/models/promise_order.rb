@@ -43,7 +43,7 @@ class PromiseOrder < ActiveRecord::Base
 
   scope :with_promise_item_id, -> { where.not(promise_item_id: nil) }
 
-  enum status: %i{ not_started pending payment_required completed cancelled failed}
+  enum status: %i{ not_started pending payment_required completed cancelled failed payment_pending payment_deposited}
 
   def selected_inspection_date
     inspection_dates.approved.last

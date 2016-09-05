@@ -75,16 +75,10 @@ class PromiseOrdersController < ApplicationController
     item = @client.items.find(promise_order.promise_item_id)
 
     begin
-      amount_in_cent = (promise_order.amount * 100).to_i
-      response = @client.direct_debit_authorities.create(
-        account_id: current_user.promise_account.bank_account_id,
-        amount: amount_in_cent
-      )
-      a = item.make_payment(
-                            id: promise_order.promise_item_id,
-                            account_id: current_user.promise_account.bank_account_id)
-      b = item.request_release( id: promise_order.promise_item_id) if a
-      c = item.release_payment( id: promise_order.promise_item_id) if b
+      if item.state == "payment_deposited"
+        request_release = item.request_release( id: promise_order.promise_item_id)
+        item.release_payment( id: promise_order.promise_item_id) if request_release
+      end
     rescue Promisepay::UnprocessableEntity => e
       promise_order.update_attributes(
         status: 'failed'
@@ -95,7 +89,7 @@ class PromiseOrdersController < ApplicationController
         promise_order.update_attributes(
           inspection_complete: true,
           payment_release: true,
-          status: 'completed'
+          status: item.state
         )
         flash[:notice] = "Product has been marked as inspected."
       end
@@ -128,6 +122,17 @@ class PromiseOrdersController < ApplicationController
 
     if item.present? && item.status["state"] == "pending"
       item.request_payment(id: item.id)
+
+      amount_in_cent = (promise_order.amount * 100).to_i
+      response = @client.direct_debit_authorities.create(
+        account_id: current_user.promise_account.bank_account_id,
+        amount: amount_in_cent
+      )
+
+      item.make_payment(
+                        id: promise_order.promise_item_id,
+                        account_id: current_user.promise_account.bank_account_id)
+
       amount_after_fee_to_seller = promise_order.amount - seller_fee_amount
 
       if promise_order.update_attributes(
@@ -139,9 +144,9 @@ class PromiseOrdersController < ApplicationController
             })
         product.sold_out += promise_order.count
         product.save
-        UserMailer.sales_order_notification_to_seller(promise_order).deliver_later
-        UserMailer.sales_order_notification_to_buyer(promise_order).deliver_later
-        NotificationCreator.new(promise_order).after_order_created
+
+        send_email_and_create_notification(promise_order)
+
         redirect_to dashboard_order_path(
           promise_order,
           type: 'promise'
@@ -180,5 +185,11 @@ class PromiseOrdersController < ApplicationController
                           amount * end_user_fee_percent / 100
 
     [fee_ids, seller_fee_amount]
+  end
+
+  def send_email_and_create_notification(promise_order)
+    UserMailer.sales_order_notification_to_seller(promise_order).deliver_later
+    UserMailer.sales_order_notification_to_buyer(promise_order).deliver_later
+    NotificationCreator.new(promise_order).after_order_created
   end
 end
