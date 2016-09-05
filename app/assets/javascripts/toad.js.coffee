@@ -213,7 +213,7 @@ $(document).ready ->
         required: false
         filesize: 5
 
-  $('form.create-api-order, form.new_promise_account').submit ->
+  $('form.create-api-order').submit ->
     $(this).find(':submit').prop 'disabled', true
     $('*').css 'cursor', 'wait'
     return
@@ -276,5 +276,6 @@ $(document).ready ->
       return
     submitHandler: (form) ->
       $('form#new_promise_account').find('input[type=submit]').prop 'disabled', true
+      $('*').css 'cursor', 'wait'
       form.submit()
       return
