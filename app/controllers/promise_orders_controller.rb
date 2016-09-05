@@ -70,21 +70,30 @@ class PromiseOrdersController < ApplicationController
   end
 
   def complete_inspection
+    set_promise_pay_instance
     promise_order = PromiseOrder.find_by_id(params["promise_order_id"])
+    item = @client.items.find(promise_order.promise_item_id)
 
-    action_data = {
-      "action" => "completeinspection",
-      "confirm" => true
-    }
-
-    @client.orders(promise_order.seller_account_id).update(promise_order.order_id, action_data)
-    promise_order.update_attribute(:inspection_complete, true)
-
-    create_order_shipments(promise_order)
-
-    release_fund_by_buyer(promise_order)
-
-    redirect_to dashboard_orders_path, :flash => { :notice => "Product has been marked as inspected." }
+    begin
+      item.make_payment(
+                            id: promise_order.promise_item_id,
+                            account_id: current_user.promise_account.bank_account_id)
+      item.request_release( id: promise_order.promise_item_id)
+      item.release_payment( id: promise_order.promise_item_id)
+    rescue Promisepay::UnprocessableEntity => e
+      promise_order.update_attributes(
+        status: 'failed'
+      )
+      flash[:error] = e.message
+    else
+      promise_order.update_attributes(
+        inspection_complete: true,
+        payment_release: true,
+        status: 'completed'
+      )
+      flash[:notice] = "Product has been marked as inspected."
+    end
+    redirect_to dashboard_orders_path
   end
 
   private
