@@ -18,6 +18,6 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
-every 30.minutes do
+every :day, :at => '12:01am' do
   rake "update_order_status"
 end
