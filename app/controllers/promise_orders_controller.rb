@@ -75,23 +75,30 @@ class PromiseOrdersController < ApplicationController
     item = @client.items.find(promise_order.promise_item_id)
 
     begin
-      item.make_payment(
+      amount_in_cent = (promise_order.amount * 100).to_i
+      response = @client.direct_debit_authorities.create(
+        account_id: current_user.promise_account.bank_account_id,
+        amount: amount_in_cent
+      )
+      a = item.make_payment(
                             id: promise_order.promise_item_id,
                             account_id: current_user.promise_account.bank_account_id)
-      item.request_release( id: promise_order.promise_item_id)
-      item.release_payment( id: promise_order.promise_item_id)
+      b = item.request_release( id: promise_order.promise_item_id) if a
+      c = item.release_payment( id: promise_order.promise_item_id) if b
     rescue Promisepay::UnprocessableEntity => e
       promise_order.update_attributes(
         status: 'failed'
       )
       flash[:error] = e.message
     else
-      promise_order.update_attributes(
-        inspection_complete: true,
-        payment_release: true,
-        status: 'completed'
-      )
-      flash[:notice] = "Product has been marked as inspected."
+      if c
+        promise_order.update_attributes(
+          inspection_complete: true,
+          payment_release: true,
+          status: 'completed'
+        )
+        flash[:notice] = "Product has been marked as inspected."
+      end
     end
     redirect_to dashboard_orders_path
   end
