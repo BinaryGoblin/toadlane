@@ -43,7 +43,7 @@ class Dashboard::ProfilesController < DashboardController
 
     respond_to do |format|
       if @user.update(user_params)
-        if current_user.profile_complete? && session[:previous_url].present?
+        if current_user.profile_complete? && session[:previous_url].present? && session[:previous_url] != products_url
           previous_visited_url = session[:previous_url]
           session.delete(:previous_url)
           format.html { redirect_to previous_visited_url, :flash => { :notice => 'Your profile details has been saved successfully.'} }
