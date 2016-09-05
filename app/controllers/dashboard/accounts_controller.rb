@@ -78,6 +78,9 @@ class Dashboard::AccountsController < DashboardController
       flash[:alert] = "There was some problem adding bank account."
     end
     redirect_to request.referrer
+  rescue Promisepay::UnprocessableEntity => e
+    flash[:error] = e.message
+    redirect_to request.referrer
   end
 
   def create_amg_profile

@@ -7,7 +7,7 @@
         - flash[:error].each do |error|
           = error
       - else
-        = flash[:error]
+        = flash[:error].scan(/[a-zA-Z0-9]+/).join(' ')
   - elsif !flash[:account_error].nil?
     .error-explanation
       | You must complete your&nbsp;

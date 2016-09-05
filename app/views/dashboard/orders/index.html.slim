@@ -7,8 +7,7 @@
         - flash[:error].each do |error|
           = error
       - else
-        / = flash[:error].split("base: ")[1].delete('[\"').delete(']')
-        = flash[:error]
+        = = flash[:error].scan(/[a-zA-Z0-9]+/).join(' ')
   .table-options
     table width="100%"
       tr

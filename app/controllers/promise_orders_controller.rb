@@ -5,6 +5,12 @@ class PromiseOrdersController < ApplicationController
     product = promise_order.product
     set_promise_pay_instance
     create_item_in_promise(product, promise_order)
+  rescue Promisepay::UnprocessableEntity => e
+    flash[:error] = e.message
+    redirect_to product_checkout_path(
+      product_id: product.id,
+      promise_order_id: promise_order.id
+    )
   end
 
   def set_inspection_date
