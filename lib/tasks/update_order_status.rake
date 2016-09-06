@@ -8,6 +8,9 @@ task :update_order_status => :environment do
     promise_orders.each do |promise_order|
       item = client.items.find(promise_order.promise_item_id)
       promise_order.update(status: item.state)
+      if item.state == "payment_deposited"
+        promise_order.update(funds_in_escrow: true)
+      end
     end
   end
 end
