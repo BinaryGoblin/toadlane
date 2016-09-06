@@ -12,7 +12,6 @@ class Dashboard::OrdersController < DashboardController
     orders =  promise_orders + stripe_orders + green_orders + amg_orders + emb_orders
 
     @orders = orders.sort_by(&:created_at).reverse
-    flash[:notice] = "Your order has been refunded."
   end
 
   def show
