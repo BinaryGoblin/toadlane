@@ -22,6 +22,7 @@ class InspectionDate < ActiveRecord::Base
   scope :not_marked_approved, -> { where(approved: nil) }
   scope :seller_added, -> { where(creator_type: "seller") }
   scope :buyer_added, -> { where(creator_type: "buyer") }
+  scope :without_order_id, -> { where(promise_order_id: nil) }
 
   validate :check_inspection_date
 

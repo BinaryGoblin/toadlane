@@ -152,8 +152,7 @@ class ProductsController < ApplicationController
         promise_order_id: promise_order.id,
         approved: true,
         creator_type: selected_inspection_date.creator_type,
-        date: selected_inspection_date.date,
-        product_id: product.id
+        date: selected_inspection_date.date
       })
       inspection_date.save(validate: false)
 
@@ -177,8 +176,7 @@ class ProductsController < ApplicationController
         promise_order_id: promise_order.id,
         approved: true,
         creator_type: selected_inspection_date.creator_type,
-        date: selected_inspection_date.date,
-        product_id: product.id
+        date: selected_inspection_date.date
       })
       inspection_date.save(validate: false)
 

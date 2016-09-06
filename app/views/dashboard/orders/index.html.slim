@@ -28,7 +28,7 @@
           th Order Total:
           th.text-center Details:
           th.text-center Action:
-          th.text-center Type:
+          th.text-center Payment Type:
           th.text-center Inspection Date:
 
       tbody
@@ -70,7 +70,7 @@
               // for displaying type of order
               - if order.instance_of? PromiseOrder
                 span.label.label-orange
-                  | Promise
+                  | Fly & Buy
               - elsif order.instance_of? GreenOrder
                 span.label.label-green
                   | Green By Phone
