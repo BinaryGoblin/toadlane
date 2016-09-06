@@ -93,7 +93,7 @@
                 span.label.label-green
                   | Sold
             td.text-center
-              - if order.selected_inspection_date.present?
+              - if order.instance_of?(PromiseOrder) && order.selected_inspection_date.present?
                 = order.selected_inspection_date.get_inspection_date
   
 .footer-actions: .fa-container: .wrap-sm

@@ -146,10 +146,19 @@ class ProductsController < ApplicationController
         fee: params[:fee] # this is fee amount
       })
 
-      inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
-      inspection_date.update_attributes({promise_order_id: promise_order.id, approved: true})
+      selected_inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
+
+      inspection_date = InspectionDate.new({
+        promise_order_id: promise_order.id,
+        approved: true,
+        creator_type: selected_inspection_date.creator_type,
+        date: selected_inspection_date.date,
+        product_id: product.id
+      })
+      inspection_date.save(validate: false)
 
     elsif params["inspection_date"].present? && params["inspection_date"]["inspection_date_id"].present?
+      # this is for selecting one inspection date from seller added dates
       promise_order = PromiseOrder.create({
         buyer_id: current_user.id,
         seller_id: product.user.id,
@@ -162,8 +171,16 @@ class ProductsController < ApplicationController
         fee: params[:fee] # this is fee amount
       })
 
-      inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
-      inspection_date.update_attributes({promise_order_id: promise_order.id, approved: true})
+      selected_inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
+
+      inspection_date = InspectionDate.new({
+        promise_order_id: promise_order.id,
+        approved: true,
+        creator_type: selected_inspection_date.creator_type,
+        date: selected_inspection_date.date,
+        product_id: product.id
+      })
+      inspection_date.save(validate: false)
 
     elsif params["promise_order_id"].present?
       promise_order = PromiseOrder.find_by_id(params["promise_order_id"])
