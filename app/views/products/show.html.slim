@@ -144,7 +144,7 @@
                       .inspection_date_select
                         - if params[:armor_order_id].present? && params[:inspection_date_by_seller] == "true"
                           p
-                            | Select Inpsection Date:
+                            | Select Inspection Date:
                           br
                           = collection_radio_buttons(:inspection_date, :inspection_date_id, @armor_order.inspection_dates.buyer_added, :id, :get_inspection_date) do |b, index|
                             tr
@@ -153,7 +153,7 @@
                                 br
                         - else
                           p
-                            | Select Inpsection Date:
+                            | Select Inspection Date:
                           br
                           = collection_radio_buttons(:inspection_date, :inspection_date_id, @product.seller_set_inspection_dates, :id, :get_inspection_date) do |b, index|
                             tr
