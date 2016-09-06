@@ -3,7 +3,7 @@ class Dashboard::OrdersController < DashboardController
 
   def index
     orders = []
-    promise_orders = current_user.promise_orders.with_promise_item_id
+    promise_orders = current_user.promise_orders.with_promise_item_id.not_deleted
     stripe_orders = current_user.stripe_orders.for_dashboard(params[:page], params[:per_page])
     green_orders = current_user.green_orders.for_dashboard(params[:page], params[:per_page])
     amg_orders = current_user.amg_orders.for_dashboard(params[:page], params[:per_page])
@@ -42,8 +42,8 @@ class Dashboard::OrdersController < DashboardController
         case order_type
         when 'StripeOrder'
           @order = StripeOrder.find(order_id).update(deleted: true)
-        when 'ArmorOrder'
-          @order = ArmorOrder.find(order_id).update(deleted: true)
+        when 'PromiseOrder'
+          @order = PromiseOrder.find(order_id).update(deleted: true)
         when 'GreenOrder'
           @order = GreenOrder.find(order_id).update(deleted: true)
         when 'AmgOrder'

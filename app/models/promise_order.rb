@@ -43,6 +43,8 @@ class PromiseOrder < ActiveRecord::Base
 
   scope :with_promise_item_id, -> { where.not(promise_item_id: nil) }
 
+  scope :not_deleted, -> { where.not(deleted: true) }
+
   attr_accessor :bank_name, :account_name, :routing_number, :account_number,
                   :account_type, :holder_type, :country, :direct_debit_agreement
 

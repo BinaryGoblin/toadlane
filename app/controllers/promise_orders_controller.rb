@@ -103,7 +103,7 @@ class PromiseOrdersController < ApplicationController
         payment_release: true,
         status: item.state
       )
-      flash[:notice] = "Product has been marked as inspected."
+      flash[:notice] = "Product has been marked as inspected and payment has been released."
     end
     redirect_to dashboard_orders_path
   end
@@ -156,6 +156,7 @@ class PromiseOrdersController < ApplicationController
               seller_charged_fee: seller_fee_amount,
               amount_after_fee_to_seller: amount_after_fee_to_seller
             })
+
         product.sold_out += promise_order.count
         product.save
 
