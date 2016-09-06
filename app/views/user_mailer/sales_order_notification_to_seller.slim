@@ -101,7 +101,7 @@ html[style="margin: 0;padding: 0;"]
               = number_to_currency(get_amount_without_fees(@order))
           tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
             td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
-              = number_to_currency(@order.rebate)
+              = @order.rebate
               | % rebate for purchasing #{@order.count} pcs
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
               | -
@@ -117,7 +117,9 @@ html[style="margin: 0;padding: 0;"]
           tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
             - if @order.instance_of? PromiseOrder
               td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
-                |  Seller Charged Fees
+                |  Seller Fees
+                br
+                | (Fee's are collected when funds are disbursed)
               td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
                 | -
                 = number_to_currency(@order.seller_charged_fee)
