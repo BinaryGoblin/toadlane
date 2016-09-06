@@ -61,7 +61,7 @@
                 - elsif order.payment_release == true
                   span.label
                     | Payment Released
-                - elsif order.funds_in_escrow == true
+                - elsif current_user == order.buyer && order.funds_in_escrow == true
                   = link_to 'Refund', promise_order_refund_path(order.id), data: {confirm: 'Are you sure ?'}, class: 'view'
                 - else
                   | -
