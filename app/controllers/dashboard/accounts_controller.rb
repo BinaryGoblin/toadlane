@@ -67,7 +67,7 @@ class Dashboard::AccountsController < DashboardController
     direct_debit_agreement = promise_params["direct_debit_agreement"] == "1"
 
     PromiseAccount.create({
-      user_id: user.id,
+      user_id: current_user.id,
       bank_account_id: bank_account.id,
       direct_debit_agreement: direct_debit_agreement
     })

@@ -541,12 +541,24 @@
   }
 }
 
-.greenDetails{
+.greenDetails, .promiseDetails{
   margin-top: 20px;
   p.help-block{
     margin-bottom: 0;
   }
 }
+.account-promisepay{
+  .promiseDetails{
+    .new_promise_account{
+      .form-group{
+        .checkbox label {
+          padding-left: 0px;
+        }
+      }
+    }
+  }
+}
+
 .show_green{
   display: inline-block !important;
 }

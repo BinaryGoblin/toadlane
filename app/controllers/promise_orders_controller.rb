@@ -1,9 +1,14 @@
 class PromiseOrdersController < ApplicationController
 
-  def update
-    promise_order = PromiseOrder.find_by_id(params[:id])
-    product = promise_order.product
+  #  creating item i.e order in promise
+  # # and making payment
+  def place_order
+    promise_order = PromiseOrder.find_by_id(params[:promise_order_id])
     set_promise_pay_instance
+    if current_user.promise_account.nil?
+      create_bank_account
+    end
+    product = promise_order.product
     create_item_in_promise(product, promise_order)
   rescue Promisepay::UnprocessableEntity => e
     flash[:error] = e.message
@@ -102,6 +107,9 @@ class PromiseOrdersController < ApplicationController
   end
 
   private
+  def promise_params
+    params.require(:promise_order).permit!
+  end
 
   def set_promise_pay_instance
     promise_pay_instance = PromisePayService.new
@@ -129,13 +137,13 @@ class PromiseOrdersController < ApplicationController
 
       amount_in_cent = (promise_order.amount * 100).to_i
       response = @client.direct_debit_authorities.create(
-        account_id: current_user.promise_account.bank_account_id,
+        account_id: promise_order.buyer_bank_id,
         amount: amount_in_cent
       )
 
       item.make_payment(
                         id: promise_order.promise_item_id,
-                        account_id: current_user.promise_account.bank_account_id)
+                        account_id: promise_order.buyer_bank_id)
 
       amount_after_fee_to_seller = promise_order.amount - seller_fee_amount
 
@@ -195,5 +203,29 @@ class PromiseOrdersController < ApplicationController
     UserMailer.sales_order_notification_to_seller(promise_order).deliver_later
     UserMailer.sales_order_notification_to_buyer(promise_order).deliver_later
     NotificationCreator.new(promise_order).after_order_created
+  end
+
+  def create_bank_account
+    user = @client.users.find(current_user.id)
+    country_for_bank = IsoCountryCodes.find(promise_params['country'])
+
+    bank_account = @client.bank_accounts.create(
+      user_id: user.id,
+      bank_name: promise_params['bank_name'],
+      account_name: promise_params['account_name'],
+      routing_number: promise_params['routing_number'],
+      account_number: promise_params['account_number'],
+      account_type: promise_params['account_type'],
+      holder_type: promise_params['holder_type'],
+      country: country_for_bank.alpha3
+    )
+
+    direct_debit_agreement = promise_params["direct_debit_agreement"] == "1"
+
+    PromiseAccount.create({
+      user_id: current_user.id,
+      bank_account_id: bank_account.id,
+      direct_debit_agreement: direct_debit_agreement
+    })
   end
 end

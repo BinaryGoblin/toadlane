@@ -175,9 +175,39 @@ class ProductsController < ApplicationController
 
     session[:promise_order_id] = promise_order.id
 
+    if current_user.promise_account_exist?
+      promise_account = current_user.promise_account
+    else
+      promise_pay_instance = PromisePayService.new
+      all_user_ids = promise_pay_instance.client.users.find_all.map &:id
+      unless all_user_ids.include? current_user.id.to_s
+        create_user_in_promise(promise_pay_instance)
+      end
+    end
+
     promise_account = current_user.promise_account_exist? ? current_user.promise_account : PromiseAccount.new
 
     [promise_order, promise_account]
+  end
+
+  def create_user_in_promise(promise_pay_instance)
+    address = current_user.addresses.first
+    phone_number = Phonelib.parse(current_user.phone)
+    country = IsoCountryCodes.find(address.country)
+
+    promise_pay_instance.client.users.create(
+      id: current_user.id,
+      first_name: current_user.first_name,
+      last_name: current_user.last_name,
+      email: current_user.email,
+      company: current_user.company,
+      mobile: phone_number.international,
+      address: address.line1,
+      city: address.city,
+      state: address.state,
+      zip: address.zip,
+      country: country.alpha3
+    )
   end
 
 end

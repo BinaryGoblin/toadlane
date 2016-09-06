@@ -43,6 +43,9 @@ class PromiseOrder < ActiveRecord::Base
 
   scope :with_promise_item_id, -> { where.not(promise_item_id: nil) }
 
+  attr_accessor :bank_name, :account_name, :routing_number, :account_number,
+                  :account_type, :holder_type, :country, :direct_debit_agreement
+
   enum status: %i{ payment_required completed cancelled failed payment_pending payment_deposited payment_held work_completed}
 
   def selected_inspection_date
@@ -69,5 +72,9 @@ class PromiseOrder < ActiveRecord::Base
 
   def buyer_requested_inspection_date
     inspection_dates.buyer_added.last.get_inspection_date
+  end
+
+  def buyer_bank_id
+    buyer.promise_account.bank_account_id
   end
 end

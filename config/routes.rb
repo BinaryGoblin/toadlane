@@ -29,13 +29,14 @@ Toad::Application.routes.draw do
 
   resources :emb_orders
 
-  resources :promise_orders, except: [:edit, :new, :create, :show, :index, :destroy] do
+  resources :promise_orders, except: [:edit, :new, :create, :show, :index, :destroy, :update] do
     collection do
       post :set_inspection_date, to: 'promise_orders#set_inspection_date', as: 'set_inspection_date'
       get :set_inspection_date
     end
     post :confirm_inspection_date_by_seller
     get :complete_inspection
+    post :place_order
   end
 
   get 'print/invoice.:id', to: 'print#invoice', as: 'print/invoice'
