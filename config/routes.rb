@@ -37,6 +37,7 @@ Toad::Application.routes.draw do
     post :confirm_inspection_date_by_seller
     get :complete_inspection
     post :place_order
+    get :refund
   end
 
   get 'print/invoice.:id', to: 'print#invoice', as: 'print/invoice'

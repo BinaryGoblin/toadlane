@@ -77,6 +77,33 @@ class PromiseOrdersController < ApplicationController
     end
   end
 
+  def refund
+    set_promise_pay_instance
+    promise_order = PromiseOrder.find_by_id(params['promise_order_id'])
+    item = @client.items.find(promise_order.promise_item_id)
+    amount_in_cent = (promise_order.amount * 100).to_i
+
+    item.request_refund(
+      id: promise_order.promise_item_id
+    )
+    if item.state == "refund_flagged"
+      item.refund(
+        id: promise_order.promise_item_id
+      )
+      promise_order.update_attributes({
+                                        state: item.status,
+                                        refunded: item.status == "refunded"})
+
+      flash[:notice] = "Your order has been refunded."
+    else
+      flash[:alert] = "Your order cannot be requested for refund."
+    end
+    redirect_to dashboard_orders_path
+  rescue Promisepay::UnprocessableEntity => e
+    flash[:error] = "The order cannot be refunded, as the state of the order is #{item.state}"
+    redirect_to dashboard_orders_path
+  end
+
   def callbacks
     render nothing: true, status: 200
   end

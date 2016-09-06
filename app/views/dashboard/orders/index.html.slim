@@ -56,12 +56,13 @@
                 = link_to 'Refund Requested', dashboard_refund_requests_path, class: 'view'
             td.text-center
               - if order.instance_of?(PromiseOrder)
-                / - if current_user == order.buyer && order.not_inspected && order.inspection_date_today?
-                - if current_user == order.buyer && order.not_inspected
+                - if current_user == order.buyer && order.not_inspected && order.inspection_date_today?
                   = link_to 'Complete Inspection', promise_order_complete_inspection_path(order.id), class: 'view'
                 - elsif order.payment_release == true
                   span.label
                     | Payment Released
+                - elsif order.funds_in_escrow == true
+                  = link_to 'Refund', promise_order_refund_path(order.id), data: {confirm: 'Are you sure ?'}, class: 'view'
                 - else
                   | -
               - else
