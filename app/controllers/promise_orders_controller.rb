@@ -104,6 +104,19 @@ class PromiseOrdersController < ApplicationController
     end
   end
 
+  def confirm_inspection_date_by_seller
+    promise_order = PromiseOrder.find_by_id(params[:promise_order_id])
+    product = Product.unexpired.find(params[:product_id])
+
+    if promise_order.inspection_dates.buyer_added.last.update_attributes({approved: true})
+      UserMailer.send_inspection_date_confirm_notification_to_buyer(promise_order).deliver_later
+      # NotificationCreator.new(promise_order).seller_confirm_date
+      redirect_to product_path(id: product.id, promise_order_id: promise_order.id), :flash => { :notice => "Inspection date has been set to #{promise_order.inspection_dates.buyer_added.last.get_inspection_date}."}
+    else
+      redirect_to product_path(id: product.id, promise_order_id: promise_order.id)
+    end
+  end
+
   def callbacks
     render nothing: true, status: 200
   end
