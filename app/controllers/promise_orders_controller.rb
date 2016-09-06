@@ -50,8 +50,7 @@ class PromiseOrdersController < ApplicationController
         promise_order.inspection_dates.create!({
           date: inspection_date,
           creator_type: "buyer",
-          promise_order_id: promise_order.id,
-          product_id: product.id
+          promise_order_id: promise_order.id
         })
         NotificationCreator.new(promise_order).buyer_request_inspection_date_to_seller
       end

@@ -32,7 +32,7 @@ class InspectionDate < ActiveRecord::Base
   end
 
   def check_inspection_date
-    if date.present?
+    if date.present? && product_id.present?
       product = Product.find_by_id(product_id)
 
       if creator_type == "seller"
