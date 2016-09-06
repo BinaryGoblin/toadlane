@@ -9,7 +9,9 @@ class PromiseOrdersController < ApplicationController
     if current_user.promise_account.nil?
       create_bank_account
     end
-    create_item_in_promise(product, promise_order)
+    if current_user.promise_account.present?
+      create_item_in_promise(product, promise_order)
+    end
   rescue Promisepay::UnprocessableEntity => e
     flash[:error] = e.message
     redirect_to product_checkout_path(
@@ -119,23 +121,18 @@ class PromiseOrdersController < ApplicationController
   def create_item_in_promise(product, promise_order)
     amount_in_cent = promise_order.amount * 100
     fee_ids, seller_fee_amount = seller_add_fees(promise_order)
-    all_item_ids = @client.items.find_all.map &:id
-    binding.pry
-    if all_item_ids.include? promise_order.id.to_s
-      item = @client.items.find(promise_order.id)
-    else
-      item = @client.items.create(
-        id: promise_order.id,
-        name: product.name,
-        amount: amount_in_cent, #amount in cent
-        payment_type: 1, # 1=> Escrow
-        buyer_id: promise_order.buyer.id,
-        seller_id: promise_order.seller.id,
-        fee_ids: fee_ids,
-        description: product.description
-        # due_date: '22/04/2016' #not quite sure about this
-      )
-    end
+
+    item = @client.items.create(
+      id: promise_order.id,
+      name: product.name,
+      amount: amount_in_cent, #amount in cent
+      payment_type: 1, # 1=> Escrow
+      buyer_id: promise_order.buyer.id,
+      seller_id: promise_order.seller.id,
+      fee_ids: fee_ids,
+      description: product.description
+      # due_date: '22/04/2016' #not quite sure about this
+    )
 
     if item.present? && item.status["state"] == "pending"
       item.request_payment(id: item.id)
