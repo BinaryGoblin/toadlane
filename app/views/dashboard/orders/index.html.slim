@@ -58,11 +58,14 @@
               - if order.instance_of?(PromiseOrder)
                 - if current_user == order.buyer && order.not_inspected && order.inspection_date_today?
                   = link_to 'Complete Inspection', promise_order_complete_inspection_path(order.id), class: 'view'
+                - elsif current_user == order.buyer && order.funds_in_escrow == true && order.refunded == false
+                  = link_to 'Refund', promise_order_refund_path(order.id), data: {confirm: 'Are you sure ?'}, class: 'view'
+                - elsif order.refunded == true
+                  span.label
+                    | Refunded
                 - elsif order.payment_release == true
                   span.label
                     | Payment Released
-                - elsif current_user == order.buyer && order.funds_in_escrow == true
-                  = link_to 'Refund', promise_order_refund_path(order.id), data: {confirm: 'Are you sure ?'}, class: 'view'
                 - else
                   | -
               - else
