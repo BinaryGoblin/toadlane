@@ -77,6 +77,10 @@ class PromiseOrder < ActiveRecord::Base
     inspection_dates.buyer_added.last.get_inspection_date
   end
 
+  def seller_not_mark_approved
+    inspection_dates.buyer_added.not_marked_approved.last
+  end
+
   def buyer_bank_id
     buyer.promise_account.bank_account_id
   end
