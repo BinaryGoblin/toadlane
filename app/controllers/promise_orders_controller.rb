@@ -4,11 +4,11 @@ class PromiseOrdersController < ApplicationController
   # # and making payment
   def place_order
     promise_order = PromiseOrder.find_by_id(params[:promise_order_id])
+    product = promise_order.product
     set_promise_pay_instance
     if current_user.promise_account.nil?
       create_bank_account
     end
-    product = promise_order.product
     create_item_in_promise(product, promise_order)
   rescue Promisepay::UnprocessableEntity => e
     flash[:error] = e.message
@@ -119,18 +119,23 @@ class PromiseOrdersController < ApplicationController
   def create_item_in_promise(product, promise_order)
     amount_in_cent = promise_order.amount * 100
     fee_ids, seller_fee_amount = seller_add_fees(promise_order)
-
-    item = @client.items.create(
-      id: promise_order.id,
-      name: product.name,
-      amount: amount_in_cent, #amount in cent
-      payment_type: 1, # 1=> Escrow
-      buyer_id: promise_order.buyer.id,
-      seller_id: promise_order.seller.id,
-      fee_ids: fee_ids,
-      description: product.description
-      # due_date: '22/04/2016' #not quite sure about this
-    )
+    all_item_ids = @client.items.find_all.map &:id
+    binding.pry
+    if all_item_ids.include? promise_order.id.to_s
+      item = @client.items.find(promise_order.id)
+    else
+      item = @client.items.create(
+        id: promise_order.id,
+        name: product.name,
+        amount: amount_in_cent, #amount in cent
+        payment_type: 1, # 1=> Escrow
+        buyer_id: promise_order.buyer.id,
+        seller_id: promise_order.seller.id,
+        fee_ids: fee_ids,
+        description: product.description
+        # due_date: '22/04/2016' #not quite sure about this
+      )
+    end
 
     if item.present? && item.status["state"] == "pending"
       item.request_payment(id: item.id)
@@ -206,7 +211,30 @@ class PromiseOrdersController < ApplicationController
   end
 
   def create_bank_account
-    user = @client.users.find(current_user.id)
+    address = current_user.addresses.first
+    phone_number = Phonelib.parse("+9779841512882")
+    country = IsoCountryCodes.find(address.country)
+
+    all_user_ids = @client.users.find_all.map &:id
+
+    if all_user_ids.include? current_user.id.to_s
+      user = @client.users.find(current_user.id)
+    else
+      user = @client.users.create(
+              id: current_user.id,
+              first_name: current_user.first_name,
+              last_name: current_user.last_name,
+              email: current_user.email,
+              company: current_user.company,
+              mobile: phone_number.international,
+              address: address.line1,
+              city: address.city,
+              state: address.state,
+              zip: address.zip,
+              country: country.alpha3
+            )
+    end
+
     country_for_bank = IsoCountryCodes.find(promise_params['country'])
 
     bank_account = @client.bank_accounts.create(
