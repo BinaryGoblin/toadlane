@@ -23,6 +23,7 @@
 #  seller_charged_fee         :float
 #  amount_after_fee_to_seller :float
 #  payment_release            :boolean          default(FALSE)
+#  refunded                   :boolean          default(FALSE)
 #
 
 class PromiseOrder < ActiveRecord::Base
@@ -48,7 +49,7 @@ class PromiseOrder < ActiveRecord::Base
   attr_accessor :bank_name, :account_name, :routing_number, :account_number,
                   :account_type, :holder_type, :country, :direct_debit_agreement
 
-  enum status: %i{ payment_required completed cancelled failed payment_pending payment_deposited payment_held work_completed}
+  enum status: %i{ payment_required completed cancelled failed payment_pending payment_deposited payment_held work_completed refunded}
 
   def selected_inspection_date
     inspection_dates.approved.last
