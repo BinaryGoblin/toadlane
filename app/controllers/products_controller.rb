@@ -143,8 +143,10 @@ class ProductsController < ApplicationController
         amount: params[:total],
         rebate_price: params[:rebate],
         rebate_percent: params[:rebate_percent],
-        fee: params[:fee] # this is fee amount
+        fee: params[:fee] # this is fee amount for buyer
       })
+
+      calculate_store_seller_fees(promise_order)
 
       selected_inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
 
@@ -167,8 +169,11 @@ class ProductsController < ApplicationController
         amount: params[:total],
         rebate_price: params[:rebate],
         rebate: params[:rebate_percent],
-        fee: params[:fee] # this is fee amount
+        fee: params[:fee], # this is fee amount for buyer
+
       })
+
+      calculate_store_seller_fees(promise_order)
 
       selected_inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
 
@@ -193,5 +198,29 @@ class ProductsController < ApplicationController
     promise_account = current_user.promise_account_exist? ? current_user.promise_account : PromiseAccount.new
 
     [promise_order, promise_account]
+  end
+
+  def calculate_store_seller_fees(promise_order)
+    order_amount = promise_order.amount
+    transaction_fee = Fee.find_by(:fee_type => "Transaction Fee").value.to_f
+    fraud_protection_fee = Fee.find_by(:fee_type => "Fraud Protection").value.to_f
+    end_user_support_fee = Fee.find_by(:fee_type => "End User Support").value.to_f
+
+    transaction_fee_amount = order_amount * transaction_fee / 100
+    fraud_protection_fee_amount = order_amount * fraud_protection_fee / 100
+    end_user_support_fee_amount = order_amount * end_user_support_fee / 100
+
+    seller_charged_fee = transaction_fee_amount + fraud_protection_fee_amount +
+                        end_user_support_fee_amount
+
+    amount_after_fee_to_seller = order_amount - seller_charged_fee
+
+    promise_order.update_attributes({
+      transaction_fee_amount: transaction_fee_amount,
+      fraud_protection_fee_amount: fraud_protection_fee_amount,
+      end_user_support_fee_amount: end_user_support_fee_amount,
+      seller_charged_fee: seller_charged_fee,
+      amount_after_fee_to_seller: amount_after_fee_to_seller
+    })
   end
 end
