@@ -215,9 +215,13 @@ class PromiseOrdersController < ApplicationController
 
   def fees_ids_collection(promise_order)
     fee_id_collection = promise_order.promise_seller_fee_id
-
-    fee_id_collection[:ach_fee] + ',' + fee_id_collection[:transaction_fee] +
-      ',' + fee_id_collection[:end_user_fee]
+    if promise_order.amount >= 1000.00
+      fee_id_collection[:ach_fee_capped] + ',' + fee_id_collection[:transaction_fee] +
+      ',' + fee_id_collection[:end_user_fee] + ',' + fee_id_collection[:fraud_protection_fee]
+    else
+      fee_id_collection[:ach_fee] + ',' + fee_id_collection[:transaction_fee] +
+        ',' + fee_id_collection[:end_user_fee] + ',' + fee_id_collection[:fraud_protection_fee]
+    end
     # In promise we are saving fees in amount in cents even to percentage
     # # the fee_type_id distinguishes if the fee is fixed or percentage or others
     # # for details see https://reference.promisepay.com/#create-fee
@@ -278,7 +282,7 @@ class PromiseOrdersController < ApplicationController
 
   def set_promise_order_id(promise_order)
     if Rails.env.development?
-      'dev_item_id' + promise_order_id.to_s
+      'dev_item_id' + promise_order.id.to_s
     else
       promise_order.id
     end

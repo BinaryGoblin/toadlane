@@ -39,8 +39,10 @@ class PromiseOrder < ActiveRecord::Base
 
   TestPromiseSellerFeeID = {
     ach_fee: '057ad7cd-8958-45f8-9584-8ae89406ca9b',
-    transaction_fee: '2008604d-b965-4186-8d06-1eed4584c106',
-    end_user_fee: 'c22d63cc-797e-49fc-a7e9-2255062e048f'
+    ach_fee_capped: 'd08c5774-8169-4345-81c8-c2ac5208bbb0',
+    transaction_fee: 'f600de3b-c6ad-499b-acad-a1d2e28ed305',
+    end_user_fee: 'c22d63cc-797e-49fc-a7e9-2255062e048f',
+    fraud_protection_fee: 'bd5b88ca-3e37-4a5d-9509-c4199a893cb8'
   }
 
   # TODO: need to add this when sending to production
