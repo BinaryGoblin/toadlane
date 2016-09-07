@@ -173,4 +173,8 @@ class Product < ActiveRecord::Base
   def is_buyer_product_owner?(buyer)
     buyer == self.user
   end
+
+  def promise_fee_for_buyer
+    Fee.find_by(:fee_type => "ACH").value
+  end
 end

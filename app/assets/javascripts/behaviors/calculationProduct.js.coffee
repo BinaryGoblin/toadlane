@@ -51,12 +51,10 @@ class Behavior.CalculationProduct
 
   # this is for promisepay
   calculatePayInToadlaneFee: (amount) =>
-    if amount < 1000000
-      fee = (amount * 2.9 / 100) + 0.30
-    else if amount >= 1000000 && amount < 2000000
-      fee = (amount * 2.7 / 100) + 0.30
-    else if amount >= 2000000
-      fee = (amount * 2.5 / 100) + 0.30
+    if amount >= 1000
+      fees = 1000
+    else if amount < 1000
+      fees = (amount * 1) / 100
 
   calculation: =>
     total  = 0
@@ -88,7 +86,7 @@ class Behavior.CalculationProduct
     total = quantity * @unitPrice
 
     if $('.user_accounts').children().find('span').text() == "Fly & Buy"
-      fees = 100  # PromisePayToadlaneFeeAmount for buyers
+      fees = @calculatePayInToadlaneFee(total)  # PromisePayToadlaneFeeAmount for buyers
     else
       fees              = total * (@fees || 0) / 100
 
