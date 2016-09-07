@@ -219,7 +219,7 @@ class User < ActiveRecord::Base
     ap << Product::PaymentOptions[:armor] if armor_profile.present?
     ap << Product::PaymentOptions[:amg] if amg_profile.present?
     ap << Product::PaymentOptions[:emb] if emb_profile.present?
-    ap << Product::PaymentOptions[:promisepay] if promise_account.present?
+    ap << Product::PaymentOptions[:promisepay]
     ap
   end
 
