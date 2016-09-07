@@ -539,7 +539,6 @@ ActiveRecord::Schema.define(version: 20160907070639) do
     t.float    "amount_after_fee_to_seller"
     t.boolean  "payment_release",             default: false
     t.boolean  "refunded",                    default: false
-    t.float    "ach_fee_amount"
     t.float    "transaction_fee_amount"
     t.float    "fraud_protection_fee_amount"
     t.float    "end_user_support_fee_amount"

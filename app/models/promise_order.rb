@@ -24,13 +24,13 @@
 #  amount_after_fee_to_seller  :float
 #  payment_release             :boolean          default(FALSE)
 #  refunded                    :boolean          default(FALSE)
-#  ach_fee_amount              :float
 #  transaction_fee_amount      :float
 #  fraud_protection_fee_amount :float
 #  end_user_support_fee_amount :float
 #
 
 class PromiseOrder < ActiveRecord::Base
+  # fee => buyer fees i.e ACH fee(calculation details in CalculationProduct.js.coffee line number 53)
   has_many :inspection_dates, dependent: :destroy
   belongs_to :buyer, class_name: 'User', foreign_key: 'buyer_id'
   belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'
