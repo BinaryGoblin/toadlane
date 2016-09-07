@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160906100525) do
+ActiveRecord::Schema.define(version: 20160907065343) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -295,6 +295,7 @@ ActiveRecord::Schema.define(version: 20160906100525) do
     t.decimal  "value",       precision: 5, scale: 3
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
+    t.string   "fee_type"
   end
 
   create_table "green_checks", force: :cascade do |t|

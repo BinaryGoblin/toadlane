@@ -7,6 +7,7 @@
 #  value       :decimal(5, 3)
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  fee_type    :string
 #
 
 class Fee < ActiveRecord::Base
