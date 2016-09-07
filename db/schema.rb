@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160907065343) do
+ActiveRecord::Schema.define(version: 20160907070639) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -529,16 +529,20 @@ ActiveRecord::Schema.define(version: 20160907065343) do
     t.float    "rebate_price"
     t.float    "amount"
     t.datetime "status_change"
-    t.boolean  "deleted",                    default: false
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.boolean  "deleted",                     default: false
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
     t.string   "promise_item_id"
-    t.boolean  "inspection_complete",        default: false
-    t.boolean  "funds_in_escrow",            default: false
+    t.boolean  "inspection_complete",         default: false
+    t.boolean  "funds_in_escrow",             default: false
     t.float    "seller_charged_fee"
     t.float    "amount_after_fee_to_seller"
-    t.boolean  "payment_release",            default: false
-    t.boolean  "refunded",                   default: false
+    t.boolean  "payment_release",             default: false
+    t.boolean  "refunded",                    default: false
+    t.float    "ach_fee_amount"
+    t.float    "transaction_fee_amount"
+    t.float    "fraud_protection_fee_amount"
+    t.float    "end_user_support_fee_amount"
   end
 
   create_table "refund_requests", force: :cascade do |t|

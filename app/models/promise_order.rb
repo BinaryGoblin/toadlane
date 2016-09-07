@@ -2,28 +2,32 @@
 #
 # Table name: promise_orders
 #
-#  id                         :integer          not null, primary key
-#  buyer_id                   :integer
-#  seller_id                  :integer
-#  product_id                 :integer
-#  status                     :integer
-#  unit_price                 :float
-#  count                      :integer
-#  fee                        :float
-#  rebate                     :float
-#  rebate_price               :float
-#  amount                     :float
-#  status_change              :datetime
-#  deleted                    :boolean          default(FALSE)
-#  created_at                 :datetime         not null
-#  updated_at                 :datetime         not null
-#  promise_item_id            :string
-#  inspection_complete        :boolean          default(FALSE)
-#  funds_in_escrow            :boolean          default(FALSE)
-#  seller_charged_fee         :float
-#  amount_after_fee_to_seller :float
-#  payment_release            :boolean          default(FALSE)
-#  refunded                   :boolean          default(FALSE)
+#  id                          :integer          not null, primary key
+#  buyer_id                    :integer
+#  seller_id                   :integer
+#  product_id                  :integer
+#  status                      :integer
+#  unit_price                  :float
+#  count                       :integer
+#  fee                         :float
+#  rebate                      :float
+#  rebate_price                :float
+#  amount                      :float
+#  status_change               :datetime
+#  deleted                     :boolean          default(FALSE)
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  promise_item_id             :string
+#  inspection_complete         :boolean          default(FALSE)
+#  funds_in_escrow             :boolean          default(FALSE)
+#  seller_charged_fee          :float
+#  amount_after_fee_to_seller  :float
+#  payment_release             :boolean          default(FALSE)
+#  refunded                    :boolean          default(FALSE)
+#  ach_fee_amount              :float
+#  transaction_fee_amount      :float
+#  fraud_protection_fee_amount :float
+#  end_user_support_fee_amount :float
 #
 
 class PromiseOrder < ActiveRecord::Base
