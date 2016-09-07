@@ -12,6 +12,10 @@
       = f.text_field :module_name, class: 'form-control'
 
     .form-group
+      = f.label :fee_type, 'Type:'
+      = f.text_field :fee_type, class: 'form-control'
+
+    .form-group
       = f.label :value, 'Fee Value:', class: 'required'
       = f.text_field :value, class: 'form-control', placeholder: '0.000'
 

@@ -46,6 +46,6 @@ class Admin::FeesController < Admin::ApplicationController
     end
 
     def fee_params
-      params.require(:fee).permit(:module_name, :value)
+      params.require(:fee).permit(:module_name, :value, :fee_type)
     end
 end

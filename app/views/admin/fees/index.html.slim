@@ -7,6 +7,7 @@
         tr
           th ID
           th Name
+          th Type
           th Value
           th
 
@@ -15,8 +16,13 @@
           tr
             td = fee.id
             td = fee.module_name
+            td
+              - if fee.fee_type.present?
+                = fee.fee_type
+              - else
+                | -
             td #{fee.value} %
             td.text-right
               = link_to 'Edit', edit_admin_fee_path(fee), class: 'view'
-              |  | 
+              |  |
               = link_to 'Delete', admin_fee_path(fee), method: :delete, data: { confirm: 'Are you sure?' }, class: 'view view-red'
