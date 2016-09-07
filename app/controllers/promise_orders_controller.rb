@@ -34,10 +34,10 @@ class PromiseOrdersController < ApplicationController
 
       if params[:promise_order_id].present?
         promise_order = PromiseOrder.find_by_id(params[:promise_order_id])
-        product.inspection_dates.create!({
+        promise_order.inspection_dates.create!({
           date: inspection_date,
           creator_type: "seller",
-          product_id: product.id
+          promise_order_id: promise_order.id
         })
         NotificationCreator.new(promise_order).seller_set_inspection_date_to_buyer
       else
@@ -59,11 +59,13 @@ class PromiseOrdersController < ApplicationController
         redirect_to product_path(id: product.id, promise_order_id: promise_order.id), :flash => { :alert => promise_order.errors.full_messages.first}
       else
         if product.user == current_user
+          flash[:notice] = 'You have rejected requested inspection date and added a new one and notified the buyer.'
           UserMailer.send_inspection_date_set_notification_to_buyer(promise_order).deliver_later
         else
+          flash[:notice] = 'Your requested inspection date has been submitted. You will be notified when the seller responds.'
           UserMailer.send_inspection_date_set_notification_to_seller(promise_order).deliver_later
         end
-        redirect_to product_path(id: product.id, promise_order_id: promise_order.id), :flash => { :notice => 'Your requested inspection date has been submitted. You will be notified when the seller responds.'}
+        redirect_to product_path(id: product.id, promise_order_id: promise_order.id)
       end
     else
       redirect_to product_path(id: product.id), :flash => { :error => "You must complete your profile to view Fly & Buy inspection dates." }
