@@ -160,7 +160,6 @@ class PromiseOrdersController < ApplicationController
 
   def create_item_in_promise(product, promise_order)
     amount_in_cent = promise_order.amount * 100
-    fee_ids, seller_fee_amount = seller_add_fees(promise_order)
 
     item = @client.items.create(
       id: promise_order.id,
@@ -169,7 +168,7 @@ class PromiseOrdersController < ApplicationController
       payment_type: 1, # 1=> Escrow
       buyer_id: promise_order.buyer.id,
       seller_id: promise_order.seller.id,
-      fee_ids: fee_ids,
+      fee_ids: fees_ids_collection(promise_order),
       description: product.description
       # due_date: '22/04/2016' #not quite sure about this
     )
@@ -177,7 +176,6 @@ class PromiseOrdersController < ApplicationController
     if item.present? && item.status["state"] == "pending"
       item.request_payment(id: item.id)
 
-      amount_in_cent = (promise_order.amount * 100).to_i
       response = @client.direct_debit_authorities.create(
         account_id: promise_order.buyer_bank_id,
         amount: amount_in_cent
@@ -187,14 +185,10 @@ class PromiseOrdersController < ApplicationController
                         id: promise_order.promise_item_id,
                         account_id: promise_order.buyer_bank_id)
 
-      amount_after_fee_to_seller = promise_order.amount - seller_fee_amount
-
       if promise_order.update_attributes(
             {
               status: item.state,
-              promise_item_id: item.id,
-              seller_charged_fee: seller_fee_amount,
-              amount_after_fee_to_seller: amount_after_fee_to_seller
+              promise_item_id: item.id
             })
 
         product.sold_out += promise_order.count
@@ -220,26 +214,14 @@ class PromiseOrdersController < ApplicationController
     end
   end
 
-  def seller_add_fees(promise_order)
-    amount = promise_order.amount
+  def fees_ids_collection(promise_order)
     fee_id_collection = promise_order.promise_seller_fee_id
 
-    fee_ids = fee_id_collection[:ach_fee] + ',' +
-              fee_id_collection[:transaction_fee] +
-              ',' + fee_id_collection[:end_user_fee]
+    fee_id_collection[:ach_fee] + ',' + fee_id_collection[:transaction_fee] +
+      ',' + fee_id_collection[:end_user_fee]
     # In promise we are saving fees in amount in cents even to percentage
     # # the fee_type_id distinguishes if the fee is fixed or percentage or others
     # # for details see https://reference.promisepay.com/#create-fee
-
-    ach_fee_percent = @client.fees.find(fee_id_collection[:ach_fee]).amount / 100.00
-    transaction_fee_percent = @client.fees.find(fee_id_collection[:transaction_fee]).amount / 100.00
-    end_user_fee_percent = @client.fees.find(fee_id_collection[:end_user_fee]).amount / 100.00
-
-    seller_fee_amount = amount * ach_fee_percent / 100 +
-                          amount * transaction_fee_percent / 100 +
-                          amount * end_user_fee_percent / 100
-
-    [fee_ids, seller_fee_amount]
   end
 
   def send_email_and_create_notification(promise_order)
