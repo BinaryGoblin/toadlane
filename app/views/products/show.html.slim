@@ -162,7 +162,7 @@
                                 br
 
                     - if @product.default_payment.present?
-                      - if @promise_order.seller_not_mark_approved.present?
+                      - if @promise_order.seller_not_mark_approved.present? && @promise_order.inspection_dates.seller_added.nil?
                         p You have requested inspection date, you will be informed when seller responds.
                       - else
                         input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
