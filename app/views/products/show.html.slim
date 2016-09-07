@@ -173,9 +173,11 @@
                       - if current_user.profile_complete?
                         a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here
                       - else
-                        = link_to 'Click Here', set_inspection_date_promise_orders_path(product_id: @product.id)
-                      span
-                      | &nbsp;to set inspection date
+                        - if @promise_order.seller_not_mark_approved.nil?
+                          = link_to 'Click Here', set_inspection_date_promise_orders_path(product_id: @product.id)
+                      - if @promise_order.seller_not_mark_approved.nil?
+                        span
+                        | &nbsp;to set inspection date
               -else
                 .text-center= link_to 'Make Sale', '#', class: 'btn btn-success-sell btn-lg checkout', data: {  toggle: 'modal', target: '#stripe_form_checkout'  }
             - else
