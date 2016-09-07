@@ -140,6 +140,6 @@ class UserMailer < ActionMailer::Base
     @seller = @order.seller
     @buyer = @order.buyer
 
-    mail to: @seller.email, subject: "Payment released by #{@buyer.name} for order #{@order.order_id}"
+    mail to: @seller.email, subject: "Payment released by #{@buyer.name} for order #{@order.id}"
   end
 end
