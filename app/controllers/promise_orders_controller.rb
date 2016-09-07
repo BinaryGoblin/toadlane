@@ -9,7 +9,8 @@ class PromiseOrdersController < ApplicationController
     if current_user.promise_account.nil?
       create_bank_account
     end
-    if current_user.promise_account.present?
+
+    if promise_order.buyer_bank_id.present?
       create_item_in_promise(product, promise_order)
     end
   rescue Promisepay::UnprocessableEntity => e
@@ -249,7 +250,7 @@ class PromiseOrdersController < ApplicationController
 
   def create_bank_account
     address = current_user.addresses.first
-    phone_number = Phonelib.parse("+9779841512882")
+    phone_number = Phonelib.parse(current_user.phone)
     country = IsoCountryCodes.find(address.country)
 
     all_user_ids = @client.users.find_all.map &:id
