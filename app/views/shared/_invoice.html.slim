@@ -91,10 +91,21 @@ div
         - if current_user == order.seller
           tr
             td colspan="3"
-              | Seller Fees
+              | Seller Fees:
               br
               | (Fee's are collected when funds are disbursed)
-            td - #{number_to_currency(number_with_precision(order.seller_charged_fee, precision: 2, delimiter: ''))}
+          tr
+            td colspan="3"
+              | Transaction Fees
+            td - #{number_to_currency(number_with_precision(order.transaction_fee_amount, precision: 2, delimiter: ''))}
+          tr
+            td colspan="3"
+              | End User Support Fees
+            td - #{number_to_currency(number_with_precision(order.end_user_support_fee_amount, precision: 2, delimiter: ''))}
+          tr
+            td colspan="3"
+              | Fraud Protection Fees
+            td - #{number_to_currency(number_with_precision(order.fraud_protection_fee_amount, precision: 2, delimiter: ''))}
       - else
         tr
           td colspan="3" Shipping
@@ -105,7 +116,7 @@ div
         td.text-center: b.text-uppercase Total:
         - if order.instance_of? PromiseOrder
           - if current_user == order.seller
-            td: b  #{number_to_currency(number_with_precision(order.amount_after_fee_to_seller, precision: 2, delimiter: ''))}
+            td: b  #{number_to_currency(number_with_precision(get_order_amount_for_seller(order), precision: 2, delimiter: ''))}
           - else
             td: b  #{number_to_currency(number_with_precision(order.amount, precision: 2, delimiter: ''))}
         - else

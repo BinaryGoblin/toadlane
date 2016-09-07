@@ -8,9 +8,8 @@ class PromiseOrdersController < ApplicationController
     set_promise_pay_instance
     if current_user.promise_account.nil?
       create_bank_account
-    end
-
-    if promise_order.buyer_bank_id.present?
+      create_item_in_promise(product, promise_order)
+    else
       create_item_in_promise(product, promise_order)
     end
   rescue Promisepay::UnprocessableEntity => e
@@ -162,7 +161,7 @@ class PromiseOrdersController < ApplicationController
     amount_in_cent = promise_order.amount * 100
 
     item = @client.items.create(
-      id: promise_order.id,
+      id: set_promise_order_id(promise_order),
       name: product.name,
       amount: amount_in_cent, #amount in cent
       payment_type: 1, # 1=> Escrow
@@ -275,5 +274,13 @@ class PromiseOrdersController < ApplicationController
       bank_account_id: bank_account.id,
       direct_debit_agreement: direct_debit_agreement
     })
+  end
+
+  def set_promise_order_id(promise_order)
+    if Rails.env.development?
+      'dev_item_id' + promise_order_id.to_s
+    else
+      promise_order.id
+    end
   end
 end

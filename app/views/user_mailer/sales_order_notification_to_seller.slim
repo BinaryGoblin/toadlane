@@ -111,19 +111,36 @@ html[style="margin: 0;padding: 0;"]
                 = number_to_currency(get_amount_for_rebate(@order))
           tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
             td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
-              |  Fees
+              |  Buyer Fees
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
               = number_to_currency(@order.fee)
-          tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
-            - if @order.instance_of? PromiseOrder
+          - if @order.instance_of? PromiseOrder
+            tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
               td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
                 |  Seller Fees
                 br
                 | (Fee's are collected when funds are disbursed)
               td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
+            tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
+              td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
+                |  Transaction Fees
+              td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
                 | -
-                = number_to_currency(@order.seller_charged_fee)
-            - else
+                = number_to_currency(@order.transaction_fee_amount)
+            tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
+              td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
+                |  End User Support Fees
+              td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
+                | -
+                = number_to_currency(@order.end_user_support_fee_amount)
+            tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
+              td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
+                |  Fraud Protection Fees
+              td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
+                | -
+                = number_to_currency(@order.fraud_protection_fee_amount)
+          - else
+            tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
               td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
                 |  Shipping
               td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
@@ -136,7 +153,7 @@ html[style="margin: 0;padding: 0;"]
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
               b[style="margin: 0;padding: 0;"]
                 - if @order.instance_of? PromiseOrder
-                  = number_to_currency(@order.amount_after_fee_to_seller)
+                  = number_to_currency(get_order_amount_for_seller(@order))
                 - else
                   = number_to_currency(@order.total)
       div[style="text-align: right;margin-top: 20px;margin: 0;padding: 0;"]
