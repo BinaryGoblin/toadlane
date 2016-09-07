@@ -90,7 +90,10 @@ div
       - if order.instance_of? PromiseOrder
         - if current_user == order.seller
           tr
-            td colspan="3" Seller Fees
+            td colspan="3"
+              | Seller Fees
+              br
+              | (Fee's are collected when funds are disbursed)
             td - #{number_to_currency(number_with_precision(order.seller_charged_fee, precision: 2, delimiter: ''))}
       - else
         tr
