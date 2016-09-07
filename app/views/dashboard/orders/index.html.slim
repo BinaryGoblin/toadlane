@@ -56,6 +56,7 @@
                 = link_to 'Refund Requested', dashboard_refund_requests_path, class: 'view'
             td.text-center
               - if order.instance_of?(PromiseOrder)
+                = link_to 'Complete Inspection', promise_order_complete_inspection_path(order.id), class: 'view'
                 - if current_user == order.buyer && order.not_inspected && order.inspection_date_today?
                   = link_to 'Complete Inspection', promise_order_complete_inspection_path(order.id), class: 'view'
                 - elsif current_user == order.buyer && order.funds_in_escrow == true && order.refunded == false
