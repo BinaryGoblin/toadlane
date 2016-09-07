@@ -142,14 +142,14 @@
                   - else
                     - if @product.default_payment_promisepay? && @product.inspection_dates.seller_added.present?
                       .inspection_date_select
-                        - if params[:armor_order_id].present? && params[:inspection_date_by_seller] == "true"
+                        - if params[:promise_order_id].present? && params[:inspection_date_by_seller] == "true"
                           p
                             | Select Inspection Date:
                           br
-                          = collection_radio_buttons(:inspection_date, :inspection_date_id, @armor_order.inspection_dates.buyer_added, :id, :get_inspection_date) do |b, index|
+                          = collection_radio_buttons(:inspection_date, :inspection_date_id, @promise_order.inspection_dates.buyer_added, :id, :get_inspection_date) do |b, index|
                             tr
                               td
-                                = b.label { b.radio_button(:"checked" => (b.object.id == @armor_order.inspection_dates.buyer_added.first.id)) + b.text }
+                                = b.label { b.radio_button(:"checked" => (b.object.id == @promise_order.inspection_dates.buyer_added.first.id)) + b.text }
                                 br
                         - else
                           p
@@ -171,10 +171,10 @@
                   - if @product.default_payment_promisepay? && @product.negotiable?
                     - unless params[:promise_order_id].present? && params[:inspection_date_by_seller] == "true"
                       - if current_user.profile_complete?
-                        a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here
-                      - else
                         - if @promise_order.seller_not_mark_approved.nil?
-                          = link_to 'Click Here', set_inspection_date_promise_orders_path(product_id: @product.id)
+                          a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here
+                      - else
+                        = link_to 'Click Here', set_inspection_date_promise_orders_path(product_id: @product.id)
                       - if @promise_order.seller_not_mark_approved.nil?
                         span
                         | &nbsp;to set inspection date
