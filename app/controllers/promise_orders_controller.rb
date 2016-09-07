@@ -39,6 +39,12 @@ class PromiseOrdersController < ApplicationController
           creator_type: "seller",
           promise_order_id: promise_order.id
         })
+        product.inspection_dates.create!({
+          date: inspection_date,
+          creator_type: "seller",
+          product_id: product.id,
+          approved: true
+        })
         NotificationCreator.new(promise_order).seller_set_inspection_date_to_buyer
       else
         promise_order = PromiseOrder.create!({
