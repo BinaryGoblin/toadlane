@@ -17,12 +17,14 @@ class StripeOrdersController < ApplicationController
       address.city = stripe_params["stripeShippingAddressCity"]
       address.country = stripe_params["stripeShippingAddressCountry"]
       address.user = current_user
-      address.save
-      stripe_order_params[:address_id] = address.id
+      address.save(validate: false)
+      stripe_order_params.merge!({"address_id"=> address.id})
     end
 
     @stripe_order = StripeOrder.new(stripe_order_params)
-    if @stripe_order.save
+    @stripe_order.address_id = address.id
+
+    if @stripe_order.save(validate: false)
       @stripe_order.start_stripe_order(stripe_params["stripeToken"])
 
       @stripe_order.calculate_shipping()
