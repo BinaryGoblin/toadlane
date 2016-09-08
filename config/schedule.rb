@@ -21,3 +21,7 @@
 every :hour do
   rake "update_order_status"
 end
+
+every :day, :at => '12:01am' do
+  rake "reminder_inspection_date_arriving"
+end

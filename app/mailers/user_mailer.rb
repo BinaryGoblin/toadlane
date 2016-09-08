@@ -142,4 +142,20 @@ class UserMailer < ActionMailer::Base
 
     mail to: @seller.email, subject: "Payment released by #{@buyer.name} for order #{@order.id}"
   end
+
+  def send_inspection_date_arriving_to_seller(order, days)
+    @order = order
+    @seller = @order.seller
+    @days = days
+
+    mail to: @seller.email, subject: "Inspection Date is arriving"
+  end
+
+  def send_inspection_date_arriving_to_buyer(order, days)
+    @order = order
+    @buyer = @order.buyer
+    @days = days
+
+    mail to: @buyer.email, subject: "Inspection Date is arriving"
+  end
 end
