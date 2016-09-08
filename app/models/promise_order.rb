@@ -80,7 +80,7 @@ class PromiseOrder < ActiveRecord::Base
   end
 
   def buyer_requested_inspection_date
-    inspection_dates.buyer_added.last.get_inspection_date
+    buyer_requested.get_inspection_date
   end
 
   def seller_not_mark_approved
@@ -89,5 +89,13 @@ class PromiseOrder < ActiveRecord::Base
 
   def buyer_bank_id
     buyer.promise_account.bank_account_id
+  end
+
+  def buyer_requested
+    inspection_dates.buyer_added.last
+  end
+
+  def inspection_date_rejected_by_seller
+    inspection_dates.buyer_added.rejected
   end
 end

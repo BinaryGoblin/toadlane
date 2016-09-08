@@ -32,21 +32,18 @@ class PromiseOrdersController < ApplicationController
         params["inspection_date"]["date(5i)"].to_i
       )
 
+      # seller reject buyer added date and add new inspection date
       if params[:promise_order_id].present?
         promise_order = PromiseOrder.find_by_id(params[:promise_order_id])
+        promise_order.buyer_requested.update_attribute(:approved, false)
         promise_order.inspection_dates.create!({
           date: inspection_date,
           creator_type: "seller",
           promise_order_id: promise_order.id
         })
-        product.inspection_dates.create!({
-          date: inspection_date,
-          creator_type: "seller",
-          product_id: product.id,
-          approved: true
-        })
         NotificationCreator.new(promise_order).seller_set_inspection_date_to_buyer
       else
+        # seller approve buyer added inspection date
         promise_order = PromiseOrder.create!({
           buyer_id: current_user.id,
           seller_id: product.user.id,
@@ -65,7 +62,11 @@ class PromiseOrdersController < ApplicationController
         redirect_to product_path(id: product.id, promise_order_id: promise_order.id), :flash => { :alert => promise_order.errors.full_messages.first}
       else
         if product.user == current_user
-          flash[:notice] = 'You have rejected requested inspection date and added a new one and notified the buyer.'
+          if promise_order.inspection_date_rejected_by_seller.present?
+            flash[:notice] = 'You have rejected requested inspection date and added a new one and notified the buyer.'
+          else
+            flash[:notice] = 'You have accepted requested inspection date and notified the buyer.'
+          end
           UserMailer.send_inspection_date_set_notification_to_buyer(promise_order).deliver_later
         else
           flash[:notice] = 'Your requested inspection date has been submitted. You will be notified when the seller responds.'

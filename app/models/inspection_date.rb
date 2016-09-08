@@ -19,6 +19,7 @@ class InspectionDate < ActiveRecord::Base
   belongs_to :promise_order, class_name: 'PromiseOrder', foreign_key: 'promise_order_id'
 
   scope :approved, -> { where(approved: true) }
+  scope :rejected, -> { where(approved: false) }
   scope :not_marked_approved, -> { where(approved: nil) }
   scope :seller_added, -> { where(creator_type: "seller") }
   scope :buyer_added, -> { where(creator_type: "buyer") }
