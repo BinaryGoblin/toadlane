@@ -123,6 +123,11 @@ class Dashboard::ProductsController < DashboardController
   def update
     set_product
 
+    if product_params['default_payment'] == "Fly And Buy" && current_user.promise_account.nil?
+      redirect_to request.referrer, :flash => { :error => "You must add your bank account in order to use the Fly & Buy method." }
+      return
+    end
+
     start_date = DateTime.new(product_params["start_date(1i)"].to_i, product_params["start_date(2i)"].to_i, product_params["start_date(3i)"].to_i, product_params["start_date(4i)"].to_i, product_params["start_date(5i)"].to_i)
     end_date = DateTime.new(product_params["end_date(1i)"].to_i, product_params["end_date(2i)"].to_i, product_params["end_date(3i)"].to_i, product_params["end_date(4i)"].to_i, product_params["end_date(5i)"].to_i)
 
