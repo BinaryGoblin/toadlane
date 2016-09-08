@@ -15,7 +15,7 @@ header.header.navbar-default: .wrap
         - other_notifications = get_user_unread_notifications
         - if message_notifications > 0
           = link_to "My Profile (#{message_notifications})", dashboard_messages_path, class: 'btn btn-success'
-        - if other_notifications > 0
+        - elsif other_notifications > 0
           = link_to "My Profile (#{other_notifications})", dashboard_notifications_path, class: 'btn btn-success'
         - else
           = link_to "My Profile", dashboard_profile_path, class: 'btn btn-success'
