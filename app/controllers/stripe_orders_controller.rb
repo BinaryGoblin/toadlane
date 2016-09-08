@@ -18,7 +18,6 @@ class StripeOrdersController < ApplicationController
       address.country = stripe_params["stripeShippingAddressCountry"]
       address.user = current_user
       address.save(validate: false)
-      stripe_order_params.merge!({"address_id"=> address.id})
     end
 
     @stripe_order = StripeOrder.new(stripe_order_params)
