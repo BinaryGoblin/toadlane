@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160907070639) do
+ActiveRecord::Schema.define(version: 20160920041843) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -298,6 +298,23 @@ ActiveRecord::Schema.define(version: 20160907070639) do
     t.string   "fee_type"
   end
 
+  create_table "fly_buy_orders", force: :cascade do |t|
+    t.integer  "buyer_id"
+    t.integer  "seller_id"
+    t.integer  "product_id"
+    t.integer  "status"
+    t.float    "unit_price"
+    t.integer  "count"
+    t.float    "fee"
+    t.float    "rebate"
+    t.float    "rebate_price"
+    t.float    "total"
+    t.datetime "status_change"
+    t.boolean  "deleted",       default: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
   create_table "green_checks", force: :cascade do |t|
     t.string   "result"
     t.string   "result_description"
@@ -390,6 +407,7 @@ ActiveRecord::Schema.define(version: 20160907070639) do
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
     t.integer  "promise_order_id"
+    t.integer  "fly_buy_order_id"
   end
 
   create_table "mailboxer_conversation_opt_outs", force: :cascade do |t|

@@ -1,0 +1,2 @@
+class FlyBuyOrdersController < ApplicationController
+end

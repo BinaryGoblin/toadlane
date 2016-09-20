@@ -55,7 +55,7 @@ class Product < ActiveRecord::Base
   has_many :armor_orders, dependent: :destroy
   has_many :amg_orders, dependent: :destroy
   has_many :emb_orders, dependent: :destroy
-  has_many :promise_orders, dependent: :destroy
+  has_many :fly_buy_orders, dependent: :destroy
   has_many :product_categories
   has_many :categories, through: :product_categories, dependent: :destroy
   has_many :images, dependent: :destroy

@@ -11,12 +11,12 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  promise_order_id :integer
+#  fly_buy_order_id :integer
 #
 
 class InspectionDate < ActiveRecord::Base
   belongs_to :product, class_name: 'Product', foreign_key: 'product_id'
-  belongs_to :armor_order, class_name: 'ArmorOrder', foreign_key: 'armor_order_id'
-  belongs_to :promise_order, class_name: 'PromiseOrder', foreign_key: 'promise_order_id'
+  belongs_to :fly_buy_order, class_name: 'FlyBuyOrder', foreign_key: 'fly_buy_id'
 
   scope :approved, -> { where(approved: true) }
   scope :rejected, -> { where(approved: false) }
