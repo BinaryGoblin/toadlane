@@ -5,7 +5,7 @@ class Dashboard::AccountsController < DashboardController
     set_green_profile
     set_amg_profile
     set_emb_profile
-    set_promise_account
+    set_fly_buy_profile
   end
 
   def create_green_profile
@@ -20,6 +20,9 @@ class Dashboard::AccountsController < DashboardController
     else
       redirect_to dashboard_accounts_path, :flash => { :alert => "Green Profile not created, please try again." }
     end
+  end
+
+  def create_fly_buy_profile
   end
 
   def create_promise_account
@@ -188,14 +191,14 @@ class Dashboard::AccountsController < DashboardController
     end
   end
 
-  def set_promise_account
-    current_promise_account = current_user.promise_account
-    if current_promise_account.present?
-      @promise_account = current_promise_account
-    elsif params['promise_account_id'].present?
-      @promise_account = PromiseAccount.find_by_id(params['promise_account_id'])
+  def set_fly_buy_profile
+    current_fly_buy_profile = current_user.fly_buy_profile
+    if current_fly_buy_profile.present?
+      @fly_buy_profile = current_fly_buy_profile
+    elsif params['fly_buy_profile_id'].present?
+      @fly_buy_profile = FlyBuyProfile.find_by_id(params['fly_buy_profile_id'])
     else
-      @promise_account = PromiseAccount.new
+      @fly_buy_profile = FlyBuyProfile.new
     end
   end
 
@@ -211,8 +214,8 @@ class Dashboard::AccountsController < DashboardController
     params.require(:armor_profile).permit!
   end
 
-  def promise_params
-    params.require(:promise_account).permit!
+  def fly_buy_params
+    params.require(:fly_buy_profile).permit(:name_on_account, :account_num, :routing_num, :type, :class)
   end
 
   def create_update_address(armor_params)
