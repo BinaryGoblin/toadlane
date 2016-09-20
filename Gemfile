@@ -61,6 +61,8 @@ gem 'iso_country_codes', '~> 0.7.5'
 
 gem 'whenever', :require => false
 
+gem 'synapse_pay_rest', '~> 0.0.13'
+
 # Dev - debugging group
 group :development do
   gem 'pry-rails'
