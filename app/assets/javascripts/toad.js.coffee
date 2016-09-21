@@ -5,6 +5,7 @@
 #= require jquery-ui/tooltip
 #= require jquery-ui/autocomplete
 #= require html5lightbox
+#= require fingerprint
 
 #= require jquery.bxslider.min
 
@@ -213,7 +214,10 @@ $(document).ready ->
         required: false
         filesize: 5
 
-  $('form.create-api-order').submit ->
+  $('form#new_fly_buy_profile').submit ->
+    fingerprint = new Fingerprint().get()
+    debugger
+    $('#fly_buy_profile_fingerprint').val(fingerprint)
     $(this).find(':submit').prop 'disabled', true
     $('*').css 'cursor', 'wait'
     return

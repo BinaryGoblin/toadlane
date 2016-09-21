@@ -23,6 +23,9 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def create_fly_buy_profile
+    if fly_buy_params.present?
+      FlyAndBuy::UserOperations.new(current_user, fly_buy_params).create_user
+    end
   end
 
   def create_promise_account
@@ -176,6 +179,10 @@ class Dashboard::AccountsController < DashboardController
     end
   end
 
+  def callback
+    binding.pry
+  end
+
   private
 
   def set_user
@@ -215,7 +222,7 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def fly_buy_params
-    params.require(:fly_buy_profile).permit(:name_on_account, :account_num, :routing_num, :type, :class)
+    params.require(:fly_buy_profile).permit!
   end
 
   def create_update_address(armor_params)

@@ -63,6 +63,10 @@ gem 'whenever', :require => false
 
 gem 'synapse_pay_rest', '~> 0.0.13'
 
+gem 'synapse_payments'
+
+ gem 'fingerprintjs-rails'
+
 # Dev - debugging group
 group :development do
   gem 'pry-rails'
