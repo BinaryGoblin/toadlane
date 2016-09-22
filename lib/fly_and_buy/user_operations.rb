@@ -24,12 +24,45 @@ class FlyAndBuy::UserOperations
       phone: user.phone,
       fingerprint: user_details[:fingerprint]
     )
+    binding.pry-rails
+
+    puts `
+curl -X POST -H "Content-Type: application/json" -H "X-SP-GATEWAY: #{client.client_id}|#{client.client_secret}" -H "X-SP-USER-IP: #{user_details[:ip_address]}" -d '{
+  "logins": [
+    {
+      "email": "#{user.email}"
+    }
+  ],
+  "phone_numbers": [
+    "#{user.phone}"
+  ],
+  "legal_names": [
+    "#{user.name}"
+  ],
+  "extra": {
+    "supp_id": "abcdtest1",
+    "note": null,
+    "is_business": true,
+    "cip_tag":1
+  }
+}' "https://sandbox.synapsepay.com/api/3/users"`
+
+    puts ` curl -X POST -H "Content-Type: application/json" -H "X-SP-GATEWAY: #{client.client_id}|#{client.client_secret}" -H "X-SP-USER-IP: #{user_details[:ip_address]}" -H "X-SP-USER: |#{user_details[:fingerprint]}" -d '{
+    "refresh_token": "#{response[:refresh_token]}"
+}' "https://sandbox.synapsepay.com/api/3/oauth/#{response[:_id]}"`
+
+puts ` curl -X POST -H "Content-Type: application/json" -H "X-SP-GATEWAY: #{client.client_id}|#{client.client_secret}" -H "X-SP-USER-IP: #{user_details[:ip_address]}" -H "X-SP-USER: |#{user_details[:fingerprint]}" -d '{
+    "refresh_token": "#{response[:refresh_token]}",
+    "phone_number":"#{user.phone}"
+}' "https://sandbox.synapsepay.com/api/3/oauth/#{response[:_id]}"`
+
 
     user_client = client.users.authenticate_as(
                       id: response[:_id],
                       refresh_token: response[:refresh_token],
                       fingerprint: user_details[:fingerprint])
 
+    binding.pry
     response = user_client.add_document(
         birthdate: Date.parse('1970/3/14'),
         first_name: user.first_name,
@@ -42,7 +75,16 @@ class FlyAndBuy::UserOperations
       )
 
     store_returned_id(response)
+    binding.pry
 
+
+    response = user_client.add_bank_account(
+      name: user_details["name_on_account"],
+      account_number: user_details["account_num"],
+      routing_number: user_details["routing_num"],
+      category: user_details["holder_type"],
+      type: user_details["account_type"]
+    )
   end
 
   # def create_payload

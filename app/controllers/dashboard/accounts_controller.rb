@@ -23,11 +23,9 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def create_fly_buy_profile
-    if request.post? && params["fingerprint"].present?
-      fly_buy_params = {
-        fingerprint: '6cc339e04458396d23af2b3cd30fa55c',
-        ip_address: '192.168.0.112'
-      }
+    binding.pry
+    if request.post? && fly_buy_params.present?
+      fly_buy_params.merge!(ip_address: '192.168.0.112')
       FlyAndBuy::UserOperations.new(current_user, fly_buy_params).create_user
       redirect_to dashboard_accounts_path
     end

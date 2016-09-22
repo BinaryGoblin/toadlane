@@ -214,7 +214,7 @@ $(document).ready ->
         filesize: 5
 
   (new Fingerprint2).get (result) ->
-    $('#fingerprint').val(result)
+    $('#fly_buy_profile_fingerprint').val(result)
     return
 
   $('form.create_fly_buy_profile').submit ->
