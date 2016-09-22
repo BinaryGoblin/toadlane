@@ -12,7 +12,7 @@
 class FlyBuyProfile < ActiveRecord::Base
   belongs_to :user
 
-  attr_accessor :name_on_account, :account_num, :routing_num, :account_type, :holder_type, :password
+  attr_accessor :name_on_account, :account_num, :routing_num, :account_type, :holder_type
 
   AccountType = [ "savings", "checking"]
   HolderType = [ "personal", "business"]

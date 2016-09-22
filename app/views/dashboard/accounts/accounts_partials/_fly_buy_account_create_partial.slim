@@ -6,13 +6,13 @@
     p <b>Status:</b> <span class="warning">You have not yet added bank account.</span>
 
   - if user.fly_buy_profile.nil? 
+    = form_tag create_fly_buy_profile_dashboard_accounts_path,  method: :post, :class => "create_fly_buy_profile"
+      = hidden_field_tag 'fingerprint'
+      = button_tag 'Create Fy Buy Profile', class: 'btn btn-primary'
+
+  - elsif user.fly_buy_profile.present? && user.fly_buy_profile.synapse_user_id.present?
     = form_for fly_buy_profile, url: create_fly_buy_profile_dashboard_accounts_path, method: "post" do |f|
       = f.hidden_field :fingerprint, :value=> nil
-      .row
-        .col-md-6
-           .form-group
-              = f.label :password, 'Password:', class: 'required'
-              = f.text_field :password, class: 'form-control', required: true
       .row
         .col-md-6
           .form-group

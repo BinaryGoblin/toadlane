@@ -179,7 +179,6 @@ GEM
       multipart-post (>= 1.2, < 3)
     ffi (1.9.10)
     ffi (1.9.10-x64-mingw32)
-    fingerprintjs-rails (0.5.3)
     font-awesome-rails (4.3.0.0)
       railties (>= 3.2, < 5.0)
     formatador (0.2.5)
@@ -488,7 +487,6 @@ DEPENDENCIES
   elementaljs-rails (~> 0.0.11)
   factory_girl_rails (~> 4.5.0)
   faker (~> 1.4.3)
-  fingerprintjs-rails
   font-awesome-rails (~> 4.3.0.0)
   fuubar (~> 2.0.0)
   guard-rails

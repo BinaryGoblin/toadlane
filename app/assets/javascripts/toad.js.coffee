@@ -5,7 +5,6 @@
 #= require jquery-ui/tooltip
 #= require jquery-ui/autocomplete
 #= require html5lightbox
-#= require fingerprint
 
 #= require jquery.bxslider.min
 
@@ -214,10 +213,11 @@ $(document).ready ->
         required: false
         filesize: 5
 
-  $('form#new_fly_buy_profile').submit ->
-    fingerprint = new Fingerprint().get()
-    debugger
-    $('#fly_buy_profile_fingerprint').val(fingerprint)
+  (new Fingerprint2).get (result) ->
+    $('#fingerprint').val(result)
+    return
+
+  $('form.create_fly_buy_profile').submit ->
     $(this).find(':submit').prop 'disabled', true
     $('*').css 'cursor', 'wait'
     return
