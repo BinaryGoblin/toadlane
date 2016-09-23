@@ -11,7 +11,7 @@
     = hidden_field_tag :rebate
     = hidden_field_tag :rebate_percent
 
-    - if product.default_payment_promisepay? && product.inspection_dates.seller_added.present?
+    - if product.default_payment_flybuy? && product.inspection_dates.seller_added.present?
       .inspection_date_select
         - if params[:promise_order_id].present? && params[:inspection_date_by_seller] == "true"
           p
@@ -48,7 +48,7 @@
           input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
 
   / Set inspection date link
-  - if !product.is_buyer_product_owner?(user) && product.default_payment_promisepay? && product.negotiable?
+  - if !product.is_buyer_product_owner?(user) && product.default_payment_flybuy? && product.negotiable?
     - unless params[:promise_order_id].present? && params[:inspection_date_by_seller] == "true"
       - if user.profile_complete?
         - if promise_order.seller_not_mark_approved.nil?
