@@ -1,9 +1,16 @@
 class FlyAndBuy::UserOperations
 
-  attr_accessor :user, :user_details, :client
+  attr_accessor :user, :user_details, :client, :fly_buy_profile
+
+  FingerPrintMessage = "fingerprint"
+
+  SynapsePayNodeType = "WIRE-US"
 
   # user => current user
-  # user_details => {:fingerprint=>"6cc339e04458396d23af2b3cd30fa55c", :ip_address=>"192.168.0.112"}
+  # user_details =>
+  #   {"fingerprint"=>"6cc339e04458396d23af2b3cd30fa55c", "bank_name"=>"Triumph Bank",
+  #       "address"=>"5699 Poplar Avenue", "name_on_account"=>"test neha",
+  #       "account_num"=>"123456789", "routing_num"=>"064000020", "ip_address"=>"192.168.0.112"}
   def initialize(user, user_details = {})
     @user = user
     @user_details = user_details
@@ -11,59 +18,49 @@ class FlyAndBuy::UserOperations
   end
 
   def create_user
-    # create_payload
-    arko_method
+    synapsepay_create_user
   end
 
   private
 
-  def arko_method
-    response = client.users.create(
+  def synapsepay_create_user
+    create_fly_buy_profile_with_fingerprint
+
+    create_user_response = client.users.create(
       name: user.name,
       email: user.email,
       phone: user.phone,
-      fingerprint: user_details[:fingerprint]
+      fingerprint: fly_buy_profile.encrypted_fingerprint
     )
-    binding.pry-rails
 
-    puts `
-curl -X POST -H "Content-Type: application/json" -H "X-SP-GATEWAY: #{client.client_id}|#{client.client_secret}" -H "X-SP-USER-IP: #{user_details[:ip_address]}" -d '{
-  "logins": [
-    {
-      "email": "#{user.email}"
-    }
-  ],
-  "phone_numbers": [
-    "#{user.phone}"
-  ],
-  "legal_names": [
-    "#{user.name}"
-  ],
-  "extra": {
-    "supp_id": "abcdtest1",
-    "note": null,
-    "is_business": true,
-    "cip_tag":1
-  }
-}' "https://sandbox.synapsepay.com/api/3/users"`
+    user_client = authenticate_user(create_user_response)
 
-    puts ` curl -X POST -H "Content-Type: application/json" -H "X-SP-GATEWAY: #{client.client_id}|#{client.client_secret}" -H "X-SP-USER-IP: #{user_details[:ip_address]}" -H "X-SP-USER: |#{user_details[:fingerprint]}" -d '{
-    "refresh_token": "#{response[:refresh_token]}"
-}' "https://sandbox.synapsepay.com/api/3/oauth/#{response[:_id]}"`
+    add_doc_response = add_necessary_doc(user_client)
 
-puts ` curl -X POST -H "Content-Type: application/json" -H "X-SP-GATEWAY: #{client.client_id}|#{client.client_secret}" -H "X-SP-USER-IP: #{user_details[:ip_address]}" -H "X-SP-USER: |#{user_details[:fingerprint]}" -d '{
-    "refresh_token": "#{response[:refresh_token]}",
-    "phone_number":"#{user.phone}"
-}' "https://sandbox.synapsepay.com/api/3/oauth/#{response[:_id]}"`
+    store_returned_id(add_doc_response)
 
+    create_bank_account(create_user_response[:_id])
+  end
 
-    user_client = client.users.authenticate_as(
-                      id: response[:_id],
-                      refresh_token: response[:refresh_token],
-                      fingerprint: user_details[:fingerprint])
+  def create_fly_buy_profile_with_fingerprint
+    encrypted_fingerprint = AESCrypt.encrypt(user_details[:fingerprint], FingerPrintMessage)
+    FlyBuyProfile.create({
+      encrypted_fingerprint: "user_#{user.id}" + "_" + user_details[:fingerprint],
+      user_id: user.id
+    })
+    @fly_buy_profile = user.fly_buy_profile
+  end
 
-    binding.pry
-    response = user_client.add_document(
+  def authenticate_user
+    client.users.authenticate_as(
+                          id: create_user_response[:_id],
+                          refresh_token: create_user_response[:refresh_token],
+                          fingerprint: fly_buy_profile.encrypted_fingerprint
+                        )
+  end
+
+  def add_necessary_doc(user_client)
+    user_client.add_document(
         birthdate: Date.parse('1970/3/14'),
         first_name: user.first_name,
         last_name: user.last_name,
@@ -73,99 +70,40 @@ puts ` curl -X POST -H "Content-Type: application/json" -H "X-SP-GATEWAY: #{clie
         document_type: 'SSN',
         document_value: '2222'
       )
-
-    store_returned_id(response)
-    binding.pry
-
-
-    response = user_client.add_bank_account(
-      name: user_details["name_on_account"],
-      account_number: user_details["account_num"],
-      routing_number: user_details["routing_num"],
-      category: user_details["holder_type"],
-      type: user_details["account_type"]
-    )
   end
-
-  # def create_payload
-  #   payload = {
-  #       "logins" =>  [
-  #           {
-  #               "email" =>  user.email
-  #           }
-  #       ],
-  #       "phone_numbers" =>  [
-  #           user.phone
-  #       ],
-  #       "legal_names" =>  [
-  #           user.name
-  #       ],
-  #       "extra" =>  {
-  #           "supp_id" =>  generate_sup_id,
-  #           "is_business" =>  is_business?
-  #       },
-  #   }
-  #   binding.pry
-  #   create_response = client.users.create(payload: payload)
-
-  #   update_payload = {
-  #       "refresh_token" => create_response["refresh_token"],
-  #       "update" => {
-  #           "login" => {
-  #               "email" => user.email
-  #           },
-  #           "phone_number" => user.phone,
-  #           "legal_name" => user.name
-  #       }
-  #   }
-
-  #   update = client.users.update(payload: update_payload)
-
-  #   oauth_payload = {
-  #       "refresh_token" =>  create_response["refresh_token"]
-  #   }
-  #   oauth_response = client.users.refresh(payload: oauth_payload)
-
-  #   acct_rout_payload = {
-  #       "type" => "ACH-US",
-  #       "info" => {
-  #           "nickname" => "Ruby Library Savings Account",
-  #           "name_on_account" => user_details["name_on_account"],
-  #           "account_num" => user_details["account_num"],
-  #           "routing_num" => user_details["routing_num"],
-  #           "type" => user_details["account_type"],
-  #           "class" => user_details["holder_type"]
-  #       },
-  #       "extra" => {
-  #           "supp_id" => generate_sup_id
-  #       }
-  #   }
-
-  #   acct_rout_response = client.nodes.add(payload: acct_rout_payload)
-  # end
 
   def create_bank_account
+    node = SynapsePayments::Nodes.new(
+                                      client,
+                                      create_user_response[:_id],
+                                      user_client.oauth_key,
+                                      fly_buy_profile.encrypted_fingerprint
+                                      )
 
-  end
+    data = {
+      "type": SynapsePayNodeType,
+      "info": {
+        "nickname": user.name,
+        "name_on_account": user_details["name_on_account"],
+        "account_num": user_details["account_num"],
+        "routing_num": user_details["routing_num"],
+        "bank_name": user_details["bank_name"],
+        "address": user_details["address"],
+      }
+    }
 
-  def store_returned_id(response)
-    FlyBuyProfile.create({
-      synapse_user_id: response[:_id],
-      user_id: user.id
-      })
-  end
+    result = node.create(data)
 
-  def generate_sup_id
-    if Rails.env.development?
-      'dev_' + user.id.to_s
-    elsif Rails.env.staging?
-      'stag_' + user.id.to_s
-    else
-      user.id
+    if result[:success] == true
+      store_returned_node_id(result)
     end
   end
 
-  def is_business?
-    user_details["holder_type"] == "business"
+  def store_returned_id(response)
+    fly_buy_profile.update_attribute(:synapse_user_id, response[:_id])
+  end
+
+  def store_returned_node_id(response)
+    fly_buy_profile.update_attribute(:synapse_node_id, response[:nodes][0][:_id])
   end
 end

@@ -7,28 +7,13 @@ class FlyBuyService
       sandbox_mode = true
     end
 
-    timeout_options = { write: 100, connect: 100, read: 100 }
+    timeout_options = { write: 50, connect: 50, read: 50 }
 
     SynapsePayments::Client.new(
                         client_id: Rails.application.secrets['fly_buy_client_id'], 
                         client_secret: Rails.application.secrets['fly_buy_client_secret'], 
                         sandbox_mode: sandbox_mode, 
                         timeout_options: timeout_options)
-
-    # client = SynapsePayments::Client.new(
-    #                     client_id: Rails.application.secrets['fly_buy_client_id'], 
-    #                     client_secret: Rails.application.secrets['fly_buy_client_secret'],
-    #                     sandbox_mode: sandbox_mode)
-    # options = {
-    #     'client_id' => Rails.application.secrets['fly_buy_client_id'],
-    #     'client_secret' => Rails.application.secrets['fly_buy_client_secret'],
-    #     'development_mode' => sandbox_mode,
-    #     'oauth_key' => oauth_key,
-    #     'fingerprint' => fingerprint,
-    #     'ip_address' => ip_address
-    # }
-
-    # client = SynapsePayRest::Client.new options: options, user_id: user_id
 
   end
 end

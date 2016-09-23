@@ -11,9 +11,19 @@
       .row
         .col-md-6
           .form-group
+            = f.label :bank_name, 'Bank Name:', class: 'required'
+            = f.text_field :bank_name, class: 'form-control', required: true
+
+        .col-md-6
+          .form-group
+            = f.label :address, 'Bank Address:', class: 'required'
+            = f.text_field :address, class: 'form-control', required: true
+      .row
+        .col-md-6
+          .form-group
             = f.label :name_on_account, 'Account Name:', class: 'required'
             = f.text_field :name_on_account, class: 'form-control', required: true
-            
+
         .col-md-6
           .form-group
             = f.label :account_num, 'Account Number:', class: 'required'
@@ -24,20 +34,5 @@
             = f.label :routing_num, 'Routing Number:', class: 'required'
             = f.text_field :routing_num, class: 'form-control', required: true
             
-        .col-md-6
-          .form-group
-            = f.label :account_type, 'Account Type:', class: 'required'
-            = f.select :account_type, options_for_select(FlyBuyProfile::AccountType),
-                                 {:include_blank => 'Choose Account Type'},
-                                 {:required => true,
-                                  :class => 'form-control'}
-      .row
-        .col-md-6
-          .form-group
-            = f.label :holder_type, 'Holder Type:', class: 'required'
-            = f.select :holder_type, options_for_select(FlyBuyProfile::HolderType),
-                                 {:include_blank => 'Choose Holder type'},
-                                 {:required => true,
-                                  :class => 'form-control'}
 
       = f.submit "Submit", class: "btn btn-primary"
