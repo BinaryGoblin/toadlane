@@ -101,7 +101,7 @@
                 span <span class="calc-rebate">0.00</span>% rebate for purchasing <span class="calc-pcs">0</span> pcs:
                 b.pull-right.calc-rebate-price 0.00
               li
-                - if @product.default_payment_promisepay?
+                - if @product.default_payment_flybuy?
                   span Toadlane Fee <span class="calc-fees" data-ach-fee="#{@product.promise_fee_for_buyer}"></span>:
                 - else
                   span Toadlane Fee (<span class="calc-fees">#{@fee}</span>%):
@@ -201,7 +201,7 @@
                     - elsif @product.default_payment_emb?
                       span.label.label-dark-blue
                         | EMB
-                    - elsif @product.user.promise_account.present?
+                    - elsif @product.default_payment_flybuy?
                       span.label.label-orange
                         | Fly & Buy
                     - else

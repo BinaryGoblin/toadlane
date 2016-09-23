@@ -28,7 +28,7 @@ class Dashboard::ProductsController < DashboardController
   def create
     return if !current_user.profile_complete? || !current_user.has_payment_account?
 
-    if product_params['default_payment'] == "Fly And Buy" && current_user.promise_account.nil?
+    if product_params['default_payment'] == "Fly And Buy" && current_user.fly_buy_profile.nil?
       redirect_to request.referrer, :flash => { :error => "You must add your bank account in order to use the Fly & Buy method." }
       return
     end

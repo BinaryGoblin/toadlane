@@ -128,12 +128,9 @@ class Product < ActiveRecord::Base
     self.amount - sold_out
   end
 
-  def default_payment_armor?
-    default_payment == PaymentOptions[:armor]
-  end
 
-  def default_payment_promisepay?
-    default_payment == PaymentOptions[:promisepay]
+  def default_payment_flybuy?
+    default_payment == PaymentOptions[:fly_buy]
   end
 
   def default_payment_stripe?
@@ -150,10 +147,6 @@ class Product < ActiveRecord::Base
 
   def default_payment_emb?
     default_payment == PaymentOptions[:emb]
-  end
-
-  def default_payment_promisepay?
-    default_payment == PaymentOptions[:promisepay]
   end
 
   def seller_set_inspection_dates
