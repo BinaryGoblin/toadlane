@@ -40,7 +40,7 @@ class Product < ActiveRecord::Base
     stripe: 'Stripe',
     amg: 'Credit Card',
     emb: 'Credit Card (EMB)',
-    promisepay: 'Fly And Buy'
+    fly_buy: 'Fly And Buy'
   }
 
   belongs_to :user

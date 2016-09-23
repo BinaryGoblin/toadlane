@@ -1,6 +1,6 @@
 .account-promisepay
   h4 Fly And Buy:
-  - if user.fly_buy_profile.present? 
+  - if user.fly_buy_profile_exist?
     p <b>Status:</b> <span class="success">You have successfully added bank account.</span>
   -else
     p <b>Status:</b> <span class="warning">You have not yet added bank account.</span>

@@ -216,10 +216,9 @@ class User < ActiveRecord::Base
     ap = []
     ap << Product::PaymentOptions[:stripe] if stripe_profile.present?
     ap << Product::PaymentOptions[:green] if green_profile.present?
-    ap << Product::PaymentOptions[:armor] if armor_profile.present?
     ap << Product::PaymentOptions[:amg] if amg_profile.present?
     ap << Product::PaymentOptions[:emb] if emb_profile.present?
-    ap << Product::PaymentOptions[:promisepay]
+    ap << Product::PaymentOptions[:fly_buy] if fly_buy_profile.present?
     ap
   end
 
@@ -231,8 +230,8 @@ class User < ActiveRecord::Base
     name.split(" ")[1]
   end
 
-  def promise_account_exist?
-    promise_account.present? && promise_account.bank_account_id.present?
+  def fly_buy_profile_exist?
+    fly_buy_profile.present? && fly_buy_profile.synapse_user_id.present? && fly_buy_profile.synapse_node_id.present?
   end
 
   private
