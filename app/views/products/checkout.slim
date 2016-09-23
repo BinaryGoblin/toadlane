@@ -59,16 +59,16 @@
                                   data: @data,
                                   product: @product}
 
-        - elsif @product.default_payment_armor?
-          = render partial: 'products/shared/armor_payment',
-                    :locals => { armor_order: @armor_order,
-                                  armor_profile: @armor_profile,
-                                  user: current_user,
-                                  data: @data,
-                                  product: @product}
+        / - elsif @product.default_payment_armor?
+        /   = render partial: 'products/shared/armor_payment',
+        /             :locals => { armor_order: @armor_order,
+        /                           armor_profile: @armor_profile,
+        /                           user: current_user,
+        /                           data: @data,
+        /                           product: @product}
                                   
-        - elsif @product.default_payment_promisepay?
-          = render partial: 'products/shared/promise_pay_tab',
+        - elsif @product.default_payment_flybuy?
+          = render partial: 'products/shared/fly_buy_form_tab',
                     :locals => { user: current_user,
                                   promise_order: @promise_order,
                                   product: @product}

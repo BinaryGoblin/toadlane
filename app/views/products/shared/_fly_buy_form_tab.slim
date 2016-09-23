@@ -1,0 +1,40 @@
+- if user.fly_buy_profile.nil?
+  
+  .account-promisepay
+    h2 To complete order add your bank account to transfer funds into escrow
+    .promiseDetails
+      = form_for promise_order, url: promise_order_place_order_path(promise_order_id: promise_order.id), method: "post" do |f|
+        = f.hidden_field :fingerprint, :value=> nil
+      .row
+        .col-md-6
+          .form-group
+            = f.label :bank_name, 'Bank Name:', class: 'required'
+            = f.text_field :bank_name, class: 'form-control', required: true
+
+        .col-md-6
+          .form-group
+            = f.label :address, 'Bank Address:', class: 'required'
+            = f.text_field :address, class: 'form-control', required: true
+      .row
+        .col-md-6
+          .form-group
+            = f.label :name_on_account, 'Account Name:', class: 'required'
+            = f.text_field :name_on_account, class: 'form-control', required: true
+
+        .col-md-6
+          .form-group
+            = f.label :account_num, 'Account Number:', class: 'required'
+            = f.text_field :account_num, class: 'form-control', required: true
+      .row
+        .col-md-6
+          .form-group
+            = f.label :routing_num, 'Routing Number:', class: 'required'
+            = f.text_field :routing_num, class: 'form-control', required: true
+            
+
+      = f.submit "Submit", class: "btn btn-primary"
+
+
+- elsif user.fly_buy_profile_exist?
+  = form_tag promise_order_place_order_path(promise_order_id: promise_order.id), method: "post", :class => "create-api-order" do
+    = submit_tag 'Place Order', class: "btn btn-primary"
