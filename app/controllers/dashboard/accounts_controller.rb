@@ -23,7 +23,6 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def create_fly_buy_profile
-    binding.pry
     if request.post? && fly_buy_params.present?
       fly_buy_params.merge!(ip_address: '192.168.0.112')
       FlyAndBuy::UserOperations.new(current_user, fly_buy_params).create_user

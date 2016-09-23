@@ -63,7 +63,9 @@ gem 'whenever', :require => false
 
 gem 'synapse_pay_rest', '~> 0.0.13'
 
-gem 'synapse_payments'
+gem 'synapse_payments', '~> 0.10.0'
+
+gem 'aescrypt', '~> 1.0.0'
 
 # Dev - debugging group
 group :development do
