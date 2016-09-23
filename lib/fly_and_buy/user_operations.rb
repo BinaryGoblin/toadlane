@@ -39,7 +39,7 @@ class FlyAndBuy::UserOperations
 
     store_returned_id(add_doc_response)
 
-    create_bank_account(create_user_response[:_id])
+    create_bank_account(create_user_response, user_client)
   end
 
   def create_fly_buy_profile_with_fingerprint
@@ -51,7 +51,7 @@ class FlyAndBuy::UserOperations
     @fly_buy_profile = user.fly_buy_profile
   end
 
-  def authenticate_user
+  def authenticate_user(create_user_response)
     client.users.authenticate_as(
                           id: create_user_response[:_id],
                           refresh_token: create_user_response[:refresh_token],
@@ -72,7 +72,7 @@ class FlyAndBuy::UserOperations
       )
   end
 
-  def create_bank_account
+  def create_bank_account(create_user_response, user_client)
     node = SynapsePayments::Nodes.new(
                                       client,
                                       create_user_response[:_id],
