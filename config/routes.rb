@@ -41,6 +41,12 @@ Toad::Application.routes.draw do
   end
 
   resources :fly_buy_orders, except: [:edit, :new, :create, :show, :index, :destroy, :update] do
+    collection do
+      post :set_inspection_date, to: 'fly_buy_orders#set_inspection_date', as: 'set_inspection_date'
+      get :set_inspection_date
+    end
+    post :confirm_inspection_date_by_seller
+    get :complete_inspection
     post :place_order
   end
 

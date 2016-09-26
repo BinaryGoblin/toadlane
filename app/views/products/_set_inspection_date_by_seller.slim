@@ -2,19 +2,19 @@
   .modal-dialog
     .modal-content
       .modal-header
-        h4.modal-title Inspection Date Request For:: #{promise_order.product.name}
+        h4.modal-title Inspection Date Request For:: #{fly_buy_order.product.name}
       .modal-body
         - if flash[:alert].present?
           .error-explanation
             = flash[:alert]
-        = promise_order.buyer.name.titleize
-        | &nbsp; has requested the inspection date to be #{promise_order.buyer_requested_inspection_date}
+        = fly_buy_order.buyer.name.titleize
+        | &nbsp; has requested the inspection date to be #{fly_buy_order.buyer_requested_inspection_date}
         p To confirm click yes. To reject and suggest a new inspection date
         = link_to "click here", "#", id: "set_new_inspection"
         | &nbsp;to set the inspection date below
 
         .set_inspection_date[style="display:none;"]
-          = form_for promise_order, url: set_inspection_date_promise_orders_path(promise_order_id: promise_order.id, product_id: product.id), method: :post  do |f|
+          = form_for fly_buy_order, url: set_inspection_date_fly_buy_orders_path(fly_buy_order_id: fly_buy_order.id, product_id: product.id), method: :post  do |f|
             .offer-from-until
               .offer-item
                 label.lg.required Select Inspection Date
@@ -30,6 +30,6 @@
 
       .confirm-inspection-date-btn
         .modal-footer
-          = link_to "Yes", promise_order_confirm_inspection_date_by_seller_path(product_id: product.id, promise_order_id: promise_order.id), class: 'btn btn-primary', method: :post
+          = link_to "Yes", fly_buy_order_confirm_inspection_date_by_seller_path(product_id: product.id, fly_buy_order_id: fly_buy_order.id), class: 'btn btn-primary', method: :post
 
 .modal-backdrop.fade.in

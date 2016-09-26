@@ -24,4 +24,8 @@ class FlyBuyOrder < ActiveRecord::Base
   belongs_to :buyer, class_name: 'User', foreign_key: 'buyer_id'
   belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'
   belongs_to :product
+
+  def seller_not_mark_approved
+    inspection_dates.buyer_added.not_marked_approved.last
+  end
 end
