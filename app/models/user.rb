@@ -156,13 +156,13 @@ class User < ActiveRecord::Base
     end
   end
 
-  def promise_orders(type=nil)
+  def fly_buy_orders(type=nil)
     if type == 'bought'
-      PromiseOrder.where(buyer_id: self.id)
+      FlyBuyOrder.where(buyer_id: self.id)
     elsif type == 'sold'
-      PromiseOrder.where(seller_id: self.id)
+      FlyBuyOrder.where(seller_id: self.id)
     else
-      PromiseOrder.where('buyer_id = ? OR seller_id = ?', self.id, self.id)
+      FlyBuyOrder.where('buyer_id = ? OR seller_id = ?', self.id, self.id)
     end
   end
 

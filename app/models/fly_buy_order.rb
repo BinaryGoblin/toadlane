@@ -27,7 +27,26 @@ class FlyBuyOrder < ActiveRecord::Base
   belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'
   belongs_to :product
 
+  scope :with_transaction_id, -> { where.not(synapse_transaction_id: nil) }
+  scope :not_deleted, -> { where.not(deleted: true) }
+
+  enum status: [ :not_started, :cancelled, :placed, :completed, :refunded ]
+
   def seller_not_mark_approved
     inspection_dates.buyer_added.not_marked_approved.last
+  end
+
+  def not_inspected
+    inspection_complete == false
+  end
+
+  def inspection_date_today?
+    if selected_inspection_date.present? && selected_inspection_date.date.present?
+      selected_inspection_date.date.to_date == Date.today
+    end
+  end
+
+  def selected_inspection_date
+    inspection_dates.approved.first
   end
 end

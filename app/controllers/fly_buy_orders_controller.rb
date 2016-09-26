@@ -32,11 +32,20 @@ class FlyBuyOrdersController < ApplicationController
                                 ip_address: fly_buy_profile.synapse_ip_address
                               )
 
-    if response[:_id].present?
-      fly_buy_profile.update_attributes({
+    if response[:recent_status][:note] == "Transaction created"
+      fly_buy_order.update_attributes({
           synapse_escrow_node_id: FlyBuyProfile::EscrowNodeID,
-          synapse_transaction_id: response[:_id]
+          synapse_transaction_id: response[:_id],
+          status: 'placed'
         })
+
+      product.sold_out += fly_buy_order.count
+      product.save
+
+      redirect_to dashboard_order_path(
+          fly_buy_order,
+          type: 'fly_buy'
+        ), notice: 'Your order was successfully placed.'
     end
 
 

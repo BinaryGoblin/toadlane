@@ -42,10 +42,7 @@
             td.text-center= link_to order.product.name.titleize, product_path(order.product, cat_id: order.product.main_category), class: 'link link-ulined', target: '_blank'
             td.text-center= order.count
             td.text-center
-              -if order.instance_of? PromiseOrder
-                = number_to_currency(order.amount, :unit => "$", precision: 2)
-              -else
-                = number_to_currency(order.total, :unit => "$", precision: 2)
+              = number_to_currency(order.total, :unit => "$", precision: 2)
             td.text-center
               = link_to 'View', '#modal_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
               - if is_cancellable?(order)
@@ -55,24 +52,25 @@
                 | &nbsp;
                 = link_to 'Refund Requested', dashboard_refund_requests_path, class: 'view'
             td.text-center
-              - if order.instance_of?(PromiseOrder)
-                - if current_user == order.buyer && order.not_inspected && order.inspection_date_today?
-                  = link_to 'Complete Inspection & Release Payment', promise_order_complete_inspection_path(order.id), class: 'view'
-                - elsif current_user == order.buyer && order.funds_in_escrow == true && order.refunded == false
-                  = link_to 'Refund', promise_order_refund_path(order.id), data: {confirm: 'Are you sure ?'}, class: 'view'
-                - elsif order.refunded == true
-                  span.label
-                    | Refunded
-                - elsif order.payment_release == true
-                  span.label
-                    | Payment Released
-                - else
+              - if order.instance_of?(FlyBuyOrder)
+                / - if current_user == order.buyer && order.not_inspected && order.inspection_date_today?
+                /   = link_to 'Complete Inspection & Release Payment', promise_order_complete_inspection_path(order.id), class: 'view'
+                / - elsif current_user == order.buyer && order.funds_in_escrow == true && order.refunded == false
+                /   = link_to 'Refund', promise_order_refund_path(order.id), data: {confirm: 'Are you sure ?'}, class: 'view'
+                / - elsif order.refunded == true
+                /   span.label
+                /     | Refunded
+                / - elsif order.payment_release == true
+                /   span.label
+                /     | Payment Released
+                / - else
                   | -
+                | -
               - else
                 | -
             td.text-center
               // for displaying type of order
-              - if order.instance_of? PromiseOrder
+              - if order.instance_of? FlyBuyOrder
                 span.label.label-orange
                   | Fly & Buy
               - elsif order.instance_of? GreenOrder
@@ -97,7 +95,7 @@
                 span.label.label-green
                   | Sold
             td.text-center
-              - if order.instance_of?(PromiseOrder) && order.selected_inspection_date.present?
+              - if order.instance_of?(FlyBuyOrder) && order.selected_inspection_date.present?
                 = order.selected_inspection_date.get_inspection_date
   
 .footer-actions: .fa-container: .wrap-sm

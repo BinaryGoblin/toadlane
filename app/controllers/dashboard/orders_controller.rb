@@ -3,13 +3,13 @@ class Dashboard::OrdersController < DashboardController
 
   def index
     orders = []
-    promise_orders = current_user.promise_orders.with_promise_item_id.not_deleted
+    fly_buy_orders = current_user.fly_buy_orders.with_transaction_id.not_deleted
     stripe_orders = current_user.stripe_orders.for_dashboard(params[:page], params[:per_page])
     green_orders = current_user.green_orders.for_dashboard(params[:page], params[:per_page])
     amg_orders = current_user.amg_orders.for_dashboard(params[:page], params[:per_page])
     emb_orders = current_user.emb_orders.for_dashboard(params[:page], params[:per_page])
 
-    orders =  promise_orders + stripe_orders + green_orders + amg_orders + emb_orders
+    orders =  fly_buy_orders + stripe_orders + green_orders + amg_orders + emb_orders
 
     @orders = orders.sort_by(&:created_at).reverse
   end
@@ -26,8 +26,8 @@ class Dashboard::OrdersController < DashboardController
       @order = AmgOrder.find(params[:id])
     when 'emb'
       @order = EmbOrder.find(params[:id])
-    when 'promise'
-      @order = PromiseOrder.find(params[:id])
+    when 'fly_buy'
+      @order = FlyBuyOrder.find(params[:id])
     else
       @order = StripeOrder.find(params[:id])
     end
@@ -42,8 +42,8 @@ class Dashboard::OrdersController < DashboardController
         case order_type
         when 'StripeOrder'
           @order = StripeOrder.find(order_id).update(deleted: true)
-        when 'PromiseOrder'
-          @order = PromiseOrder.find(order_id).update(deleted: true)
+        when 'FlyBuyOrder'
+          @order = FlyBuyOrder.find(order_id).update(deleted: true)
         when 'GreenOrder'
           @order = GreenOrder.find(order_id).update(deleted: true)
         when 'AmgOrder'
