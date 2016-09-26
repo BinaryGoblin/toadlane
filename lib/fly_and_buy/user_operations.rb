@@ -5,6 +5,9 @@ class FlyAndBuy::UserOperations
   FingerPrintMessage = "fingerprint"
 
   SynapsePayNodeType = "WIRE-US"
+  SynapseEscrowNodeType = "SYNAPSE-US"
+
+  SynapsePayCurrency = "USD"
 
   # user => current user
   # user_details =>
@@ -43,11 +46,11 @@ class FlyAndBuy::UserOperations
   end
 
   def create_fly_buy_profile_with_fingerprint
-    FlyBuyProfile.create({
-      encrypted_fingerprint: "user_#{user.id}" + "_" + user_details[:fingerprint],
-      user_id: user.id
-    })
-    @fly_buy_profile = user.fly_buy_profile
+    @fly_buy_profile = FlyBuyProfile.create({
+                            encrypted_fingerprint: "user_#{user.id}" + "_" + user_details[:fingerprint],
+                            user_id: user.id,
+                            synapse_ip_address: user_details["ip_address"]
+                          })
   end
 
   def authenticate_user(create_user_response)
