@@ -11,11 +11,14 @@
 #  synapse_node_id        :string
 #  synapse_ip_address     :string
 #  synapse_escrow_node_id :string
+#  synapse_transaction_id :string
 #
 
 class FlyBuyProfile < ActiveRecord::Base
   belongs_to :user
 
   attr_accessor :name_on_account, :account_num, :routing_num, :bank_name, :address
+
+  EscrowNodeID = '57d7465386c2732e824b7c8b'
 
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160926091435) do
+ActiveRecord::Schema.define(version: 20160926092920) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -324,6 +324,7 @@ ActiveRecord::Schema.define(version: 20160926091435) do
     t.string   "synapse_node_id"
     t.string   "synapse_ip_address"
     t.string   "synapse_escrow_node_id"
+    t.string   "synapse_transaction_id"
   end
 
   create_table "green_checks", force: :cascade do |t|
