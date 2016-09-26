@@ -2,16 +2,14 @@
 #
 # Table name: fly_buy_profiles
 #
-#  id                     :integer          not null, primary key
-#  synapse_user_id        :string
-#  user_id                :integer
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#  encrypted_fingerprint  :string
-#  synapse_node_id        :string
-#  synapse_ip_address     :string
-#  synapse_escrow_node_id :string
-#  synapse_transaction_id :string
+#  id                    :integer          not null, primary key
+#  synapse_user_id       :string
+#  user_id               :integer
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  encrypted_fingerprint :string
+#  synapse_node_id       :string
+#  synapse_ip_address    :string
 #
 
 class FlyBuyProfile < ActiveRecord::Base
