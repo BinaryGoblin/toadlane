@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160926055937) do
+ActiveRecord::Schema.define(version: 20160926094901) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -310,9 +310,11 @@ ActiveRecord::Schema.define(version: 20160926055937) do
     t.float    "rebate_price"
     t.float    "total"
     t.datetime "status_change"
-    t.boolean  "deleted",       default: false
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.boolean  "deleted",                default: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.string   "synapse_escrow_node_id"
+    t.string   "synapse_transaction_id"
   end
 
   create_table "fly_buy_profiles", force: :cascade do |t|

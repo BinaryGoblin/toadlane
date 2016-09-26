@@ -2,21 +2,23 @@
 #
 # Table name: fly_buy_orders
 #
-#  id            :integer          not null, primary key
-#  buyer_id      :integer
-#  seller_id     :integer
-#  product_id    :integer
-#  status        :integer
-#  unit_price    :float
-#  count         :integer
-#  fee           :float
-#  rebate        :float
-#  rebate_price  :float
-#  total         :float
-#  status_change :datetime
-#  deleted       :boolean          default(FALSE)
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id                     :integer          not null, primary key
+#  buyer_id               :integer
+#  seller_id              :integer
+#  product_id             :integer
+#  status                 :integer
+#  unit_price             :float
+#  count                  :integer
+#  fee                    :float
+#  rebate                 :float
+#  rebate_price           :float
+#  total                  :float
+#  status_change          :datetime
+#  deleted                :boolean          default(FALSE)
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  synapse_escrow_node_id :string
+#  synapse_transaction_id :string
 #
 
 class FlyBuyOrder < ActiveRecord::Base
