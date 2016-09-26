@@ -43,7 +43,6 @@ class FlyAndBuy::UserOperations
   end
 
   def create_fly_buy_profile_with_fingerprint
-    encrypted_fingerprint = AESCrypt.encrypt(user_details[:fingerprint], FingerPrintMessage)
     FlyBuyProfile.create({
       encrypted_fingerprint: "user_#{user.id}" + "_" + user_details[:fingerprint],
       user_id: user.id
