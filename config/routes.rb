@@ -40,6 +40,10 @@ Toad::Application.routes.draw do
     get :refund
   end
 
+  resources :fly_buy_orders, except: [:edit, :new, :create, :show, :index, :destroy, :update] do
+    post :place_order
+  end
+
   get 'print/invoice.:id', to: 'print#invoice', as: 'print/invoice'
 
   get 'search/autocomplete'

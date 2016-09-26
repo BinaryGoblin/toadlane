@@ -28,10 +28,10 @@ class ProductsController < ApplicationController
     commontator_thread_show(@product)
     @related_products = Product.unexpired.where(main_category: @product.main_category).where.not(id: @product.id)
 
-    if params[:promise_order_id].present?
-      @promise_order = PromiseOrder.find_by_id(params[:promise_order_id])
+    if params[:fly_buy_order_id].present?
+      @fly_buy_order = FlyBuyOrder.find_by_id(params[:fly_buy_order_id])
     else
-      @promise_order = PromiseOrder.new
+      @fly_buy_order = FlyBuyOrder.new
     end
   end
 
@@ -74,7 +74,7 @@ class ProductsController < ApplicationController
       fee: Fee.find_by(:module_name => "Stripe").value
     }
 
-    @promise_order, @promise_account = promise_order_process(@product)
+    @fly_buy_order, @fly_buy_profile = fly_buy_order_process(@product)
 
     @stripe_order = StripeOrder.new
     @green_order = GreenOrder.new
@@ -134,24 +134,22 @@ class ProductsController < ApplicationController
     })
   end
 
-  def promise_order_process(product)
-    if params["promise_order_id"].present? && params["inspection_date"].present? && params["inspection_date"]["inspection_date_id"].present?
-      promise_order = PromiseOrder.find_by_id(params["promise_order_id"])
-      promise_order.update_attributes({
+  def fly_buy_order_process(product)
+    if params["fly_buy_order_id"].present? && params["inspection_date"].present? && params["inspection_date"]["inspection_date_id"].present?
+      fly_buy_order = FlyBuyOrder.find_by_id(params["fly_buy_order_id"])
+      fly_buy_order.update_attributes({
         unit_price: product.unit_price,
         count: params[:count],
-        amount: params[:total],
+        total: params[:total],
         rebate_price: params[:rebate],
         rebate_percent: params[:rebate_percent],
         fee: params[:fee] # this is fee amount for buyer
       })
 
-      calculate_store_seller_fees(promise_order)
-
       selected_inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
 
       inspection_date = InspectionDate.new({
-        promise_order_id: promise_order.id,
+        fly_buy_order_id: fly_buy_order.id,
         approved: true,
         creator_type: selected_inspection_date.creator_type,
         date: selected_inspection_date.date
@@ -160,44 +158,42 @@ class ProductsController < ApplicationController
 
     elsif params["inspection_date"].present? && params["inspection_date"]["inspection_date_id"].present?
       # this is for selecting one inspection date from seller added dates
-      promise_order = PromiseOrder.create({
+      fly_buy_order = FlyBuyOrder.create({
         buyer_id: current_user.id,
         seller_id: product.user.id,
         product_id: product.id,
         unit_price: product.unit_price,
         count: params[:count],
-        amount: params[:total],
+        total: params[:total],
         rebate_price: params[:rebate],
         rebate: params[:rebate_percent],
         fee: params[:fee], # this is fee amount for buyer
 
       })
 
-      calculate_store_seller_fees(promise_order)
-
       selected_inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
 
       inspection_date = InspectionDate.new({
-        promise_order_id: promise_order.id,
+        fly_buy_order_id: fly_buy_order.id,
         approved: true,
         creator_type: selected_inspection_date.creator_type,
         date: selected_inspection_date.date
       })
       inspection_date.save(validate: false)
 
-    elsif params["promise_order_id"].present?
-      promise_order = PromiseOrder.find_by_id(params["promise_order_id"])
-    elsif request.get? && session[:promise_order_id].present?
-      promise_order = PromiseOrder.find_by_id(session[:promise_order_id])
+    elsif params["fly_buy_order_id"].present?
+      fly_buy_order = FlyBuyOrder.find_by_id(params["fly_buy_order_id"])
+    elsif request.get? && session[:fly_buy_order_id].present?
+      fly_buy_order = FlyBuyOrder.find_by_id(session[:fly_buy_order_id])
     else
-      promise_order = FlyBuyOrder.new
+      fly_buy_order = FlyBuyOrder.new
     end
 
-    session[:promise_order_id] = promise_order.id
+    session[:fly_buy_order_id] = fly_buy_order.id
 
     fly_buy_profile = current_user.fly_buy_profile_exist? ? current_user.fly_buy_profile : FlyBuyProfile.new
 
-    [promise_order, fly_buy_profile]
+    [fly_buy_order, fly_buy_profile]
   end
 
   def calculate_store_seller_fees(promise_order)
