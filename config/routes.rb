@@ -47,6 +47,7 @@ Toad::Application.routes.draw do
     end
     post :confirm_inspection_date_by_seller
     get :complete_inspection
+    get :release_payment
     post :place_order
   end
 

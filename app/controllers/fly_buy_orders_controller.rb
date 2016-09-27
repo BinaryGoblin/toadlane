@@ -134,6 +134,34 @@ class FlyBuyOrdersController < ApplicationController
   end
 
   def complete_inspection
+    fly_buy_order = FlyBuyOrder.find_by_id(params["fly_buy_order_id"])
+    if fly_buy_order.update_attribute(:inspection_complete, true)
+      flash[:notice] = 'Order has been marked as inspected'
+    else
+      flash[:alert] = 'Could not be marked as inspected'
+    end
+    redirect_to dashboard_orders_path
+  end
+
+  def release_payment
+    fly_buy_order = FlyBuyOrder.find_by_id(params["fly_buy_order_id"])
+    binding.pry
+    client = FlyBuyService.get_client
+    user = client.users.find(current_user.fly_buy_profile.synapse_user_id)
+    user_client = client.users.authenticate_as(
+                          id: current_user.fly_buy_profile.synapse_user_id,
+                          refresh_token: user[:refresh_token],
+                          fingerprint: current_user.fly_buy_profile.encrypted_fingerprint
+                        )
+    seller_fly_buy_profile = fly_buy_order.seller.fly_buy_profile
+    response = user_client.send_money(
+      from: FlyBuyProfile::EscrowNodeID,
+      to: current_user.fly_buy_profile.synapse_node_id,
+      to_node_type: FlyAndBuy::UserOperations::SynapsePayNodeType,
+      amount: fly_buy_order.total,
+      currency: FlyAndBuy::UserOperations::SynapsePayCurrency,
+      ip_address: current_user.fly_buy_profile.synapse_ip_address,
+    )
   end
 
   private

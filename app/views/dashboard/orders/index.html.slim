@@ -52,19 +52,14 @@
                 | &nbsp;
                 = link_to 'Refund Requested', dashboard_refund_requests_path, class: 'view'
             td.text-center
-              - if order.instance_of?(FlyBuyOrder)
-                / - if current_user == order.buyer && order.not_inspected && order.inspection_date_today?
-                /   = link_to 'Complete Inspection & Release Payment', promise_order_complete_inspection_path(order.id), class: 'view'
-                / - elsif current_user == order.buyer && order.funds_in_escrow == true && order.refunded == false
-                /   = link_to 'Refund', promise_order_refund_path(order.id), data: {confirm: 'Are you sure ?'}, class: 'view'
-                / - elsif order.refunded == true
-                /   span.label
-                /     | Refunded
-                / - elsif order.payment_release == true
-                /   span.label
-                /     | Payment Released
-                / - else
-                  | -
+              - if order.buyer && order.instance_of?(FlyBuyOrder)
+                - if order.not_inspected && order.inspection_date_today? && order.funds_in_escrow == true
+                  = link_to 'Complete Inspection & Release Payment', fly_buy_order_complete_inspection_path(order.id), class: 'view'
+                - elsif order.inspected && order.funds_in_escrow == true
+                  = link_to 'Release Payment', fly_buy_order_release_payment_path(order.id), class: 'view'
+                - elsif order.payment_release == true
+                  span.label
+                    | Payment Released
                 | -
               - else
                 | -
