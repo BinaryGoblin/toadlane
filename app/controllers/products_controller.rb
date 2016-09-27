@@ -142,7 +142,7 @@ class ProductsController < ApplicationController
         count: params[:count],
         total: params[:total],
         rebate_price: params[:rebate],
-        rebate_percent: params[:rebate_percent],
+        rebate: params[:rebate_percent],
         fee: params[:fee] # this is fee amount for buyer
       })
 
