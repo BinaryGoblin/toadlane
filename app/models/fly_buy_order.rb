@@ -57,4 +57,8 @@ class FlyBuyOrder < ActiveRecord::Base
   def buyer_requested_inspection_date
     buyer_requested.get_inspection_date
   end
+
+  def inspection_date_rejected_by_seller
+    inspection_dates.buyer_added.rejected
+  end
 end

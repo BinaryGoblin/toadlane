@@ -114,6 +114,15 @@ class FlyBuyOrdersController < ApplicationController
   end
 
   def confirm_inspection_date_by_seller
+    fly_buy_order = FlyBuyOrder.find_by_id(params[:fly_buy_order_id])
+    product = Product.unexpired.find(params[:product_id])
+
+    if fly_buy_order.inspection_dates.buyer_added.last.update_attributes({approved: true})
+      UserMailer.send_inspection_date_confirm_notification_to_buyer(fly_buy_order).deliver_later
+      redirect_to product_path(id: product.id, fly_buy_order_id: fly_buy_order.id), :flash => { :notice => "Inspection date has been set to #{fly_buy_order.inspection_dates.buyer_added.last.get_inspection_date}."}
+    else
+      redirect_to product_path(id: product.id, fly_buy_order_id: fly_buy_order.id)
+    end
   end
 
   def complete_inspection
