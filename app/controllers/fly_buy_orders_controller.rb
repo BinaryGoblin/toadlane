@@ -50,6 +50,67 @@ class FlyBuyOrdersController < ApplicationController
   end
 
   def set_inspection_date
+    product = Product.unexpired.find(params[:product_id])
+
+    if current_user.profile_complete?
+      inspection_date = DateTime.new(
+        params["inspection_date"]["date(1i)"].to_i,
+        params["inspection_date"]["date(2i)"].to_i,
+        params["inspection_date"]["date(3i)"].to_i,
+        params["inspection_date"]["date(4i)"].to_i,
+        params["inspection_date"]["date(5i)"].to_i
+      )
+
+      # seller reject buyer added date and add new inspection date
+      if params[:fly_buy_order_id].present?
+        fly_buy_order = FlyBuyOrder.find_by_id(params[:fly_buy_order_id])
+        fly_buy_order.buyer_requested.update_attribute(:approved, false)
+        fly_buy_order.inspection_dates.create!({
+          date: inspection_date,
+          creator_type: "seller",
+          fly_buy_order_id: fly_buy_order.id
+        })
+      else
+        # seller approve buyer added inspection date
+        fly_buy_order = FlyBuyOrder.create!({
+          buyer_id: current_user.id,
+          seller_id: product.user.id,
+          product_id: product.id
+        })
+
+        fly_buy_order.inspection_dates.create!({
+          date: inspection_date,
+          creator_type: "buyer",
+          fly_buy_order_id: fly_buy_order.id
+        })
+      end
+
+      if fly_buy_order.errors.any?
+        redirect_to product_path(id: product.id, fly_buy_order_id: fly_buy_order.id), :flash => { :alert => fly_buy_order.errors.full_messages.first}
+      else
+        if product.user == current_user
+          if fly_buy_order.inspection_date_rejected_by_seller.present?
+            flash[:notice] = 'You have rejected requested inspection date and added a new one and notified the buyer.'
+          else
+            flash[:notice] = 'You have accepted requested inspection date and notified the buyer.'
+          end
+          UserMailer.send_inspection_date_set_notification_to_buyer(fly_buy_order).deliver_later
+        else
+          flash[:notice] = 'Your requested inspection date has been submitted. You will be notified when the seller responds.'
+          UserMailer.send_inspection_date_set_notification_to_seller(fly_buy_order).deliver_later
+        end
+        redirect_to product_path(id: product.id, fly_buy_order_id: fly_buy_order.id)
+      end
+    else
+      redirect_to product_path(id: product.id), :flash => { :error => "You must complete your profile to view Fly & Buy inspection dates." }
+    end
+  rescue ActiveRecord::RecordInvalid => e
+    @errors = e.message.split(": ")[1]
+    if params[:fly_buy_order_id].present?
+      redirect_to product_path(id: product.id, fly_buy_order_id: fly_buy_order.id, buyer_request_inspection_date: true), :flash => { :alert => @errors}
+    else
+      redirect_to product_path(id: product.id, fly_buy_order_id: fly_buy_order.id), :flash => { :alert => @errors}
+    end
   end
 
   def confirm_inspection_date_by_seller
