@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160926094901) do
+ActiveRecord::Schema.define(version: 20160927083847) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -315,6 +315,9 @@ ActiveRecord::Schema.define(version: 20160926094901) do
     t.datetime "updated_at",                             null: false
     t.string   "synapse_escrow_node_id"
     t.string   "synapse_transaction_id"
+    t.boolean  "inspection_complete",    default: false
+    t.boolean  "payment_release",        default: false
+    t.boolean  "funds_in_escrow",        default: false
   end
 
   create_table "fly_buy_profiles", force: :cascade do |t|

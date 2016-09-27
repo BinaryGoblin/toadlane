@@ -19,6 +19,9 @@
 #  updated_at             :datetime         not null
 #  synapse_escrow_node_id :string
 #  synapse_transaction_id :string
+#  inspection_complete    :boolean          default(FALSE)
+#  payment_release        :boolean          default(FALSE)
+#  funds_in_escrow        :boolean          default(FALSE)
 #
 
 class FlyBuyOrder < ActiveRecord::Base
