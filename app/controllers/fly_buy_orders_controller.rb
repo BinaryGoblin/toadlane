@@ -47,22 +47,6 @@ class FlyBuyOrdersController < ApplicationController
           type: 'fly_buy'
         ), notice: 'Your order was successfully placed.'
     end
-
-
-
-    # set_promise_pay_instance
-    # if current_user.promise_account.nil?
-    #   create_bank_account
-    #   create_item_in_promise(product, fly_buy_order)
-    # else
-    #   create_item_in_promise(product, fly_buy_order)
-    # end
-  # rescue Promisepay::UnprocessableEntity => e
-  #   flash[:error] = e.message
-  #   redirect_to product_checkout_path(
-  #     product_id: product.id,
-  #     fly_buy_order_id: fly_buy_order.id
-  #   )
   end
 
   def set_inspection_date
