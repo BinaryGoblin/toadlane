@@ -20,19 +20,19 @@ html[style="margin: 0;padding: 0;"]
           = get_email_or_name(@seller)
         .message-section style=("margin: 0;padding: 15px;background: #eee;border-radius: 3px;margin-bottom: 20px;")
           = get_email_or_name(@seller)
-          - if @promise_order.inspection_dates.buyer_added.approved.present?
+          - if @order.inspection_dates.buyer_added.approved.present?
             | &nbsp;has accepted the inspection date that you set i.e&nbsp;
             strong
-              = @promise_order.buyer_requested_inspection_date
+              = @order.buyer_requested_inspection_date
           - else
             | &nbsp;has rejected the inspection date that you set i.e&nbsp;
             strong
-              = @promise_order.buyer_requested_inspection_date
+              = @order.buyer_requested_inspection_date
             | &nbsp;and has set a new inspection date to&nbsp;
             strong
               = @product.latest_seller_added_inspection_date
         .message-footer style=("margin: 0;padding: 0;")
-          = link_to "Click Here", product_url(id: @product.id, promise_order_id: @promise_order.id),
+          = link_to "Click Here", product_url(id: @product.id, order_id: @order.id),
                 {:style => "margin: 0;padding: 7px 13px;color: white;border: 1px solid transparent;border-bottom-color: #3d6411;border-top-color: #59af0c;text-shadow: 0 1px 0 #3d6411;text-decoration: none;background-image: linear-gradient(to bottom, #59af0c 0%, #5c8f10 100%);background-repeat: repeat-x;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF59AF0C', endColorstr='#FF5C8F10', GradientType=0);border-radius: 3px;display: inline-block;"}
     .text-center[style="margin: 0;padding: 0;text-align: center;"]
       a[href="#{faq_url}" style="margin: 0;padding: 0;color: #5c8f10;"]

@@ -49,4 +49,12 @@ class FlyBuyOrder < ActiveRecord::Base
   def selected_inspection_date
     inspection_dates.approved.first
   end
+
+  def buyer_requested
+    inspection_dates.buyer_added.last
+  end
+
+  def buyer_requested_inspection_date
+    buyer_requested.get_inspection_date
+  end
 end
