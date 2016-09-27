@@ -43,6 +43,7 @@ class FlyBuyOrdersController < ApplicationController
       fly_buy_order.update_attributes({
           synapse_escrow_node_id: FlyBuyProfile::EscrowNodeID,
           synapse_transaction_id: response[:_id],
+          funds_in_escrow: true,
           status: 'placed'
         })
 
