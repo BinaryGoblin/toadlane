@@ -23,14 +23,21 @@ class FlyBuyOrdersController < ApplicationController
                           fingerprint: fly_buy_profile.encrypted_fingerprint
                         )
     nodes = user_client.nodes(fly_buy_profile.synapse_node_id)
-    # here node_id and node_type is of buyer's node_id and node_type
-    response = nodes.transactions.create(
-                                node_id: FlyBuyProfile::EscrowNodeID,
-                                node_type: FlyAndBuy::UserOperations::SynapseEscrowNodeType,
-                                amount: fly_buy_order.total,
-                                currency: FlyAndBuy::UserOperations::SynapsePayCurrency,
-                                ip_address: fly_buy_profile.synapse_ip_address
-                              )
+    # response = nodes.transactions.create(
+    #                             node_id: FlyBuyProfile::EscrowNodeID,
+    #                             node_type: FlyAndBuy::UserOperations::SynapseEscrowNodeType,
+    #                             amount: fly_buy_order.total,
+    #                             currency: FlyAndBuy::UserOperations::SynapsePayCurrency,
+    #                             ip_address: fly_buy_profile.synapse_ip_address
+    #                           )
+    response = user_client.send_money(
+      from: fly_buy_profile.synapse_node_id,
+      to: FlyBuyProfile::EscrowNodeID,
+      to_node_type: FlyAndBuy::UserOperations::SynapseEscrowNodeType,
+      amount: fly_buy_order.total,
+      currency: FlyAndBuy::UserOperations::SynapsePayCurrency,
+      ip_address: fly_buy_profile.synapse_ip_address,
+    )
 
     if response[:recent_status][:note] == "Transaction created"
       fly_buy_order.update_attributes({
