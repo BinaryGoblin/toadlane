@@ -1,8 +1,5 @@
 desc 'When inspection date is arriving'
 task :reminder_inspection_date_arriving => :environment do
-  promise_pay_instance = PromisePayService.new
-  client = promise_pay_instance.client
-
   [1, 2].each do |rule|
     approved_inspection_dates = InspectionDate.approved
 
@@ -12,10 +9,10 @@ task :reminder_inspection_date_arriving => :environment do
             )
 
     inspection_dates.each do |inspection_date|
-      if inspection_date.promise_order.present?
-        promise_order = inspection_date.promise_order
-        UserMailer.send_inspection_date_arriving_to_seller(promise_order, rule).deliver_later
-        UserMailer.send_inspection_date_arriving_to_buyer(promise_order, rule).deliver_later
+      if inspection_date.fly_buy_order.present?
+        fly_buy_order = inspection_date.fly_buy_order
+        UserMailer.send_inspection_date_arriving_to_seller(fly_buy_order, rule).deliver_later
+        UserMailer.send_inspection_date_arriving_to_buyer(fly_buy_order, rule).deliver_later
       end
     end
   end

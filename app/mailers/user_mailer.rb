@@ -148,7 +148,7 @@ class UserMailer < ActionMailer::Base
     @seller = @order.seller
     @days = days
 
-    mail to: @seller.email, subject: "Inspection Date is arriving"
+    mail to: @seller.email, subject: "Inspection Date is arriving in #{@days} day/s"
   end
 
   def send_inspection_date_arriving_to_buyer(order, days)
@@ -156,6 +156,6 @@ class UserMailer < ActionMailer::Base
     @buyer = @order.buyer
     @days = days
 
-    mail to: @buyer.email, subject: "Inspection Date is arriving"
+    mail to: @buyer.email, subject: "Inspection Date is arriving in #{@days} day/s"
   end
 end
