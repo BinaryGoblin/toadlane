@@ -44,6 +44,8 @@ class FlyBuyOrdersController < ApplicationController
       product.sold_out += fly_buy_order.count
       product.save
 
+      send_email_notification(fly_buy_order)
+
       redirect_to dashboard_order_path(
           fly_buy_order,
           type: 'fly_buy'
@@ -202,5 +204,10 @@ class FlyBuyOrdersController < ApplicationController
   private
   def fly_buy_params
     params.require(:fly_buy_profile).permit!
+  end
+
+  def send_email_notification(fly_buy_order)
+    UserMailer.sales_order_notification_to_seller(fly_buy_order).deliver_later
+    UserMailer.sales_order_notification_to_buyer(fly_buy_order).deliver_later
   end
 end

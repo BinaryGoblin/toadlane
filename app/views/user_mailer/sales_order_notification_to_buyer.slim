@@ -22,10 +22,10 @@ html[style="margin: 0;padding: 0;"]
               h4.text-uppercase[style="margin: 0;padding: 0;"]
                 |  order #
                 = @order.id
-                - if @order.instance_of? PromiseOrder
+                - if @order.instance_of? FlyBuyOrder
                   p
-                    | Promise Item Id #
-                    = @order.promise_item_id
+                    | Transaction Id #
+                    = @order.synapse_transaction_id
               div[style="margin: 0;padding: 0;"]
                 |  Date:&nbsp;
                 = @order.created_at.to_date
@@ -98,7 +98,7 @@ html[style="margin: 0;padding: 0;"]
               = @order.count
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
               = number_to_currency(@order.unit_price)
-            td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
+            / td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
               = number_to_currency(get_amount_without_fees(@order))
           tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
             td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
@@ -106,7 +106,7 @@ html[style="margin: 0;padding: 0;"]
               | % rebate for purchasing #{@order.count} pcs
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
               | -
-              - if @order.instance_of? PromiseOrder
+              - if @order.instance_of? FlyBuyOrder
                 = number_to_currency(@order.rebate_price)
               - else
                 = number_to_currency(get_amount_for_rebate(@order))
@@ -115,7 +115,7 @@ html[style="margin: 0;padding: 0;"]
               |  Buyer Fees
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
               = number_to_currency(@order.fee)
-          - if !@order.instance_of? PromiseOrder
+          - if !@order.instance_of? FlyBuyOrder
             tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
               td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
                 |  Shipping
@@ -128,10 +128,7 @@ html[style="margin: 0;padding: 0;"]
                 | Total:
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
               b[style="margin: 0;padding: 0;"]
-                - if @order.instance_of? PromiseOrder
-                  = number_to_currency(@order.amount)
-                - else
-                  = number_to_currency(@order.total)
+                = number_to_currency(@order.total)
       div[style="text-align: right;margin-top: 20px;margin: 0;padding: 0;"]
         a.btn[href="#{dashboard_orders_url}" style="margin: 0;padding: 7px 13px;color: white;border: 1px solid transparent;border-bottom-color: #3d6411;border-top-color: #59af0c;text-decoration: none;background-image: linear-gradient(to bottom, #59af0c 0%, #5c8f10 100%);background-repeat: repeat-x;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF59AF0C', endColorstr='#FF5C8F10', GradientType=0);border-radius: 3px;display: inline-block;"]
           | View All Orders
@@ -148,4 +145,5 @@ html[style="margin: 0;padding: 0;"]
     div[style="text-align: left;margin-top: 20px;margin-right: 20px;padding: 0;color: #666B85"]
       | Note:
       br
-      | After you inspect the products you will either release funds to the seller or send yourself a refund.
+      | After you inspect the products you will either release funds to the seller.
+      / | After you inspect the products you will either release funds to the seller or send yourself a refund.
