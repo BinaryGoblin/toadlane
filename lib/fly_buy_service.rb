@@ -10,8 +10,8 @@ class FlyBuyService
     timeout_options = { write: 50, connect: 50, read: 50 }
 
     SynapsePayments::Client.new(
-                        client_id: Rails.application.secrets['fly_buy_client_id'], 
-                        client_secret: Rails.application.secrets['fly_buy_client_secret'], 
+                        client_id: Rails.application.secrets['SYNAPSEPAY_CLIENT_ID'],
+                        client_secret: Rails.application.secrets['SYNAPSEPAY_CLIENT_SECRET'],
                         sandbox_mode: sandbox_mode, 
                         timeout_options: timeout_options)
 
