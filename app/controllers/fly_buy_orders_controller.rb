@@ -192,6 +192,8 @@ class FlyBuyOrdersController < ApplicationController
       status: 'completed'
       })
 
+    UserMailer.send_payment_released_notification_to_seller(fly_buy_order).deliver_later
+
     redirect_to dashboard_orders_path, :flash => { :notice => 'Payment has been successfully released to seller.'}
   rescue SynapsePayments::Error => e
     redirect_to dashboard_orders_path, :flash => { :error => e.message }
