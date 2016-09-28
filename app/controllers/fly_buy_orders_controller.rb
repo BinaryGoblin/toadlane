@@ -13,11 +13,11 @@ class FlyBuyOrdersController < ApplicationController
 
     seller_profile = fly_buy_order.seller.fly_buy_profile
 
-    @client = FlyBuyService.get_client
+    client = FlyBuyService.get_client
 
-    user = @client.users.find(fly_buy_profile.synapse_user_id)
+    user = client.users.find(fly_buy_profile.synapse_user_id)
 
-    user_client = @client.users.authenticate_as(
+    user_client = client.users.authenticate_as(
                           id: fly_buy_profile.synapse_user_id,
                           refresh_token: user[:refresh_token],
                           fingerprint: fly_buy_profile.encrypted_fingerprint
@@ -144,8 +144,6 @@ class FlyBuyOrdersController < ApplicationController
 
     seller_fly_buy_profile = fly_buy_order.seller.fly_buy_profile
 
-    app_fingerprint = ""
-
     url = "https://sandbox.synapsepay.com/api/v3/user/signin"
     a = {
       "client": {
@@ -188,6 +186,11 @@ class FlyBuyOrdersController < ApplicationController
     }
 
     u = s.create(data)
+
+    fly_buy_order.update_attributes({
+      payment_release: true,
+      status: 'completed'
+      })
 
     redirect_to dashboard_orders_path, :flash => { :notice => 'Payment has been successfully released to seller.'}
   rescue SynapsePayments::Error => e
