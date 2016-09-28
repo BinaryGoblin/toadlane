@@ -23,20 +23,14 @@ class FlyBuyOrdersController < ApplicationController
                           fingerprint: fly_buy_profile.encrypted_fingerprint
                         )
     nodes = user_client.nodes(fly_buy_profile.synapse_node_id)
-    # response = nodes.transactions.create(
-    #                             node_id: FlyBuyProfile::EscrowNodeID,
-    #                             node_type: FlyAndBuy::UserOperations::SynapseEscrowNodeType,
-    #                             amount: fly_buy_order.total,
-    #                             currency: FlyAndBuy::UserOperations::SynapsePayCurrency,
-    #                             ip_address: fly_buy_profile.synapse_ip_address
-    #                           )
+
     response = user_client.send_money(
       from: fly_buy_profile.synapse_node_id,
       to: FlyBuyProfile::EscrowNodeID,
       to_node_type: FlyAndBuy::UserOperations::SynapseEscrowNodeType,
       amount: fly_buy_order.total,
       currency: FlyAndBuy::UserOperations::SynapsePayCurrency,
-      ip_address: fly_buy_profile.synapse_ip_address,
+      ip_address: fly_buy_profile.synapse_ip_address
     )
 
     if response[:recent_status][:note] == "Transaction created"
@@ -147,21 +141,57 @@ class FlyBuyOrdersController < ApplicationController
     fly_buy_order = FlyBuyOrder.find_by_id(params["fly_buy_order_id"])
 
     client = FlyBuyService.get_client
-    user = client.users.find(current_user.fly_buy_profile.synapse_user_id)
-    user_client = client.users.authenticate_as(
-                          id: current_user.fly_buy_profile.synapse_user_id,
-                          refresh_token: user[:refresh_token],
-                          fingerprint: current_user.fly_buy_profile.encrypted_fingerprint
-                        )
+
     seller_fly_buy_profile = fly_buy_order.seller.fly_buy_profile
-    response = user_client.send_money(
-      from: FlyBuyProfile::EscrowNodeID,
-      to: seller_fly_buy_profile.synapse_node_id,
-      to_node_type: FlyAndBuy::UserOperations::SynapsePayNodeType,
+
+    app_fingerprint = ""
+
+    url = "https://sandbox.synapsepay.com/api/v3/user/signin"
+    a = {
+      "client": {
+        "client_id": "id-fb13c910-a846-49e0-a479-26e763bfc62b",
+        "client_secret": "secret-b703ba44-2bac-49c6-85f5-3de140742041"
+      },
+      "login":{
+        "email": "neha@jyaasa.com",
+        "password": "TestTest123$"
+      },
+      "user":{
+        "_id":{
+          "$oid": FlyBuyProfile::AppUserId
+        },
+        "fingerprint":FlyBuyProfile::AppFingerPrint,
+        "ip":"192.168.0.112"
+      }
+    }
+    b = RestClient.post(url,
+      a.to_json,
+      :content_type => :json,
+      :accept => :json)
+
+    o = JSON.parse(b)
+
+    s = SynapsePayments::Transactions.new(
+                        client,
+                        o["user"]["_id"]["$oid"],
+                        FlyBuyProfile::EscrowNodeID,
+                        o["oauth"]["oauth_key"],
+                        FlyBuyProfile::AppFingerPrint
+                      )
+
+    data = {
+      node_id: seller_fly_buy_profile.synapse_node_id,
+      node_type: FlyAndBuy::UserOperations::SynapsePayNodeType,
       amount: fly_buy_order.total,
       currency: FlyAndBuy::UserOperations::SynapsePayCurrency,
-      ip_address: current_user.fly_buy_profile.synapse_ip_address,
-    )
+      ip_address: current_user.fly_buy_profile.synapse_ip_address
+    }
+
+    u = s.create(data)
+
+    redirect_to dashboard_orders_path, :flash => { :notice => 'Payment has been successfully released to seller.'}
+  rescue SynapsePayments::Error => e
+    redirect_to dashboard_orders_path, :flash => { :error => e.message }
   end
 
   private
