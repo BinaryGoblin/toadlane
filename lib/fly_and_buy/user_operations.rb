@@ -44,6 +44,8 @@ class FlyAndBuy::UserOperations
     store_returned_id(add_doc_response)
 
     create_bank_account(create_user_response, user_client)
+
+    user_client.oauth_key
   end
 
   def create_fly_buy_profile_with_fingerprint
@@ -69,7 +71,9 @@ class FlyAndBuy::UserOperations
         last_name: user.last_name,
         street: user.addresses.first.line1,
         postal_code: user.addresses.first.zip,
-        country_code: user.addresses.first.country
+        country_code: user.addresses.first.country,
+        document_type: 'SSN',
+        document_value: '2222'
       )
   end
 

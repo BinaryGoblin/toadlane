@@ -283,3 +283,58 @@ $(document).ready ->
       $('*').css 'cursor', 'wait'
       form.submit()
       return
+
+  $('.synapse-kyc-btn').click ->
+    oauth_key = $('.synapse-kyc-btn').data('oauth-key')
+    fingerprint = $('.synapse-kyc-btn').data('fingerprint')
+    development_mode = $('.synapse-kyc-btn').data('development_mode')
+
+    $('a.synapse-kyc-btn').addClass( "disabled" )
+    $('*').css 'cursor', 'wait'
+
+    iframeInfo =
+      physical_id:
+        collect: true
+        message: 'To continue, please attach a EIN letter.'
+        no_webcam: true
+      development_mode: development_mode
+      no_ac_rt: false
+      do_kyc: true
+      do_banks: false
+      kyc_done: false
+      userInfo:
+        oauth_key: oauth_key
+        fingerprint: fingerprint
+      colors:
+        'trim': '#059db1'
+        'unfocused': 'UNFOCUSED_COLOR'
+        'text': '#059db1'
+      messages:
+        'kyc_message': 'Please click on the button above to verify your identity before creating a transaction.'
+        'bank_message': 'Please click on the button above to link a bank account to your profile.'
+        'trans_mesage': 'Please click on the button above to create a transaction.'
+      receiverLogo: 'https://cdn.synapsepay.com/static_assets/logo@2x.png'
+
+    setupSynapseiFrame iframeInfo
+    $('#synapse_iframe').css 'visibility', 'visible'
+    $('#synapse_iframe').css 'height', '100%'
+    $('#synapse_iframe').css 'width', '100%'
+    $('#synapse_iframe').css 'left', '0px'
+
+  expressReciver = (e) ->
+    try
+      json = JSON.parse(e.data)
+      if json.success or json.close
+        $('a.synapse-kyc-btn').removeClass( "disabled" )
+        $('*').css 'cursor', 'default'
+        $('#synapse_iframe').css 'visibility', 'hidden'
+        $('#synapse_iframe').css 'height', '0%'
+        $('#synapse_iframe').css 'width', '0%'
+        $('#synapse_iframe').css 'left', '0px'
+        $('#synapse_iframe').prop 'src', ''
+        self.set 'enableButton', true
+    catch e
+      # console.log(e);
+    return
+
+  window.addEventListener 'message', expressReciver, false
