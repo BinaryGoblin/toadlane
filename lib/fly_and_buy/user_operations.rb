@@ -33,7 +33,8 @@ class FlyAndBuy::UserOperations
       name: user.name,
       email: user.email,
       phone: user.phone,
-      fingerprint: fly_buy_profile.encrypted_fingerprint
+      fingerprint: fly_buy_profile.encrypted_fingerprint,
+      is_business: true
     )
 
     user_client = authenticate_user(create_user_response)
@@ -68,9 +69,7 @@ class FlyAndBuy::UserOperations
         last_name: user.last_name,
         street: user.addresses.first.line1,
         postal_code: user.addresses.first.zip,
-        country_code: user.addresses.first.country,
-        document_type: 'SSN',
-        document_value: '2222'
+        country_code: user.addresses.first.country
       )
   end
 
