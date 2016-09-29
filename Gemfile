@@ -112,3 +112,6 @@ gem 'annotate', '~> 2.7.1'
 gem 'impressionist', '~> 1.5.1'
 gem 'paranoia', '~> 2.0'
 gem 'blogo', '~> 0.1.4'
+
+gem 'imgkit', '~> 1.6.1'
+gem 'wkhtmltoimage-binary', '~> 0.12.2'

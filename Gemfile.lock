@@ -222,6 +222,7 @@ GEM
       multi_xml (>= 0.5.2)
     httpclient (2.8.0)
     i18n (0.7.0)
+    imgkit (1.6.1)
     impressionist (1.5.1)
       httpclient (~> 2.2)
       nokogiri (~> 1.5)
@@ -461,6 +462,7 @@ GEM
     whenever (0.9.7)
       chronic (>= 0.6.3)
     will_paginate (3.0.7)
+    wkhtmltoimage-binary (0.12.2)
 
 PLATFORMS
   ruby
@@ -492,6 +494,7 @@ DEPENDENCIES
   guard-rails
   guard-rspec
   httparty (~> 0.13.7)
+  imgkit (~> 1.6.1)
   impressionist (~> 1.5.1)
   iso_country_codes (~> 0.7.5)
   jbuilder (~> 2.2.9)
@@ -532,6 +535,7 @@ DEPENDENCIES
   webmock (~> 1.20.4)
   whenever
   will_paginate (~> 3.0.7)
+  wkhtmltoimage-binary (~> 0.12.2)
 
 BUNDLED WITH
    1.10.6

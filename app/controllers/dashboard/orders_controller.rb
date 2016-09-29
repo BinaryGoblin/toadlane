@@ -12,6 +12,17 @@ class Dashboard::OrdersController < DashboardController
     orders =  fly_buy_orders + stripe_orders + green_orders + amg_orders + emb_orders
 
     @orders = orders.sort_by(&:created_at).reverse
+    html = render_to_string(
+        {
+            layout: 'layouts/print.html.slim',
+            file: Rails.root + '/app/views/shared/_invoice.html.slim',
+            locals: {order: @orders.last}
+        })
+    kit = IMGKit.new(html)
+    img = @kit.to_png
+    file  = Tempfile.new(["template_#{@orders.last.id}", 'png'], 'tmp',
+                         :encoding => 'ascii-8bit')
+    file.write(img)
   end
 
   def show
