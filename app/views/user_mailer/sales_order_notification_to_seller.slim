@@ -20,8 +20,6 @@ html[style="margin: 0;padding: 0;"]
               - if @product.images.present? && @product.images.first.image(:small).present?
                 = image_tag get_image(@product.images.first.image(:small)), :class => "pro-img", :style => "background: #fff;border-color: #ccc;float: left;margin: 0;padding: 5px;height: 75px;vertical-align: middle;margin-right: 10px;border-radius: 5px;border: 1px solid #eaebec;"
               h4.text-uppercase[style="margin: 0;padding: 0;"]
-                |  order #
-                = @order.id
                 - if @order.instance_of? ArmorOrder
                   p
                     | Armor Order Id #
