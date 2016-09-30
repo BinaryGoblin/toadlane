@@ -25,9 +25,7 @@ class Dashboard::AccountsController < DashboardController
   def create_fly_buy_profile
     if request.post? && fly_buy_params.present?
       fly_buy_params.merge!(ip_address: '192.168.0.112')
-      @oauth_key = FlyAndBuy::UserOperations.new(current_user, fly_buy_params).create_user
-      @fingerprint = current_user.fly_buy_profile.encrypted_fingerprint
-      @development_mode = Rails.env.production? ? false : true
+      FlyAndBuy::UserOperations.new(current_user, fly_buy_params).create_user
       redirect_to dashboard_accounts_path
     end
   end

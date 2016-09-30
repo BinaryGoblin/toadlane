@@ -65,6 +65,8 @@ gem 'synapse_pay_rest', '~> 0.0.13'
 
 gem 'synapse_payments', '~> 0.10.0'
 
+gem 'roo', '~> 2.4.0'
+
 # Dev - debugging group
 group :development do
   gem 'pry-rails'

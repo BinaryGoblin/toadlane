@@ -33,9 +33,20 @@
           .form-group
             = f.label :routing_num, 'Routing Number:', class: 'required'
             = f.text_field :routing_num, class: 'form-control', required: true
-            
 
+        .col-md-6
+          .form-group
+              = f.label :ssn_number, 'SSN Number:', class: 'required'
+              = f.text_field :ssn_number, class: 'form-control', required: true
+      .row
+        .col-md-6
+          .form-group
+            label Company Date:
+            = date_select :fly_buy_profile, :date_of_company, { order: [:month, :day, :year] }, { class: "form-control" }
+            
+        .col-md-6
+          .form-group
+            = f.label :eic_doc, 'EIC Letter:', class: 'required'
+            = f.file_field :eic_doc, required: true
+            
       = f.submit "Submit", class: "btn btn-primary"
-  - if user.fly_buy_profile_exist? && @oauth_key.present? && @fingerprint.present?
-    = link_to 'Add KYC Details', "javascript:void(0)", class: 'btn btn-primary synapse-kyc-btn', :data => { :oauth_key => @oauth_key, :fingerprint => @fingerprint, :development_mode => @development_mode  }
-    iframe id="synapse_iframe" style="top:0; height:0%;width:0%;position:fixed;z-index:100000;visibility:hidden;" frameborder="0"

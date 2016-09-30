@@ -15,7 +15,7 @@
 class FlyBuyProfile < ActiveRecord::Base
   belongs_to :user
 
-  attr_accessor :name_on_account, :account_num, :routing_num, :bank_name, :address
+  attr_accessor :name_on_account, :account_num, :routing_num, :bank_name, :address, :eic_doc, :ssn_number, :date_of_company
 
   EscrowNodeID = '57d7465386c2732e824b7c8b'
   AppUserId = '57d745ff86c27319cbe0edf0'

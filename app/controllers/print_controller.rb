@@ -34,17 +34,10 @@ class PrintController < ApplicationController
             locals: {order: FlyBuyOrder.last}
         }))
 
-    target_partial_path = Rails.root + '/app/views/drug_tests/_print_result.pdf.slim'
-    pdf_template_path = 'layouts/pdf.slim'
-    file_name = "print_result_#{Time.now.to_i}.pdf"
-    pdf = render_to_string(
-        {
-            layout: pdf_template_path,
-            file: target_partial_path,
-            pdf: file_name,
-            locals: {result: result}, margin: {top: "1.0mm"}
-        })
+    img   = kit.to_img(:png)
+    file  = Tempfile.new(["template_#{FlyBuyOrder.last}", 'png'], 'tmp',
+                         :encoding => 'ascii-8bit')
+    file.write(img)
 
-    send_data pdf, filename: file_name
   end
 end
