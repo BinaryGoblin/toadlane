@@ -11,29 +11,47 @@ class FlyBuyOrdersController < ApplicationController
     end
     fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
 
-    seller_profile = fly_buy_order.seller.fly_buy_profile
-
     client = FlyBuyService.get_client
+    user_response = client.users.get(user_id: fly_buy_profile.synapse_user_id)
 
-    user = client.users.find(fly_buy_profile.synapse_user_id)
+    client_user = FlyBuyService.get_user(oauth_key: nil, fingerprint: fly_buy_profile.encrypted_fingerprint, ip_address: fly_buy_profile.synapse_ip_address, user_id: fly_buy_profile.synapse_user_id)
 
-    user_client = client.users.authenticate_as(
-                          id: fly_buy_profile.synapse_user_id,
-                          refresh_token: user[:refresh_token],
-                          fingerprint: fly_buy_profile.encrypted_fingerprint
-                        )
-    nodes = user_client.nodes(fly_buy_profile.synapse_node_id)
+    oauth_payload = {
+      "refresh_token" => user_response['refresh_token'],
+      "fingerprint" => fly_buy_profile.encrypted_fingerprint
+    }
 
-    response = user_client.send_money(
-      from: fly_buy_profile.synapse_node_id,
-      to: FlyBuyProfile::EscrowNodeID,
-      to_node_type: FlyAndBuy::UserOperations::SynapseEscrowNodeType,
-      amount: fly_buy_order.total,
-      currency: FlyAndBuy::UserOperations::SynapsePayCurrency,
-      ip_address: fly_buy_profile.synapse_ip_address
-    )
+    oauth_response = client_user.users.refresh(payload: oauth_payload)
 
-    if response[:recent_status][:note] == "Transaction created"
+    client_user = FlyBuyService.get_user(oauth_key: oauth_response["oauth_key"], fingerprint: fly_buy_profile.encrypted_fingerprint, ip_address: fly_buy_profile.synapse_ip_address, user_id: fly_buy_profile.synapse_user_id)
+
+    trans_payload = {
+      "to" => {
+        "type" => FlyAndBuy::UserOperations::SynapsePayNodeType[:synapse_us],
+        "id" => FlyBuyProfile::EscrowNodeID
+      },
+      "amount" => {
+        "amount" => fly_buy_order.total,
+        "currency" => FlyAndBuy::UserOperations::SynapsePayCurrency
+      },
+      "extra" => {
+        "note" => "#{current_user.name} Deposit to #{FlyAndBuy::UserOperations::SynapsePayNodeType[:synapse_us]} account",
+        "webhook" => "http://requestb.in/q283sdq2",
+        "process_on" => 1,
+        "ip" => fly_buy_profile.synapse_ip_address
+      },
+      # "fees" => [{
+      #   "fee" => 1.00,
+      #   "note" => "Facilitator Fee",
+      #   "to" => {
+      #     "id" => "55d9287486c27365fe3776fb"
+      #   }
+      # }]
+    }
+
+    create_response = client_user.trans.create(node_id: fly_buy_profile.synapse_node_id, payload: trans_payload)
+
+    if create_response["recent_status"]["note"] == "Transaction created"
       fly_buy_order.update_attributes({
           synapse_escrow_node_id: FlyBuyProfile::EscrowNodeID,
           synapse_transaction_id: response[:_id],
@@ -51,6 +69,44 @@ class FlyBuyOrdersController < ApplicationController
           type: 'fly_buy'
         ), notice: 'Your order was successfully placed.'
     end
+
+    # ...........................................................................
+    # user = client.users.find(fly_buy_profile.synapse_user_id)
+
+    # user_client = client.users.authenticate_as(
+    #                       id: fly_buy_profile.synapse_user_id,
+    #                       refresh_token: user[:refresh_token],
+    #                       fingerprint: fly_buy_profile.encrypted_fingerprint
+    #                     )
+    # nodes = user_client.nodes(fly_buy_profile.synapse_node_id)
+
+    # response = user_client.send_money(
+    #   from: fly_buy_profile.synapse_node_id,
+    #   to: FlyBuyProfile::EscrowNodeID,
+    #   to_node_type: FlyAndBuy::UserOperations::SynapseEscrowNodeType,
+    #   amount: fly_buy_order.total,
+    #   currency: FlyAndBuy::UserOperations::SynapsePayCurrency,
+    #   ip_address: fly_buy_profile.synapse_ip_address
+    # )
+
+    # if response[:recent_status][:note] == "Transaction created"
+    #   fly_buy_order.update_attributes({
+    #       synapse_escrow_node_id: FlyBuyProfile::EscrowNodeID,
+    #       synapse_transaction_id: response[:_id],
+    #       funds_in_escrow: true,
+    #       status: 'placed'
+    #     })
+
+    #   product.sold_out += fly_buy_order.count
+    #   product.save
+
+    #   send_email_notification(fly_buy_order)
+
+    #   redirect_to dashboard_order_path(
+    #       fly_buy_order,
+    #       type: 'fly_buy'
+    #     ), notice: 'Your order was successfully placed.'
+    # end
   end
 
   def set_inspection_date
