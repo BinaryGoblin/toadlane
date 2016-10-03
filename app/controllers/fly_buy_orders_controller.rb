@@ -9,6 +9,9 @@ class FlyBuyOrdersController < ApplicationController
       fly_buy_params.merge!(ip_address: '192.168.0.112')
       FlyAndBuy::UserOperations.new(current_user, fly_buy_params).create_user
     end
+
+    file = convert_invoice_to_image(fly_buy_order)
+
     fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
 
     client = FlyBuyService.get_client
@@ -38,7 +41,12 @@ class FlyBuyOrdersController < ApplicationController
         "note" => "#{current_user.name} Deposit to #{FlyAndBuy::UserOperations::SynapsePayNodeType[:synapse_us]} account",
         "webhook" => "http://requestb.in/q283sdq2",
         "process_on" => 1,
-        "ip" => fly_buy_profile.synapse_ip_address
+        "ip" => fly_buy_profile.synapse_ip_address,
+        "other" => {
+          "attachments" => [
+            encode_attachment(file_tempfile: file.path, file_type: 'image/png')
+          ]
+        }
       },
       # "fees" => [{
       #   "fee" => 1.00,
@@ -229,5 +237,28 @@ class FlyBuyOrdersController < ApplicationController
   def send_email_notification(fly_buy_order)
     UserMailer.sales_order_notification_to_seller(fly_buy_order).deliver_later
     UserMailer.sales_order_notification_to_buyer(fly_buy_order).deliver_later
+  end
+
+  def encode_attachment(file_tempfile:, file_type:)
+    file_contents = IO.read(file_tempfile)
+    encoded = Base64.encode64(file_contents)
+    mime_padding = "data:#{file_type};base64,"
+    mime_padding + encoded
+  end
+
+  def convert_invoice_to_image(fly_buy_order)
+    html = render_to_string(
+        {
+            layout: 'layouts/print.html.slim',
+            file: Rails.root + '/app/views/shared/_invoice.html.slim',
+            locals: {order: fly_buy_order}
+        })
+    kit = IMGKit.new(html)
+    img = kit.to_png
+    file  = Tempfile.new(["template_#{fly_buy_order.synapse_transaction_id}", 'png'], 'tmp',
+                         :encoding => 'ascii-8bit')
+    file.write(img)
+
+    file
   end
 end
