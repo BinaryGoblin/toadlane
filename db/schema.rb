@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160927083847) do
+ActiveRecord::Schema.define(version: 20161003042957) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -323,11 +323,15 @@ ActiveRecord::Schema.define(version: 20160927083847) do
   create_table "fly_buy_profiles", force: :cascade do |t|
     t.string   "synapse_user_id"
     t.integer  "user_id"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.string   "encrypted_fingerprint"
     t.string   "synapse_node_id"
     t.string   "synapse_ip_address"
+    t.string   "eic_attachment_file_name"
+    t.string   "eic_attachment_content_type"
+    t.integer  "eic_attachment_file_size"
+    t.datetime "eic_attachment_updated_at"
   end
 
   create_table "green_checks", force: :cascade do |t|
