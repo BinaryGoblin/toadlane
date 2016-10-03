@@ -14,6 +14,7 @@
 #  eic_attachment_content_type :string
 #  eic_attachment_file_size    :integer
 #  eic_attachment_updated_at   :datetime
+#  synapse_document_id         :string
 #
 
 class FlyBuyProfile < ActiveRecord::Base

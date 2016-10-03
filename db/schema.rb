@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161003042957) do
+ActiveRecord::Schema.define(version: 20161003101752) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -332,6 +332,7 @@ ActiveRecord::Schema.define(version: 20161003042957) do
     t.string   "eic_attachment_content_type"
     t.integer  "eic_attachment_file_size"
     t.datetime "eic_attachment_updated_at"
+    t.string   "synapse_document_id"
   end
 
   create_table "green_checks", force: :cascade do |t|

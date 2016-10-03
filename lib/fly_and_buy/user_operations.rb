@@ -153,7 +153,10 @@ class FlyAndBuy::UserOperations
       }]
     }
 
-    client_user.users.update(payload: add_documents_payload)
+    response = client_user.users.update(payload: add_documents_payload)
+    if response["documents"][0].present?
+      fly_buy_profile.update_attribute(:synapse_document_id, response["documents"][0]["id"])
+    end
   end
 
   def create_bank_account
