@@ -1,5 +1,8 @@
 class Dashboard::AccountsController < DashboardController
   include ProductHelper
+
+  before_filter :authenticate_user!, except: [:callback]
+
   def index
     set_user
     set_green_profile
@@ -227,6 +230,11 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def callback
+    # TODO:: Handle wehbook
+    if params["account"].present? && params["account"]["recent_status"].present? && params["account"]["recent_status"]["status_id"] == "4"
+
+    end
+    render nothing: true, status: 200
   end
 
   private
