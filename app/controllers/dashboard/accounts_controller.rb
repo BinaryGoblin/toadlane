@@ -30,14 +30,12 @@ class Dashboard::AccountsController < DashboardController
       fly_buy_params.merge!(ip_address: '192.168.0.112')
       FlyAndBuy::UserOperations.new(current_user, fly_buy_params).create_user
 
-      response = FlyAndBuy::AddingBankDetails.new(current_user, current_user.fly_buy_profile, fly_buy_params).add_details
-      if response["error"].present?
-        flash[:error] = response["error"]["en"]
-      end
+      FlyAndBuy::AddingBankDetails.new(current_user, current_user.fly_buy_profile, fly_buy_params).add_details
       redirect_to dashboard_accounts_path
     end
   rescue SynapsePayRest::Error::Conflict => e
     flash[:error] = e
+    redirect_to dashboard_accounts_path
   end
 
   def update_fly_buy_profile
