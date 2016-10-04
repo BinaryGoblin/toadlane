@@ -1,7 +1,7 @@
 class ProductsController < ApplicationController
 
   # impressionist is for allowing view count and ease of it
-  impressionist :actions=>[:show],  :unique => [:user_id]
+  # impressionist :actions=>[:show],  :unique => [:user_id]
 
   layout 'user_dashboard'
 
@@ -26,7 +26,7 @@ class ProductsController < ApplicationController
     @stripe_order = StripeOrder.new
     @fee = Fee.find_by(:module_name => "Stripe").value
     commontator_thread_show(@product)
-    impressionist(@product)
+    # impressionist(@product)
     @related_products = Product.unexpired.where(main_category: @product.main_category).where.not(id: @product.id)
 
     if params[:fly_buy_order_id].present?
