@@ -31,7 +31,11 @@ class FlyAndBuy::AddingBankDetails
 
     get_user_and_instantiate_user
 
-    add_necessary_doc
+    doc_response = add_necessary_doc
+
+    if doc_response["error"].present?
+      return doc_response
+    end
 
     add_bank_acc_response  = create_bank_account
     store_returned_node_id(add_bank_acc_response)
@@ -101,8 +105,11 @@ class FlyAndBuy::AddingBankDetails
     }
 
     response = client_user.users.update(payload: add_documents_payload)
-    if response["documents"][0].present?
+
+    if response["documents"].present? && response["documents"][0].present?
       fly_buy_profile.update_attribute(:synapse_document_id, response["documents"][0]["id"])
+    else
+      return response
     end
   end
 

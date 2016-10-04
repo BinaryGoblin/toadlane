@@ -30,7 +30,10 @@ class Dashboard::AccountsController < DashboardController
       fly_buy_params.merge!(ip_address: '192.168.0.112')
       FlyAndBuy::UserOperations.new(current_user, fly_buy_params).create_user
 
-      FlyAndBuy::AddingBankDetails.new(current_user, current_user.fly_buy_profile, fly_buy_params).add_details
+      response = FlyAndBuy::AddingBankDetails.new(current_user, current_user.fly_buy_profile, fly_buy_params).add_details
+      if response["error"].present?
+        flash[:error] = response["error"]["en"]
+      end
       redirect_to dashboard_accounts_path
     end
   end

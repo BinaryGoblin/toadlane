@@ -71,16 +71,17 @@ class Dashboard::ProductsController < DashboardController
         :videos_attributes
       )
     )
-    if params["product"]["inspection_date_attributes"].present? && params["product"]["default_payment"] == "Fly And Buy"
-      inspection_attributes = params["product"]["inspection_date_attributes"]
-      inspection_attributes.each do |inspection_attribute|
-        inspection_date = DateTime.new(inspection_attribute["date(1i)"].to_i, inspection_attribute["date(2i)"].to_i, inspection_attribute["date(3i)"].to_i, inspection_attribute["date(4i)"].to_i, inspection_attribute["date(5i)"].to_i)
-        @product.inspection_dates.create({date: inspection_date, creator_type: "seller", product_id: @product.id})
-      end
-    end
 
     respond_to do |format|
       if @product.valid?
+        if params["product"]["inspection_date_attributes"].present? && params["product"]["default_payment"] == "Fly And Buy"
+          inspection_attributes = params["product"]["inspection_date_attributes"]
+          inspection_attributes.each do |inspection_attribute|
+            inspection_date = DateTime.new(inspection_attribute["date(1i)"].to_i, inspection_attribute["date(2i)"].to_i, inspection_attribute["date(3i)"].to_i, inspection_attribute["date(4i)"].to_i, inspection_attribute["date(5i)"].to_i)
+            @product.inspection_dates.create({date: inspection_date, creator_type: "seller", product_id: @product.id})
+          end
+        end
+        
         if images
           images[:images_attributes].each do |image|
             data = { image: image }
