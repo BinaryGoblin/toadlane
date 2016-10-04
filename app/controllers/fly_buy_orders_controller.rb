@@ -26,6 +26,9 @@ class FlyBuyOrdersController < ApplicationController
         ), notice: 'Your order was successfully placed.'
       end
     else
+      fly_buy_params.merge!(ip_address: '192.168.0.112')
+      FlyAndBuy::UserOperations.new(current_user, fly_buy_params).create_user
+
       if fly_buy_order.update_attribute(:status, 'processing')
         product.sold_out += fly_buy_order.count
         product.save
@@ -152,16 +155,16 @@ class FlyBuyOrdersController < ApplicationController
 
     trans_payload = {
       "to" => {
-        "type" => FlyAndBuy::UserOperations::SynapsePayNodeType[:wire],
+        "type" => FlyAndBuy::AddingBankDetails::SynapsePayNodeType[:wire],
         "id" => seller_fly_buy_profile.synapse_node_id
       },
       "from" => {
-        "type" => FlyAndBuy::UserOperations::SynapsePayNodeType[:synapse_us],
+        "type" => FlyAndBuy::AddingBankDetails::SynapsePayNodeType[:synapse_us],
         "id" => FlyBuyProfile::EscrowNodeID
       },
       "amount" => {
         "amount" => fly_buy_order.total,
-        "currency" => FlyAndBuy::UserOperations::SynapsePayCurrency
+        "currency" => FlyAndBuy::AddingBankDetails::SynapsePayCurrency
       },
       "extra" => {
         "note" => "#{current_user.name} Sent to #{fly_buy_order.buyer.name} account",
@@ -199,8 +202,7 @@ class FlyBuyOrdersController < ApplicationController
     fly_buy_order = FlyBuyOrder.find_by_id(params[:fly_buy_order_id])
     product = fly_buy_order.product
 
-    fly_buy_params.merge!(ip_address: '192.168.0.112')
-    FlyAndBuy::UserOperations.new(current_user, fly_buy_params).create_user
+    FlyAndBuy::AddingBankDetails.new(current_user, current_user.fly_buy_profile, fly_buy_params).add_details
 
     create_transaction_response = create_transaction_in_synapsepay(fly_buy_order, product)
     
@@ -278,15 +280,15 @@ class FlyBuyOrdersController < ApplicationController
 
     trans_payload = {
       "to" => {
-        "type" => FlyAndBuy::UserOperations::SynapsePayNodeType[:synapse_us],
+        "type" => FlyAndBuy::AddingBankDetails::SynapsePayNodeType[:synapse_us],
         "id" => FlyBuyProfile::EscrowNodeID
       },
       "amount" => {
         "amount" => fly_buy_order.total,
-        "currency" => FlyAndBuy::UserOperations::SynapsePayCurrency
+        "currency" => FlyAndBuy::AddingBankDetails::SynapsePayCurrency
       },
       "extra" => {
-        "note" => "#{current_user.name} Deposit to #{FlyAndBuy::UserOperations::SynapsePayNodeType[:synapse_us]} account",
+        "note" => "#{current_user.name} Deposit to #{FlyAndBuy::AddingBankDetails::SynapsePayNodeType[:synapse_us]} account",
         "webhook" => "http://requestb.in/q283sdq2",
         "process_on" => 1,
         "ip" => fly_buy_profile.synapse_ip_address,

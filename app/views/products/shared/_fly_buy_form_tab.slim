@@ -1,12 +1,9 @@
-
-
-- if fly_buy_order.status == "processing" && user.fly_buy_profile.nil?
+- if fly_buy_order.status == "processing" && user.fly_buy_profile.present? && user.fly_buy_profile.synapse_node_id.nil?
 
   .account-promisepay
     h2 Your order has been placed. To confirm your purchase add your bank details below:
     .promiseDetails
       = form_for fly_buy_profile, url: fly_buy_order_confirm_order_placed_path(fly_buy_order_id: fly_buy_order.id), method: "post" do |f|
-        = f.hidden_field :fingerprint, :value=> nil
         .row
           .col-md-6
             .form-group
@@ -52,7 +49,8 @@
         = f.submit "Submit", class: "btn btn-primary"
 
 - else
-  = form_tag fly_buy_order_place_order_path(fly_buy_order_id: fly_buy_order.id), method: "post", :class => "create-api-order" do
-    = submit_tag 'Place Order', class: "btn btn-primary"
+  = form_for fly_buy_profile, url: fly_buy_order_place_order_path(fly_buy_order_id: fly_buy_order.id), method: "post", html: {class: "create_fly_buy_profile"} do |f|
+    = f.hidden_field :fingerprint, :value=> nil
+    = f.submit "Place Order", class: "btn btn-primary"
 
   
