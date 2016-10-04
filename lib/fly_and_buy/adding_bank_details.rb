@@ -39,6 +39,8 @@ class FlyAndBuy::AddingBankDetails
 
     add_bank_acc_response  = create_bank_account
     store_returned_node_id(add_bank_acc_response)
+  rescue SynapsePayRest::Error::Conflict => e
+    return e
   end
 
   def update_fly_buy_profile_with_attachment
@@ -111,6 +113,8 @@ class FlyAndBuy::AddingBankDetails
     else
       return response
     end
+  rescue SynapsePayRest::Error::Conflict => e
+    return e
   end
 
   def create_bank_account
