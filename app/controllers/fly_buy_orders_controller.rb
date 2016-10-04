@@ -5,76 +5,42 @@ class FlyBuyOrdersController < ApplicationController
     fly_buy_order = FlyBuyOrder.find_by_id(params[:fly_buy_order_id])
     product = fly_buy_order.product
 
-    if current_user.fly_buy_profile.nil?
-      fly_buy_params.merge!(ip_address: '192.168.0.112')
-      FlyAndBuy::UserOperations.new(current_user, fly_buy_params).create_user
-    end
+    if current_user.fly_buy_profile_exist?
+      create_transaction_response = create_transaction_in_synapsepay(fly_buy_order, product)
 
-    file = convert_invoice_to_image(fly_buy_order)
+      if create_transaction_response["recent_status"]["note"] == "Transaction created"
+        fly_buy_order.update_attributes({
+            synapse_escrow_node_id: FlyBuyProfile::EscrowNodeID,
+            synapse_transaction_id: create_transaction_response["_id"],
+            status: 'placed'
+          })
 
-    fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
+        product.sold_out += fly_buy_order.count
+        product.save
 
-    client = FlyBuyService.get_client
-    user_response = client.users.get(user_id: fly_buy_profile.synapse_user_id)
+        send_email_notification(fly_buy_order)
 
-    client_user = FlyBuyService.get_user(oauth_key: nil, fingerprint: fly_buy_profile.encrypted_fingerprint, ip_address: fly_buy_profile.synapse_ip_address, user_id: fly_buy_profile.synapse_user_id)
-
-    oauth_payload = {
-      "refresh_token" => user_response['refresh_token'],
-      "fingerprint" => fly_buy_profile.encrypted_fingerprint
-    }
-
-    oauth_response = client_user.users.refresh(payload: oauth_payload)
-
-    client_user = FlyBuyService.get_user(oauth_key: oauth_response["oauth_key"], fingerprint: fly_buy_profile.encrypted_fingerprint, ip_address: fly_buy_profile.synapse_ip_address, user_id: fly_buy_profile.synapse_user_id)
-
-    trans_payload = {
-      "to" => {
-        "type" => FlyAndBuy::UserOperations::SynapsePayNodeType[:synapse_us],
-        "id" => FlyBuyProfile::EscrowNodeID
-      },
-      "amount" => {
-        "amount" => fly_buy_order.total,
-        "currency" => FlyAndBuy::UserOperations::SynapsePayCurrency
-      },
-      "extra" => {
-        "note" => "#{current_user.name} Deposit to #{FlyAndBuy::UserOperations::SynapsePayNodeType[:synapse_us]} account",
-        "webhook" => "http://requestb.in/q283sdq2",
-        "process_on" => 1,
-        "ip" => fly_buy_profile.synapse_ip_address,
-        "other" => {
-          "attachments" => [
-            encode_attachment(file_tempfile: file.path, file_type: 'image/png')
-          ]
-        }
-      },
-      # "fees" => [{
-      #   "fee" => 1.00,
-      #   "note" => "Facilitator Fee",
-      #   "to" => {
-      #     "id" => "55d9287486c27365fe3776fb"
-      #   }
-      # }]
-    }
-
-    create_response = client_user.trans.create(node_id: fly_buy_profile.synapse_node_id, payload: trans_payload)
-
-    if create_response["recent_status"]["note"] == "Transaction created"
-      fly_buy_order.update_attributes({
-          synapse_escrow_node_id: FlyBuyProfile::EscrowNodeID,
-          synapse_transaction_id: create_response["_id"],
-          status: 'placed'
-        })
-
-      product.sold_out += fly_buy_order.count
-      product.save
-
-      send_email_notification(fly_buy_order)
-
-      redirect_to dashboard_order_path(
+        redirect_to dashboard_order_path(
           fly_buy_order,
           type: 'fly_buy'
         ), notice: 'Your order was successfully placed.'
+      end
+    else
+      if fly_buy_order.update_attribute(:status, 'processing')
+        product.sold_out += fly_buy_order.count
+        product.save
+        # email notification to buyer with order invoice and add bank account detail notificaiton
+
+        # send_email_notification(fly_buy_order)
+
+        flash[:notice] = 'Your order was successfully placed.'
+      else
+        flash[:notice] = 'Your order could not be placed.'
+      end
+      redirect_to product_checkout_path(
+        product_id: product.id,
+        fly_buy_order_id: fly_buy_order.id
+      )
     end
   end
 
@@ -212,9 +178,9 @@ class FlyBuyOrdersController < ApplicationController
       # }]
     }
 
-    create_response = client_user.trans.create(node_id: FlyBuyProfile::EscrowNodeID, payload: trans_payload)
+    create_transaction_response = client_user.trans.create(node_id: FlyBuyProfile::EscrowNodeID, payload: trans_payload)
 
-    if create_response["error"]["en"] == "You do not have sufficient balance for this transfer."
+    if create_transaction_response["error"]["en"] == "You do not have sufficient balance for this transfer."
       flash[:alert] = "The funds are not yet received in escrow. Please wait"
     else
       fly_buy_order.update_attributes({
@@ -227,6 +193,35 @@ class FlyBuyOrdersController < ApplicationController
     redirect_to dashboard_orders_path
   rescue SynapsePayments::Error => e
     redirect_to dashboard_orders_path, :flash => { :error => e.message }
+  end
+
+  def confirm_order_placed
+    fly_buy_order = FlyBuyOrder.find_by_id(params[:fly_buy_order_id])
+    product = fly_buy_order.product
+
+    fly_buy_params.merge!(ip_address: '192.168.0.112')
+    FlyAndBuy::UserOperations.new(current_user, fly_buy_params).create_user
+
+    create_transaction_response = create_transaction_in_synapsepay(fly_buy_order, product)
+    
+
+    if create_transaction_response["recent_status"]["note"] == "Transaction created"
+      fly_buy_order.update_attributes({
+          synapse_escrow_node_id: FlyBuyProfile::EscrowNodeID,
+          synapse_transaction_id: create_transaction_response["_id"],
+          status: 'placed'
+        })
+
+      product.sold_out += fly_buy_order.count
+      product.save
+
+      send_email_notification(fly_buy_order)
+
+      redirect_to dashboard_order_path(
+          fly_buy_order,
+          type: 'fly_buy'
+        ), notice: 'Your order has been confirmed.'
+    end
   end
 
   private
@@ -260,5 +255,56 @@ class FlyBuyOrdersController < ApplicationController
     file.write(img)
 
     file
+  end
+
+  def create_transaction_in_synapsepay(fly_buy_order, product)
+    file = convert_invoice_to_image(fly_buy_order)
+
+    fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
+
+    client = FlyBuyService.get_client
+    user_response = client.users.get(user_id: fly_buy_profile.synapse_user_id)
+
+    client_user = FlyBuyService.get_user(oauth_key: nil, fingerprint: fly_buy_profile.encrypted_fingerprint, ip_address: fly_buy_profile.synapse_ip_address, user_id: fly_buy_profile.synapse_user_id)
+
+    oauth_payload = {
+      "refresh_token" => user_response['refresh_token'],
+      "fingerprint" => fly_buy_profile.encrypted_fingerprint
+    }
+
+    oauth_response = client_user.users.refresh(payload: oauth_payload)
+
+    client_user = FlyBuyService.get_user(oauth_key: oauth_response["oauth_key"], fingerprint: fly_buy_profile.encrypted_fingerprint, ip_address: fly_buy_profile.synapse_ip_address, user_id: fly_buy_profile.synapse_user_id)
+
+    trans_payload = {
+      "to" => {
+        "type" => FlyAndBuy::UserOperations::SynapsePayNodeType[:synapse_us],
+        "id" => FlyBuyProfile::EscrowNodeID
+      },
+      "amount" => {
+        "amount" => fly_buy_order.total,
+        "currency" => FlyAndBuy::UserOperations::SynapsePayCurrency
+      },
+      "extra" => {
+        "note" => "#{current_user.name} Deposit to #{FlyAndBuy::UserOperations::SynapsePayNodeType[:synapse_us]} account",
+        "webhook" => "http://requestb.in/q283sdq2",
+        "process_on" => 1,
+        "ip" => fly_buy_profile.synapse_ip_address,
+        "other" => {
+          "attachments" => [
+            encode_attachment(file_tempfile: file.path, file_type: 'image/png')
+          ]
+        }
+      },
+      # "fees" => [{
+      #   "fee" => 1.00,
+      #   "note" => "Facilitator Fee",
+      #   "to" => {
+      #     "id" => "55d9287486c27365fe3776fb"
+      #   }
+      # }]
+    }
+
+    client_user.trans.create(node_id: fly_buy_profile.synapse_node_id, payload: trans_payload)
   end
 end

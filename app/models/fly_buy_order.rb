@@ -33,7 +33,7 @@ class FlyBuyOrder < ActiveRecord::Base
   scope :with_transaction_id, -> { where.not(synapse_transaction_id: nil) }
   scope :not_deleted, -> { where.not(deleted: true) }
 
-  enum status: [ :not_started, :cancelled, :placed, :completed, :refunded ]
+  enum status: [ :not_started, :cancelled, :placed, :completed, :refunded, :processing ]
 
   def seller_not_mark_approved
     inspection_dates.buyer_added.not_marked_approved.last

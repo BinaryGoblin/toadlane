@@ -1,10 +1,11 @@
-- if user.fly_buy_profile.nil?
-  
+
+
+- if fly_buy_order.status == "processing" && user.fly_buy_profile.nil?
+
   .account-promisepay
-    / h2 To complete order add your bank account to transfer funds into escrow
-    h2 To complete order add your bank account
+    h2 Your order has been placed. To confirm your purchase add your bank details below:
     .promiseDetails
-      = form_for fly_buy_profile, url: fly_buy_order_place_order_path(fly_buy_order_id: fly_buy_order.id), method: "post" do |f|
+      = form_for fly_buy_profile, url: fly_buy_order_confirm_order_placed_path(fly_buy_order_id: fly_buy_order.id), method: "post" do |f|
         = f.hidden_field :fingerprint, :value=> nil
         .row
           .col-md-6
@@ -31,11 +32,27 @@
             .form-group
               = f.label :routing_num, 'Routing Number:', class: 'required'
               = f.text_field :routing_num, class: 'form-control', required: true
+
+          .col-md-6
+            .form-group
+              = f.label :ssn_number, 'SSN Number:', class: 'required'
+              = f.text_field :ssn_number, class: 'form-control', required: true
+        .row
+          .col-md-6
+            .form-group
+              label Company Date:
+              = date_select :fly_buy_profile, :date_of_company, { order: [:month, :day, :year] }, { class: "form-control" }
+              
+          .col-md-6
+            .form-group
+              = f.label :eic_attachment, 'EIN Document:', class: 'required'
+              = f.file_field :eic_attachment, required: true
               
 
         = f.submit "Submit", class: "btn btn-primary"
 
-
-- elsif user.fly_buy_profile_exist?
+- else
   = form_tag fly_buy_order_place_order_path(fly_buy_order_id: fly_buy_order.id), method: "post", :class => "create-api-order" do
     = submit_tag 'Place Order', class: "btn btn-primary"
+
+  
