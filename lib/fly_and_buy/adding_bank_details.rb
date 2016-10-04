@@ -33,10 +33,6 @@ class FlyAndBuy::AddingBankDetails
 
     doc_response = add_necessary_doc
 
-    if doc_response["error"].present?
-      return doc_response
-    end
-
     add_bank_acc_response  = create_bank_account
     store_returned_node_id(add_bank_acc_response)
   rescue SynapsePayRest::Error::Conflict => e
