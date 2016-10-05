@@ -327,6 +327,9 @@ class Dashboard::ProductsController < DashboardController
   def viewers
     set_product
     user_ids = @product.impressions.try(:pluck, :user_id)
+    if user_ids.include? @product.user.id
+      user_ids.delete(@product.user.id)
+    end
     @users = User.where(id: user_ids).order('id ASC')
   end
 
