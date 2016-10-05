@@ -123,7 +123,7 @@
           .white-panel.wp-table
             - if current_user.present?
               - if current_user.profile_complete?
-                -if @product.status_characteristic == 'sell' || strip_tags(time_left(@product.end_date)) != 'Time ended' || @product.user != current_user
+                -if @product.status_characteristic == 'sell'
                   = form_tag(product_checkout_path(product_id: @product, armor_order_id: params[:armor_order_id]), method: :post, class: 'text-center') do
                     = hidden_field_tag :total
                     = hidden_field_tag :count
@@ -134,6 +134,8 @@
 
                     - if @product.is_buyer_product_owner?(current_user)
                       | You cannot buy your own product.
+                    - elsif strip_tags(time_left(@product.end_date)) == 'Time ended'
+                      | The End Time of this product is over.
                     - else
                       - if @product.default_payment_armor? && @product.inspection_dates.present?
                         .inspection_date_select
