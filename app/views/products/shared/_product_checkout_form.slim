@@ -44,6 +44,8 @@
       - if product.default_payment.present?
         - if fly_buy_order.seller_not_mark_approved.present? && fly_buy_order.inspection_dates.seller_added.nil?
           p You have requested inspection date, you will be informed when seller responds.
+        - elsif product.inspection_dates.passed_inspection_date.count == product.inspection_dates.count
+          p The inspection date set by buyer has been passed.
         - else
           input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
 
