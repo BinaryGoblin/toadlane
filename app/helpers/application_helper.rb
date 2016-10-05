@@ -33,10 +33,12 @@ module ApplicationHelper
     product = Product.find(id)
 
     content_tag :div do
-      concat link_to product.category.name, search_path(cat_id: product.category.id, count: 16)
+      concat link_to product.category.name, search_path(cat_id: product.category.id, count: 16) if product.category.present?
       if product.categories.present?
         product.categories.each do |category|
-          unless category.name == "all"
+          if category.name == "all"
+            concat link_to category.name, search_path(cat_id: category.id, count: 16)
+          else
             concat ', '
             concat link_to category.name, search_path(cat_id: category.id, count: 16)
           end
