@@ -38,7 +38,10 @@
             td= order.id
             td
               span.label
-                = order.status
+                - if order.status == 'pending_confirmation'
+                  = link_to order.status, '#modal_pending_confirmation', class: 'link link-ulined pending_confirmation_status', data: { toggle: 'modal' }
+                - else
+                  = order.status
             td.text-center= link_to order.product.name.titleize, product_path(order.product, cat_id: order.product.main_category), class: 'link link-ulined', target: '_blank'
             td.text-center= order.count
             td.text-center
@@ -96,3 +99,4 @@
 .footer-actions: .fa-container: .wrap-sm
 
 = render partial: '/shared/order', collection: @orders
+= render partial: 'dashboard/orders/pending_confirmation_pop_up'

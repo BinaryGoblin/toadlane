@@ -12,7 +12,7 @@ class FlyBuyOrdersController < ApplicationController
         fly_buy_order.update_attributes({
             synapse_escrow_node_id: FlyBuyProfile::EscrowNodeID,
             synapse_transaction_id: create_transaction_response["_id"],
-            status: 'placed'
+            status: 'pending_confirmation'
           })
 
         product.sold_out += fly_buy_order.count
@@ -211,7 +211,7 @@ class FlyBuyOrdersController < ApplicationController
       fly_buy_order.update_attributes({
           synapse_escrow_node_id: FlyBuyProfile::EscrowNodeID,
           synapse_transaction_id: create_transaction_response["_id"],
-          status: 'placed'
+          status: 'pending_confirmation'
         })
 
       product.sold_out += fly_buy_order.count
