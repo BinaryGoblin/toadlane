@@ -33,7 +33,14 @@ class FlyBuyOrder < ActiveRecord::Base
   scope :with_transaction_id, -> { where.not(synapse_transaction_id: nil) }
   scope :not_deleted, -> { where.not(deleted: true) }
 
-  enum status: [ :not_started, :cancelled, :placed, :completed, :refunded, :processing, :pending_confirmation ]
+  # If the transaction is created in synapsepay, the status should be "Pending Confirmation",
+  #  This is assuming the money has not been wired into escrow.
+  ## if the money has been wired into the escrow the status of the order would be
+  ##  “Pending Inspection”, and on the date of inspection the status changes to
+  ###  “Pending Fund Release”, and then the final status should be “Placed”.
+
+  enum status: [ :cancelled, :placed, :completed, :refunded,
+                :processing, :pending_confirmation, :pending_inspection, :pending_fund_release ]
 
   def seller_not_mark_approved
     inspection_dates.buyer_added.not_marked_approved.last

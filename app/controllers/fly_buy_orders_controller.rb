@@ -125,7 +125,7 @@ class FlyBuyOrdersController < ApplicationController
 
   def complete_inspection
     fly_buy_order = FlyBuyOrder.find_by_id(params["fly_buy_order_id"])
-    if fly_buy_order.update_attribute(:inspection_complete, true)
+    if fly_buy_order.update_attributes(inspection_complete: true, status: 'placed')
       flash[:notice] = 'Order has been marked as inspected'
     else
       flash[:alert] = 'Could not be marked as inspected'

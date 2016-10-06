@@ -56,9 +56,9 @@
                 = link_to 'Refund Requested', dashboard_refund_requests_path, class: 'view'
             td.text-center
               - if order.buyer && order.instance_of?(FlyBuyOrder)
-                - if order.not_inspected && order.inspection_date_today? && order.funds_in_escrow == true
-                  = link_to 'Complete Inspection & Release Payment', fly_buy_order_complete_inspection_path(order.id), class: 'view'
-                - elsif order.inspected && order.funds_in_escrow == true
+                - if order.not_inspected && order.status == 'pending_inspection' && order.inspection_date_today? && order.funds_in_escrow == true
+                  = link_to 'Complete Inspection', fly_buy_order_complete_inspection_path(order.id), class: 'view'
+                - elsif order.inspected && order.status == 'placed' && order.funds_in_escrow == true
                   = link_to 'Release Payment', fly_buy_order_release_payment_path(order.id), class: 'view'
                 - elsif order.payment_release == true
                   span.label
