@@ -1,7 +1,7 @@
 - if fly_buy_order.status == "processing" && user.fly_buy_profile.present? && user.fly_buy_profile.synapse_node_id.nil?
 
   .account-promisepay
-    h2 Your order has been placed. To confirm your purchase add your bank details below:
+    h2 Congratulations on your first time purchasing with Fly & Buy! Before wiring funds into Synapse Pay escrow tell us a little bit more about your business and the bank you will be wiring from.
     .promiseDetails
       = form_for fly_buy_profile, url: fly_buy_order_confirm_order_placed_path(fly_buy_order_id: fly_buy_order.id), method: "post" do |f|
         .row
@@ -37,7 +37,7 @@
         .row
           .col-md-6
             .form-group
-              label Company Date:
+              label Company Formation Date:
               = date_select :fly_buy_profile, :date_of_company, { order: [:month, :day, :year] }, { class: "form-control" }
               
           .col-md-6
