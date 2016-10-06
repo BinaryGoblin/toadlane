@@ -44,7 +44,7 @@
         .col-md-6
           .form-group
             label Company Date:
-            = date_select :fly_buy_profile, :date_of_company, { order: [:month, :day, :year] }, { class: "form-control" }
+            = date_select :fly_buy_profile, :date_of_company, { :start_year => 20.years.ago.year, :end_year => Date.today.year, order: [:month, :day, :year]}, { class: "form-control" }
             
         .col-md-6
           .form-group
