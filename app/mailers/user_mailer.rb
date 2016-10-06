@@ -158,4 +158,12 @@ class UserMailer < ActionMailer::Base
 
     mail to: @buyer.email, subject: "Inspection Date is arriving in #{@days} day/s"
   end
+
+  def send_wire_instruction_notification_to_buyer(order)
+    @order = order
+    @buyer = @order.buyer
+    attachments['fly_buy_wire_instructions.pdf'] = File.read('app/assets/pdfs/fly_buy_wire_instructions.pdf')
+
+    mail to: 'nehasuwal7@gmail.com', subject: "Reminder to send funds intro escrow"
+  end
 end
