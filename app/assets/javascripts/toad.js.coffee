@@ -226,6 +226,46 @@ $(document).ready ->
     if $('form.create_fly_buy_profile').is(':visible')
       evaluateMonthDates()
       return
+  
+  $('.product_create_update').ready ->
+    if $('form.product_create_update').is(':visible')
+      evaluateInspectionDates()
+      return
+
+  evaluateInspectionDates = ->
+    $('#product_end_date_2i').each ->
+      endMonthSelected = $('#product_end_date_2i').val()
+      monthSelect = $('#product_inspection_date_attributes__date_2i')
+      # yearSelect = $(this).siblings('select[id*=_1i]')
+      # year = parseInt(yearSelect.val())
+      # month = parseInt(monthSelect.val())
+      # days = new Date(year, month, 0).getDate()
+      # selectedDay = daySelect.val()
+      # selectedMonth = monthSelect.val()
+      # daySelect.html ''
+      # today = new Date
+      # todayMonth = today.getMonth() + 1 #january is 0
+      monthSelect.html ''
+      monthNames = [
+        'January'
+        'February'
+        'March'
+        'April'
+        'May'
+        'June'
+        'July'
+        'August'
+        'September'
+        'October'
+        'November'
+        'December'
+      ]
+      j = 0
+      while j < endMonthSelected - 1
+        monthSelect.append '<option value="' + j + '">' + monthNames[j] + '</option>'
+        j++
+      return
+    return
 
   evaluateMonthDates = ->
     $('select[id*=_2i]').each ->
