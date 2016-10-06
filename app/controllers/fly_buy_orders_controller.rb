@@ -216,7 +216,8 @@ class FlyBuyOrdersController < ApplicationController
 
       send_email_notification(fly_buy_order)
 
-      UserMailer.send_wire_instruction_notification_to_buyer(fly_buy_order).deliver_now
+      UserMailer.send_wire_instruction_notification_to_buyer(fly_buy_order).deliver_later
+      UserMailer.wire_instruction_notification_sent_to_seller(fly_buy_order).deliver_later
 
       redirect_to dashboard_order_path(
           fly_buy_order,

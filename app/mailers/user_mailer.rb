@@ -164,6 +164,13 @@ class UserMailer < ActionMailer::Base
     @buyer = @order.buyer
     attachments['fly_buy_wire_instructions.pdf'] = File.read('app/assets/pdfs/fly_buy_wire_instructions.pdf')
 
-    mail to: 'nehasuwal7@gmail.com', subject: "Reminder to send funds intro escrow"
+    mail to: @buyer.email, subject: "Reminder to send funds intro escrow"
+  end
+
+  def wire_instruction_notification_sent_to_seller(order)
+    @order = order
+    @seller = @order.seller
+
+    mail to: @seller.email, subject: "Notification to buyer sent"
   end
 end
