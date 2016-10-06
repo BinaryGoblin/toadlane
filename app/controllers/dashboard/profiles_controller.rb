@@ -46,9 +46,9 @@ class Dashboard::ProfilesController < DashboardController
         if current_user.profile_complete? && session[:previous_url].present? && session[:previous_url] != products_url
           previous_visited_url = session[:previous_url]
           session.delete(:previous_url)
-          format.html { redirect_to previous_visited_url, :flash => { :notice => 'Your profile details has been saved successfully.'} }
+          format.html { redirect_to previous_visited_url, :flash => { :notice => 'Congratulations! You are ready to place an order!'} }
         else
-          format.html { redirect_to dashboard_profile_path(saved?: true) }
+          format.html { redirect_to dashboard_profile_path(saved?: true), :flash => { :notice => 'Your profile details has been saved successfully.'} }
         end
       else
         format.html { render action: 'show' }
