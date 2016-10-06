@@ -1,4 +1,4 @@
-= form_for [ controller.class.name.split("::").first.underscore.to_sym, setup_product(@product)], :html => { multipart: true, class: 'product_form_partial' } do |f|
+= form_for [ controller.class.name.split("::").first.underscore.to_sym, setup_product(@product)], :html => { multipart: true, class: 'product_form_partial product_create_update' } do |f|
   .wrap-sm: .product-form
     - if @product.errors.any?
       .error-explanation
@@ -362,7 +362,7 @@
               .offer-item
                 .offer-date
                   label Date:
-                  = date_select :inspection_date, :date, { :default => inspection_date.date, order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" , :value => inspection_date.date }, { class: "form-control" }
+                  = date_select :inspection_date, :date, { :start_year => f.object.start_date.year, :end_year => f.object.end_date.year, :default => inspection_date.date, order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" , :value => inspection_date.date }, { class: "form-control" }
 
                 .offer-time
                   label Time:
@@ -378,7 +378,7 @@
             .offer-item
               .offer-date
                 label Date:
-                = date_select :inspection_date, :date, { :default => DateTime.tomorrow, order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" }, { class: "form-control" }
+                = date_select :inspection_date, :date, { :start_year => f.object.start_date.year, :end_year => f.object.end_date.year, :default => DateTime.tomorrow, order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" }, { class: "form-control" }
 
               .offer-time
                 label Time:
@@ -394,7 +394,7 @@
           .offer-item
             .offer-date
               label Date:
-              = date_select :inspection_date, :date, { :default => DateTime.tomorrow, order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" }, { class: "form-control" }
+              = date_select :inspection_date, :date, { :start_year => f.object.start_date.year, :end_year => f.object.end_date.year, :default => DateTime.tomorrow, order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" }, { class: "form-control" }
 
             .offer-time
               label Time:

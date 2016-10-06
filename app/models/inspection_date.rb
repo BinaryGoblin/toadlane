@@ -45,11 +45,17 @@ class InspectionDate < ActiveRecord::Base
         existing_dates_except_self = product.inspection_dates.where.not(id: id)
         .where('date BETWEEN ? AND ?', date.beginning_of_day, date.end_of_day )
       end
+
       if existing_dates_except_self.any?
         errors.add(:date, 'must be unique.')
       end
+
       if date.to_date <= Date.today
         errors.add(:date, 'must be greater than today.')
+      end
+
+      if date.to_date < product.end_date.to_date
+        errors.add(:date, "must not be greater than product's end date.")
       end
     end
   end
