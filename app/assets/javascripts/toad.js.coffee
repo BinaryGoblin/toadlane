@@ -222,35 +222,50 @@ $(document).ready ->
     $('*').css 'cursor', 'wait'
     return
 
-  $('select[id*=_2i], select[id*=_3i], select[id*=_1i]').click ->
-    debugger
-    evaluateMonthDates
-
-    evaluateMonthDates = ->
-      $('select[id*=_2i]').each ->
-        monthSelect = $(this)
-        daySelect = $(this).siblings('select[id*=_3i]')
-        yearSelect = $(this).siblings('select[id*=_1i]')
-        year = parseInt(yearSelect.val())
-        month = parseInt(monthSelect.val())
-        debugger
-        days = new Date(year, month, 0).getDate()
-        today = new Date
-        todayMonth = today.getMonth() + 1 #january is 0
-        selectedDay = daySelect.val()
-        daySelect.html ''
-        i = 1
-        j = 1
-        while i <= days
-          daySelect.append '<option value="' + i + '">' + i + '</option>'
-          i++
-        daySelect.val selectedDay
-        while j <= todayMonth
-          monthSelect.append '<option value="' + j + '">' + j + '</option>'
-          i++
-        monthSelect.val selectedDay
-        return
+  $('.create_fly_buy_profile').ready ->
+    if $('form.create_fly_buy_profile').is(':visible')
+      evaluateMonthDates()
       return
+
+  evaluateMonthDates = ->
+    $('select[id*=_2i]').each ->
+      monthSelect = $(this)
+      daySelect = $(this).siblings('select[id*=_3i]')
+      yearSelect = $(this).siblings('select[id*=_1i]')
+      year = parseInt(yearSelect.val())
+      month = parseInt(monthSelect.val())
+      days = new Date(year, month, 0).getDate()
+      selectedDay = daySelect.val()
+      selectedMonth = monthSelect.val()
+      daySelect.html ''
+      today = new Date
+      todayMonth = today.getMonth() + 1 #january is 0
+      monthSelect.html ''
+      monthNames = [
+        'January'
+        'February'
+        'March'
+        'April'
+        'May'
+        'June'
+        'July'
+        'August'
+        'September'
+        'October'
+        'November'
+        'December'
+      ]
+      i = 1
+      while i <= days
+        daySelect.append '<option value="' + i + '">' + i + '</option>'
+        i++
+      j = 1
+      while j <= todayMonth
+        monthSelect.append '<option value="' + j + '">' + monthNames[j - 1] + '</option>'
+        j++
+      daySelect.val selectedDay
+      return
+    return
 
   $('#product_default_payment').change ->
     if $('#product_default_payment').find(":selected").text() == "Fly And Buy"
