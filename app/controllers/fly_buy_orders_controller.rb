@@ -204,7 +204,6 @@ class FlyBuyOrdersController < ApplicationController
 
     create_transaction_response = create_transaction_in_synapsepay(fly_buy_order, product)
     
-
     if create_transaction_response["recent_status"]["note"] == "Transaction created"
       fly_buy_order.update_attributes({
           synapse_escrow_node_id: FlyBuyProfile::EscrowNodeID,
@@ -220,7 +219,7 @@ class FlyBuyOrdersController < ApplicationController
       redirect_to dashboard_order_path(
           fly_buy_order,
           type: 'fly_buy'
-        ), notice: 'Your order has been confirmed.'
+        ), notice: 'You have been emailed wire instructions!'
     end
   end
 
