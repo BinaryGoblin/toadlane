@@ -8,3 +8,18 @@
     border-bottom: 1px solid #ddd;
   }
 }
+
+.modal#modal_order_place_now_what{
+	.modal-header{
+		height: 45px;
+	}
+	.modal-body{
+		ol li{
+			margin-bottom: 10px;
+		}
+	}
+}
+
+a.order-placed-now-what{
+	font-size: 16px;
+}

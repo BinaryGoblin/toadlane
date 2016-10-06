@@ -35,8 +35,6 @@ class FlyBuyOrdersController < ApplicationController
         # email notification to buyer with order invoice and add bank account detail notificaiton
 
         # send_email_notification(fly_buy_order)
-
-        flash[:notice] = 'Your order was successfully placed.'
       else
         flash[:notice] = 'Your order could not be placed.'
       end

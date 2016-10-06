@@ -1,6 +1,10 @@
 .wrap-sm.margin-top-30.vp-calculation-checkout data-options='{"pricebreaks":#{@product.pricebreaks.collect { |p| { quantity: (p.quantity - 1), price: p.price } }.to_json},"maxquantity":#{@data[:available_product].present? ? @data[:available_product].to_s : '"Infinity"'}}'
-  h1
-    | Checkout
+  - if current_user.fly_buy_profile_exist? == false && params['fly_buy_order_id'].present? && @fly_buy_order.present? && @fly_buy_order.status == 'processing'
+    = link_to 'You have placed an order. Now what?', '#modal_order_place_now_what', class: 'link link-ulined order-placed-now-what',
+      data: { toggle: 'modal' }
+  - else
+    h1
+      | Please review your order prior to checking out
   br
   - if flash[:alert].present?
     .alert.alert-danger.margin-top-20 role="alert"
@@ -73,3 +77,5 @@
                                   fly_buy_order: @fly_buy_order,
                                   product: @product,
                                   fly_buy_profile: @fly_buy_profile}
+
+= render partial: 'products/shared/order_placed_now_what'
