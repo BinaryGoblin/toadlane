@@ -50,6 +50,7 @@ Toad::Application.routes.draw do
     get :release_payment
     post :place_order
     post :confirm_order_placed
+    get :resend_wire_instruction
   end
 
   get 'print/invoice.:id', to: 'print#invoice', as: 'print/invoice'

@@ -226,6 +226,15 @@ class FlyBuyOrdersController < ApplicationController
     end
   end
 
+  def resend_wire_instruction
+    fly_buy_order = FlyBuyOrder.find_by_id(params[:fly_buy_order_id])
+    UserMailer.send_wire_instruction_notification_to_buyer(fly_buy_order).deliver_later
+    redirect_to dashboard_order_path(
+      fly_buy_order,
+      type: 'fly_buy'
+    ), notice: 'You have been emailed wire instructions!'
+  end
+
   private
   def fly_buy_params
     params.require(:fly_buy_profile).permit!
