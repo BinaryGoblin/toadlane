@@ -21,4 +21,5 @@
 every :day, :at => '12:01am' do
   rake "reminder_inspection_date_arriving"
   rake "on_inspection_date_order_status_change"
+  rake "email_notification_buyer_send_funds"
 end
