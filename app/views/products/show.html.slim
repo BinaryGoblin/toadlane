@@ -1,6 +1,6 @@
 .complete-profile-error.wrap-sm
   - if !flash[:error].nil?
-    .error-explanation
+    .error-explanation.text-center
       | You must complete your&nbsp;
       = link_to 'profile', dashboard_profile_path, class: 'view'
       | &nbsp;to create order.
