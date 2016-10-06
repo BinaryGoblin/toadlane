@@ -3,7 +3,7 @@
   .account-promisepay
     h2 Congratulations on your first time purchasing with Fly & Buy! Before wiring funds into Synapse Pay escrow tell us a little bit more about your business and the bank you will be wiring from.
     .promiseDetails
-      = form_for fly_buy_profile, url: fly_buy_order_confirm_order_placed_path(fly_buy_order_id: fly_buy_order.id), method: "post" do |f|
+      = form_for fly_buy_profile, url: fly_buy_order_confirm_order_placed_path(fly_buy_order_id: fly_buy_order.id), method: "post", :html => { class: 'create_fly_buy_profile' } do |f|
         .row
           .col-md-6
             .form-group
@@ -38,7 +38,7 @@
           .col-md-6
             .form-group
               label Company Formation Date:
-              = date_select :fly_buy_profile, :date_of_company, { :start_year => 20.years.ago.year, :end_year => Date.today.year, order: [:month, :day, :year], { class: "form-control" }
+              = date_select :fly_buy_profile, :date_of_company, { :start_year => 20.years.ago.year, :end_year => Date.today.year, order: [:month, :day, :year]}, { class: "form-control" }
               
           .col-md-6
             .form-group
