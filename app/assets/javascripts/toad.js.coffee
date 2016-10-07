@@ -224,23 +224,27 @@ $(document).ready ->
 
   $('.create_fly_buy_profile').ready ->
     if $('form.create_fly_buy_profile').is(':visible')
-      # evaluateMonthDates()
+      evaluateMonthDates()
       return
   
   $('.product_create_update').ready ->
     if $('form.product_create_update').is(':visible')
-      # evaluateInspectionDates()
+      evaluateInspectionDates()
       return
 
   $('#product_inspection_date_attributes__date_1i').click ->
-    # evaluateInspectionDates()
+    evaluateInspectionDates()
     return
 
   evaluateInspectionDates = ->
     $('#product_end_date_2i').each ->
+      selectedMonth = $('#product_inspection_date_attributes__date_2i').val()
+      selectedYear = $('#product_inspection_date_attributes__date_1i').val()
+      selectedDay = $('#product_inspection_date_attributes__date_3i').val()
       endMonthSelected = $('#product_end_date_2i').val()
       endYearSelected = $('#product_end_date_1i').val()
       monthSelect = $('#product_inspection_date_attributes__date_2i')
+      daySelect = $('#product_inspection_date_attributes__date_3i')
       yearSelect = $('#product_inspection_date_attributes__date_1i')
       # year = parseInt(yearSelect.val())
       # month = parseInt(monthSelect.val())
@@ -270,11 +274,17 @@ $(document).ready ->
         while j < endMonthSelected - 1
           monthSelect.append '<option value="' + j + '">' + monthNames[j] + '</option>'
           j++
+        daySelect.val(selectedDay)
+        monthSelect.val(selectedMonth - 1)
+        yearSelect.val(selectedYear)
         return
       else
         while j < 12
           monthSelect.append '<option value="' + j + '">' + monthNames[j] + '</option>'
           j++
+        daySelect.val(selectedDay)
+        monthSelect.val(selectedMonth - 1)
+        yearSelect.val(selectedYear)
         return
     return
 
