@@ -227,8 +227,8 @@ $(document).ready ->
       evaluateMonthDates()
       return
   
-  $('.product_create_update').ready ->
-    if $('form.product_create_update').is(':visible')
+  $('.product_edit').ready ->
+    if $('form.product_edit').is(':visible')
       evaluateInspectionDates()
       return
 
