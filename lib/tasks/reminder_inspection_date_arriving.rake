@@ -9,8 +9,8 @@ task :reminder_inspection_date_arriving => :environment do
             )
 
     inspection_dates.each do |inspection_date|
-      if inspection_date.fly_buy_order.present?
-        fly_buy_order = inspection_date.fly_buy_order
+      fly_buy_order = FlyBuyOrder.find_by_id(inspection_date.fly_buy_order_id)
+      if fly_buy_order.present? && fly_buy_order.synapse_transaction_id.present?
         UserMailer.send_inspection_date_arriving_to_seller(fly_buy_order, rule).deliver_later
         UserMailer.send_inspection_date_arriving_to_buyer(fly_buy_order, rule).deliver_later
       end

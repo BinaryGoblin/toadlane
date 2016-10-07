@@ -8,8 +8,8 @@ task :on_inspection_date_order_status_change => :environment do
                       )
 
   inspection_dates.each do |inspection_date|
-    if inspection_date.fly_buy_order.present?
-      fly_buy_order = inspection_date.fly_buy_order
+    fly_buy_order = FlyBuyOrder.find_by_id(inspection_date.fly_buy_order_id)
+    if fly_buy_order.present? && fly_buy_order.synapse_transaction_id.present?
       fly_buy_order.update_attribute(:status, 'pending_fund_release')
     end
   end
