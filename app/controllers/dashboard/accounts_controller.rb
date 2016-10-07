@@ -250,7 +250,9 @@ class Dashboard::AccountsController < DashboardController
         fly_buy_order_id = params["extra"]["supp_id"]
         fly_buy_order = FlyBuyOrder.find_by_id(fly_buy_order_id)
         if params["recent_status"]["status"] == "PROCESSING-CREDIT"
-          fly_buy_order.update_attribute(:status, 'pending_inspection')
+          fly_buy_order.update_attributes({
+            status: 'pending_inspection',
+            funds_in_escrow: true)
           UserMailer.send_funds_received_notification_to_seller(fly_buy_order).deliver_later
         end
       end
