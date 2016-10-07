@@ -245,8 +245,15 @@ class Dashboard::AccountsController < DashboardController
 
   def callback
     # TODO:: Handle wehbook
-    if params["account"].present? && params["account"]["recent_status"].present? && params["account"]["recent_status"]["status_id"] == "4"
-
+    if params["account"].present?
+      if params["extra"]["supp_id"].present?
+        fly_buy_order_id = params["extra"]["supp_id"]
+        fly_buy_order = FlyBuyOrder.find_by_id(fly_buy_order_id)
+        if params["recent_status"]["status"] == "PROCESSING-CREDIT"
+          fly_buy_order.update_attribute(:status, 'pending_inspection')
+          UserMailer.send_funds_received_notification_to_seller(fly_buy_order).deliver_later
+        end
+      end
     end
     render nothing: true, status: 200
   end

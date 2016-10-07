@@ -153,6 +153,8 @@ class FlyBuyOrdersController < ApplicationController
 
     client_user = FlyBuyService.get_user(oauth_key: oauth_response["oauth_key"], fingerprint: FlyBuyProfile::AppFingerPrint, ip_address: current_user.fly_buy_profile.synapse_ip_address, user_id: FlyBuyProfile::AppUserId)
 
+    seller_fee_percent, seller_fee_amount = get_seller_fees(fly_buy_order)
+
     trans_payload = {
       "to" => {
         "type" => FlyAndBuy::AddingBankDetails::SynapsePayNodeType[:wire],
@@ -167,18 +169,19 @@ class FlyBuyOrdersController < ApplicationController
         "currency" => FlyAndBuy::AddingBankDetails::SynapsePayCurrency
       },
       "extra" => {
+        "supp_id" => "#{fly_buy_order.id}",
         "note" => "#{current_user.name} Sent to #{fly_buy_order.buyer.name} account",
         "webhook" => "http://requestb.in/q283sdq2",
         "process_on" => 1,
         "ip" => current_user.fly_buy_profile.synapse_ip_address
       },
-      # "fees" => [{
-      #   "fee" => 1.00,
-      #   "note" => "Facilitator Fee",
-      #   "to" => {
-      #     "id" => "55d9287486c27365fe3776fb"
-      #   }
-      # }]
+      "fees" => [{
+        "fee" => seller_fee_percent,
+        "note" => "Seller Fee",
+        "to" => {
+          "id" => seller_fly_buy_profile.synapse_node_id
+        }
+      }]
     }
 
     create_transaction_response = client_user.trans.create(node_id: FlyBuyProfile::EscrowNodeID, payload: trans_payload)
@@ -239,6 +242,36 @@ class FlyBuyOrdersController < ApplicationController
       fly_buy_order,
       type: 'fly_buy'
     ), notice: 'You have been emailed wire instructions!'
+  end
+
+  def cancel_transaction
+    fly_buy_order = FlyBuyOrder.find_by_id(params[:fly_buy_order_id])
+
+    client = FlyBuyService.get_client
+
+    seller_fly_buy_profile = fly_buy_order.seller.fly_buy_profile
+    buyer_fly_buy_profile = fly_buy_order.buyer.fly_buy_profile
+
+    user_response = client.users.get(user_id: FlyBuyProfile::AppUserId)
+
+    client_user = FlyBuyService.get_user(oauth_key: nil, fingerprint: FlyBuyProfile::AppFingerPrint, ip_address: current_user.fly_buy_profile.synapse_ip_address, user_id: FlyBuyProfile::AppUserId)
+
+    oauth_payload = {
+      "refresh_token" => user_response['refresh_token'],
+      "fingerprint" => FlyBuyProfile::AppFingerPrint
+    }
+
+    oauth_response = client_user.users.refresh(payload: oauth_payload)
+
+    client_user = FlyBuyService.get_user(oauth_key: oauth_response["oauth_key"], fingerprint: FlyBuyProfile::AppFingerPrint, ip_address: current_user.fly_buy_profile.synapse_ip_address, user_id: FlyBuyProfile::AppUserId)
+
+    cancel_transaction = client_user.trans.delete(
+                          node_id: buyer_fly_buy_profile.synapse_node_id,
+                          trans_id: fly_buy_order.synapse_transaction_id)
+    binding.pry
+    if cancel_transaction["recent_status"]["status"] == "CANCELED"
+      fly_buy_order.update_attribute(:status, 'cancelled')
+    end 
   end
 
   private
