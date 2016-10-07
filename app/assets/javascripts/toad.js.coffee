@@ -232,11 +232,16 @@ $(document).ready ->
       evaluateInspectionDates()
       return
 
+  $('#product_inspection_date_attributes__date_1i').click ->
+    evaluateInspectionDates()
+    return
+
   evaluateInspectionDates = ->
     $('#product_end_date_2i').each ->
       endMonthSelected = $('#product_end_date_2i').val()
+      endYearSelected = $('#product_end_date_1i').val()
       monthSelect = $('#product_inspection_date_attributes__date_2i')
-      # yearSelect = $(this).siblings('select[id*=_1i]')
+      yearSelect = $('#product_inspection_date_attributes__date_1i')
       # year = parseInt(yearSelect.val())
       # month = parseInt(monthSelect.val())
       # days = new Date(year, month, 0).getDate()
@@ -261,10 +266,16 @@ $(document).ready ->
         'December'
       ]
       j = 0
-      while j < endMonthSelected - 1
-        monthSelect.append '<option value="' + j + '">' + monthNames[j] + '</option>'
-        j++
-      return
+      if yearSelect.val() == endYearSelected
+        while j < endMonthSelected - 1
+          monthSelect.append '<option value="' + j + '">' + monthNames[j] + '</option>'
+          j++
+        return
+      else
+        while j < 12
+          monthSelect.append '<option value="' + j + '">' + monthNames[j] + '</option>'
+          j++
+        return
     return
 
   evaluateMonthDates = ->

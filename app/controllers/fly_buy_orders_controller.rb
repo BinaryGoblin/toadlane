@@ -7,7 +7,7 @@ class FlyBuyOrdersController < ApplicationController
 
     if current_user.fly_buy_profile_exist?
       create_transaction_response = create_transaction_in_synapsepay(fly_buy_order, product)
-
+      binding.pry
       if create_transaction_response["recent_status"]["note"] == "Transaction created"
         fly_buy_order.update_attributes({
             synapse_escrow_node_id: FlyBuyProfile::EscrowNodeID,
@@ -286,7 +286,7 @@ class FlyBuyOrdersController < ApplicationController
     oauth_response = client_user.users.refresh(payload: oauth_payload)
 
     client_user = FlyBuyService.get_user(oauth_key: oauth_response["oauth_key"], fingerprint: fly_buy_profile.encrypted_fingerprint, ip_address: fly_buy_profile.synapse_ip_address, user_id: fly_buy_profile.synapse_user_id)
-
+    binding.pry
     trans_payload = {
       "to" => {
         "type" => FlyAndBuy::AddingBankDetails::SynapsePayNodeType[:synapse_us],
@@ -299,7 +299,7 @@ class FlyBuyOrdersController < ApplicationController
       "extra" => {
         "note" => "#{current_user.name} Deposit to #{FlyAndBuy::AddingBankDetails::SynapsePayNodeType[:synapse_us]} account",
         "webhook" => "http://requestb.in/q283sdq2",
-        "process_on" => 1,
+        "process_on" => 0,
         "ip" => fly_buy_profile.synapse_ip_address,
         "other" => {
           "attachments" => [

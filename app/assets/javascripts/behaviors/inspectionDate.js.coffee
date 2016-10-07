@@ -8,6 +8,7 @@ class Behavior.InspectionDate
     @$template = $ document.getElementById('template-inspectiondate').innerHTML
     $ul.on 'click', '.remove', @removeInspectionDate
     $el.click => @addNewInspectionDate()
+    
 
   addNewInspectionDate: ->
     tmpl = @$template.clone()

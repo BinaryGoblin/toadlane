@@ -24,7 +24,7 @@ class InspectionDate < ActiveRecord::Base
   scope :seller_added, -> { where(creator_type: "seller") }
   scope :buyer_added, -> { where(creator_type: "buyer") }
   scope :without_order_id, -> { where(promise_order_id: nil) }
-  scope :passed_inspection_date, -> { where('date >= ?', DateTime.now) }
+  scope :passed_inspection_date, -> { where('date <= ?', DateTime.now) }
 
   validate :check_inspection_date
 
@@ -54,7 +54,7 @@ class InspectionDate < ActiveRecord::Base
         errors.add(:date, 'must be greater than today.')
       end
 
-      if date.to_date < product.end_date.to_date
+      if date.year > product.end_date.year
         errors.add(:date, "must not be greater than product's end date.")
       end
     end
