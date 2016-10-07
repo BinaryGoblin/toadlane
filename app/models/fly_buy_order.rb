@@ -22,6 +22,8 @@
 #  inspection_complete    :boolean          default(FALSE)
 #  payment_release        :boolean          default(FALSE)
 #  funds_in_escrow        :boolean          default(FALSE)
+#  seller_fees_percent    :float
+#  seller_fees_amount     :float
 #
 
 class FlyBuyOrder < ActiveRecord::Base

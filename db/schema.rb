@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161005070840) do
+ActiveRecord::Schema.define(version: 20161007093849) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -318,6 +318,8 @@ ActiveRecord::Schema.define(version: 20161005070840) do
     t.boolean  "inspection_complete",    default: false
     t.boolean  "payment_release",        default: false
     t.boolean  "funds_in_escrow",        default: false
+    t.float    "seller_fees_percent"
+    t.float    "seller_fees_amount"
   end
 
   create_table "fly_buy_profiles", force: :cascade do |t|

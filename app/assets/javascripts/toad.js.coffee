@@ -224,16 +224,16 @@ $(document).ready ->
 
   $('.create_fly_buy_profile').ready ->
     if $('form.create_fly_buy_profile').is(':visible')
-      evaluateMonthDates()
+      # evaluateMonthDates()
       return
   
   $('.product_create_update').ready ->
     if $('form.product_create_update').is(':visible')
-      evaluateInspectionDates()
+      # evaluateInspectionDates()
       return
 
   $('#product_inspection_date_attributes__date_1i').click ->
-    evaluateInspectionDates()
+    # evaluateInspectionDates()
     return
 
   evaluateInspectionDates = ->

@@ -48,3 +48,8 @@
     .form-group
       = f.label :entity_scope, 'Entity Scope:', class: 'required'
       = f.text_field :entity_scope, class: 'form-control', required: true
+.row
+  .col-md-6
+    .form-group
+      = f.label :bank_statement, 'Bank Statement:', class: 'required'
+      = f.file_field :bank_statement, required: true

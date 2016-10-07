@@ -138,7 +138,14 @@ html[style="margin: 0;padding: 0;"]
           /       | -
           /       = number_to_currency(@order.fraud_protection_fee_amount)
           / - else
-          - if !@order.instance_of? FlyBuyOrder
+          - if @order.instance_of? FlyBuyOrder
+            tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
+              td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
+                |  Seller Fees #{@order.seller_fees_percent}%
+              td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
+                | -
+                = number_to_currency(@order.seller_fees_amount)
+          - else
             tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
               td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
                 |  Shipping
@@ -151,7 +158,10 @@ html[style="margin: 0;padding: 0;"]
                 | Total:
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
               b[style="margin: 0;padding: 0;"]
-                = number_to_currency(@order.total)
+                - if @order.instance_of? FlyBuyOrder
+                  = number_to_currency(@order.total - @order.seller_fees_amount) if @order.seller_fees_amount.present?
+                - else
+                  = number_to_currency(@order.total)
       div[style="text-align: right;margin-top: 20px;margin: 0;padding: 0;"]
         a.btn[href="#{dashboard_orders_url}" style="margin: 0;padding: 7px 13px;color: white;border: 1px solid transparent;border-bottom-color: #3d6411;border-top-color: #59af0c;text-decoration: none;background-image: linear-gradient(to bottom, #59af0c 0%, #5c8f10 100%);background-repeat: repeat-x;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF59AF0C', endColorstr='#FF5C8F10', GradientType=0);border-radius: 3px;display: inline-block;"]
           | View All Orders
