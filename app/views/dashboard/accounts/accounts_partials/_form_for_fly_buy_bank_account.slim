@@ -1,0 +1,40 @@
+.row
+  .col-md-6
+    .form-group
+      = f.label :bank_name, 'Bank Name:', class: 'required'
+      = f.text_field :bank_name, class: 'form-control', required: true
+
+  .col-md-6
+    .form-group
+      = f.label :address, 'Bank Address:', class: 'required'
+      = f.text_field :address, class: 'form-control', required: true
+.row
+  .col-md-6
+    .form-group
+      = f.label :name_on_account, 'Account Name:', class: 'required'
+      = f.text_field :name_on_account, class: 'form-control', required: true
+
+  .col-md-6
+    .form-group
+      = f.label :account_num, 'Account Number:', class: 'required'
+      = f.text_field :account_num, class: 'form-control', required: true
+.row
+  .col-md-6
+    .form-group
+      = f.label :routing_num, 'Routing Number:', class: 'required'
+      = f.text_field :routing_num, class: 'form-control', required: true
+
+  .col-md-6
+    .form-group
+        = f.label :ssn_number, 'SSN Number:', class: 'required'
+        = f.text_field :ssn_number, class: 'form-control', required: true
+.row
+  .col-md-6
+    .form-group
+      label Company Formation Date:
+      = date_select :fly_buy_profile, :date_of_company, { :start_year => 20.years.ago.year, :end_year => Date.today.year, order: [:month, :day, :year]}, { class: "form-control" }
+      
+  .col-md-6
+    .form-group
+      = f.label :eic_attachment, 'EIN Document:', class: 'required'
+      = f.file_field :eic_attachment, required: true
