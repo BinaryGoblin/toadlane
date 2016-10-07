@@ -252,7 +252,8 @@ class Dashboard::AccountsController < DashboardController
         if params["recent_status"]["status"] == "PROCESSING-CREDIT"
           fly_buy_order.update_attributes({
             status: 'pending_inspection',
-            funds_in_escrow: true)
+            funds_in_escrow: true
+          })
           UserMailer.send_funds_received_notification_to_seller(fly_buy_order).deliver_later
         end
       end
