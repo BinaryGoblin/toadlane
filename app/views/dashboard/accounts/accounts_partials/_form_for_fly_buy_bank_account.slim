@@ -38,3 +38,12 @@
     .form-group
       = f.label :eic_attachment, 'EIN Document:', class: 'required'
       = f.file_field :eic_attachment, required: true
+.row
+  .col-md-6
+    .form-group
+      = f.label :entity_type, 'Entity Type:', class: 'required'
+      = f.text_field :entity_type, class: 'form-control', required: true
+  .col-md-6
+    .form-group
+      = f.label :entity_scope, 'Entity Scope:', class: 'required'
+      = f.text_field :entity_scope, class: 'form-control', required: true
