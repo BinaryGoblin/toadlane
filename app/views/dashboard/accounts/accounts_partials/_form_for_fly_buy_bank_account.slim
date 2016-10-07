@@ -31,9 +31,10 @@
 .row
   .col-md-6
     .form-group
-      label Company Formation Date:
-      = date_select :fly_buy_profile, :date_of_company, { :start_year => 20.years.ago.year, :end_year => Date.today.year, order: [:month, :day, :year]}, { class: "form-control" }
-      
+      .offer-item
+        .offer-date
+          label Company Formation Date:
+          = date_select :fly_buy_profile, :date_of_company, { :start_year => 20.years.ago.year, :end_year => Date.today.year, order: [:month, :day, :year]}, { class: "form-control" }
   .col-md-6
     .form-group
       = f.label :eic_attachment, 'EIN Document:', class: 'required'

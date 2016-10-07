@@ -454,10 +454,53 @@
     }
   }
   .account-promisepay{
-    .new_promise_account{
-      .form-group{
-        .checkbox label {
-          padding-left: 0px;
+    .create_fly_buy_profile{
+      .offer-item {
+        @include clearfix;
+
+        &:first-child {
+          margin-bottom: 20px;
+        }
+
+        > label {
+          width: 145px;
+          float: left;
+          margin-top: 26px;
+        }
+
+        > div {
+          float: left;
+
+          label {
+            display: block;
+          }
+        }
+
+        .selectize-input {
+          padding-right: 20px;
+        }
+
+        .offer-date {
+          margin-right: 20px;
+          width: 300px;
+
+          .selectize-control {
+            float: left;
+
+            &:nth-child(3) {
+              width: 96px;
+              margin-right: 5px;
+            }
+
+            &:nth-child(5) {
+              width: 50px;
+              margin-right: 5px;
+            }
+
+            &:nth-child(7) {
+              width: 64px;
+            }
+          }
         }
       }
     }
