@@ -102,7 +102,7 @@ class FlyAndBuy::AddingBankDetails
         {
           # this is for bank statement
           "document_value": encode_attachment(file_tempfile: fly_buy_profile.bank_statement.url, file_type: fly_buy_profile.bank_statement_content_type),
-          "document_type": "SELFIE"
+          "document_type": "proof_of_account"
         }]
       }]
     }
