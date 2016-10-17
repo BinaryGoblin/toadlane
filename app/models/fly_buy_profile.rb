@@ -19,13 +19,17 @@
 #  bank_statement_content_type :string
 #  bank_statement_file_size    :integer
 #  bank_statement_updated_at   :datetime
+#  gov_id_file_name            :string
+#  gov_id_content_type         :string
+#  gov_id_file_size            :integer
+#  gov_id_updated_at           :datetime
 #
 
 class FlyBuyProfile < ActiveRecord::Base
   belongs_to :user
 
   attr_accessor :name_on_account, :account_num, :routing_num, :bank_name, :address,
-  								:ssn_number, :date_of_company, :entity_type, :entity_scope, :bank_statement
+  								:ssn_number, :date_of_company, :entity_type, :entity_scope
 
   EscrowNodeID = '57d7465386c2732e824b7c8b'
   AppUserId = '57d745ff86c27319cbe0edf0'
@@ -33,6 +37,8 @@ class FlyBuyProfile < ActiveRecord::Base
 
   has_attached_file :eic_attachment
   has_attached_file :bank_statement
+  has_attached_file :gov_id
   do_not_validate_attachment_file_type :eic_attachment
   do_not_validate_attachment_file_type :bank_statement
+  do_not_validate_attachment_file_type :gov_id
 end

@@ -31,17 +31,6 @@
 .row
   .col-md-6
     .form-group
-      .offer-item
-        .offer-date
-          label Company Formation Date:
-          = date_select :fly_buy_profile, :date_of_company, { :start_year => 20.years.ago.year, :end_year => Date.today.year, order: [:month, :day, :year]}, { class: "form-control" }
-  .col-md-6
-    .form-group
-      = f.label :eic_attachment, 'EIN Document:', class: 'required'
-      = f.file_field :eic_attachment, required: true
-.row
-  .col-md-6
-    .form-group
       = f.label :entity_type, 'Entity Type:', class: 'required'
       = f.text_field :entity_type, class: 'form-control', required: true
   .col-md-6
@@ -51,5 +40,22 @@
 .row
   .col-md-6
     .form-group
+      .offer-item
+        .offer-date
+          label Company Formation Date:
+          = date_select :fly_buy_profile, :date_of_company, { :start_year => 20.years.ago.year, :end_year => Date.today.year, order: [:month, :day, :year]}, { class: "form-control" }
+  .col-md-6
+    .form-group
+      = f.label :eic_attachment, 'EIN Document:', class: 'required'
+      = f.file_field :eic_attachment, required: true
+  
+.row
+  .col-md-6
+    .form-group
       = f.label :bank_statement, 'Proof of Account:', class: 'required'
       = f.file_field :bank_statement, required: true
+
+  .col-md-6
+    .form-group
+      = f.label :gov_id, 'Govenment Issued ID:', class: 'required'
+      = f.file_field :gov_id, required: true

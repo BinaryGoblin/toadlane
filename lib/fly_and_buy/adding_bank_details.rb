@@ -11,7 +11,9 @@ class FlyAndBuy::AddingBankDetails
 
   SynapsePayDocType = {
     ssn: 'SSN',
-    ein: 'GOVT_ID'
+    ein: 'EIN_DOC',
+    bank_statement: 'proof_of_account',
+    gov_id: 'GOV_ID'
   }
 
   def initialize(user, fly_buy_profile, user_details = {})
@@ -102,8 +104,14 @@ class FlyAndBuy::AddingBankDetails
         {
           # this is for bank statement
           "document_value": encode_attachment(file_tempfile: fly_buy_profile.bank_statement.url, file_type: fly_buy_profile.bank_statement_content_type),
-          "document_type": "proof_of_account"
-        }]
+          "document_type": SynapsePayDocType[:bank_statement]
+        },
+        {
+          # this is for gov_id
+          "document_value": encode_attachment(file_tempfile: fly_buy_profile.gov_id.url, file_type: fly_buy_profile.gov_id_content_type),
+          "document_type": SynapsePayDocType[:gov_id]
+        }
+      ]
       }]
     }
 

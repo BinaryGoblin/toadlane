@@ -15,17 +15,3 @@
             
       = f.submit "Submit", class: "btn btn-primary"
 
-  / - if user.fly_buy_profile_exist?
-    = form_for fly_buy_profile, url: update_fly_buy_profile_dashboard_accounts_path, method: "post", :html => { class: 'create_fly_buy_profile' } do |f|
-      .row
-        .col-md-6
-          .form-group
-            label Company Date:
-            = date_select :fly_buy_profile, :date_of_company, { order: [:month, :day, :year] }, { class: "form-control" }
-            
-        .col-md-6
-          .form-group
-            = f.label :eic_attachment, 'EIC Letter:', class: 'required'
-            = f.file_field :eic_attachment, required: true
-      = f.submit "Submit", class: "btn btn-primary"
-

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161017045151) do
+ActiveRecord::Schema.define(version: 20161017073137) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -339,6 +339,10 @@ ActiveRecord::Schema.define(version: 20161017045151) do
     t.string   "bank_statement_content_type"
     t.integer  "bank_statement_file_size"
     t.datetime "bank_statement_updated_at"
+    t.string   "gov_id_file_name"
+    t.string   "gov_id_content_type"
+    t.integer  "gov_id_file_size"
+    t.datetime "gov_id_updated_at"
   end
 
   create_table "green_checks", force: :cascade do |t|
