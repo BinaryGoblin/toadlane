@@ -23,6 +23,7 @@
 #  gov_id_content_type         :string
 #  gov_id_file_size            :integer
 #  gov_id_updated_at           :datetime
+#  permission_scope_verified   :boolean          default(FALSE)
 #
 
 class FlyBuyProfile < ActiveRecord::Base

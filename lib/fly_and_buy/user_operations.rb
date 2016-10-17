@@ -75,6 +75,12 @@ class FlyAndBuy::UserOperations
   end
 
   def create_fly_buy_profile_with_fingerprint
+    fly_buy_profiles = FlyBuyProfile.where(user_id: signed_in_user.id)
+    if fly_buy_profiles.present?
+      fly_buy_profiles.each do |profile|
+        profile.destroy
+      end
+    end
     @fly_buy_profile = FlyBuyProfile.create({
                             encrypted_fingerprint: "user_#{signed_in_user.id}" + "_" + user_details[:fingerprint],
                             user_id: signed_in_user.id,

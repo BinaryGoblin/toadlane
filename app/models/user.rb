@@ -232,7 +232,12 @@ class User < ActiveRecord::Base
   end
 
   def fly_buy_profile_exist?
-    fly_buy_profile.present? && fly_buy_profile.synapse_user_id.present? && fly_buy_profile.synapse_node_id.present?
+    fly_buy_profile.present? && fly_buy_profile.synapse_user_id.present? &&
+    fly_buy_profile.synapse_node_id.present?
+  end
+
+  def fly_buy_profile_verified?
+    fly_buy_profile_exist? && fly_buy_profile.permission_scope_verified == true
   end
 
   private

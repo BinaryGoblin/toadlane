@@ -1,4 +1,4 @@
-- if fly_buy_order.status == "processing" && user.fly_buy_profile.present? && user.fly_buy_profile.synapse_node_id.nil?
+- if fly_buy_order.status == "processing" && user.fly_buy_profile.present? && user.fly_buy_profile.synapse_node_id.nil? && fly_buy_profile.permission_scope_verified == false
 
   .account-promisepay
     h2 Congratulations on your first time purchasing with Fly & Buy! Before wiring funds into Synapse Pay escrow tell us a little bit more about your business and the bank you will be wiring from.

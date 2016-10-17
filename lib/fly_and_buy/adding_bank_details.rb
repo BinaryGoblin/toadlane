@@ -12,8 +12,8 @@ class FlyAndBuy::AddingBankDetails
   SynapsePayDocType = {
     ssn: 'SSN',
     ein: 'EIN_DOC',
-    bank_statement: 'proof_of_account',
-    gov_id: 'GOV_ID'
+    bank_statement: 'PROOF_OF_ACCOUNT',
+    gov_id: 'GOVT_ID'
   }
 
   def initialize(user, fly_buy_profile, user_details = {})
@@ -103,13 +103,13 @@ class FlyAndBuy::AddingBankDetails
         },
         {
           # this is for bank statement
-          "document_value": encode_attachment(file_tempfile: fly_buy_profile.bank_statement.url, file_type: fly_buy_profile.bank_statement_content_type),
-          "document_type": SynapsePayDocType[:bank_statement]
+          'document_value': encode_attachment(file_tempfile: fly_buy_profile.bank_statement.url, file_type: fly_buy_profile.bank_statement_content_type),
+          'document_type': SynapsePayDocType[:bank_statement]
         },
         {
           # this is for gov_id
-          "document_value": encode_attachment(file_tempfile: fly_buy_profile.gov_id.url, file_type: fly_buy_profile.gov_id_content_type),
-          "document_type": SynapsePayDocType[:gov_id]
+          'document_value': encode_attachment(file_tempfile: fly_buy_profile.gov_id.url, file_type: fly_buy_profile.gov_id_content_type),
+          'document_type': SynapsePayDocType[:gov_id]
         }
       ]
       }]
@@ -119,6 +119,12 @@ class FlyAndBuy::AddingBankDetails
 
     if response["documents"].present? && response["documents"][0].present?
       fly_buy_profile.update_attribute(:synapse_document_id, response["documents"][0]["id"])
+      if response["documents"][0]["permission_scope"].present?
+        permission_array = response["documents"][0]["permission_scope"].split("|")
+        if permission_array.include?("SEND") && permission_array.include?("RECEIVE") && permission_array.include?("DAILY")
+          fly_buy_profile.update_attribute(:permission_scope_verified, true)
+        end
+      end
     else
       return response
     end

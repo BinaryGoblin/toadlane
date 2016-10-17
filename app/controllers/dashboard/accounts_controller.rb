@@ -249,7 +249,7 @@ class Dashboard::AccountsController < DashboardController
       if params["extra"]["supp_id"].present?
         fly_buy_order_id = params["extra"]["supp_id"]
         fly_buy_order = FlyBuyOrder.find_by_id(fly_buy_order_id)
-        if params["recent_status"]["status"] == "PROCESSING-CREDIT"
+        if fly_buy_order.present? && params["recent_status"]["status"] == "PROCESSING-CREDIT"
           fly_buy_order.update_attributes({
             status: 'pending_inspection',
             funds_in_escrow: true

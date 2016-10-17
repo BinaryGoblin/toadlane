@@ -2,12 +2,12 @@
   h4 Fly And Buy:
   h3
     |*Required for Fly & Buy Transactions
-  - if user.fly_buy_profile_exist?
+  - if user.fly_buy_profile_verified?
     p <b>Status:</b> <span class="success">You have successfully added your bank account. You can now buy or sell using Fly & Buy!</span>
   -else
     p <b>Status:</b> <span class="warning">You have not yet added bank account.</span>
 
-  - if user.fly_buy_profile_exist? == false
+  - if user.fly_buy_profile_verified? == false
     = form_for fly_buy_profile, url: create_fly_buy_profile_dashboard_accounts_path, method: "post", :html => { class: 'create_fly_buy_profile' } do |f|
       = f.hidden_field :fingerprint, :value=> nil
       = render partial: 'dashboard/accounts/accounts_partials/form_for_fly_buy_bank_account',
