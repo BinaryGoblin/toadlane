@@ -9,9 +9,11 @@ class FlyBuyService
   if Rails.env.development?
     ClientId = Rails.application.secrets['SYNAPSEPAY_CLIENT_ID']
     ClientSecret = Rails.application.secrets['SYNAPSEPAY_CLIENT_SECRET']
+    WebhookUrl = Rails.application.secrets['SYNAPSEPAY_WEBHOOK_URL']
   else
     ClientId = ENV['SYNAPSEPAY_CLIENT_ID']
     ClientSecret = ENV['SYNAPSEPAY_CLIENT_SECRET']
+    WebhookUrl = ENV['SYNAPSEPAY_WEBHOOK_URL']
   end
 
   def self.get_client
@@ -34,7 +36,6 @@ class FlyBuyService
       'development_mode' => SandboxMode}
 
     client = SynapsePayRest::Client.new options: options
-
   end
 
   def self.get_user(oauth_key:, fingerprint:, ip_address:, user_id:)
@@ -48,5 +49,27 @@ class FlyBuyService
 
 
     SynapsePayRest::Client.new options: options, user_id: user_id
+  end
+
+  def self.create_subscription
+    url = "https://sandbox.synapsepay.com/api/v3/subscription/add"
+
+    create_payload = {
+      "client": {
+        "client_id": ClientId,
+        "client_secret": ClientSecret
+      },
+      "url": WebhookUrl,
+      "scope":[
+        "USERS|POST",
+        "NODES|POST",
+        "TRANS|POST"
+      ]
+    }
+
+    RestClient.post(url,
+      create_payload.to_json,
+      :content_type => :json,
+      :accept => :json)
   end
 end

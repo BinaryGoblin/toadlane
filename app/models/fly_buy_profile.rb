@@ -15,6 +15,10 @@
 #  eic_attachment_file_size    :integer
 #  eic_attachment_updated_at   :datetime
 #  synapse_document_id         :string
+#  bank_statement_file_name    :string
+#  bank_statement_content_type :string
+#  bank_statement_file_size    :integer
+#  bank_statement_updated_at   :datetime
 #
 
 class FlyBuyProfile < ActiveRecord::Base
@@ -28,4 +32,7 @@ class FlyBuyProfile < ActiveRecord::Base
   AppFingerPrint = '8781321799f523327fb8d1f15ffa266d'
 
   has_attached_file :eic_attachment
+  has_attached_file :bank_statement
+  do_not_validate_attachment_file_type :eic_attachment
+  do_not_validate_attachment_file_type :bank_statement
 end
