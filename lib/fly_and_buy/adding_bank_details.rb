@@ -123,6 +123,9 @@ class FlyAndBuy::AddingBankDetails
         permission_array = response["documents"][0]["permission_scope"].split("|")
         if permission_array.include?("SEND") && permission_array.include?("RECEIVE") && permission_array.include?("DAILY")
           fly_buy_profile.update_attribute(:permission_scope_verified, true)
+        elsif response["documents"][0]["virtual_docs"][0].present? && response["documents"][0]["virtual_docs"][0]["status"] == "SUBMITTED|MFA_PENDING"
+          questions = response["documents"][0]["virtual_docs"][0]["meta"]["question_set"]["questions"]
+          fly_buy_profile.update_attribute(:kba_questions, questions.to_json)
         end
       end
     else

@@ -24,13 +24,15 @@
 #  gov_id_file_size            :integer
 #  gov_id_updated_at           :datetime
 #  permission_scope_verified   :boolean          default(FALSE)
+#  kba_questions               :json
 #
 
 class FlyBuyProfile < ActiveRecord::Base
   belongs_to :user
 
   attr_accessor :name_on_account, :account_num, :routing_num, :bank_name, :address,
-  								:ssn_number, :date_of_company, :entity_type, :entity_scope
+  								:ssn_number, :date_of_company, :entity_type, :entity_scope,
+                  :question_1, :question_2, :question_3, :question_4, :question_5
 
   EscrowNodeID = '57d7465386c2732e824b7c8b'
   AppUserId = '57d745ff86c27319cbe0edf0'

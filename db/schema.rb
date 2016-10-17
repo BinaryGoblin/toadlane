@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161017074527) do
+ActiveRecord::Schema.define(version: 20161017101746) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -344,6 +344,7 @@ ActiveRecord::Schema.define(version: 20161017074527) do
     t.integer  "gov_id_file_size"
     t.datetime "gov_id_updated_at"
     t.boolean  "permission_scope_verified",   default: false
+    t.json     "kba_questions",               default: {}
   end
 
   create_table "green_checks", force: :cascade do |t|
