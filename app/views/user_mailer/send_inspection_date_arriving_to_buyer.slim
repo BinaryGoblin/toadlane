@@ -22,7 +22,7 @@ html[style="margin: 0;padding: 0;"]
           = @days
           | &nbsp;days from now.
         .message-footer style=("margin: 0;padding: 0;")
-          = link_to "View Orders", dashboard_orders_url,
+          = link_to "View Order", dashboard_order_url(@order, type: 'fly_buy'),
                 {:style => "margin: 0;padding: 7px 13px;color: white;border: 1px solid transparent;border-bottom-color: #3d6411;border-top-color: #59af0c;text-shadow: 0 1px 0 #3d6411;text-decoration: none;background-image: linear-gradient(to bottom, #59af0c 0%, #5c8f10 100%);background-repeat: repeat-x;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF59AF0C', endColorstr='#FF5C8F10', GradientType=0);border-radius: 3px;display: inline-block;"}
     .text-center[style="margin: 0;padding: 0;text-align: center;"]
       a[href="#{faq_url}" style="margin: 0;padding: 0;color: #5c8f10;"]
