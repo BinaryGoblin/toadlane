@@ -26,6 +26,7 @@ class FlyAndBuy::UserOperations
   private
 
   def synapsepay_create_user
+    FlyBuyService.create_subscription
     create_fly_buy_profile_with_fingerprint
 
     create_user_response = creating_user_synapse
