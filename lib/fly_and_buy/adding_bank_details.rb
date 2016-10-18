@@ -122,17 +122,17 @@ class FlyAndBuy::AddingBankDetails
     }
 
     response = client_user.users.update(payload: add_documents_payload)
-    binding.pry
+
     if response["documents"].present? && response["documents"][0].present?
       fly_buy_profile.update_attribute(:synapse_document_id, response["documents"][0]["id"])
-      if response["documents"][0]["permission_scope"].present?
-        permission_array = response["documents"][0]["permission_scope"].split("|")
-        if permission_array.include?("SEND") && permission_array.include?("RECEIVE") && permission_array.include?("DAILY")
-          fly_buy_profile.update_attribute(:permission_scope_verified, true)
-        elsif response["documents"][0]["virtual_docs"][0].present? && response["documents"][0]["virtual_docs"][0]["status"] == "SUBMITTED|MFA_PENDING"
-          questions = response["documents"][0]["virtual_docs"][0]["meta"]
-          fly_buy_profile.update_attribute(:kba_questions, questions)
-        end
+      if response["documents"][0]["virtual_docs"][0].present? && response["documents"][0]["virtual_docs"][0]["status"] == "SUBMITTED|MFA_PENDING"
+        questions = response["documents"][0]["virtual_docs"][0]["meta"]
+        fly_buy_profile.update_attribute(:kba_questions, questions)
+      end
+    elsif response["documents"]["permission"].present? && response["documents"]["permission"] == "SEND-AND-RECEIVE"
+      permission_array = response["documents"]["permission"].split("-")
+      if permission_array.include?("SEND") && permission_array.include?("RECEIVE")
+        fly_buy_profile.update_attribute(:permission_scope_verified, true)
       end
     else
       return response
