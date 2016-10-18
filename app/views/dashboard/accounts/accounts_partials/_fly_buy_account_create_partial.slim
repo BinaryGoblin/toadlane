@@ -3,7 +3,7 @@
   h3
     |*Required for Fly & Buy Transactions
 
-  - if user.fly_buy_profile_verified?
+  - if user.fly_buy_profile_verified? && user.fly_buy_profile.kba_questions.empty?
     p <b>Status:</b> <span class="success">You have successfully added your bank account. You can now buy or sell using Fly & Buy!</span>
   - elsif user.fly_buy_profile.present? && user.fly_buy_profile.kba_questions.present?
     = form_for fly_buy_profile, url: answer_kba_question_dashboard_accounts_path, method: "post" do |f|
