@@ -34,7 +34,7 @@ class FlyAndBuy::AddingBankDetails
     get_user_and_instantiate_user
 
     add_necessary_doc
-    binding.pry
+
     add_bank_acc_response  = create_bank_account
 
     store_returned_node_id(add_bank_acc_response)
