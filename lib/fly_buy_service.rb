@@ -52,24 +52,39 @@ class FlyBuyService
   end
 
   def self.create_subscription
-    url = "https://sandbox.synapsepay.com/api/v3/subscription/add"
+    # url = "https://sandbox.synapsepay.com/api/3/subscriptions"
 
-    create_payload = {
-      "client": {
-        "client_id": ClientId,
-        "client_secret": ClientSecret
-      },
-      "url": WebhookUrl,
-      "scope":[
-        "USERS|POST",
-        "NODES|POST",
-        "TRANS|POST"
-      ]
-    }
+    # create_payload = {
+    #   "client": {
+    #     "client_id": ClientId,
+    #     "client_secret": ClientSecret
+    #   },
+    #   "url": WebhookUrl,
+    #   "scope":[
+    #     "USERS|POST",
+    #     "NODES|POST",
+    #     "TRANS|POST"
+    #   ]
+    # }
+    # binding.pry
+    # RestClient.post(url,
+    #   create_payload.to_json,
+    #   :content_type => :json,
+    #   :accept => :json)
 
-    RestClient.post(url,
-      create_payload.to_json,
-      :content_type => :json,
-      :accept => :json)
+    puts `curl -X POST -H "Content-Type: application/json" -H "X-SP-GATEWAY: #{ClientId}|#{ClientSecret}" -H "X-SP-PROD: NO" -H "X-SP-LANG: EN" -d '{
+        "url":"#{WebhookUrl}",
+        "scope":[
+          "USERS|POST",
+          "USERS|PATCH",
+          "USERS|DELETE",
+          "NODES|POST",
+          "NODES|PATCH",
+          "NODES|DELETE",
+          "TRANS|POST",
+          "TRANS|PATCH",
+          "TRANS|DELETE"
+        ]
+    }' 'https://sandbox.synapsepay.com/api/3/subscriptions'`
   end
 end
