@@ -4,7 +4,10 @@
   .pull-right
     = link_to asset_path("fly_buy_wire_instructions.pdf"), class: "btn btn-success back-to-order-btn", :target => "_blank"
       | View Wire Instructions
-    = link_to "Resend Wire Instructions", fly_buy_order_resend_wire_instruction_path(@order.id), class: "btn btn-success back-to-order-btn"
+    - if @order.instance_of?(FlyBuyOrder) && @order.order_a_million?
+      = link_to asset_path("risk-assessment.pdf"), class: "btn btn-success back-to-order-btn", :target => "_blank"
+        | View Risk Assessment
+    / = link_to "Resend Wire Instructions", fly_buy_order_resend_wire_instruction_path(@order.id), class: "btn btn-success back-to-order-btn"
     = link_to "Close", dashboard_orders_path, class: "btn btn-success back-to-order-btn"
   .table-options
     table width="100%"

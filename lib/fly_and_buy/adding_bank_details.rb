@@ -96,11 +96,11 @@ class FlyAndBuy::AddingBankDetails
         'virtual_docs' => [{
           'document_value' => user_details["ssn_number"],
           'document_type' => SynapsePayDocType[:ssn]
-        },
-        {
-          'document_value' => '2222',
-          'document_type' => 'TIN'
         }
+        # {
+        #   'document_value' => '2222',
+        #   'document_type' => 'TIN'
+        # }
         ],
         'physical_docs' => [{
           # This is EIN document

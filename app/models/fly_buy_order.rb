@@ -77,4 +77,8 @@ class FlyBuyOrder < ActiveRecord::Base
   def inspected
     !not_inspected
   end
+
+  def order_a_million?
+    total >= 1000000
+  end
 end
