@@ -67,7 +67,7 @@ class FlyAndBuy::AnswerKbaQuestions
         fly_buy_profile.update_attribute(:permission_scope_verified, true)
       end
     end
-		fly_buy_profile.update_attribute(:kba_questions, true)
+		fly_buy_profile.update_attribute(:kba_questions, {})
 	end
 
 end
