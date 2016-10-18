@@ -6,8 +6,8 @@
   - if user.fly_buy_profile_verified?
     p <b>Status:</b> <span class="success">You have successfully added your bank account. You can now buy or sell using Fly & Buy!</span>
   - elsif user.fly_buy_profile.present? && user.fly_buy_profile.kba_questions.present?
-    = form_for fly_buy_profile, url: create_fly_buy_profile_dashboard_accounts_path, method: "post" do |f|
-      - questions = user.fly_buy_profile.kba_questions
+    = form_for fly_buy_profile, url: answer_kba_question_dashboard_accounts_path, method: "post" do |f|
+      - questions = user.fly_buy_profile.kba_questions["question_set"]["questions"]
       ol
         - questions.each do |question|
           li = question["question"]
@@ -21,7 +21,7 @@
     p <b>Status:</b> <span class="warning">You have not yet added bank account.</span>
     
     = form_for fly_buy_profile, url: create_fly_buy_profile_dashboard_accounts_path, method: "post", :html => { class: 'create_fly_buy_profile' } do |f|
-      = f.hidden_field :fingerprint, :value=> nil
+      = f.hidden_field :fingerprint, :value => nil
       = render partial: 'dashboard/accounts/accounts_partials/form_for_fly_buy_bank_account',
                     :locals => {  :f => f}
             

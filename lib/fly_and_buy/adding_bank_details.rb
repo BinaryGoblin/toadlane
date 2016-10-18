@@ -33,9 +33,10 @@ class FlyAndBuy::AddingBankDetails
 
     get_user_and_instantiate_user
 
-    doc_response = add_necessary_doc
-
+    add_necessary_doc
+    binding.pry
     add_bank_acc_response  = create_bank_account
+
     store_returned_node_id(add_bank_acc_response)
   rescue SynapsePayRest::Error::Conflict => e
     return e
@@ -95,7 +96,12 @@ class FlyAndBuy::AddingBankDetails
         'virtual_docs' => [{
           'document_value' => user_details["ssn_number"],
           'document_type' => SynapsePayDocType[:ssn]
-        }],
+        },
+        {
+          'document_value' => '2222',
+          'document_type' => 'TIN'
+        }
+        ],
         'physical_docs' => [{
           # This is EIN document
           'document_value' => encode_attachment(file_tempfile: fly_buy_profile.eic_attachment.url, file_type: fly_buy_profile.eic_attachment_content_type),
@@ -116,7 +122,7 @@ class FlyAndBuy::AddingBankDetails
     }
 
     response = client_user.users.update(payload: add_documents_payload)
-
+    binding.pry
     if response["documents"].present? && response["documents"][0].present?
       fly_buy_profile.update_attribute(:synapse_document_id, response["documents"][0]["id"])
       if response["documents"][0]["permission_scope"].present?
@@ -124,8 +130,8 @@ class FlyAndBuy::AddingBankDetails
         if permission_array.include?("SEND") && permission_array.include?("RECEIVE") && permission_array.include?("DAILY")
           fly_buy_profile.update_attribute(:permission_scope_verified, true)
         elsif response["documents"][0]["virtual_docs"][0].present? && response["documents"][0]["virtual_docs"][0]["status"] == "SUBMITTED|MFA_PENDING"
-          questions = response["documents"][0]["virtual_docs"][0]["meta"]["question_set"]["questions"]
-          fly_buy_profile.update_attribute(:kba_questions, questions.to_json)
+          questions = response["documents"][0]["virtual_docs"][0]["meta"]
+          fly_buy_profile.update_attribute(:kba_questions, questions)
         end
       end
     else

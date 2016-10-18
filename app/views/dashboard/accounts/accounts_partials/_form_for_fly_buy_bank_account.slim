@@ -59,3 +59,9 @@
     .form-group
       = f.label :gov_id, 'Govenment Issued ID:', class: 'required'
       = f.file_field :gov_id, required: true
+
+.row
+  .form-group
+    .checkbox: label
+      = f.check_box :terms_of_service, required: true
+      | &nbsp;By creating this account you agree to our Terms of Service & Privacy Policy and our financial software partner SynapsePay’s <a href="https://synapsepay.com/legal" target="_BLANK"> Terms of Service & Privacy Policy</a>

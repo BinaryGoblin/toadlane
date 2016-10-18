@@ -155,6 +155,12 @@ class FlyBuyOrdersController < ApplicationController
 
     seller_fee_percent, seller_fee_amount = get_seller_fees(fly_buy_order)
 
+    if Rails.env.development?
+      webhook_url = Rails.application.secrets['SYNAPSEPAY_WEBHOOK_URL']
+    else
+      webhook_url = ENV['SYNAPSEPAY_WEBHOOK_URL']
+    end
+
     trans_payload = {
       "to" => {
         "type" => FlyAndBuy::AddingBankDetails::SynapsePayNodeType[:wire],
@@ -171,7 +177,7 @@ class FlyBuyOrdersController < ApplicationController
       "extra" => {
         "supp_id" => "#{fly_buy_order.id}",
         "note" => "#{current_user.name} Sent to #{fly_buy_order.buyer.name} account",
-        "webhook" => "http://requestb.in/q283sdq2",
+        "webhook" => webhook_url,
         "process_on" => 1,
         "ip" => current_user.fly_buy_profile.synapse_ip_address
       },

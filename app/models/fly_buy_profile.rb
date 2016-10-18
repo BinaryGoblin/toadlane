@@ -25,6 +25,7 @@
 #  gov_id_updated_at           :datetime
 #  permission_scope_verified   :boolean          default(FALSE)
 #  kba_questions               :json
+#  terms_of_service            :boolean          default(FALSE)
 #
 
 class FlyBuyProfile < ActiveRecord::Base

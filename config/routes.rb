@@ -85,7 +85,7 @@ Toad::Application.routes.draw do
         post :create_amg_profile
         post :create_emb_profile
         post :create_fly_buy_profile
-        post :update_fly_buy_profile
+        post :answer_kba_question
         get :callback
         post :callback
       end
