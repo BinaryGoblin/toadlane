@@ -281,12 +281,15 @@ class FlyBuyOrdersController < ApplicationController
                           node_id: buyer_fly_buy_profile.synapse_node_id,
                           trans_id: fly_buy_order.synapse_transaction_id)
 
-    if cancel_transaction.present? && cancel_transaction["recent_status"]["status"] == "CANCELED"
+    if cancel_transaction.present? && cancel_transaction["recent_status"].present? && cancel_transaction["recent_status"]["status"] == "CANCELED"
       fly_buy_order.update_attribute(:status, 'cancelled')
-      redirect_to dashboard_orders_path(
-        type: 'fly_buy'
-      ), notice: 'You order has been canceled.'
+      flash[:notice] = 'You order has been canceled.'
+    elsif cancel_transaction["error"].present? && cancel_transaction["error"]["en"].present?
+      flash[:cancel_trans_error] = cancel_transaction["error"]["en"].split("Error: ").last
     end 
+    redirect_to dashboard_orders_path(
+      type: 'fly_buy'
+    )
   end
 
   private

@@ -8,6 +8,8 @@
           = error
       - else
         = flash[:error].scan(/[a-zA-Z0-9]+/).join(' ')
+  .error-explanation
+    = flash[:cancel_trans_error] if flash[:cancel_trans_error].present?
   .table-options
     table width="100%"
       tr
@@ -56,7 +58,7 @@
                 = link_to 'Refund Requested', dashboard_refund_requests_path, class: 'view'
             td.text-center
               - if order.buyer && order.status != 'cancelled' && order.instance_of?(FlyBuyOrder)
-                - if order.status == 'pending_confirmation'
+                - if order.status == 'pending_confirmation' && order.funds_in_escrow == false
                   = link_to 'Cancel Transaction', fly_buy_order_cancel_transaction_path(order.id), class: 'view'
                 - if order.not_inspected && order.status == 'pending_inspection' && order.inspection_date_today? && order.funds_in_escrow == true
                   = link_to 'Complete Inspection', fly_buy_order_complete_inspection_path(order.id), class: 'view'
