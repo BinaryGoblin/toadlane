@@ -175,7 +175,6 @@ class FlyBuyOrdersController < ApplicationController
         "currency" => FlyAndBuy::AddingBankDetails::SynapsePayCurrency
       },
       "extra" => {
-        "supp_id" => "#{fly_buy_order.id}",
         "note" => "#{current_user.name} Sent to #{fly_buy_order.buyer.name} account",
         "webhook" => webhook_url,
         "process_on" => 1,
@@ -317,6 +316,12 @@ class FlyBuyOrdersController < ApplicationController
   end
 
   def create_transaction_in_synapsepay(fly_buy_order, product)
+    if Rails.env.development?
+      webhook_url = Rails.application.secrets['SYNAPSEPAY_WEBHOOK_URL']
+    else
+      webhook_url = ENV['SYNAPSEPAY_WEBHOOK_URL']
+    end
+
     file = convert_invoice_to_image(fly_buy_order)
 
     fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
@@ -345,9 +350,8 @@ class FlyBuyOrdersController < ApplicationController
         "currency" => FlyAndBuy::AddingBankDetails::SynapsePayCurrency
       },
       "extra" => {
-        "supp_id" => "#{fly_buy_order.id}",
         "note" => "#{current_user.name} Deposit to #{FlyAndBuy::AddingBankDetails::SynapsePayNodeType[:synapse_us]} account",
-        "webhook" => "http://requestb.in/q283sdq2",
+        "webhook" => webhook_url,
         "process_on" => 0,
         "ip" => fly_buy_profile.synapse_ip_address,
         "other" => {

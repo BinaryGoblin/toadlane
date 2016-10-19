@@ -207,12 +207,14 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def callback
-    # TODO:: Handle wehbook
+    # Handled wehbook for when the status of the transaction is "SETTLED"
+    # # i.e SETTLED meaning funds are transfered in escrow
     if params["account"].present?
-      if params["extra"]["supp_id"].present?
-        fly_buy_order_id = params["extra"]["supp_id"]
-        fly_buy_order = FlyBuyOrder.find_by_id(fly_buy_order_id)
-        if fly_buy_order.present? && params["recent_status"]["status"] == "PROCESSING-CREDIT"
+      if params["_id"]["$oid"].present?
+        synapse_transaction_id = params["_id"]["$oid"]
+
+        fly_buy_order = FlyBuyOrder.find_by_synapse_transaction_id(synapse_transaction_id)
+        if fly_buy_order.present? && params["recent_status"]["status"] == "SETTLED" && params["recent_status"]["status_id"] == "4"
           fly_buy_order.update_attributes({
             status: 'pending_inspection',
             funds_in_escrow: true
