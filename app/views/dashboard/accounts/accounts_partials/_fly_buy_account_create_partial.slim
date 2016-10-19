@@ -5,9 +5,10 @@
 
   - if user.fly_buy_profile_verified? && user.fly_buy_profile.kba_questions.empty?
     p <b>Status:</b> <span class="success">You have successfully added your bank account. You can now buy or sell using Fly & Buy!</span>
-  - elsif user.fly_buy_profile.present? && user.fly_buy_profile.synapse_document_id.present? && user.fly_buy_profile.permission_scope_verified == false
+  - elsif user.fly_buy_profile.present? && user.fly_buy_profile.synapse_document_id.present? && user.fly_buy_profile.permission_scope_verified == false && user.fly_buy_profile.kba_questions.empty?
     p <b>Status:</b> <span class="warning">You have added your bank account but it is not yet verified.</span>
-  - elsif user.fly_buy_profile.present? && user.fly_buy_profile.kba_questions.present?
+  - elsif user.fly_buy_profile.present? && user.fly_buy_profile.kba_questions.present?  && user.fly_buy_profile.permission_scope_verified == false
+    p The SSN you entered has been matched partially, please fill the questionaire below to verify the KBA.
     = form_for fly_buy_profile, url: answer_kba_question_dashboard_accounts_path, method: "post" do |f|
       - questions = user.fly_buy_profile.kba_questions["question_set"]["questions"]
       ol
@@ -19,6 +20,7 @@
             = f.radio_button field_name, answer["id"]
             = f.label answer["answer"]
       = f.submit "Submit", class: "btn btn-primary"
+      p Note: You need to have 80 as a KBA score for SSN to be considered  as valid.
   - else
     p <b>Status:</b> <span class="warning">You have not yet added bank account.</span>
     
