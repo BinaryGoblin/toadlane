@@ -35,7 +35,7 @@ class Dashboard::AccountsController < DashboardController
     end
 
     if request.post? && fly_buy_params.present?
-      fly_buy_params.merge!(ip_address: '192.168.0.112')
+      fly_buy_params.merge!(ip_address: request.ip)
       FlyAndBuy::UserOperations.new(current_user, fly_buy_params).create_user
 
       FlyAndBuy::AddingBankDetails.new(current_user, current_user.fly_buy_profile, fly_buy_params).add_details
