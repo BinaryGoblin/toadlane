@@ -42,7 +42,8 @@ class FlyBuyOrder < ActiveRecord::Base
   ###  “Pending Fund Release”, and then the final status should be “Placed”.
 
   enum status: [ :cancelled, :placed, :completed, :refunded,
-                :processing, :pending_confirmation, :pending_inspection, :pending_fund_release ]
+                :processing, :pending_confirmation, :pending_inspection, :pending_fund_release,
+                :processing_fund_release ]
 
   def seller_not_mark_approved
     inspection_dates.buyer_added.not_marked_approved.last

@@ -161,6 +161,10 @@ class FlyBuyOrdersController < ApplicationController
       webhook_url = ENV['SYNAPSEPAY_WEBHOOK_URL']
     end
 
+    file = convert_invoice_to_image(fly_buy_order)
+
+    seller_send_amount = fly_buy_order.total - fly_buy_order.seller_fees_amount
+
     trans_payload = {
       "to" => {
         "type" => FlyAndBuy::AddingBankDetails::SynapsePayNodeType[:wire],
@@ -171,35 +175,38 @@ class FlyBuyOrdersController < ApplicationController
         "id" => FlyBuyProfile::EscrowNodeID
       },
       "amount" => {
-        "amount" => fly_buy_order.total,
+        "amount" => seller_send_amount,
         "currency" => FlyAndBuy::AddingBankDetails::SynapsePayCurrency
       },
       "extra" => {
-        "note" => "#{current_user.name} Sent to #{fly_buy_order.buyer.name} account",
+        "supp_id" => fly_buy_order.class.name + "_" + fly_buy_order.id.to_s,
+        "note" => "Released Payment",
         "webhook" => webhook_url,
-        "process_on" => 1,
-        "ip" => current_user.fly_buy_profile.synapse_ip_address
+        "process_on" => 0,
+        "ip" => current_user.fly_buy_profile.synapse_ip_address,
+        "other" => {
+          "attachments" => [
+            encode_attachment(file_tempfile: file.path, file_type: 'image/png')
+          ]
+        }
       },
       "fees" => [{
         "fee" => seller_fee_percent,
         "note" => "Seller Fee",
         "to" => {
-          "id" => seller_fly_buy_profile.synapse_node_id
+          "id" => FlyBuyProfile::EscrowNodeID
         }
       }]
     }
-
     create_transaction_response = client_user.trans.create(node_id: FlyBuyProfile::EscrowNodeID, payload: trans_payload)
 
-    if create_transaction_response["error"]["en"] == "You do not have sufficient balance for this transfer."
+    if create_transaction_response["error"].present? && create_transaction_response["error"]["en"] == "You do not have sufficient balance for this transfer."
       flash[:alert] = "The funds are not yet received in escrow. Please wait"
     else
       fly_buy_order.update_attributes({
-        payment_release: true,
-        status: 'completed'
+        status: 'processing_fund_release'
       })
-      UserMailer.send_payment_released_notification_to_seller(fly_buy_order).deliver_later
-      flash[:alert] = "Payment has been successfully released to seller."
+      flash[:notice] = "Processing to release funds to seller."
     end
     redirect_to dashboard_orders_path
   rescue SynapsePayments::Error => e
@@ -350,7 +357,7 @@ class FlyBuyOrdersController < ApplicationController
         "currency" => FlyAndBuy::AddingBankDetails::SynapsePayCurrency
       },
       "extra" => {
-        "note" => "#{current_user.name} Deposit to #{FlyAndBuy::AddingBankDetails::SynapsePayNodeType[:synapse_us]} account",
+        "note" => "Transaction Created",
         "webhook" => webhook_url,
         "process_on" => 0,
         "ip" => fly_buy_profile.synapse_ip_address,

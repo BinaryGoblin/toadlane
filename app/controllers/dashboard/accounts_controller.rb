@@ -208,18 +208,28 @@ class Dashboard::AccountsController < DashboardController
 
   def callback
     # Handled wehbook for when the status of the transaction is "SETTLED"
-    # # i.e SETTLED meaning funds are transfered in escrow
     if params["account"].present?
-      if params["_id"]["$oid"].present?
+      if params["account"]["extra"]["note"] == "Transaction Created"
         synapse_transaction_id = params["_id"]["$oid"]
-
         fly_buy_order = FlyBuyOrder.find_by_synapse_transaction_id(synapse_transaction_id)
-        if fly_buy_order.present? && params["recent_status"]["status"] == "SETTLED" && params["recent_status"]["status_id"] == "4"
+      elsif params["account"]["extra"]["note"] == "Released Payment" && params["account"]["extra"]["supp_id"].present?
+        fly_buy_order_id = params["account"]["extra"]["supp_id"].split("_").last
+        fly_buy_order = FlyBuyOrder.find_by_id(fly_buy_order_id)
+      end
+
+      if fly_buy_order.present? && params["recent_status"]["status"] == "SETTLED" && params["recent_status"]["status_id"] == "4"
+        if params["account"]["extra"]["note"] == "Transaction Created"
           fly_buy_order.update_attributes({
             status: 'pending_inspection',
             funds_in_escrow: true
           })
           UserMailer.send_funds_received_notification_to_seller(fly_buy_order).deliver_later
+        elsif params["account"]["extra"]["note"] == "Released Payment"
+          fly_buy_order.update_attributes({
+            payment_release: true,
+            status: 'completed'
+           })
+          UserMailer.send_payment_released_notification_to_seller(fly_buy_order).deliver_later
         end
       end
     end
