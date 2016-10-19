@@ -51,7 +51,11 @@ class Dashboard::AccountsController < DashboardController
     if request.post? && fly_buy_params.present?
       fly_buy_profile = current_user.fly_buy_profile
       FlyAndBuy::AnswerKbaQuestions.new(current_user, fly_buy_profile, fly_buy_params).process
-      redirect_to dashboard_accounts_path
+      if params["fly_buy_profile"]["product_id"].present?
+        redirect_to product_checkout_path(params["fly_buy_profile"]["product_id"])
+      else
+        redirect_to dashboard_accounts_path
+      end
     end
   end
 

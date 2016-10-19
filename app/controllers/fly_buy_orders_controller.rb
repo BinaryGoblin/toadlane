@@ -219,31 +219,39 @@ class FlyBuyOrdersController < ApplicationController
 
     seller_fee_percent, seller_fee_amount = get_seller_fees(fly_buy_order)
 
-    FlyAndBuy::AddingBankDetails.new(current_user, current_user.fly_buy_profile, fly_buy_params).add_details
+    if current_user.fly_buy_profile.kba_questions.present? && params["fly_buy_profile"].present?
+      FlyAndBuy::AnswerKbaQuestions.new(current_user, current_user.fly_buy_profile, fly_buy_params).process
+    else
+      FlyAndBuy::AddingBankDetails.new(current_user, current_user.fly_buy_profile, fly_buy_params).add_details
+    end
 
-    create_transaction_response = create_transaction_in_synapsepay(fly_buy_order, product)
-    
-    if create_transaction_response["recent_status"]["note"] == "Transaction created"
-      fly_buy_order.update_attributes({
-          synapse_escrow_node_id: FlyBuyProfile::EscrowNodeID,
-          synapse_transaction_id: create_transaction_response["_id"],
-          status: 'pending_confirmation',
-          seller_fees_amount: seller_fee_amount,
-          seller_fees_percent: seller_fee_percent,
-        })
+    if current_user.fly_buy_profile.kba_questions.present? && current_user.fly_buy_profile.permission_scope_verified == false
+      redirect_to product_checkout_path(product)
+    else
+      create_transaction_response = create_transaction_in_synapsepay(fly_buy_order, product)
 
-      product.sold_out += fly_buy_order.count
-      product.save
+      if create_transaction_response["recent_status"]["note"] == "Transaction created"
+        fly_buy_order.update_attributes({
+            synapse_escrow_node_id: FlyBuyProfile::EscrowNodeID,
+            synapse_transaction_id: create_transaction_response["_id"],
+            status: 'pending_confirmation',
+            seller_fees_amount: seller_fee_amount,
+            seller_fees_percent: seller_fee_percent,
+          })
 
-      send_email_notification(fly_buy_order)
+        product.sold_out += fly_buy_order.count
+        product.save
 
-      UserMailer.send_wire_instruction_notification_to_buyer(fly_buy_order).deliver_later
-      UserMailer.wire_instruction_notification_sent_to_seller(fly_buy_order).deliver_later
+        send_email_notification(fly_buy_order)
 
-      redirect_to dashboard_order_path(
-          fly_buy_order,
-          type: 'fly_buy'
-        ), notice: 'You have been emailed wire instructions!'
+        UserMailer.send_wire_instruction_notification_to_buyer(fly_buy_order).deliver_later
+        UserMailer.wire_instruction_notification_sent_to_seller(fly_buy_order).deliver_later
+
+        redirect_to dashboard_order_path(
+            fly_buy_order,
+            type: 'fly_buy'
+          ), notice: 'You have been emailed wire instructions!'
+      end
     end
   end
 

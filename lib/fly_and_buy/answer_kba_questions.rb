@@ -65,9 +65,9 @@ class FlyAndBuy::AnswerKbaQuestions
 			permission_array = kba_response["permission"].split('-')
 			if permission_array.include?('SEND') && permission_array.include?('RECEIVE')
         fly_buy_profile.update_attribute(:permission_scope_verified, true)
+    		fly_buy_profile.update_attribute(:kba_questions, {})
       end
     end
-		fly_buy_profile.update_attribute(:kba_questions, {})
 	end
 
 end

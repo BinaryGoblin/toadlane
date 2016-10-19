@@ -10,9 +10,28 @@
 
         = f.submit "Submit", class: "btn btn-primary"
 
+- elsif user.fly_buy_profile.present? && user.fly_buy_profile.kba_questions.present?  && user.fly_buy_profile.permission_scope_verified == false
+  p The SSN you entered has been matched partially, please fill the questionaire below to verify the KBA.
+  = form_for fly_buy_profile, url: fly_buy_order_confirm_order_placed_path(fly_buy_order_id: fly_buy_order.id), method: "post" do |f|
+    - questions = user.fly_buy_profile.kba_questions["question_set"]["questions"]
+    ol
+      - questions.each do |question|
+        li = question["question"]
+        - question_id = question["id"]
+        - question["answers"].each do |answer|
+          - field_name = "question" + "_" + question_id.to_s
+          = f.radio_button field_name, answer["id"]
+          = f.label answer["answer"]
+    = f.submit "Submit", class: "btn btn-primary"
+    p Note: You need to have 80 as a KBA score for SSN to be considered  as valid.
+
+- elsif user.fly_buy_profile.present? && user.fly_buy_profile.synapse_document_id.present? && user.fly_buy_profile.permission_scope_verified == false && user.fly_buy_profile.kba_questions.empty?
+    p <b>Status:</b> <span class="warning">You have added your bank account but it is not yet verified.</span>
+
 - else
   = form_for fly_buy_profile, url: fly_buy_order_place_order_path(fly_buy_order_id: fly_buy_order.id), method: "post", html: {class: "create_fly_buy_profile"} do |f|
     = f.hidden_field :fingerprint, :value=> nil
     = f.submit "Place Order", class: "btn btn-primary"
+
 
   
