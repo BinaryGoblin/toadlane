@@ -233,6 +233,20 @@ class Dashboard::AccountsController < DashboardController
         end
       end
     end
+    # Handling webhook for if permission status is 'SEND-AND-RECEIVE'
+    if params["documents"].present?
+      if params["_id"]["$oid"].present? && params["permission"] == "SEND-AND-RECEIVE"
+        permission_array = params["permission"].split('-')
+        synapse_user_id = params["_id"]["$oid"]
+        fly_buy_profile = FlyBuyProfile.find_by_synapse_user_id(synapse_user_id)
+        if fly_buy_profile.present? && permission_array.include?('SEND') && permission_array.include?('RECEIVE')
+          fly_buy_profile.update_attributes({
+            permission_scope_verified: true,
+            kba_questions: {}
+          })
+        end
+      end
+    end
     render nothing: true, status: 200
   end
 

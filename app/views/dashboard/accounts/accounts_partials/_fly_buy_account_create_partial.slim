@@ -5,6 +5,8 @@
 
   - if user.fly_buy_profile_verified? && user.fly_buy_profile.kba_questions.empty?
     p <b>Status:</b> <span class="success">You have successfully added your bank account. You can now buy or sell using Fly & Buy!</span>
+  - elsif user.fly_buy_profile.present? && user.fly_buy_profile.synapse_document_id.present? && user.fly_buy_profile.permission_scope_verified == false
+    p <b>Status:</b> <span class="warning">You have added your bank account but it is not yet verified.</span>
   - elsif user.fly_buy_profile.present? && user.fly_buy_profile.kba_questions.present?
     = form_for fly_buy_profile, url: answer_kba_question_dashboard_accounts_path, method: "post" do |f|
       - questions = user.fly_buy_profile.kba_questions["question_set"]["questions"]
