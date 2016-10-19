@@ -34,13 +34,12 @@ class InspectionDate < ActiveRecord::Base
   end
 
   def check_inspection_date
+    product = Product.find_by_id(product_id) if product_id.present?
+
     if date.present? && product_id.present? && product.default_payment == 'Fly And Buy'
-      product = Product.find_by_id(product_id)
 
       if creator_type == "seller"
-        existing_dates_except_self = product.inspection_dates.seller_added
-        .where.not(id: id)
-        .where('date BETWEEN ? AND ?', date.beginning_of_day, date.end_of_day)
+        existing_dates_except_self = product.inspection_dates.seller_added.where.not(id: id).where('date BETWEEN ? AND ?', date.beginning_of_day, date.end_of_day)
       else
         existing_dates_except_self = product.inspection_dates.where.not(id: id)
         .where('date BETWEEN ? AND ?', date.beginning_of_day, date.end_of_day )

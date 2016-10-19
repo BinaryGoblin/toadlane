@@ -280,10 +280,11 @@ $(document).ready ->
         return
       else
         while j < 12
-          monthSelect.append '<option value="' + j + '">' + monthNames[j] + '</option>'
+          month_count = j + 1
+          monthSelect.append '<option value="' + month_count + '">' + monthNames[j] + '</option>'
           j++
         daySelect.val(selectedDay)
-        monthSelect.val(selectedMonth - 1)
+        monthSelect.val(selectedMonth)
         yearSelect.val(selectedYear)
         return
     return

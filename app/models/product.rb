@@ -80,7 +80,7 @@ class Product < ActiveRecord::Base
 
   validates_numericality_of :unit_price, :amount, only_integer: false, greater_than: 0, less_than: 1000000
   validates_presence_of :end_date, :status_characteristic
-  validates_presence_of :shipping_estimates
+  validates_presence_of :shipping_estimates, if: :default_payment_not_flybuy
   searchkick autocomplete: ['name'], fields: [:name, :main_category]
 
   scope :unexpired, -> { where("end_date > ?", DateTime.now).where(status: true) }
@@ -170,5 +170,9 @@ class Product < ActiveRecord::Base
 
   def promise_fee_for_buyer
     Fee.find_by(:fee_type => "ACH").value
+  end
+
+  def default_payment_not_flybuy
+    default_payment != PaymentOptions[:fly_buy]
   end
 end
