@@ -84,6 +84,7 @@ class Product < ActiveRecord::Base
   searchkick autocomplete: ['name'], fields: [:name, :main_category]
 
   scope :unexpired, -> { where("end_date > ?", DateTime.now).where(status: true) }
+  scope :fly_buy_default_payment, -> { where(default_payment: "Fly And Buy") }
 
   self.per_page = 16
 
