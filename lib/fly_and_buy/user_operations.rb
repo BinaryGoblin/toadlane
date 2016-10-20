@@ -71,8 +71,10 @@ class FlyAndBuy::UserOperations
   end
 
   def create_current_user_company_address
-    user_details["addresses"].merge!(name: signed_in_user.company, of_company: true)
-    signed_in_user.addresses.create(user_details["addresses"])
+    if user_details["addresses"].present?
+      user_details["addresses"].merge!(name: signed_in_user.company, of_company: true)
+      signed_in_user.addresses.create(user_details["addresses"])
+    end
   end
 
   def creating_user_synapse
