@@ -36,8 +36,7 @@ class FlyAndBuy::AddingBankDetails
 
     get_user_and_instantiate_user
 
-    add_necessary_doc
-
+    add_doc_response = add_necessary_doc
     add_bank_acc_response  = create_bank_account
 
     store_returned_node_id(add_bank_acc_response)
@@ -155,8 +154,8 @@ class FlyAndBuy::AddingBankDetails
 
     if user_doc_response["documents"].present? && user_doc_response["documents"][0].present?
       fly_buy_profile.update_attribute(:synapse_document_id, user_doc_response["documents"][0]["id"])
-      if user_doc_response["documents"][0]["virtual_docs"][0].present? && user_doc_response["documents"][0]["virtual_docs"][0]["status"] == "SUBMITTED|MFA_PENDING"
-        questions = user_doc_response["documents"][0]["virtual_docs"][0]["meta"]
+      if user_doc_response["documents"][0]["virtual_docs"][0].present? && user_doc_response["documents"][1]["virtual_docs"][0]["document_type"] == "SSN" && user_doc_response["documents"][1]["virtual_docs"][0]["status"] == "SUBMITTED|MFA_PENDING"
+        questions = user_doc_response["documents"][1]["virtual_docs"][0]["meta"]
         fly_buy_profile.update_attribute(:kba_questions, questions)
       end
       if user_doc_response["permission"].present? && user_doc_response["permission"] == "SEND-AND-RECEIVE"

@@ -54,12 +54,11 @@ class Dashboard::AccountsController < DashboardController
   def answer_kba_question
     if request.post? && fly_buy_params.present?
       fly_buy_profile = current_user.fly_buy_profile
-      FlyAndBuy::AnswerKbaQuestions.new(current_user, fly_buy_profile, fly_buy_params).process
-      if params["fly_buy_profile"]["product_id"].present?
-        redirect_to product_checkout_path(params["fly_buy_profile"]["product_id"])
-      else
-        redirect_to dashboard_accounts_path
+      answer_kba_response = FlyAndBuy::AnswerKbaQuestions.new(current_user, fly_buy_profile, fly_buy_params).process
+      if answer_kba_response["error"].present? && answer_kba_response["error"]["en"].present?
+        flash[:alert] = answer_kba_response["error"]["en"]
       end
+      redirect_to dashboard_accounts_path
     end
   end
 
@@ -247,6 +246,9 @@ class Dashboard::AccountsController < DashboardController
         permission_array = params["permission"].split('-')
         synapse_user_id = params["_id"]["$oid"]
         fly_buy_profile = FlyBuyProfile.find_by_synapse_user_id(synapse_user_id)
+        if fly_buy_profile.present? && fly_buy_profile.created_at.to_date > Date.today
+          fly_buy_profile.destroy
+        end
         if fly_buy_profile.present? && permission_array.include?('SEND') && permission_array.include?('RECEIVE')
           fly_buy_profile.update_attributes({
             permission_scope_verified: true,

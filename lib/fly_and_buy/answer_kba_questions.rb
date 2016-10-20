@@ -10,15 +10,20 @@ class FlyAndBuy::AnswerKbaQuestions
 	end
 
 	def process
-		kba_answer_process
-		
+		answer_kba_response = kba_answer_process
+    if answer_kba_response["error"].present? && answer_kba_response["error"]["en"].present?
+      return answer_kba_response
+    end
 	end
 
 	private
 
 	def kba_answer_process
 		get_user_and_instantiate_user
-		answer_kba_questions
+		answer_kba_response = answer_kba_questions
+    if answer_kba_response["error"].present? && answer_kba_response["error"]["en"].present?
+      return answer_kba_response
+    end
 	end
 
 	def get_user_and_instantiate_user
@@ -67,6 +72,8 @@ class FlyAndBuy::AnswerKbaQuestions
         fly_buy_profile.update_attribute(:permission_scope_verified, true)
     		fly_buy_profile.update_attribute(:kba_questions, {})
       end
+    elsif kba_response["error"].present? && kba_response["error"]["en"].present?
+      return kba_response
     end
 	end
 
