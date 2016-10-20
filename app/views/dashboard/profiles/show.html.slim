@@ -62,7 +62,11 @@
         h4 Addresses
       .col-md-9
         = f.fields_for :addresses do |ff|
-          h4 Address ##{ff.index + 1}
+          - if ff.object.of_company == true
+            h4 Company Address
+          - else
+            h4 Address ##{ff.index + 1}
+          
           - if ff.index == 0
             i Default Address
           .row.profile-table

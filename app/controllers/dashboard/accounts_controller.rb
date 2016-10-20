@@ -26,7 +26,7 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def create_fly_buy_profile
-    if current_user.present? && !current_user.profile_complete?
+    if current_user.present? && current_user.profile_complete? == false
       return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must complete your profile before you can create a bank account." }
     end
 
@@ -34,8 +34,12 @@ class Dashboard::AccountsController < DashboardController
       return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must have your full name before adding bank account." }
     end
 
-    if request.post? && fly_buy_params.present?
-      fly_buy_params.merge!(ip_address: request.ip)
+    if current_user.present? && current_user.profile_complete? && current_user.company.present? && current_user.company.count(" ") == 0
+      return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must have company's full name before adding bank account." }
+    end
+
+    if request.post? && fly_buy_params.present? && params["addresses"].present?
+      fly_buy_params.merge!(addresses: params["addresses"], ip_address: request.ip)
       FlyAndBuy::UserOperations.new(current_user, fly_buy_params).create_user
 
       FlyAndBuy::AddingBankDetails.new(current_user, current_user.fly_buy_profile, fly_buy_params).add_details

@@ -1,3 +1,114 @@
+h4 Company Details:
+br
+.row
+  .col-md-6
+    .form-group
+      = f.label :company_email, 'Company Email:', class: 'required'
+      = f.text_field :company_email, class: 'form-control', required: true
+
+  .col-md-6
+    .form-group
+      = f.label :company_phone, 'Company Phone:', class: 'required'
+      = f.telephone_field :company_phone, class: 'form-control', data: { behavior: 'IntlPhone' }, required: true
+.row
+  .col-md-6
+    .form-group
+      .offer-item
+        .offer-date
+          label Company Formation Date:
+          = date_select :fly_buy_profile, :date_of_company, { :start_year => 20.years.ago.year, :end_year => Date.today.year, order: [:month, :day, :year]}, { class: "form-control" }
+  .col-md-6
+    .form-group
+        = f.label :tin_number, 'EIN Number:', class: 'required'
+        = f.text_field :tin_number, class: 'form-control', required: true
+.row
+  .col-md-6
+    .form-group
+      = f.label :entity_type, 'Entity Type:', class: 'required'
+      = f.text_field :entity_type, class: 'form-control', required: true, placeholder: "Corp"
+
+  .col-md-6
+    .form-group
+      = f.label :entity_scope, 'Entity Scope:', class: 'required'
+      = f.text_field :entity_scope, class: 'form-control', required: true, placeholder: "Small Business"
+.row
+  .col-md-12
+    = fields_for :addresses, Address.new do |ff|
+      h4 Company Address:
+      br
+      - if ff.index == 0
+        i Default Address
+      .row.profile-table
+        .col-md-6
+          .form-group
+            = ff.label :line1, 'Address Line 1:', class: 'required'
+            = ff.text_field :line1, class: 'form-control'
+
+          .form-group
+            = ff.label :city, 'City:', class: 'required'
+            = ff.text_field :city, class: 'form-control'
+
+        .col-md-6
+          .form-group
+            = ff.label :state, 'State:', class: 'required'
+            = ff.text_field :state, class: 'form-control'
+
+          .form-group
+            = ff.label :zip, 'Postal Code:', class: 'required'
+            = ff.text_field :zip, class: 'form-control'
+
+        .col-md-6
+          .form-group
+            = ff.label :country, 'Country:', class: 'required'
+            = ff.country_select 'country', [ 'US', 'GB' ], { iso_codes: true }, { class: 'form-control' }
+
+h4 Company Documents:
+br
+.row
+  .col-md-6
+    .form-group
+      = f.label :eic_attachment, 'EIN Document:', class: 'required'
+      = f.file_field :eic_attachment, required: true
+  
+  .col-md-6
+    .form-group
+      = f.label :bank_statement, 'Proof of Account:', class: 'required'
+      = f.file_field :bank_statement, required: true
+hr
+
+h4 Company Officer Details:
+br
+.row
+  .col-md-6
+    .form-group
+      .offer-item
+        .offer-date
+          label User DOB:
+          = date_select :fly_buy_profile, :dob, { :start_year => 20.years.ago.year, :end_year => Date.today.year, order: [:month, :day, :year]}, { class: "form-control" }
+  .col-md-6
+    .form-group
+        = f.label :ssn_number, 'SSN Number of Officer:', class: 'required'
+        = f.text_field :ssn_number, class: 'form-control', required: true
+.row
+  .col-md-6
+    .form-group
+      = f.label :o_entity_type, 'Entity Type:', class: 'required'
+      = f.text_field :o_entity_type, class: 'form-control', required: true, placeholder: "M"
+
+  .col-md-6
+    .form-group
+      = f.label :o_entity_scope, 'Entity Scope:', class: 'required'
+      = f.text_field :o_entity_scope, class: 'form-control', required: true, placeholder: "Arts & Entertainment"
+
+.row
+  .col-md-6
+    .form-group
+      = f.label :gov_id, 'Govenment Issued ID of Officer:', class: 'required'
+      = f.file_field :gov_id, required: true
+hr
+
+h4 Bank Account Details:
+br
 .row
   .col-md-6
     .form-group
@@ -24,41 +135,7 @@
       = f.label :routing_num, 'Routing Number:', class: 'required'
       = f.text_field :routing_num, class: 'form-control', required: true
 
-  .col-md-6
-    .form-group
-        = f.label :ssn_number, 'SSN Number:', class: 'required'
-        = f.text_field :ssn_number, class: 'form-control', required: true
-.row
-  .col-md-6
-    .form-group
-      = f.label :entity_type, 'Entity Type:', class: 'required'
-      = f.text_field :entity_type, class: 'form-control', required: true
-  .col-md-6
-    .form-group
-      = f.label :entity_scope, 'Entity Scope:', class: 'required'
-      = f.text_field :entity_scope, class: 'form-control', required: true
-.row
-  .col-md-6
-    .form-group
-      .offer-item
-        .offer-date
-          label Company Formation Date:
-          = date_select :fly_buy_profile, :date_of_company, { :start_year => 20.years.ago.year, :end_year => Date.today.year, order: [:month, :day, :year]}, { class: "form-control" }
-  .col-md-6
-    .form-group
-      = f.label :eic_attachment, 'EIN Document:', class: 'required'
-      = f.file_field :eic_attachment, required: true
-  
-.row
-  .col-md-6
-    .form-group
-      = f.label :bank_statement, 'Proof of Account:', class: 'required'
-      = f.file_field :bank_statement, required: true
-
-  .col-md-6
-    .form-group
-      = f.label :gov_id, 'Govenment Issued ID:', class: 'required'
-      = f.file_field :gov_id, required: true
+hr
 
 .row
   .form-group

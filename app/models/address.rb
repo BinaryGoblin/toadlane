@@ -13,6 +13,7 @@
 #  country    :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  of_company :boolean          default(FALSE)
 #
 
 class Address < ActiveRecord::Base

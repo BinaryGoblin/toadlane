@@ -33,7 +33,9 @@ class FlyBuyProfile < ActiveRecord::Base
 
   attr_accessor :name_on_account, :account_num, :routing_num, :bank_name, :address,
   								:ssn_number, :date_of_company, :entity_type, :entity_scope,
-                  :question_1, :question_2, :question_3, :question_4, :question_5
+                  :company_email, :company_address, :tin_number, :dob, :o_entity_type,
+                  :question_1, :question_2, :question_3, :question_4, :question_5,
+                  :company_phone, :o_entity_scope
 
   EscrowNodeID = '57d7465386c2732e824b7c8b'
   AppUserId = '57d745ff86c27319cbe0edf0'

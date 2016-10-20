@@ -1,6 +1,7 @@
 class FlyAndBuy::AddingBankDetails
 
-  attr_accessor :signed_in_user, :client, :fly_buy_profile, :client_user, :user_details
+  attr_accessor :signed_in_user, :client, :fly_buy_profile, :client_user, :user_details,
+                  :company_address
 
   SynapsePayNodeType = {
     wire: "WIRE-US",
@@ -13,13 +14,15 @@ class FlyAndBuy::AddingBankDetails
     ssn: 'SSN',
     ein: 'EIN_DOC',
     bank_statement: 'PROOF_OF_ACCOUNT',
-    gov_id: 'GOVT_ID'
+    gov_id: 'GOVT_ID',
+    tin: 'TIN'
   }
 
   def initialize(user, fly_buy_profile, user_details = {})
     @signed_in_user = user
     @user_details = user_details
     @fly_buy_profile = fly_buy_profile
+    @company_address = signed_in_user.company_address
     @client = FlyBuyService.get_client
   end
 
@@ -76,32 +79,29 @@ class FlyAndBuy::AddingBankDetails
   end
 
   def add_necessary_doc
-    add_documents_payload = {
+    # doc #1 for company
+    add_documents_payload_1 = {
       'documents' => [{
-        'email' => signed_in_user.email,
-        'phone_number' => signed_in_user.phone,
+        'email' => user_details["company_email"],
+        'phone_number' => user_details["company_phone"],
         'ip' => fly_buy_profile.synapse_ip_address,
-        'name' => signed_in_user.name,
-        'alias' => signed_in_user.name,
+        'name' => signed_in_user.company,
+        'alias' => signed_in_user.company,
         'entity_type' => user_details["entity_type"].upcase,
-        'entity_scope' => user_details["entity_scope"].titleize,
+        'entity_scope' => user_details["entity_type"].titleize,
         'day' => user_details["date_of_company(3i)"].to_i,
         'month' => user_details["date_of_company(2i)"].to_i,
         'year' => user_details["date_of_company(1i)"].to_i,
-        'address_street' => signed_in_user.addresses.first.line1,
-        'address_city' => signed_in_user.addresses.first.city,
-        'address_subdivision' => signed_in_user.addresses.first.state,
-        'address_postal_code' => signed_in_user.addresses.first.zip,
-        'address_country_code' => signed_in_user.addresses.first.country,
-        'virtual_docs' => [{
-          'document_value' => user_details["ssn_number"],
-          'document_type' => SynapsePayDocType[:ssn]
-        }
-        # {
-        #   'document_value' => '2222',
-        #   'document_type' => 'TIN'
-        # }
-        ],
+        'address_street' => company_address.first.line1,
+        'address_city' => company_address.first.city,
+        'address_subdivision' => company_address.first.state,
+        'address_postal_code' => company_address.first.zip,
+        'address_country_code' => company_address.first.country,
+        'virtual_docs' => [
+        {
+          'document_value' => user_details["tin"],
+          'document_type' => SynapsePayDocType[:tin]
+        }],
         'physical_docs' => [{
           # This is EIN document
           'document_value' => encode_attachment(file_tempfile: fly_buy_profile.eic_attachment.url, file_type: fly_buy_profile.eic_attachment_content_type),
@@ -111,8 +111,35 @@ class FlyAndBuy::AddingBankDetails
           # this is for bank statement
           'document_value': encode_attachment(file_tempfile: fly_buy_profile.bank_statement.url, file_type: fly_buy_profile.bank_statement_content_type),
           'document_type': SynapsePayDocType[:bank_statement]
-        },
-        {
+        }]
+      }]
+    }
+
+    company_doc_response = client_user.users.update(payload: add_documents_payload_1)
+
+    # doc #2 for officer of company
+    add_documents_payload_2 = {
+      'documents' => [{
+        'email' => signed_in_user.email,
+        'phone_number' => signed_in_user.phone,
+        'ip' => fly_buy_profile.synapse_ip_address,
+        'name' => signed_in_user.name,
+        'alias' => signed_in_user.name,
+        'entity_type' => user_details["o_entity_type"].upcase,
+        'entity_scope' => user_details["o_entity_scope"].titleize,
+        'day' => user_details["dob(3i)"].to_i,
+        'month' => user_details["dob(2i)"].to_i,
+        'year' => user_details["dob(1i)"].to_i,
+        'address_street' => signed_in_user.addresses.first.line1,
+        'address_city' => signed_in_user.addresses.first.city,
+        'address_subdivision' => signed_in_user.addresses.first.state,
+        'address_postal_code' => signed_in_user.addresses.first.zip,
+        'address_country_code' => signed_in_user.addresses.first.country,
+        'virtual_docs' => [{
+          'document_value' => user_details["ssn_number"],
+          'document_type' => SynapsePayDocType[:ssn]
+        }],
+        'physical_docs' => [{
           # this is for gov_id
           'document_value': encode_attachment(file_tempfile: fly_buy_profile.gov_id.url, file_type: fly_buy_profile.gov_id_content_type),
           'document_type': SynapsePayDocType[:gov_id]
@@ -120,22 +147,21 @@ class FlyAndBuy::AddingBankDetails
       ]
       }]
     }
+    user_doc_response = client_user.users.update(payload: add_documents_payload_2)
 
-    response = client_user.users.update(payload: add_documents_payload)
-
-    if response["documents"].present? && response["documents"][0].present?
-      fly_buy_profile.update_attribute(:synapse_document_id, response["documents"][0]["id"])
-      if response["documents"][0]["virtual_docs"][0].present? && response["documents"][0]["virtual_docs"][0]["status"] == "SUBMITTED|MFA_PENDING"
-        questions = response["documents"][0]["virtual_docs"][0]["meta"]
+    if user_doc_response["documents"].present? && user_doc_response["documents"][0].present?
+      fly_buy_profile.update_attribute(:synapse_document_id, user_doc_response["documents"][0]["id"])
+      if user_doc_response["documents"][0]["virtual_docs"][0].present? && user_doc_response["documents"][0]["virtual_docs"][0]["status"] == "SUBMITTED|MFA_PENDING"
+        questions = user_doc_response["documents"][0]["virtual_docs"][0]["meta"]
         fly_buy_profile.update_attribute(:kba_questions, questions)
       end
-    elsif response["documents"]["permission"].present? && response["documents"]["permission"] == "SEND-AND-RECEIVE"
-      permission_array = response["documents"]["permission"].split("-")
+    elsif user_doc_response["documents"]["permission"].present? && user_doc_response["documents"]["permission"] == "SEND-AND-RECEIVE"
+      permission_array = user_doc_response["documents"]["permission"].split("-")
       if permission_array.include?("SEND") && permission_array.include?("RECEIVE")
         fly_buy_profile.update_attribute(:permission_scope_verified, true)
       end
     else
-      return response
+      return user_doc_response
     end
   rescue SynapsePayRest::Error::Conflict => e
     return e
