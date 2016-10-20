@@ -54,10 +54,10 @@ class Dashboard::AccountsController < DashboardController
   def answer_kba_question
     if request.post? && fly_buy_params.present?
       fly_buy_profile = current_user.fly_buy_profile
-      answer_kba_response = FlyAndBuy::AnswerKbaQuestions.new(current_user, fly_buy_profile, fly_buy_params).process
-      if answer_kba_response["error"].present? && answer_kba_response["error"]["en"].present?
-        flash[:alert] = answer_kba_response["error"]["en"]
-      end
+      FlyAndBuy::AnswerKbaQuestions.new(current_user, fly_buy_profile, fly_buy_params).process
+      # if answer_kba_response["error"].present? && answer_kba_response["error"]["en"].present?
+      #   flash[:alert] = answer_kba_response["error"]["en"]
+      # end
       redirect_to dashboard_accounts_path
     end
   end
