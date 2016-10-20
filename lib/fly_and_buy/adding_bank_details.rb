@@ -22,7 +22,6 @@ class FlyAndBuy::AddingBankDetails
     @signed_in_user = user
     @user_details = user_details
     @fly_buy_profile = fly_buy_profile
-    @company_address = signed_in_user.addresses.company_address
     @client = FlyBuyService.get_client
   end
 
@@ -34,6 +33,8 @@ class FlyAndBuy::AddingBankDetails
   def add_doc_to_user_process
     update_fly_buy_profile_with_attachment
 
+    create_current_user_company_address
+
     get_user_and_instantiate_user
 
     add_doc_response = add_necessary_doc
@@ -42,6 +43,15 @@ class FlyAndBuy::AddingBankDetails
     store_returned_node_id(add_bank_acc_response)
   rescue SynapsePayRest::Error::Conflict => e
     return e
+  end
+
+  def create_current_user_company_address
+    if user_details["addresses"].present?
+      user_details["addresses"].merge!(name: signed_in_user.company, of_company: true)
+      @company_address = signed_in_user.addresses.create(user_details["addresses"])
+    else
+      @company_address = signed_in_user.addresses.company_address.first
+    end
   end
 
   def update_fly_buy_profile_with_attachment
@@ -94,11 +104,11 @@ class FlyAndBuy::AddingBankDetails
         'day' => user_details["date_of_company(3i)"].to_i,
         'month' => user_details["date_of_company(2i)"].to_i,
         'year' => user_details["date_of_company(1i)"].to_i,
-        'address_street' => company_address.first.line1,
-        'address_city' => company_address.first.city,
-        'address_subdivision' => company_address.first.state,
-        'address_postal_code' => company_address.first.zip,
-        'address_country_code' => company_address.first.country,
+        'address_street' => company_address.line1,
+        'address_city' => company_address.city,
+        'address_subdivision' => company_address.state,
+        'address_postal_code' => company_address.zip,
+        'address_country_code' => company_address.country,
         'virtual_docs' => [
         {
           'document_value' => user_details["tin_number"],

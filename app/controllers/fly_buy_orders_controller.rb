@@ -221,7 +221,8 @@ class FlyBuyOrdersController < ApplicationController
 
     if current_user.fly_buy_profile.kba_questions.present? && params["fly_buy_profile"].present?
       FlyAndBuy::AnswerKbaQuestions.new(current_user, current_user.fly_buy_profile, fly_buy_params).process
-    else
+    elsif params["addresses"].present?
+      fly_buy_params.merge!(addresses: params["addresses"], ip_address: request.ip)
       FlyAndBuy::AddingBankDetails.new(current_user, current_user.fly_buy_profile, fly_buy_params).add_details
     end
 
