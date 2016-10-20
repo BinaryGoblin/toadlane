@@ -123,7 +123,7 @@ class FlyAndBuy::UserOperations
         profile.destroy
       end
     end
-    binding.pry
+
     terms_of_service = user_details["terms_of_service"] == "1" ? true : false
     @fly_buy_profile = FlyBuyProfile.create({
                             encrypted_fingerprint: "user_#{signed_in_user.id}" + "_" + user_details[:fingerprint],
