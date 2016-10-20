@@ -83,8 +83,6 @@ class User < ActiveRecord::Base
 
   before_destroy { roles.clear }
 
-  scope :company_address, -> { where(of_company: true) }
-
   serialize :benefits, Array
 
   validate :validate_phone_number

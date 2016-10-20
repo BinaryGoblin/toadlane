@@ -62,12 +62,12 @@ class FlyAndBuy::UserOperations
 
   def synapsepay_create_user
     create_current_user_company_address
-    # FlyBuyService.create_subscription
-    # create_fly_buy_profile_with_fingerprint
+    FlyBuyService.create_subscription
+    create_fly_buy_profile_with_fingerprint
 
-    # create_user_response = creating_user_synapse
+    create_user_response = creating_user_synapse
 
-    # store_returned_id(create_user_response)
+    store_returned_id(create_user_response)
   end
 
   def create_current_user_company_address

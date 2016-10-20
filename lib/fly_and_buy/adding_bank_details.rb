@@ -22,7 +22,7 @@ class FlyAndBuy::AddingBankDetails
     @signed_in_user = user
     @user_details = user_details
     @fly_buy_profile = fly_buy_profile
-    @company_address = signed_in_user.company_address
+    @company_address = signed_in_user.addresses.company_address
     @client = FlyBuyService.get_client
   end
 
@@ -49,7 +49,10 @@ class FlyAndBuy::AddingBankDetails
     only_attachments = user_details.except(:fingerprint, :bank_name, :address, :name_on_account,
                               :account_num, :routing_num, :ssn_number, :ip_address,
                               "date_of_company(2i)", "date_of_company(3i)",
-                              "date_of_company(1i)")
+                              "date_of_company(1i)", :terms_of_service, :addresses,
+                              :o_entity_type, :o_entity_scope, "dob(3i)",
+                              "dob(2i)", "dob(1i)", :company_email, :company_phone,
+                              :entity_type, :entity_scope, :tin_number)
     fly_buy_profile.update(only_attachments)
   end
 
@@ -88,7 +91,7 @@ class FlyAndBuy::AddingBankDetails
         'name' => signed_in_user.company,
         'alias' => signed_in_user.company,
         'entity_type' => user_details["entity_type"].upcase,
-        'entity_scope' => user_details["entity_type"].titleize,
+        'entity_scope' => user_details["entity_scope"].titleize,
         'day' => user_details["date_of_company(3i)"].to_i,
         'month' => user_details["date_of_company(2i)"].to_i,
         'year' => user_details["date_of_company(1i)"].to_i,
@@ -99,7 +102,7 @@ class FlyAndBuy::AddingBankDetails
         'address_country_code' => company_address.first.country,
         'virtual_docs' => [
         {
-          'document_value' => user_details["tin"],
+          'document_value' => user_details["tin_number"],
           'document_type' => SynapsePayDocType[:tin]
         }],
         'physical_docs' => [{
@@ -147,6 +150,7 @@ class FlyAndBuy::AddingBankDetails
       ]
       }]
     }
+
     user_doc_response = client_user.users.update(payload: add_documents_payload_2)
 
     if user_doc_response["documents"].present? && user_doc_response["documents"][0].present?
@@ -155,10 +159,11 @@ class FlyAndBuy::AddingBankDetails
         questions = user_doc_response["documents"][0]["virtual_docs"][0]["meta"]
         fly_buy_profile.update_attribute(:kba_questions, questions)
       end
-    elsif user_doc_response["documents"]["permission"].present? && user_doc_response["documents"]["permission"] == "SEND-AND-RECEIVE"
-      permission_array = user_doc_response["documents"]["permission"].split("-")
-      if permission_array.include?("SEND") && permission_array.include?("RECEIVE")
-        fly_buy_profile.update_attribute(:permission_scope_verified, true)
+      if user_doc_response["permission"].present? && user_doc_response["permission"] == "SEND-AND-RECEIVE"
+        permission_array = user_doc_response["permission"].split("-")
+        if permission_array.include?("SEND") && permission_array.include?("RECEIVE")
+          fly_buy_profile.update_attribute(:permission_scope_verified, true)
+        end
       end
     else
       return user_doc_response

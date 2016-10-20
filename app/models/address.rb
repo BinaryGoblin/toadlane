@@ -21,6 +21,8 @@ class Address < ActiveRecord::Base
   has_many :stripe_orders
   has_many :green_orders
 
+  scope :company_address, -> { where(of_company: true) }
+
   validates_presence_of :name, :line1, :city, :state, :zip, :country
 
   def get_inline_address
