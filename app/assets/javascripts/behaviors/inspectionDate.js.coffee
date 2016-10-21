@@ -17,28 +17,28 @@ class Behavior.InspectionDate
     if @count == 6
       $(".add-inspectiondate").hide()
 
-    endMonthSelected = $('#product_end_date_2i').val()
-    monthSelect = tmpl.find('.offer-date').find('#product_inspection_date_attributes__date_2i')
-    monthSelect.html ''
-    monthNames = [
-      'January'
-      'February'
-      'March'
-      'April'
-      'May'
-      'June'
-      'July'
-      'August'
-      'September'
-      'October'
-      'November'
-      'December'
-    ]
-    j = 0
-    while j < endMonthSelected - 1
-      monthSelect.append '<option value="' + j + '">' + monthNames[j] + '</option>'
-      j++
-    return
+    # endMonthSelected = $('#product_end_date_2i').val()
+    # monthSelect = tmpl.find('.offer-date').find('#product_inspection_date_attributes__date_2i')
+    # monthSelect.html ''
+    # monthNames = [
+    #   'January'
+    #   'February'
+    #   'March'
+    #   'April'
+    #   'May'
+    #   'June'
+    #   'July'
+    #   'August'
+    #   'September'
+    #   'October'
+    #   'November'
+    #   'December'
+    # ]
+    # j = 0
+    # while j < endMonthSelected - 1
+    #   monthSelect.append '<option value="' + j + '">' + monthNames[j] + '</option>'
+    #   j++
+    # return
 
   removeInspectionDate: ->
     li = $(@).closest 'li'

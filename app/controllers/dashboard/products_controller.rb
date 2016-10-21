@@ -2,9 +2,10 @@ class Dashboard::ProductsController < DashboardController
   def index
     @products = Product.where(user_id: current_user.id).paginate(page: params[:page], per_page: params[:count]).order('id DESC')
     @products_count = @products.count
-    if params["armor_order_id"].present?
-      @armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
-      @buyer = @armor_order.buyer
+    @products.each do |product|
+      if product.default_payment_flybuy? && current_user.fly_buy_profile_verified? == false
+        product.update_attribute(:status, false)
+      end
     end
   end
 
