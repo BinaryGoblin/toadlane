@@ -9,9 +9,16 @@ class ProductsController < ApplicationController
 
   def index
     # TODO Disabling this during Stripe integration by calling for 'buy' only
-    @products_recommended = Product.unexpired.where(status_characteristic: 'sell', status_action: 'recommended').order(created_at: :desc).limit(16)
-    @products_for_sale = Product.unexpired.where(status_characteristic: 'sell').order(created_at: :desc).limit(16)
-    @products_ending_soon = Product.unexpired.where(status_characteristic: 'sell').order(end_date: :asc).limit(16)
+
+    # fly_buy_inspection_date_not_passed => if the product's default payment is
+    # #   'Fly And buy', then only select those product whose all the inspection dates
+    # #    has not passed
+    products_recommended = Product.unexpired.where(status_characteristic: 'sell', status_action: 'recommended').order(created_at: :desc).limit(16)
+    products_for_sale = Product.unexpired.where(status_characteristic: 'sell').order(created_at: :desc).limit(16)
+    products_ending_soon = Product.unexpired.where(status_characteristic: 'sell').order(end_date: :asc).limit(16)
+    @products_recommended = products_recommended.select { |p| p.if_fly_buy_check_valid_inspection_date }
+    @products_for_sale = products_for_sale.select { |p| p.if_fly_buy_check_valid_inspection_date }
+    @products_ending_soon = products_ending_soon.select { |p| p.if_fly_buy_check_valid_inspection_date }
     # TODO Disabling this during Stripe integration by calling for 'buy' instead of 'sell'
     # @products_requested = Product.unexpired.where(status_characteristic: 'sell').order(created_at: :desc).limit(16)
     @featured_sellers = User.limit(16)
@@ -40,9 +47,8 @@ class ProductsController < ApplicationController
   end
 
   def products
-    unexpired_products = Product.unexpired.where(status_characteristic: 'sell').order('updated_at DESC')
-    inspection_date_passed_products = unexpired_products.fly_buy_default_payment.joins(:inspection_dates).where.not('inspection_dates.date <=?', DateTime.now)
-    @products = inspection_date_passed_products.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    unexpired_products = Product.unexpired.where(status_characteristic: 'sell').order('updated_at DESC').order('id DESC')
+    @products = unexpired_products.select { |p| p.if_fly_buy_check_valid_inspection_date }.paginate(page: params[:page], per_page: params[:count])
   end
 
   def deals
@@ -50,17 +56,15 @@ class ProductsController < ApplicationController
   end
 
   def for_sale
-    unexpired_products = Product.unexpired.where(status_characteristic: 'sell')
-    inspection_date_passed_products = unexpired_products.fly_buy_default_payment.joins(:inspection_dates).where.not('inspection_dates.date <=?', DateTime.now)
-    @products = inspection_date_passed_products.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    unexpired_products = Product.unexpired.where(status_characteristic: 'sell').order('id DESC')
+    @products = unexpired_products.select { |p| p.if_fly_buy_check_valid_inspection_date }.paginate(page: params[:page], per_page: params[:count])
     render 'products/products'
   end
 
   def requested
     # TODO Disabling this during Stripe integration by calling for 'buy' instead of 'sell'
-    unexpired_products = Product.unexpired.where(status_characteristic: 'buy')
-    inspection_date_passed_products = unexpired_products.fly_buy_default_payment.joins(:inspection_dates).where.not('inspection_dates.date <=?', DateTime.now)
-    @products = inspection_date_passed_products.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    unexpired_products = Product.unexpired.where(status_characteristic: 'buy').order('id DESC')
+    @products = unexpired_products.select { |p| p.if_fly_buy_check_valid_inspection_date }.paginate(page: params[:page], per_page: params[:count])
     render 'products/products'
   end
 

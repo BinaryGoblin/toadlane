@@ -90,11 +90,11 @@ class Product < ActiveRecord::Base
 
   def available_payments
     ap = []
-    ap << PaymentOptions[:stripe] if stripe_profile.present?
-    ap << PaymentOptions[:green] if green_profile.present?
-    ap << PaymentOptions[:amg] if amg_profile.present?
-    ap << PaymentOptions[:emb] if emb_profile.present?
-    if fly_buy_profile_verified?
+    ap << PaymentOptions[:stripe] if stripe_present?
+    ap << PaymentOptions[:green] if green_present?
+    ap << PaymentOptions[:amg] if amg_present?
+    ap << PaymentOptions[:emb] if emb_present?
+    if user.fly_buy_profile_verified?
       ap << PaymentOptions[:fly_buy]
     end
     ap
@@ -178,5 +178,18 @@ class Product < ActiveRecord::Base
 
   def default_payment_not_flybuy
     default_payment != PaymentOptions[:fly_buy]
+  end
+
+  # fly_buy_inspection_date_not_passed => if the product's default payment is
+  # #   'Fly And buy', then only select those product whose all the inspection dates
+  # #    has not passed
+  def if_fly_buy_check_valid_inspection_date
+    if default_payment_flybuy?
+      unless inspection_dates.passed_inspection_date.count == inspection_dates.count
+        return self
+      end
+    else
+      return self
+    end
   end
 end
