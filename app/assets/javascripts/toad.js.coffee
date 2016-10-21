@@ -227,14 +227,14 @@ $(document).ready ->
   #     evaluateMonthDates()
   #     return
   
-  $('.product_edit').ready ->
-    if $('form.product_edit').is(':visible')
-      evaluateInspectionDates()
-      return
+  # $('.product_edit').ready ->
+  #   if $('form.product_edit').is(':visible')
+  #     evaluateInspectionDates()
+  #     return
 
-  $('#product_inspection_date_attributes__date_1i').click ->
-    evaluateInspectionDates()
-    return
+  # $('#product_inspection_date_attributes__date_1i').click ->
+  #   evaluateInspectionDates()
+  #   return
 
   evaluateInspectionDates = ->
     $('#product_end_date_2i').each ->
