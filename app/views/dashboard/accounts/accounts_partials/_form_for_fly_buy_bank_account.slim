@@ -68,7 +68,10 @@ br
   .col-md-6
     .form-group
       = f.label :eic_attachment, 'EIN Document:', class: 'required'
-      = f.file_field :eic_attachment, required: true
+      = link_to "Lost your ein?", 'https://www.irs.gov/businesses/small-businesses-self-employed/lost-or-misplaced-your-ein', class: 'view', target: '_blank'
+      / = f.file_field :eic_attachment
+      input required="required" type="file" name="fly_buy_profile[eic_attachment]" id="fly_buy_profile_eic_attachment"  accept="image/*"
+      p style="color:red;" Format must png, jpg
   
   .col-md-6
     .form-group
@@ -84,7 +87,7 @@ br
       .offer-item
         .offer-date
           label User DOB:
-          = date_select :fly_buy_profile, :dob, { :start_year => 20.years.ago.year, :end_year => Date.today.year, order: [:month, :day, :year]}, { class: "form-control" }
+          = date_select :fly_buy_profile, :dob, { :start_year => 60.year.ago.year, :end_year => Date.today.year, order: [:month, :day, :year]}, { class: "form-control" }
   .col-md-6
     .form-group
         = f.label :ssn_number, 'SSN Number of Officer:', class: 'required'

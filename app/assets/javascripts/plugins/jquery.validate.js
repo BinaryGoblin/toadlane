@@ -1363,3 +1363,16 @@ $.extend($.fn, {
 });
 
 }));
+
+
+$.validator.addMethod('check_date_of_birth', (function(value, element) {
+  var currentyear, minimunage, minyear, year;
+  year = $('#fly_buy_profile_dob_1i').val();
+  if (year === '') {
+    return false;
+  }
+  minimunage = 18;
+  currentyear = new Date().getFullYear();
+  minyear = currentyear - year;
+  return minyear > minimunage;
+}), 'You have to be at least 18 years of age.');

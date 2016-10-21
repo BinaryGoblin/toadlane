@@ -217,15 +217,15 @@ $(document).ready ->
     $('#fly_buy_profile_fingerprint').val(result)
     return
 
-  $('form.create_fly_buy_profile').submit ->
-    $(this).find(':submit').prop 'disabled', true
-    $('*').css 'cursor', 'wait'
-    return
+  # $('form.create_fly_buy_profile').submit ->
+  #   $(this).find(':submit').prop 'disabled', true
+  #   $('*').css 'cursor', 'wait'
+  #   return
 
-  $('.create_fly_buy_profile').ready ->
-    if $('form.create_fly_buy_profile').is(':visible')
-      evaluateMonthDates()
-      return
+  # $('.create_fly_buy_profile').ready ->
+  #   if $('form.create_fly_buy_profile').is(':visible')
+  #     evaluateMonthDates()
+  #     return
   
   $('.product_edit').ready ->
     if $('form.product_edit').is(':visible')
@@ -387,6 +387,45 @@ $(document).ready ->
       return
     submitHandler: (form) ->
       $('form#new_promise_account').find('input[type=submit]').prop 'disabled', true
+      $('*').css 'cursor', 'wait'
+      form.submit()
+      return
+
+  $('form.create_fly_buy_profile').validate
+    rules:
+      "fly_buy_profile[company_email]":
+        required: true
+        email: true
+      "fly_buy_profile[ssn_number]":
+        maxlength: 10
+        number: true
+        required: true
+      "fly_buy_profile[eic_attachment]":
+        required: true,
+        extension: "jpg,jpeg, png"
+      "fly_buy_profile[bank_statement]":
+        required: true,
+        extension: "jpg,jpeg, png"
+      "fly_buy_profile[gov_id]":
+        required: true,
+        extension: "jpg,jpeg, png"
+      "fly_buy_profile[dob(1i)]":
+        check_date_of_birth: true
+    messages:
+      "fly_buy_profile[ssn_number]":
+        remote: "Please enter no more than 10 digits."
+      "fly_buy_profile[eic_attachment]":
+        remote: "Only file extension jpg, jpeg and png is allowed. "
+    errorPlacement: (error, element) ->
+      # this is done for displaying the error message for DIRECT DEBIT AGREEMENT
+      # # below the checkbox
+      if element.attr('name') == "promise_account[direct_debit_agreement]"
+        error.insertAfter(element.parent().parent())
+      else
+        error.insertAfter element
+      return
+    submitHandler: (form) ->
+      $('form.create_fly_buy_profile').find('input[type=submit]').prop 'disabled', true
       $('*').css 'cursor', 'wait'
       form.submit()
       return
