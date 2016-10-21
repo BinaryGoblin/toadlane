@@ -1,4 +1,4 @@
-h4 Company Details:
+h4 Company Information:
 br
 .row
   .col-md-6
@@ -25,12 +25,12 @@ br
   .col-md-6
     .form-group
       = f.label :entity_type, 'Entity Type:', class: 'required'
-      = f.text_field :entity_type, class: 'form-control', required: true, placeholder: "Corp"
+      = f.select :entity_type, company_entity_types, {prompt: 'Please select an Entity Type'}, class: 'form-control', required: true
 
   .col-md-6
     .form-group
       = f.label :entity_scope, 'Entity Scope:', class: 'required'
-      = f.text_field :entity_scope, class: 'form-control', required: true, placeholder: "Small Business"
+      = f.select :entity_scope, user_company_entity_scopes, {prompt: 'Please select an Entity Scope'}, class: 'form-control', required: true
 .row
   .col-md-12
     = fields_for :addresses, Address.new do |ff|
@@ -76,7 +76,7 @@ br
       = f.file_field :bank_statement, required: true
 hr
 
-h4 Company Officer Details:
+h4 User Verification:
 br
 .row
   .col-md-6
@@ -93,12 +93,12 @@ br
   .col-md-6
     .form-group
       = f.label :o_entity_type, 'Entity Type:', class: 'required'
-      = f.text_field :o_entity_type, class: 'form-control', required: true, placeholder: "M"
+      = f.select :o_entity_type, user_entity_types, {prompt: 'Please select an Entity Type'}, class: 'form-control', required: true
 
   .col-md-6
     .form-group
       = f.label :o_entity_scope, 'Entity Scope:', class: 'required'
-      = f.text_field :o_entity_scope, class: 'form-control', required: true, placeholder: "Arts & Entertainment"
+      = f.select :o_entity_type, user_company_entity_scopes, {prompt: 'Please select an Entity Scope'}, class: 'form-control', required: true
 
 .row
   .col-md-6
