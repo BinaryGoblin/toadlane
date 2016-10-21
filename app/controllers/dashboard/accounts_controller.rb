@@ -35,7 +35,7 @@ class Dashboard::AccountsController < DashboardController
     end
 
     if current_user.present? && current_user.profile_complete? && current_user.company.present? && current_user.company.count(" ") == 0
-      return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must have company's full name before adding bank account." }
+      return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must update your first and last name prior to submitting your company information" }
     end
 
     if request.post? && fly_buy_params.present? && params["addresses"].present?
