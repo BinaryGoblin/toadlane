@@ -103,7 +103,7 @@ class User < ActiveRecord::Base
   def has_payment_account?
     self.stripe_profile.present? || self.green_profile.present? ||
         self.amg_profile.present? || self.emb_profile.present? ||
-        self.fly_buy_profile.present?
+        self.fly_buy_profile_verified?
   end
 
   def armor_orders(type=nil)
@@ -219,7 +219,9 @@ class User < ActiveRecord::Base
     ap << Product::PaymentOptions[:green] if green_profile.present?
     ap << Product::PaymentOptions[:amg] if amg_profile.present?
     ap << Product::PaymentOptions[:emb] if emb_profile.present?
-    ap << Product::PaymentOptions[:fly_buy] if fly_buy_profile.present?
+    if fly_buy_profile_verified?
+      ap << Product::PaymentOptions[:fly_buy]
+    end
     ap
   end
 

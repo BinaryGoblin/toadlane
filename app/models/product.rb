@@ -90,9 +90,13 @@ class Product < ActiveRecord::Base
 
   def available_payments
     ap = []
-    ap << PaymentOptions[:stripe] if user.stripe_profile.present?
-    ap << PaymentOptions[:green] if user.green_profile.present?
-    ap << PaymentOptions[:armor] if user.armor_profile.present?
+    ap << PaymentOptions[:stripe] if stripe_profile.present?
+    ap << PaymentOptions[:green] if green_profile.present?
+    ap << PaymentOptions[:amg] if amg_profile.present?
+    ap << PaymentOptions[:emb] if emb_profile.present?
+    if fly_buy_profile_verified?
+      ap << PaymentOptions[:fly_buy]
+    end
     ap
   end
 
