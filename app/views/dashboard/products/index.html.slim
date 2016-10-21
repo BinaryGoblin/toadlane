@@ -33,7 +33,8 @@
               - if product.status
                 .text-green Active
               - else
-                = link_to 'Inactive', dashboard_accounts_path, class: 'text-orange view'
+                .text-orange Inactive
+                = link_to "Update your account", dashboard_accounts_path, class: 'link view'
 
             td
               = link_to product.name, product_path(product, cat_id: product.main_category), class: 'link link-ulined', target: '_blank'
