@@ -26,6 +26,16 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def create_fly_buy_profile
+    if current_user.fly_buy_profile.present?
+      fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id)
+    else
+      necessary_fly_buy_params = fly_buy_params.except(:fingerprint, :bank_name, :address, :name_on_account, :account_num)
+      necessary_fly_buy_params.merge!(synapse_ip_address: request.ip, encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"], user_id: current_user.id)
+      fly_buy_profile = FlyBuyProfile.create(necessary_fly_buy_params)
+      address_params = params["addresses"].merge!(name: current_user.company, of_company: true)
+      current_user.addresses.create(address_params)
+    end
+    
     if current_user.present? && current_user.profile_complete? == false
       return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must complete your profile before you can create a bank account." }
     end
@@ -40,9 +50,9 @@ class Dashboard::AccountsController < DashboardController
 
     if request.post? && fly_buy_params.present? && params["addresses"].present?
       fly_buy_params.merge!(addresses: params["addresses"], ip_address: request.ip)
-      FlyAndBuy::UserOperations.new(current_user, fly_buy_params).create_user
+      # FlyAndBuy::UserOperations.new(current_user, fly_buy_params).create_user
 
-      FlyAndBuy::AddingBankDetails.new(current_user, current_user.fly_buy_profile, fly_buy_params).add_details
+      # FlyAndBuy::AddingBankDetails.new(current_user, current_user.fly_buy_profile, fly_buy_params).add_details
       redirect_to dashboard_accounts_path
     end
   rescue SynapsePayRest::Error::Conflict => e

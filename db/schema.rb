@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161020074819) do
+ActiveRecord::Schema.define(version: 20161021104714) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -347,6 +347,18 @@ ActiveRecord::Schema.define(version: 20161020074819) do
     t.boolean  "permission_scope_verified",   default: false
     t.json     "kba_questions",               default: {}
     t.boolean  "terms_of_service",            default: false
+    t.string   "name_on_account"
+    t.integer  "ssn_number"
+    t.datetime "date_of_company"
+    t.datetime "dob"
+    t.string   "entity_type"
+    t.string   "entity_scope"
+    t.string   "o_entity_scope"
+    t.string   "o_entity_type"
+    t.string   "company_email"
+    t.integer  "tin_number"
+    t.string   "company_phone"
+    t.boolean  "completed",                   default: false
   end
 
   create_table "green_checks", force: :cascade do |t|
