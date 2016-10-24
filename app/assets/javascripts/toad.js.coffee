@@ -267,7 +267,6 @@ $(document).ready ->
 
         j = 0
 
-        debugger
 
         if yearSelectBox.val() == endYearSelected
           while j < parseInt(endMonthSelected) - 1
