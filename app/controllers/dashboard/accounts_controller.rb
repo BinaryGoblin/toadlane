@@ -86,7 +86,7 @@ class Dashboard::AccountsController < DashboardController
       # end
       redirect_to dashboard_accounts_path
     end
-  rescue SynapsePayRest::Error::Conflict = e
+  rescue SynapsePayRest::Error::Conflict => e
     flash[:error] = e
     redirect_to dashboard_accounts_path
   end
