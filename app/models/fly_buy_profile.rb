@@ -27,13 +27,13 @@
 #  kba_questions               :json
 #  terms_of_service            :boolean          default(FALSE)
 #  name_on_account             :string
-#  ssn_number                  :integer
+#  ssn_number                  :string
 #  date_of_company             :datetime
 #  dob                         :datetime
 #  entity_type                 :string
 #  entity_scope                :string
 #  company_email               :string
-#  tin_number                  :integer
+#  tin_number                  :string
 #  completed                   :boolean          default(FALSE)
 #
 
