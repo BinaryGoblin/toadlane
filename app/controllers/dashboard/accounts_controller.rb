@@ -28,12 +28,28 @@ class Dashboard::AccountsController < DashboardController
   def create_fly_buy_profile
     if current_user.fly_buy_profile.present?
       fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
-      necessary_fly_buy_params = fly_buy_params.except(:company_phone, :address_id, :fingerprint, :bank_name, :address, :name_on_account, :account_num)
+      necessary_fly_buy_params = fly_buy_params.except(:email, :company_phone, :address_id, :fingerprint, :bank_name, :address, :name_on_account, :account_num)
       necessary_fly_buy_params.merge!(synapse_ip_address: request.ip, encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"], user_id: current_user.id)
       fly_buy_profile.update(necessary_fly_buy_params)
     else
-      necessary_fly_buy_params = fly_buy_params.except(:company_phone, :address_id, :fingerprint, :bank_name, :address, :name_on_account, :account_num)
-      necessary_fly_buy_params.merge!(synapse_ip_address: request.ip, encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"], user_id: current_user.id)
+      if fly_buy_params["addresses"].present?
+        address = current_user.addresses.create(fly_buy_params["addresses"])
+        current_user.update_attribute(:phone, fly_buy_params["company_phone"])
+
+        necessary_fly_buy_params = fly_buy_params.except(:email, :addresses,
+                                              :fingerprint, :bank_name, :address,
+                                              :name_on_account, :account_num)
+        
+        fly_buy_params.merge!(address_id: address.id)
+      else
+        necessary_fly_buy_params = fly_buy_params.except(:address_id, :fingerprint,
+                          :bank_name, :address, :name_on_account, :account_num)
+      end
+      necessary_fly_buy_params.merge!(
+                    synapse_ip_address: request.ip,
+                    encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"],
+                    user_id: current_user.id,
+                    company_email: fly_buy_params["email"])
       fly_buy_profile = FlyBuyProfile.create(necessary_fly_buy_params)
     end
     
@@ -44,9 +60,6 @@ class Dashboard::AccountsController < DashboardController
     if current_user.present? && current_user.profile_complete? && current_user.name.present? && current_user.name.count(" ") == 0
       return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must update your first and last name prior to submitting your company information" }
     end
-    # if current_user.present? && current_user.profile_complete? && current_user.company.present? && current_user.company.count(" ") == 0
-    #   return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must update your first and last name prior to submitting your company information" }
-    # end
 
     if current_user.present? && current_user.profile_complete? && current_user.company.present? == false
       return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must add your company name prior to submitting your company information." }
