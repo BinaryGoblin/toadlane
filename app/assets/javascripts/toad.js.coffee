@@ -243,6 +243,7 @@ $(document).ready ->
       $(month_select_box).each ->
         endMonthSelected = $('#product_end_date_2i').val()
         endYearSelected = $('#product_end_date_1i').val()
+        startYearSelected = $('#product_start_date_1i').val()
         yearSelectBlock = $(this)[0].id
         yearSelectBox = $('#'+yearSelectBlock)
 
@@ -265,6 +266,8 @@ $(document).ready ->
         ]
 
         j = 0
+
+        debugger
 
         if yearSelectBox.val() == endYearSelected
           while j < parseInt(endMonthSelected) - 1
@@ -435,6 +438,21 @@ $(document).ready ->
   $('#product_default_payment').change ->
     if $('#product_default_payment').find(":selected").text() == "Fly And Buy"
       $('.insert_inspection_dates').show()
+      endYearSelected = $('#product_end_date_1i').val()
+      startYearSelected = $('#product_start_date_1i').val()
+
+      yearSelectBox = $('#product_inspection_date_attributes__date_1i')
+
+      yearSelectBox.html ''
+
+      start_year = parseInt(startYearSelected)
+      end_year = parseInt(endYearSelected)
+
+      while start_year <= end_year
+        yearSelectBox.append '<option value="' + start_year + '">' + start_year + '</option>'
+        start_year++
+      yearSelectBox.val
+      return
     else
       $('.insert_inspection_dates').hide()
 
