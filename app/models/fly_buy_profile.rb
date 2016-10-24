@@ -46,7 +46,7 @@ class FlyBuyProfile < ActiveRecord::Base
   #                 :question_1, :question_2, :question_3, :question_4, :question_5,
   #                 :company_phone, :o_entity_scope
 
-  attr_accessor :account_num, :routing_num, :bank_name, :address,
+  attr_accessor :account_num, :routing_num, :bank_name, :address, :email,
                   :question_1, :question_2, :question_3, :question_4, :question_5
 
   EscrowNodeID = '57d7465386c2732e824b7c8b'

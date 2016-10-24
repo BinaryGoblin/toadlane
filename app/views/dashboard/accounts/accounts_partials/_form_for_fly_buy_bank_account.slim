@@ -1,15 +1,10 @@
 h4 Company Information:
 br
 .row
-  .col-md-6
+  .col-md-7
     .form-group
-      = f.label :company_email, 'Company Email:', class: 'required'
-      = f.text_field :company_email, class: 'form-control', required: true
-
-  .col-md-6
-    .form-group
-      = f.label :company_phone, 'Company Phone:', class: 'required'
-      = f.telephone_field :company_phone, class: 'form-control', data: { behavior: 'IntlPhone' }, required: true
+        = f.label :email, 'Email', class: 'required'
+        = f.text_field :email, class: 'form-control', required: true, value: user.email
 .row
   .col-md-6
     .form-group
@@ -31,37 +26,54 @@ br
     .form-group
       = f.label :entity_scope, 'Entity Scope:', class: 'required'
       = f.select :entity_scope, user_company_entity_scopes, {prompt: 'Please select an Entity Scope'}, class: 'form-control', required: true
+
+hr
 .row
-  .col-md-12
-    = fields_for :addresses, Address.new do |ff|
-      h4 Company Address:
-      br
+  - address = Address.where(:user => user).order('created_at')
+  - if address.count > 0
+    .col-md-8
+      thead
+        tr
+          th
+            h4 Select Address::
+            br
+      tbody
+        = f.collection_radio_buttons(:address_id, address, :id, :get_inline_address) do |b, index|
+          tr
+            td
+              = b.label { b.radio_button(:"data-behavior" => "AssignShipping", :"checked" => (b.object.id == address.first.id)) + b.text }
+  - else
+    br
+    = f.fields_for :addresses do |ff|
       - if ff.index == 0
         i Default Address
-      .row.profile-table
-        .col-md-6
-          .form-group
-            = ff.label :line1, 'Address Line 1:', class: 'required'
-            = ff.text_field :line1, class: 'form-control'
+      .col-md-6
+        .form-group
+          = ff.label :name, 'Address Name:', class: 'required'
+          = ff.text_field :name, class: 'form-control', required: true
 
-          .form-group
-            = ff.label :city, 'City:', class: 'required'
-            = ff.text_field :city, class: 'form-control'
+        .form-group
+          = ff.label :line1, 'Address Line 1:', class: 'required'
+          = ff.text_field :line1, class: 'form-control', required: true
 
-        .col-md-6
-          .form-group
-            = ff.label :state, 'State:', class: 'required'
-            = ff.text_field :state, class: 'form-control'
+        .form-group
+          = ff.label :city, 'City:', class: 'required'
+          = ff.text_field :city, class: 'form-control', required: true
 
-          .form-group
-            = ff.label :zip, 'Postal Code:', class: 'required'
-            = ff.text_field :zip, class: 'form-control'
+        .form-group
+          = ff.label :state, 'State:', class: 'required'
+          = ff.text_field :state, class: 'form-control', required: true
 
-        .col-md-6
-          .form-group
-            = ff.label :country, 'Country:', class: 'required'
-            = ff.country_select 'country', [ 'US', 'GB' ], { iso_codes: true }, { class: 'form-control' }
+      .col-md-6
+        .form-group
+          = ff.label :zip, 'Postal Code:', class: 'required'
+          = ff.text_field :zip, class: 'form-control', required: true
 
+        .form-group
+          = ff.label :country, 'Country:', class: 'required'
+          = ff.country_select 'country', [ 'US', 'GB' ], { iso_codes: true }, { class: 'form-control' }
+
+hr
 h4 Company Documents:
 br
 .row
@@ -77,6 +89,7 @@ br
     .form-group
       = f.label :bank_statement, 'Bank statement:', class: 'required'
       = f.file_field :bank_statement, required: true
+      p style="color:red;" Format must png, jpg
 hr
 
 h4 User Verification:
@@ -92,22 +105,13 @@ br
     .form-group
         = f.label :ssn_number, 'SSN Number of Officer:', class: 'required'
         = f.text_field :ssn_number, class: 'form-control', required: true
-.row
-  .col-md-6
-    .form-group
-      = f.label :o_entity_type, 'Entity Type:', class: 'required'
-      = f.select :o_entity_type, user_entity_types, {prompt: 'Please select an Entity Type'}, class: 'form-control', required: true
-
-  .col-md-6
-    .form-group
-      = f.label :o_entity_scope, 'Entity Scope:', class: 'required'
-      = f.select :o_entity_type, user_company_entity_scopes, {prompt: 'Please select an Entity Scope'}, class: 'form-control', required: true
 
 .row
   .col-md-6
     .form-group
       = f.label :gov_id, 'Govenment Issued ID of Officer:', class: 'required'
       = f.file_field :gov_id, required: true
+      p style="color:red;" Format must png, jpg
 hr
 
 h4 Bank Account Details:
