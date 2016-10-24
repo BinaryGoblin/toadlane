@@ -49,10 +49,10 @@ class Dashboard::AccountsController < DashboardController
     end
 
     if request.post? && fly_buy_params.present? && params["addresses"].present?
-      fly_buy_params.merge!(addresses: params["addresses"], ip_address: request.ip)
-      # FlyAndBuy::UserOperations.new(current_user, fly_buy_params).create_user
+      fly_buy_params.merge!(ip_address: request.ip)
+      FlyAndBuy::UserOperations.new(current_user, fly_buy_params).create_user
 
-      # FlyAndBuy::AddingBankDetails.new(current_user, current_user.fly_buy_profile, fly_buy_params).add_details
+      FlyAndBuy::AddingBankDetails.new(current_user, current_user.fly_buy_profile, fly_buy_params).add_details
       redirect_to dashboard_accounts_path
     end
   rescue SynapsePayRest::Error::Conflict => e

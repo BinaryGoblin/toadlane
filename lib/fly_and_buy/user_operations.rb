@@ -61,20 +61,13 @@ class FlyAndBuy::UserOperations
   private
 
   def synapsepay_create_user
-    create_current_user_company_address
     FlyBuyService.create_subscription
+    
     create_fly_buy_profile_with_fingerprint
 
     create_user_response = creating_user_synapse
 
     store_returned_id(create_user_response)
-  end
-
-  def create_current_user_company_address
-    if user_details["addresses"].present?
-      user_details["addresses"].merge!(name: signed_in_user.company, of_company: true)
-      signed_in_user.addresses.create(user_details["addresses"])
-    end
   end
 
   def creating_user_synapse

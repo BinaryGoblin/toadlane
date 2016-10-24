@@ -33,7 +33,6 @@ br
       = f.select :entity_scope, user_company_entity_scopes, {prompt: 'Please select an Entity Scope'}, class: 'form-control', required: true
 .row
   .col-md-12
-    - binding.pry
     = fields_for :addresses, Address.new do |ff|
       h4 Company Address:
       br
