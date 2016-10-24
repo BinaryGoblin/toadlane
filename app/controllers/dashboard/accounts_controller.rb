@@ -27,7 +27,10 @@ class Dashboard::AccountsController < DashboardController
 
   def create_fly_buy_profile
     if current_user.fly_buy_profile.present?
-      fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id)
+      fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
+      necessary_fly_buy_params = fly_buy_params.except(:address_id, :fingerprint, :bank_name, :address, :name_on_account, :account_num)
+      necessary_fly_buy_params.merge!(synapse_ip_address: request.ip, encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"], user_id: current_user.id)
+      fly_buy_profile.update(necessary_fly_buy_params)
     else
       necessary_fly_buy_params = fly_buy_params.except(:address_id, :fingerprint, :bank_name, :address, :name_on_account, :account_num)
       necessary_fly_buy_params.merge!(synapse_ip_address: request.ip, encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"], user_id: current_user.id)
@@ -49,10 +52,10 @@ class Dashboard::AccountsController < DashboardController
       return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must add your company name prior to submitting your company information." }
     end
 
-    if request.post? && fly_buy_params.present? && params["addresses"].present?
-      FlyAndBuy::UserOperations.new(current_user, fly_buy_params).create_user
+    if request.post? && fly_buy_params.present?
+      FlyAndBuy::UserOperations.new(current_user, fly_buy_profile, fly_buy_params).create_user
 
-      FlyAndBuy::AddingBankDetails.new(current_user, current_user.fly_buy_profile, fly_buy_params).add_details
+      FlyAndBuy::AddingBankDetails.new(current_user, fly_buy_profile, fly_buy_params).add_details
       redirect_to dashboard_accounts_path
     end
   rescue SynapsePayRest::Error::Conflict => e

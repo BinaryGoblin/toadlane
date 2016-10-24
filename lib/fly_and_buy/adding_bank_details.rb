@@ -1,6 +1,7 @@
 class FlyAndBuy::AddingBankDetails
 
-  attr_accessor :signed_in_user, :client, :fly_buy_profile, :client_user, :user_details
+  attr_accessor :signed_in_user, :client, :fly_buy_profile, :client_user,
+                :user_details, :address
 
   SynapsePayNodeType = {
     wire: "WIRE-US",
@@ -22,6 +23,7 @@ class FlyAndBuy::AddingBankDetails
     @user_details = user_details
     @fly_buy_profile = fly_buy_profile
     @client = FlyBuyService.get_client
+    @address = Address.find_by_id(user_details["address_id"])
   end
 
   def add_details
@@ -30,8 +32,6 @@ class FlyAndBuy::AddingBankDetails
 
   private
   def add_doc_to_user_process
-    update_fly_buy_profile_with_attachment
-
     get_user_and_instantiate_user
 
     add_doc_response = add_necessary_doc
@@ -40,17 +40,6 @@ class FlyAndBuy::AddingBankDetails
     store_returned_node_id(add_bank_acc_response)
   rescue SynapsePayRest::Error::Conflict => e
     return e
-  end
-
-  def update_fly_buy_profile_with_attachment
-    only_attachments = user_details.except(:fingerprint, :bank_name, :address, :name_on_account,
-                              :account_num, :routing_num, :ssn_number, :ip_address,
-                              "date_of_company(2i)", "date_of_company(3i)",
-                              "date_of_company(1i)", :terms_of_service, :addresses,
-                              :o_entity_type, :o_entity_scope, "dob(3i)",
-                              "dob(2i)", "dob(1i)", :company_email, :company_phone,
-                              :entity_type, :entity_scope, :tin_number)
-    fly_buy_profile.update(only_attachments)
   end
 
   def get_user_and_instantiate_user
@@ -80,26 +69,26 @@ class FlyAndBuy::AddingBankDetails
 
   def add_necessary_doc
     # doc #1 for company
-    add_documents_payload_1 = {
+    company_payload = {
       'documents' => [{
-        'email' => user_details["company_email"],
-        'phone_number' => user_details["company_phone"],
+        'email' => signed_in_user.email,
+        'phone_number' => signed_in_user.phone,
         'ip' => fly_buy_profile.synapse_ip_address,
-        'name' => signed_in_user.company,
+        'name' => signed_in_user.name + signed_in_user.company,
         'alias' => signed_in_user.company,
-        'entity_type' => user_details["entity_type"],
-        'entity_scope' => user_details["entity_scope"],
-        'day' => user_details["date_of_company(3i)"].to_i,
-        'month' => user_details["date_of_company(2i)"].to_i,
-        'year' => user_details["date_of_company(1i)"].to_i,
-        'address_street' => signed_in_user.address.first.line1,
-        'address_city' => signed_in_user.address.first.city,
-        'address_subdivision' => signed_in_user.address.first.state,
-        'address_postal_code' => signed_in_user.address.first.zip,
-        'address_country_code' => signed_in_user.address.first.country,
+        'entity_type' => fly_buy_profile.entity_type,
+        'entity_scope' => fly_buy_profile.entity_scope,
+        'day' => fly_buy_profile.date_of_company.day,
+        'month' => fly_buy_profile.date_of_company.month,
+        'year' => fly_buy_profile.date_of_company.year,
+        'address_street' => address.line1,
+        'address_city' => address.city,
+        'address_subdivision' => address.state,
+        'address_postal_code' => address.zip,
+        'address_country_code' => address.country,
         'virtual_docs' => [
         {
-          'document_value' => user_details["tin_number"],
+          'document_value' => fly_buy_profile.tin_number,
           'document_type' => SynapsePayDocType[:tin]
         }],
         'physical_docs' => [{
@@ -115,28 +104,32 @@ class FlyAndBuy::AddingBankDetails
       }]
     }
 
-    company_doc_response = client_user.users.update(payload: add_documents_payload_1)
+    company_doc_response = client_user.users.update(payload: company_payload)
 
     # doc #2 for officer of company
-    add_documents_payload_2 = {
+    recorded_email = signed_in_user.email.split("@")
+    updated_email = recorded_email.first + "+#{signed_in_user.first_name}"
+    email = updated_email + "@" + recorded_email.last
+
+    user_payload = {
       'documents' => [{
-        'email' => signed_in_user.email,
+        'email' => email,
         'phone_number' => signed_in_user.phone,
         'ip' => fly_buy_profile.synapse_ip_address,
         'name' => signed_in_user.name,
         'alias' => signed_in_user.name,
-        'entity_type' => user_details["o_entity_type"],
-        'entity_scope' => user_details["o_entity_scope"],
-        'day' => user_details["dob(3i)"].to_i,
-        'month' => user_details["dob(2i)"].to_i,
-        'year' => user_details["dob(1i)"].to_i,
-        'address_street' => signed_in_user.addresses.first.line1,
-        'address_city' => signed_in_user.addresses.first.city,
-        'address_subdivision' => signed_in_user.addresses.first.state,
-        'address_postal_code' => signed_in_user.addresses.first.zip,
-        'address_country_code' => signed_in_user.addresses.first.country,
+        'entity_type' => fly_buy_profile.entity_type,
+        'entity_scope' => fly_buy_profile.entity_scope,
+        'day' => fly_buy_profile.dob.day,
+        'month' => fly_buy_profile.dob.month,
+        'year' => fly_buy_profile.dob.year,
+        'address_street' => address.line1,
+        'address_city' => address.city,
+        'address_subdivision' => address.state,
+        'address_postal_code' => address.zip,
+        'address_country_code' => address.country,
         'virtual_docs' => [{
-          'document_value' => user_details["ssn_number"],
+          'document_value' => fly_buy_profile.ssn_number,
           'document_type' => SynapsePayDocType[:ssn]
         }],
         'physical_docs' => [{
@@ -148,7 +141,7 @@ class FlyAndBuy::AddingBankDetails
       }]
     }
 
-    user_doc_response = client_user.users.update(payload: add_documents_payload_2)
+    user_doc_response = client_user.users.update(payload: user_payload)
 
     if user_doc_response["documents"].present? && user_doc_response["documents"][0].present?
       fly_buy_profile.update_attribute(:synapse_document_id, user_doc_response["documents"][0]["id"])

@@ -81,8 +81,7 @@ br
     .form-group
       = f.label :eic_attachment, 'EIN Document:', class: 'required'
       = link_to "Lost your ein?", 'https://www.irs.gov/businesses/small-businesses-self-employed/lost-or-misplaced-your-ein', class: 'view', target: '_blank'
-      / = f.file_field :eic_attachment
-      input required="required" type="file" name="fly_buy_profile[eic_attachment]" id="fly_buy_profile_eic_attachment"  accept="image/*"
+      = f.file_field :eic_attachment
       p style="color:red;" Format must png, jpg
   
   .col-md-6
