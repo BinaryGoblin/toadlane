@@ -32,11 +32,8 @@
 #  dob                         :datetime
 #  entity_type                 :string
 #  entity_scope                :string
-#  o_entity_scope              :string
-#  o_entity_type               :string
 #  company_email               :string
 #  tin_number                  :integer
-#  company_phone               :string
 #  completed                   :boolean          default(FALSE)
 #
 
