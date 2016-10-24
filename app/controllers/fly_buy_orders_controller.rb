@@ -28,8 +28,15 @@ class FlyBuyOrdersController < ApplicationController
         ), notice: 'Your order was successfully placed.'
       end
     else
-      fly_buy_params.merge!(ip_address: '192.168.0.112')
-      FlyAndBuy::UserOperations.new(current_user, fly_buy_params).create_user
+      if current_user.fly_buy_profile.present?
+        fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
+      else
+        fly_buy_profile = FlyBuyProfile.create(
+                      user_id: current_user.id,
+                      encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"],
+                      synapse_ip_address: request.ip)
+      end
+      FlyAndBuy::UserOperations.new(current_user, fly_buy_profile, fly_buy_params).create_user
 
       if fly_buy_order.update_attribute(:status, 'processing')
         product.sold_out += fly_buy_order.count

@@ -6,7 +6,7 @@
       = form_for fly_buy_profile, url: fly_buy_order_confirm_order_placed_path(fly_buy_order_id: fly_buy_order.id), method: "post", :html => { class: 'create_fly_buy_profile' } do |f|
 
         = render partial: 'dashboard/accounts/accounts_partials/form_for_fly_buy_bank_account',
-                    :locals => {  :f => f}
+                    :locals => {  :f => f, :user => user}
 
         = f.submit "Submit", class: "btn btn-primary"
 
