@@ -28,11 +28,11 @@ class Dashboard::AccountsController < DashboardController
   def create_fly_buy_profile
     if current_user.fly_buy_profile.present?
       fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
-      necessary_fly_buy_params = fly_buy_params.except(:address_id, :fingerprint, :bank_name, :address, :name_on_account, :account_num)
+      necessary_fly_buy_params = fly_buy_params.except(:company_phone, :address_id, :fingerprint, :bank_name, :address, :name_on_account, :account_num)
       necessary_fly_buy_params.merge!(synapse_ip_address: request.ip, encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"], user_id: current_user.id)
       fly_buy_profile.update(necessary_fly_buy_params)
     else
-      necessary_fly_buy_params = fly_buy_params.except(:address_id, :fingerprint, :bank_name, :address, :name_on_account, :account_num)
+      necessary_fly_buy_params = fly_buy_params.except(:company_phone, :address_id, :fingerprint, :bank_name, :address, :name_on_account, :account_num)
       necessary_fly_buy_params.merge!(synapse_ip_address: request.ip, encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"], user_id: current_user.id)
       fly_buy_profile = FlyBuyProfile.create(necessary_fly_buy_params)
     end

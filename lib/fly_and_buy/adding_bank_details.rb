@@ -74,7 +74,7 @@ class FlyAndBuy::AddingBankDetails
         'email' => signed_in_user.email,
         'phone_number' => signed_in_user.phone,
         'ip' => fly_buy_profile.synapse_ip_address,
-        'name' => signed_in_user.name + signed_in_user.company,
+        'name' => signed_in_user.first_name + " " + signed_in_user.company,
         'alias' => signed_in_user.company,
         'entity_type' => fly_buy_profile.entity_type,
         'entity_scope' => fly_buy_profile.entity_scope,
