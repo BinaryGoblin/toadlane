@@ -236,59 +236,60 @@ $(document).ready ->
   #   evaluateInspectionDates()
   #   return
 
-  $('.product_edit').ready ->
-    $('#product_inspection_date_attributes__date_1i').change ->
-      month_select_block = $(this)[0].id
-      month_select_box = $('#'+month_select_block)
-      
-      $(month_select_box).each ->
-        inspection_date_value = $('#product_hidden_field_name').val()
-        inspection_date_array = inspection_date_value.split("-")
-        selectedYear = inspection_date_array[0]
-        selectedMonth = inspection_date_array[1]
-        selectedDay = inspection_date_array[2]
+  $('#product_inspection_date_attributes__date_1i').change ->
+    month_select_block = $(this)[0].id
+    month_select_box = $('#'+month_select_block)
+    
+    $(month_select_box).each ->
+      inspection_date_value = $('#product_hidden_field_name').val()
+      inspection_date_array = inspection_date_value.split("-")
+      selectedYear = inspection_date_array[0]
+      selectedMonth = inspection_date_array[1]
+      selectedDay = inspection_date_array[2]
 
-        endMonthSelected = $('#product_end_date_2i').val()
-        endYearSelected = $('#product_end_date_1i').val()
+      endMonthSelected = $('#product_end_date_2i').val()
+      endYearSelected = $('#product_end_date_1i').val()
 
-        yearSelectBlock = $(this)[0].id
-        yearSelectBox = $('#'+yearSelectBlock)
+      yearSelectBlock = $(this)[0].id
+      yearSelectBox = $('#'+yearSelectBlock)
 
-        monthSelectBox = yearSelectBox.siblings('select#product_inspection_date_attributes__date_2i')
+      monthSelectBox = yearSelectBox.siblings('select#product_inspection_date_attributes__date_2i')
 
-        monthSelectBox.html ''
-        monthNames = [
-          'January'
-          'February'
-          'March'
-          'April'
-          'May'
-          'June'
-          'July'
-          'August'
-          'September'
-          'October'
-          'November'
-          'December'
-        ]
+      monthSelectBox.html ''
+      monthNames = [
+        'January'
+        'February'
+        'March'
+        'April'
+        'May'
+        'June'
+        'July'
+        'August'
+        'September'
+        'October'
+        'November'
+        'December'
+      ]
 
-        j = 0
-        if yearSelectBox.val() == endYearSelected
-          while j < parseInt(endMonthSelected) - 1
-            monthSelectBox.append '<option value="' + j + '">' + monthNames[j] + '</option>'
-            j++
-          monthSelectBox.val(parseInt(selectedMonth) - 1)
-          if monthSelectBox.val() == null
-            monthSelectBox.val(0)
-          return
-        else
-          while j < 12
-            month_count = j + 1
-            monthSelectBox.append '<option value="' + month_count + '">' + monthNames[j] + '</option>'
-            j++
-          monthSelectBox.val(parseInt(selectedMonth))
-          return
-      return
+      j = 0
+      if yearSelectBox.val() == endYearSelected
+        while j < parseInt(endMonthSelected) - 1
+          monthSelectBox.append '<option value="' + j + '">' + monthNames[j] + '</option>'
+          j++
+        monthSelectBox.val(parseInt(selectedMonth) - 1)
+        if monthSelectBox.val() == null
+          monthSelectBox.val(0)
+        return
+      else
+        while j < 12
+          month_count = j + 1
+          monthSelectBox.append '<option value="' + month_count + '">' + monthNames[j] + '</option>'
+          j++
+        monthSelectBox.val(parseInt(selectedMonth))
+        if monthSelectBox.val() == null
+          monthSelectBox.val(0)
+        return
+    return
 
   evaluateInspectionDates = ->
     $('#product_end_date_2i').each ->
