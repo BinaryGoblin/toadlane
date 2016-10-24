@@ -56,6 +56,10 @@ class InspectionDate < ActiveRecord::Base
       if date.year > product.end_date.year
         errors.add(:date, "must not be greater than product's end date.")
       end
+
+      unless product.start_date < date && date < product.end_date
+        errors.add(:date, "must be in between product's start date and end date")
+      end
     end
   end
 end
