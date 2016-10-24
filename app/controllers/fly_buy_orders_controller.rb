@@ -267,9 +267,6 @@ class FlyBuyOrdersController < ApplicationController
           ), notice: 'You have been emailed wire instructions!'
       end
     end
-  rescue SynapsePayRest::Error::Conflict => e
-    flash[:error] = e
-    redirect_to product_checkout_path(product)
   end
 
   def resend_wire_instruction
