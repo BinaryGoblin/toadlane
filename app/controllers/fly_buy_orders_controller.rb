@@ -228,9 +228,15 @@ class FlyBuyOrdersController < ApplicationController
 
     if current_user.fly_buy_profile.kba_questions.present? && params["fly_buy_profile"].present?
       FlyAndBuy::AnswerKbaQuestions.new(current_user, current_user.fly_buy_profile, fly_buy_params).process
-    elsif params["addresses"].present?
-      fly_buy_params.merge!(addresses: params["addresses"], ip_address: request.ip)
-      FlyAndBuy::AddingBankDetails.new(current_user, current_user.fly_buy_profile, fly_buy_params).add_details
+    else
+      fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
+      necessary_fly_buy_params = fly_buy_params.except(:email, :company_phone, :address_id, :fingerprint, :bank_name, :address, :name_on_account, :account_num)
+      necessary_fly_buy_params.merge!(
+                    company_email: fly_buy_params["email"],
+                    company_phone: fly_buy_params["company_phone"])
+      fly_buy_profile.update(necessary_fly_buy_params)
+      current_user.update_attribute(:phone, fly_buy_params["company_phone"])
+      FlyAndBuy::AddingBankDetails.new(current_user, fly_buy_profile, fly_buy_params).add_details
     end
 
     if current_user.fly_buy_profile.kba_questions.present? && current_user.fly_buy_profile.permission_scope_verified == false
