@@ -357,6 +357,8 @@
       ul.inspectiondates
         - if @product.seller_set_inspection_dates.any?
           - @product.seller_set_inspection_dates.each_with_index do |inspection_date, index|
+            - hidden_field_name = "inspection_date" + "_" + inspection_date.id.to_s
+            = f.hidden_field :hidden_field_name, :value => inspection_date.date.to_date
             li.inspectiondate
               .index= index+1
               .offer-item
