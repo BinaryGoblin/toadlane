@@ -35,16 +35,11 @@
 #  company_email               :string
 #  tin_number                  :string
 #  completed                   :boolean          default(FALSE)
+#  company_phone               :string
 #
 
 class FlyBuyProfile < ActiveRecord::Base
   belongs_to :user
-
-  # attr_accessor :name_on_account, :account_num, :routing_num, :bank_name, :address,
-  #                 :ssn_number, :date_of_company, :entity_type, :entity_scope,
-  #                 :company_email, :company_address, :tin_number, :dob, :o_entity_type,
-  #                 :question_1, :question_2, :question_3, :question_4, :question_5,
-  #                 :company_phone, :o_entity_scope
 
   attr_accessor :account_num, :routing_num, :bank_name, :address, :email,
                   :question_1, :question_2, :question_3, :question_4, :question_5
