@@ -229,6 +229,10 @@ class FlyBuyOrdersController < ApplicationController
     if current_user.fly_buy_profile.kba_questions.present? && params["fly_buy_profile"].present?
       FlyAndBuy::AnswerKbaQuestions.new(current_user, current_user.fly_buy_profile, fly_buy_params).process
     else
+      if fly_buy_params["address_attributes"].present?
+        address = current_user.addresses.create(fly_buy_params["address_attributes"][(current_user.addresses.count + 1).to_s])
+        fly_buy_params.merge!(address_id: address.id).except!(:address_attributes)
+      end
       fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
       necessary_fly_buy_params = fly_buy_params.except(:email, :company_phone, :address_id, :fingerprint, :bank_name, :address, :name_on_account, :account_num)
       necessary_fly_buy_params.merge!(

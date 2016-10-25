@@ -8,8 +8,11 @@
     border-bottom: 1px solid #ddd;
   }
 
-  .promiseDetails{
+  .flybuy-form{
   	.create_fly_buy_profile{
+      p.warning{
+        color: red;
+      }
   		.offer-item{
   			.offer-date{
   				width: 300px;

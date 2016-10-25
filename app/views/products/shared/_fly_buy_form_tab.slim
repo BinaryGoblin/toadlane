@@ -2,7 +2,7 @@
 
   .account-flybuy
     h2 Congratulations on your first time purchasing with Fly & Buy! Before wiring funds into Synapse Pay escrow tell us a little bit more about your business and the bank you will be wiring from.
-    .promiseDetails
+    .flybuy-form
       = form_for fly_buy_profile, url: fly_buy_order_confirm_order_placed_path(fly_buy_order_id: fly_buy_order.id), method: "post", :html => { class: 'create_fly_buy_profile' } do |f|
 
         = render partial: 'dashboard/accounts/accounts_partials/form_for_fly_buy_bank_account',
