@@ -50,8 +50,8 @@ class Dashboard::AccountsController < DashboardController
         address_id: fly_buy_params["address_id"]
       }
       
-      CreateUserForFlyBuyJob.perform_later(current_user, fly_buy_profile)
-      AddBankDetailsForFlyBuyJob.perform_later(current_user, fly_buy_profile, bank_account_details)
+      CreateUserForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id)
+      AddBankDetailsForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id, bank_account_details)
       fly_buy_profile.update_attribute(:completed, true)
       redirect_to dashboard_accounts_path
     end
