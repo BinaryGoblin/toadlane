@@ -522,13 +522,13 @@ $(document).ready ->
         required: true
       "fly_buy_profile[eic_attachment]":
         required: true,
-        extension: "jpg,jpeg, png"
+        extension: "jpg|png|pdf"
       "fly_buy_profile[bank_statement]":
         required: true,
-        extension: "jpg,jpeg, png"
+        extension: "jpg|png|pdf"
       "fly_buy_profile[gov_id]":
         required: true,
-        extension: "jpg,jpeg, png"
+        extension: "jpg|png|pdf"
       "fly_buy_profile[dob(1i)]":
         check_date_of_birth: true
     messages:
