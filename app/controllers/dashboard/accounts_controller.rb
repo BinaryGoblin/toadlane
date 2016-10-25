@@ -26,32 +26,7 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def create_fly_buy_profile
-    if current_user.fly_buy_profile.present?
-      fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
-      necessary_fly_buy_params = fly_buy_params.except(:email, :company_phone, :address_id, :fingerprint, :bank_name, :address, :name_on_account, :account_num)
-      necessary_fly_buy_params.merge!(synapse_ip_address: request.ip, encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"], user_id: current_user.id)
-      fly_buy_profile.update(necessary_fly_buy_params)
-    else
-      if fly_buy_params["addresses"].present?
-        address = current_user.addresses.create(fly_buy_params["addresses"])
-        current_user.update_attribute(:phone, fly_buy_params["company_phone"])
-
-        necessary_fly_buy_params = fly_buy_params.except(:email, :addresses,
-                                              :fingerprint, :bank_name, :address,
-                                              :name_on_account, :account_num)
-        
-        fly_buy_params.merge!(address_id: address.id)
-      else
-        necessary_fly_buy_params = fly_buy_params.except(:address_id, :fingerprint,
-                          :bank_name, :address, :name_on_account, :account_num)
-      end
-      necessary_fly_buy_params.merge!(
-                    synapse_ip_address: request.ip,
-                    encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"],
-                    user_id: current_user.id,
-                    company_email: fly_buy_params["email"])
-      fly_buy_profile = FlyBuyProfile.create(necessary_fly_buy_params)
-    end
+    create_update_flybuy_profile
     
     if current_user.present? && current_user.profile_complete? == false
       return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must complete your profile before you can create a bank account." }
@@ -75,6 +50,42 @@ class Dashboard::AccountsController < DashboardController
     puts e
     flash[:error] = e
     redirect_to dashboard_accounts_path
+  end
+
+  def create_update_flybuy_profile
+    if fly_buy_params["address_attributes"].present?
+      address = current_user.addresses.create(fly_buy_params["address_attributes"][(current_user.addresses.count + 1).to_s])
+      fly_buy_params.merge!(address_id: address.id).except!(:address_attributes)
+    end
+
+    current_user.update_attribute(:phone, fly_buy_params["company_phone"])
+
+    if current_user.fly_buy_profile.present?
+      fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
+      necessary_fly_buy_params = fly_buy_params.except(
+                                    :email, :address_id,
+                                    :fingerprint, :bank_name,
+                                    :name_on_account, :account_num
+                                  )
+
+      necessary_fly_buy_params.merge!(
+        synapse_ip_address: request.ip,
+        encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"],
+        user_id: current_user.id, company_email: fly_buy_params["email"]
+      )
+
+      fly_buy_profile.update(necessary_fly_buy_params)
+    else
+
+      necessary_fly_buy_params.merge!(
+        synapse_ip_address: request.ip,
+        encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"],
+        user_id: current_user.id,
+        company_email: fly_buy_params["email"]
+      )
+
+      fly_buy_profile = FlyBuyProfile.create(necessary_fly_buy_params)
+    end
   end
 
   def answer_kba_question

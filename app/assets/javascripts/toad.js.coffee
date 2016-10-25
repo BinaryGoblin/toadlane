@@ -97,6 +97,12 @@ $(document).ready ->
       $(".set_inspection_date").show()
       $(".confirm-inspection-date-btn").hide()
 
+  $('.show-address-block-button').click (event)->
+    event.preventDefault()
+    $('.flybuy-address-block input:checked').prop('checked',false)
+    $(this).hide()
+    $('.insert-new-address-block').show()
+
   $('.related_searches a').click (event) ->
     event.preventDefault()
     rs = $(this).html()
