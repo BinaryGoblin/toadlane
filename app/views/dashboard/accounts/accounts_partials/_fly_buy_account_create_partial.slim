@@ -5,8 +5,10 @@
 
   - if user.fly_buy_profile_verified? && user.fly_buy_profile.kba_questions.empty?
     p <b>Status:</b> <span class="success">You have successfully added your company information. You can now buy or sell using Fly & Buy!</span>
+
   - elsif user.fly_buy_profile.present? && user.fly_buy_profile.synapse_document_id.present? && user.fly_buy_profile.permission_scope_verified == false && user.fly_buy_profile.kba_questions.empty?
     p <b>Status:</b> <span class="warning">You have added your bank account but it is not yet verified.</span>
+
   - elsif user.fly_buy_profile.present? && user.fly_buy_profile.kba_questions.present?  && user.fly_buy_profile.permission_scope_verified == false
     p Your social security number has been matched. Please answer the questions below to verify your identity.
     = form_for fly_buy_profile, url: answer_kba_question_dashboard_accounts_path, method: "post" do |f|
@@ -20,6 +22,8 @@
             = f.radio_button field_name, answer["id"]
             = f.label answer["answer"]
       = f.submit "Submit", class: "btn btn-primary"
+  - elsif user.fly_buy_profile.present? && user.fly_buy_profile.completed == true && fly_buy_profile.permission_scope_verified == false
+    p <b>Status:</b><span class="success">You have successfully added your bank account details, but it is not verified yet.</span>
   - else
     p <b>Status:</b> <span class="warning">Add to your company information to send and receive funds.</span>
     
@@ -28,5 +32,5 @@
       = render partial: 'dashboard/accounts/accounts_partials/form_for_fly_buy_bank_account',
                     :locals => {  :f => f, :user => user}
             
-      = f.submit "Submit", class: "btn btn-primary"
+      = f.submit "Submit", class: "btn btn-primary create_fly_buy_submit_btn"
 

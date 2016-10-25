@@ -23,7 +23,11 @@ class FlyAndBuy::AddingBankDetails
     @user_details = user_details
     @fly_buy_profile = fly_buy_profile
     @client = FlyBuyService.get_client
-    @address = Address.find_by_id(user_details["address_id"])
+    if user_details["address_id"] == nil
+      @address = signed_in_user.addresses.first
+    else
+      @address = Address.find_by_id(user_details["address_id"])
+    end
   end
 
   def add_details

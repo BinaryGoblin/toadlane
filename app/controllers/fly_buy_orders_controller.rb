@@ -36,7 +36,7 @@ class FlyBuyOrdersController < ApplicationController
                       encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"],
                       synapse_ip_address: request.ip)
       end
-      FlyAndBuy::UserOperations.new(current_user, fly_buy_profile, fly_buy_params).create_user
+      CreateUserForFlyBuyJob.perform_now(current_user, fly_buy_profile)
 
       if fly_buy_order.update_attribute(:status, 'processing')
         product.sold_out += fly_buy_order.count
@@ -240,7 +240,17 @@ class FlyBuyOrdersController < ApplicationController
                     company_phone: fly_buy_params["company_phone"])
       fly_buy_profile.update(necessary_fly_buy_params)
       current_user.update_attribute(:phone, fly_buy_params["company_phone"])
-      FlyAndBuy::AddingBankDetails.new(current_user, fly_buy_profile, fly_buy_params).add_details
+
+      bank_account_details = {
+        bank_name: fly_buy_params["bank_name"],
+        address: fly_buy_params["address"],
+        name_on_account: fly_buy_params["name_on_account"],
+        account_num: fly_buy_params["account_num"],
+        routing_num: fly_buy_params["routing_num"],
+        address_id: fly_buy_params["address_id"]
+      }
+      AddBankDetailsForFlyBuyJob.perform_now(current_user, fly_buy_profile, bank_account_details)
+      # FlyAndBuy::AddingBankDetails.new(current_user, fly_buy_profile, fly_buy_params).add_details
     end
 
     if current_user.fly_buy_profile.kba_questions.present? && current_user.fly_buy_profile.permission_scope_verified == false

@@ -47,7 +47,7 @@ hr
       = f.collection_radio_buttons(:address_id, address, :id, :get_inline_address) do |b, index|
         tr
           td
-            = b.label { b.radio_button(:"data-behavior" => "AssignShipping", :"checked" => (b.object.id == address.first.id)) + b.text }
+            = b.label { b.radio_button(:"checked" => (b.object.id == address.first.id)) + b.text }
   br
   .insert-new-address-block style="display:none;"
     - address_count = (address.count + 1).to_s

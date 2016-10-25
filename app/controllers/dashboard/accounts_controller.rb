@@ -26,7 +26,7 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def create_fly_buy_profile
-    create_update_flybuy_profile
+    fly_buy_profile = create_update_flybuy_profile
     
     if current_user.present? && current_user.profile_complete? == false
       return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must complete your profile before you can create a bank account." }
@@ -41,9 +41,18 @@ class Dashboard::AccountsController < DashboardController
     end
 
     if request.post? && fly_buy_params.present?
-      FlyAndBuy::UserOperations.new(current_user, fly_buy_profile, fly_buy_params).create_user
-
-      FlyAndBuy::AddingBankDetails.new(current_user, fly_buy_profile, fly_buy_params).add_details
+      bank_account_details = {
+        bank_name: fly_buy_params["bank_name"],
+        address: fly_buy_params["address"],
+        name_on_account: fly_buy_params["name_on_account"],
+        account_num: fly_buy_params["account_num"],
+        routing_num: fly_buy_params["routing_num"],
+        address_id: fly_buy_params["address_id"]
+      }
+      
+      CreateUserForFlyBuyJob.perform_later(current_user, fly_buy_profile)
+      AddBankDetailsForFlyBuyJob.perform_later(current_user, fly_buy_profile, bank_account_details)
+      fly_buy_profile.update_attribute(:completed, true)
       redirect_to dashboard_accounts_path
     end
   rescue SynapsePayRest::Error::Conflict => e
@@ -77,6 +86,12 @@ class Dashboard::AccountsController < DashboardController
       fly_buy_profile.update(necessary_fly_buy_params)
     else
 
+      necessary_fly_buy_params = fly_buy_params.except(
+                                    :email, :address_id,
+                                    :fingerprint, :bank_name,
+                                    :name_on_account, :account_num
+                                  )
+
       necessary_fly_buy_params.merge!(
         synapse_ip_address: request.ip,
         encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"],
@@ -86,15 +101,13 @@ class Dashboard::AccountsController < DashboardController
 
       fly_buy_profile = FlyBuyProfile.create(necessary_fly_buy_params)
     end
+    fly_buy_profile
   end
 
   def answer_kba_question
     if request.post? && fly_buy_params.present?
       fly_buy_profile = current_user.fly_buy_profile
       FlyAndBuy::AnswerKbaQuestions.new(current_user, fly_buy_profile, fly_buy_params).process
-      # if answer_kba_response["error"].present? && answer_kba_response["error"]["en"].present?
-      #   flash[:alert] = answer_kba_response["error"]["en"]
-      # end
       redirect_to dashboard_accounts_path
     end
   end
