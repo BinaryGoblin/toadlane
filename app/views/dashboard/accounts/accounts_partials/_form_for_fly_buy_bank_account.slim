@@ -87,13 +87,13 @@ br
       = f.label :eic_attachment, 'EIN Document:', class: 'required'
       = link_to "Lost your ein?", 'https://www.irs.gov/businesses/small-businesses-self-employed/lost-or-misplaced-your-ein', class: 'view', target: '_blank'
       = f.file_field :eic_attachment
-      p style="color:red;" Format must png, jpg
+      p.warning Format must be png, jpg or pdf
   
   .col-md-6
     .form-group
       = f.label :bank_statement, 'Bank statement:', class: 'required'
       = f.file_field :bank_statement, required: true
-      p style="color:red;" Format must png, jpg
+      p.warning Format must be png, jpg or pdf
 hr
 
 h4 User Verification:
@@ -103,22 +103,23 @@ br
     .form-group
       .offer-item
         .offer-date
-          label User DOB:
+          label Your date of birth:
           = date_select :fly_buy_profile, :dob, { :start_year => 60.year.ago.year, :end_year => Date.today.year, order: [:month, :day, :year]}, { class: "form-control" }
   .col-md-6
     .form-group
-        = f.label :ssn_number, 'SSN Number of Officer:', class: 'required'
+        = f.label :ssn_number, 'SOCIAL SECURITY NUMBER:', class: 'required'
         = f.text_field :ssn_number, class: 'form-control', required: true
 
 .row
   .col-md-6
     .form-group
-      = f.label :gov_id, 'Govenment Issued ID of Officer:', class: 'required'
+      = f.label :gov_id, 'GOVERNMENT ISSUED ID:', class: 'required'
       = f.file_field :gov_id, required: true
-      p style="color:red;" Format must png, jpg
+      p.warning Format must be png, jpg or pdf
 hr
 
-h4 Bank Account Details:
+h4 Bank Account Verification:
+p.warning This is the account you use to send and receive funds with Fly & Buy
 br
 .row
   .col-md-6

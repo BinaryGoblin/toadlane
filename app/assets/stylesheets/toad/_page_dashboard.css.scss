@@ -457,7 +457,10 @@
       text-align: justify;
     }
   }
-  .account-promisepay{
+  .account-flybuy{
+    p.warning{
+      color: red;
+    }
     .create_fly_buy_profile{
       .offer-item {
         @include clearfix;
