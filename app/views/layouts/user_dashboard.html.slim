@@ -17,7 +17,7 @@ html
   body
     - if flash[:alert]
       .main-alert data-behavior="FlashMessages"= flash[:alert].upcase
-    - elsif flash[:notice]
+    / - elsif flash[:notice]
       .main-notice data-behavior="FlashMessages"= flash[:notice].upcase
 
     = render '/shared/header'
