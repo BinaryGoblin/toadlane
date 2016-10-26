@@ -12,4 +12,6 @@
 
 class Fee < ActiveRecord::Base
   validates_numericality_of :value
+
+  FlyBuyReductionFeeAmount = 75.0
 end

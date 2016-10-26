@@ -79,7 +79,9 @@ class Behavior.CalculationProduct
     total = quantity * @unitPrice
 
     if $('.user_accounts').children().find('span').text() == "Fly & Buy"
-      fees = 0  # PromisePayToadlaneFeeAmount for buyers
+      without_reduction_fees = total * (@fees || 0) / 100
+      reduction_in_fees = without_reduction_fees * 75 / 100
+      fees = without_reduction_fees - reduction_in_fees
     else
       fees              = total * (@fees || 0) / 100
 

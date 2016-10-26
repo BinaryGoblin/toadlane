@@ -101,7 +101,10 @@
                 span <span class="calc-rebate">0.00</span>% rebate for purchasing <span class="calc-pcs">0</span> pcs:
                 b.pull-right.calc-rebate-price 0.00
               li
-                span Toadlane Fee (<span class="calc-fees">#{@fee}</span>%):
+                - if @product.default_payment_flybuy?
+                  span Toadlane Fee (<span class="calc-fees">#{@fee}</span>% - #{Fee::FlyBuyReductionFeeAmount}% reduction):
+                - else
+                  span Toadlane Fee (<span class="calc-fees">#{@fee}</span>%):
                 b.pull-right.calc-fees-price 0.00
               li
                 span Shipping Estimate ($<span class="calc-shipping" data-type="PerUnit">0.00</span>/unit):
