@@ -63,8 +63,14 @@ class Dashboard::AccountsController < DashboardController
 
   def create_update_flybuy_profile
     if fly_buy_params["address_attributes"].present?
-      address = current_user.addresses.create(fly_buy_params["address_attributes"][(current_user.addresses.count + 1).to_s])
-      fly_buy_params.merge!(address_id: address.id).except!(:address_attributes)
+      address_attributes_param = fly_buy_params["address_attributes"][(current_user.addresses.count + 1).to_s]
+      empty_keys = address_attributes_param.select {|k, v| v.empty?}
+      if empty_keys.count == 5
+        fly_buy_params.except!(:address_attributes)
+      else
+        address = current_user.addresses.create(address_attributes_param)
+        fly_buy_params.merge!(address_id: address.id).except!(:address_attributes)
+      end
     end
 
     current_user.update_attribute(:phone, fly_buy_params["company_phone"])
