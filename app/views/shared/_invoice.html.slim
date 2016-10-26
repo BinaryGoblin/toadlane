@@ -80,14 +80,14 @@
       - if order.instance_of?(FlyBuyOrder)
         - if current_user == order.seller
           tr
-            td colspan="3" Toadlane Fee (#{fee}% - #{Fee::FlyBuyReductionFeeAmount}% reduced)
+            td colspan="3" Toadlane Fee (#{get_fly_buy_toadlane_fee}% - #{Fee::FlyBuyReductionFeeAmount}% reduced)
             td #{number_to_currency(number_with_precision(order.fee, precision: 2, delimiter: ''))}
           tr
             td colspan="3" Seller Fees #{order.seller_fees_percent}%
             td - #{number_to_currency(number_with_precision(order.seller_fees_amount, precision: 2, delimiter: ''))}
         - elsif current_user == order.buyer
           tr
-            td colspan="3" Toadlane Fee (#{fee}% - #{Fee::FlyBuyReductionFeeAmount}% reduced)
+            td colspan="3" Toadlane Fee (#{get_fly_buy_toadlane_fee}% - #{Fee::FlyBuyReductionFeeAmount}% reduced)
             td #{number_to_currency(number_with_precision(order.fee, precision: 2, delimiter: ''))}
       - else
         tr
