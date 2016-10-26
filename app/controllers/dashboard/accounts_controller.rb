@@ -61,8 +61,6 @@ class Dashboard::AccountsController < DashboardController
     redirect_to dashboard_accounts_path
   end
 
-  
-
   def answer_kba_question
     if request.post? && fly_buy_params.present?
       fly_buy_profile = current_user.fly_buy_profile
@@ -71,66 +69,6 @@ class Dashboard::AccountsController < DashboardController
     end
   end
 
-  def create_promise_account
-    if current_user.present? && !current_user.profile_complete?
-      return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must complete your profile before you can create a bank account." }
-    end
-
-    promise_pay_instance = PromisePayService.new
-
-    address = current_user.addresses.first
-    phone_number = Phonelib.parse(current_user.phone)
-    country = IsoCountryCodes.find(address.country)
-    all_user_ids = promise_pay_instance.client.users.find_all.map &:id
-    if all_user_ids.include? current_user.id.to_s
-      user = promise_pay_instance.client.users.find(current_user.id)
-    else
-      user = promise_pay_instance.client.users.create(
-              id: current_user.id,
-              first_name: current_user.first_name,
-              last_name: current_user.last_name,
-              email: current_user.email,
-              company: current_user.company,
-              mobile: phone_number.international,
-              address: address.line1,
-              city: address.city,
-              state: address.state,
-              zip: address.zip,
-              country: country.alpha3
-            )
-    end
-
-    country_for_bank = IsoCountryCodes.find(promise_params['country'])
-
-    bank_account = promise_pay_instance.client.bank_accounts.create(
-      user_id: user.id,
-      bank_name: promise_params['bank_name'],
-      account_name: promise_params['account_name'],
-      routing_number: promise_params['routing_number'],
-      account_number: promise_params['account_number'],
-      account_type: promise_params['account_type'],
-      holder_type: promise_params['holder_type'],
-      country: country_for_bank.alpha3
-    )
-
-    direct_debit_agreement = promise_params["direct_debit_agreement"] == "1"
-
-    PromiseAccount.create({
-      user_id: current_user.id,
-      bank_account_id: bank_account.id,
-      direct_debit_agreement: direct_debit_agreement
-    })
-
-    if current_user.promise_account.present? && current_user.promise_account.bank_account_id.present?
-      flash[:notice] = "Bank Account was successfully added."
-    else
-      flash[:alert] = "There was some problem adding bank account."
-    end
-    redirect_to request.referrer
-  rescue Promisepay::UnprocessableEntity => e
-    flash[:error] = e.message
-    redirect_to request.referrer
-  end
 
   def create_amg_profile
     if amg_params.present?
@@ -176,22 +114,6 @@ class Dashboard::AccountsController < DashboardController
     end
   end
 
-  def set_armor_profile
-    current_armor_profile = current_user.armor_profile
-    if current_armor_profile.present?
-      armor_profile = current_armor_profile
-    elsif params[:confirmed_email].present? && current_armor_profile.nil?
-      armor_profile = ArmorProfile.create(:confirmed_email => params[:confirmed_email], :user_id => current_user.id)
-    else
-      armor_profile = ArmorProfile.new
-    end
-
-    if params[:product_id].present? && params[:armor_order_id].present?
-      redirect_to product_checkout_path(product_id: params[:product_id], armor_order_id: params[:armor_order_id], armor_profile_id: armor_profile.id), :flash => { :notice => "Your email has been confirmed successfully. fill up other details to create armor profile" }
-    else
-      redirect_to dashboard_accounts_path(armor_profile_id: armor_profile.id), :flash => { :notice => "Your email has been confirmed successfully. fill up other details to create armor profile" }
-    end
-  end
 
   # for valid phone number
   def check_valid_phone_number
