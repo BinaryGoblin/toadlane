@@ -239,7 +239,7 @@ class User < ActiveRecord::Base
   end
 
   def fly_buy_profile_account_added?
-    fly_buy_profile_exist? && fly_buy_profile.permission_scope_verified == true
+    fly_buy_profile_exist? && fly_buy_profile.completed == true
   end
 
   private
