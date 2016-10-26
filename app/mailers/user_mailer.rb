@@ -150,7 +150,7 @@ class UserMailer < ActionMailer::Base
     mail to: @user, subject: "Fly & Buy account verified"
   end
 
-  def send_account_not_verified_yet_notification_to_user.(fly_buy_profile)
+  def send_account_not_verified_yet_notification_to_user(fly_buy_profile)
     @fly_buy_profile = fly_buy_profile
     @user = @fly_buy_profile.user
 
