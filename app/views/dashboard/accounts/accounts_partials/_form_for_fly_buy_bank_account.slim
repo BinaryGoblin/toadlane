@@ -35,13 +35,14 @@ br
 hr
 .row.flybuy-address-block
   - address = Address.where(:user => user).order('created_at')
-  span.text-right
-    button.btn.btn-success.show-address-block-button = fa_icon 'plus', text: 'ADD ANOTHER ADDRESS'
   .col-md-8
     thead
       tr
         th
           h4 Address::
+          br
+          .text-left
+            button.btn.btn-success.show-address-block-button = fa_icon 'plus', text: 'ADD ANOTHER ADDRESS'
           br
     tbody
       = f.collection_radio_buttons(:address_id, address, :id, :get_inline_address) do |b, index|
