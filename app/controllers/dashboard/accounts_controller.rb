@@ -310,6 +310,7 @@ class Dashboard::AccountsController < DashboardController
             permission_scope_verified: true,
             kba_questions: {}
           })
+          UserMailer.send_account_verified_notification_to_user(fly_buy_profile).deliver_later
         end
       end
     end

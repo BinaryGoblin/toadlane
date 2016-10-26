@@ -143,6 +143,13 @@ class UserMailer < ActionMailer::Base
     mail to: @seller.email, subject: "Payment released by #{@buyer.name} for order #{@order.id}"
   end
 
+  def send_account_verified_notification_to_user(fly_buy_profile)
+    @fly_buy_profile = fly_buy_profile
+    @user = @fly_buy_profile.user
+
+    mail to: @user, subject: "Fly & Buy account verified"
+  end
+
   def send_inspection_date_arriving_to_seller(order, days)
     @order = order
     @seller = @order.seller
