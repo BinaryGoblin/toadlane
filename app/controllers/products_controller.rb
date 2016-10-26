@@ -34,7 +34,11 @@ class ProductsController < ApplicationController
       impressionist(@product)
     end
     @stripe_order = StripeOrder.new
-    @fee = Fee.find_by(:module_name => "Stripe").value
+    if @product.default_payment_flybuy?
+      @fee = Fee.find_by(:module_name => "Fly & Buy").value
+    else
+      @fee = Fee.find_by(:module_name => "Stripe").value
+    end
     commontator_thread_show(@product)
     # impressionist(@product)
     @related_products = Product.unexpired.where(main_category: @product.main_category).where.not(id: @product.id)
