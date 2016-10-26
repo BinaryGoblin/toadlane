@@ -25,7 +25,7 @@
   - elsif user.fly_buy_profile.present? && user.fly_buy_profile.completed == true && fly_buy_profile.permission_scope_verified == false
     p <b>Status:</b><span class="success">You have successfully added your bank account details, but it is not verified yet.</span>
   - else
-    p <b>Status:</b> <span class="warning">Add to your company information to send and receive funds.</span>
+    p <b>Status:</b> <span class="warning">Add your company information to send and receive funds.</span>
     
     = form_for fly_buy_profile, url: create_fly_buy_profile_dashboard_accounts_path, method: "post", :html => { class: 'create_fly_buy_profile' } do |f|
       = f.hidden_field :fingerprint, :value => nil
