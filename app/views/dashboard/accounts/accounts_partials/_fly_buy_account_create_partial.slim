@@ -22,8 +22,10 @@
             = f.radio_button field_name, answer["id"]
             = f.label answer["answer"]
       = f.submit "Submit", class: "btn btn-primary"
+  
   - elsif user.fly_buy_profile.present? && user.fly_buy_profile.completed == true && fly_buy_profile.permission_scope_verified == false
-    p <b>Status:</b><span class="success">You have successfully added your bank account details, but it is not verified yet.</span>
+    p <b>Status:</b><span class="warning">You have successfully submitted your information. You will receive updates as your account is verified.</span>
+  
   - else
     p <b>Status:</b> <span class="warning">Add your company information to send and receive funds.</span>
     
