@@ -187,7 +187,7 @@ class Dashboard::AccountsController < DashboardController
           })
           UserMailer.send_account_verified_notification_to_user(fly_buy_profile).deliver_later
         else
-          UserMailer.send_account_not_verified_yet_notification_to_user.(fly_buy_profile).deliver_later
+          UserMailer.send_account_not_verified_yet_notification_to_user(fly_buy_profile).deliver_later
         end
       end
     end
