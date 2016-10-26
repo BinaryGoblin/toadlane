@@ -92,11 +92,7 @@ module ProductHelper
   end
 
   def product_views_text(count)
-    if count > 1
-      "#{count} Product Views"
-    else
-      "#{count} Product View"
-    end
+    "#{count} Product Views"
   end
 
   def assignable_users_collection

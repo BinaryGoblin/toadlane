@@ -14,7 +14,7 @@ html
     = csrf_meta_tags
 
   body.admin_dashboard
-    - if flash[:notice]
+    / - if flash[:notice]
       .main-notice data-behavior="FlashMessages"= flash[:notice]
 
     = render '/shared/admin_header'
