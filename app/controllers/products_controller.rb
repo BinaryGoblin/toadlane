@@ -79,7 +79,12 @@ class ProductsController < ApplicationController
       redirect_to product_path(@product), :flash => { :error => "You must complete your profile before you can view product details." }
     end
 
-    response.headers["X-FRAME-OPTIONS"] = "SAMEORIGIN"
+    if @product.default_payment_flybuy?
+      fee = Fee.find_by(:module_name => "Fly & Buy").value
+    else
+      fee = Fee.find_by(:module_name => "Stripe").value
+    end
+
 
     @data = {
       total: params[:total],
@@ -89,7 +94,7 @@ class ProductsController < ApplicationController
       rebate: params[:rebate],
       rebate_percent: params[:rebate_percent],
       available_product: @product.remaining_amount,
-      fee: Fee.find_by(:module_name => "Stripe").value
+      fee: fee
     }
 
     @fly_buy_order, @fly_buy_profile = fly_buy_order_process(@product)
@@ -185,7 +190,7 @@ class ProductsController < ApplicationController
         total: params[:total],
         rebate_price: params[:rebate],
         rebate: params[:rebate_percent],
-        fee: params[:fee], # this is fee amount for buyer
+        fee: params[:fee], # this is fee amount for buyer i.e Toadlane Fee
 
       })
 

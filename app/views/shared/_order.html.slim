@@ -5,7 +5,7 @@
       h4.modal-title Purchase Order Invoice
 
     .modal-body
-      = render partial: '/shared/invoice', :locals => {:order => order}
+      = render partial: '/shared/invoice', :locals => {:order => order, :fee => @fee}
 
       br
       br

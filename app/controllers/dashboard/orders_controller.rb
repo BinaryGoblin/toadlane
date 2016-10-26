@@ -12,6 +12,7 @@ class Dashboard::OrdersController < DashboardController
     orders =  fly_buy_orders + stripe_orders + green_orders + amg_orders + emb_orders
 
     @orders = orders.sort_by(&:created_at).reverse
+    @fee = Fee.find_by(:module_name => "Fly & Buy").value
   end
 
   def show
@@ -27,6 +28,7 @@ class Dashboard::OrdersController < DashboardController
     when 'emb'
       @order = EmbOrder.find(params[:id])
     when 'fly_buy'
+      @fee = Fee.find_by(:module_name => "Fly & Buy").value
       @order = FlyBuyOrder.find(params[:id])
     else
       @order = StripeOrder.find(params[:id])

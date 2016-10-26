@@ -10,7 +10,7 @@
     td -<span class="stripe-rebate-price">#{number_to_currency(fly_buy_order.rebate_price)}</span>
 
   tr
-    td colspan="3" Toadlane Fee <span class="calc-fees"></span>
+    td colspan="3" Toadlane Fee (<span class="calc-fees">#{data[:fee]}</span>% - #{Fee::FlyBuyReductionFeeAmount}% reduced):
     td  <span class="stripe-fees-price">#{number_to_currency(fly_buy_order.fee)}</span>
 
   tr

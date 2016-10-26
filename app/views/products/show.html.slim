@@ -102,7 +102,7 @@
                 b.pull-right.calc-rebate-price 0.00
               li
                 - if @product.default_payment_flybuy?
-                  span Toadlane Fee (<span class="calc-fees">#{@fee}</span>% - #{Fee::FlyBuyReductionFeeAmount}% reduction):
+                  span Toadlane Fee (<span class="calc-fees">#{@fee}</span>% - #{Fee::FlyBuyReductionFeeAmount}% reduced):
                 - else
                   span Toadlane Fee (<span class="calc-fees">#{@fee}</span>%):
                 b.pull-right.calc-fees-price 0.00
