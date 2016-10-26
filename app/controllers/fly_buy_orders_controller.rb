@@ -36,7 +36,7 @@ class FlyBuyOrdersController < ApplicationController
                       encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"],
                       synapse_ip_address: request.ip)
       end
-      CreateUserForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id)
+      CreateUserForFlyBuyJob.perform_now(current_user.id, fly_buy_profile.id)
 
       if fly_buy_order.update_attribute(:status, 'processing')
         product.sold_out += fly_buy_order.count
@@ -256,7 +256,7 @@ class FlyBuyOrdersController < ApplicationController
         routing_num: fly_buy_params["routing_num"],
         address_id: fly_buy_params["address_id"]
       }
-      AddBankDetailsForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id, bank_account_details)
+      AddBankDetailsForFlyBuyJob.perform_now(current_user.id, fly_buy_profile.id, bank_account_details)
       fly_buy_profile.update_attribute(:completed, true)
     end
 
