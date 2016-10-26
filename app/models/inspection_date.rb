@@ -58,7 +58,7 @@ class InspectionDate < ActiveRecord::Base
       end
 
       unless product.start_date < date && date < product.end_date
-        errors.add(:date, "must be in between product's start date and end date")
+        errors.add(:date, "must be in between product's start date and end date. Please enter valid date.")
       end
     end
   end
