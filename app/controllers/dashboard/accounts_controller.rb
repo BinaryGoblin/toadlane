@@ -61,54 +61,7 @@ class Dashboard::AccountsController < DashboardController
     redirect_to dashboard_accounts_path
   end
 
-  def create_update_flybuy_profile
-    if fly_buy_params["address_attributes"].present?
-      address_attributes_param = fly_buy_params["address_attributes"][(current_user.addresses.count + 1).to_s]
-      empty_keys = address_attributes_param.select {|k, v| v.empty?}
-      if empty_keys.count == 5
-        fly_buy_params.except!(:address_attributes)
-      else
-        address = current_user.addresses.create(address_attributes_param)
-        fly_buy_params.merge!(address_id: address.id).except!(:address_attributes)
-      end
-    end
-
-    current_user.update_attribute(:phone, fly_buy_params["company_phone"])
-
-    if current_user.fly_buy_profile.present?
-      fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
-      necessary_fly_buy_params = fly_buy_params.except(
-                                    :email, :address_id,
-                                    :fingerprint, :bank_name,
-                                    :name_on_account, :account_num
-                                  )
-
-      necessary_fly_buy_params.merge!(
-        synapse_ip_address: request.ip,
-        encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"],
-        user_id: current_user.id, company_email: fly_buy_params["email"]
-      )
-
-      fly_buy_profile.update(necessary_fly_buy_params)
-    else
-
-      necessary_fly_buy_params = fly_buy_params.except(
-                                    :email, :address_id,
-                                    :fingerprint, :bank_name,
-                                    :name_on_account, :account_num
-                                  )
-
-      necessary_fly_buy_params.merge!(
-        synapse_ip_address: request.ip,
-        encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"],
-        user_id: current_user.id,
-        company_email: fly_buy_params["email"]
-      )
-
-      fly_buy_profile = FlyBuyProfile.create(necessary_fly_buy_params)
-    end
-    fly_buy_profile
-  end
+  
 
   def answer_kba_question
     if request.post? && fly_buy_params.present?
@@ -396,5 +349,54 @@ class Dashboard::AccountsController < DashboardController
 
   def emb_params
     params.require(:emb_profile).permit!
+  end
+
+  def create_update_flybuy_profile
+    if fly_buy_params["address_attributes"].present?
+      address_attributes_param = fly_buy_params["address_attributes"][(current_user.addresses.count + 1).to_s]
+      empty_keys = address_attributes_param.select {|k, v| v.empty?}
+      if empty_keys.count == 5
+        fly_buy_params.except!(:address_attributes)
+      else
+        address = current_user.addresses.create(address_attributes_param)
+        fly_buy_params.merge!(address_id: address.id).except!(:address_attributes)
+      end
+    end
+
+    current_user.update_attribute(:phone, fly_buy_params["company_phone"])
+
+    if current_user.fly_buy_profile.present?
+      fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
+      necessary_fly_buy_params = fly_buy_params.except(
+                                    :email, :address_id,
+                                    :fingerprint, :bank_name,
+                                    :name_on_account, :account_num
+                                  )
+
+      necessary_fly_buy_params.merge!(
+        synapse_ip_address: request.ip,
+        encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"],
+        user_id: current_user.id, company_email: fly_buy_params["email"]
+      )
+
+      fly_buy_profile.update(necessary_fly_buy_params)
+    else
+
+      necessary_fly_buy_params = fly_buy_params.except(
+                                    :email, :address_id,
+                                    :fingerprint, :bank_name,
+                                    :name_on_account, :account_num
+                                  )
+
+      necessary_fly_buy_params.merge!(
+        synapse_ip_address: request.ip,
+        encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"],
+        user_id: current_user.id,
+        company_email: fly_buy_params["email"]
+      )
+
+      fly_buy_profile = FlyBuyProfile.create(necessary_fly_buy_params)
+    end
+    fly_buy_profile
   end
 end
