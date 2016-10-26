@@ -49,7 +49,7 @@ class InspectionDate < ActiveRecord::Base
         errors.add(:date, 'must be unique.')
       end
 
-      if date.to_date <= Date.today
+      if date.utc <= Date.today
         errors.add(:date, 'must be greater than today.')
       end
 
