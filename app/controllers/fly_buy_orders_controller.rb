@@ -257,7 +257,7 @@ class FlyBuyOrdersController < ApplicationController
         address_id: fly_buy_params["address_id"]
       }
       AddBankDetailsForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id, bank_account_details)
-      # FlyAndBuy::AddingBankDetails.new(current_user, fly_buy_profile, fly_buy_params).add_details
+      fly_buy_profile.update_attribute(:completed, true)
     end
 
     if current_user.fly_buy_profile.kba_questions.present? && current_user.fly_buy_profile.permission_scope_verified == false
