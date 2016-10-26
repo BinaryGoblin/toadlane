@@ -99,6 +99,11 @@ $height-carousel-default: 670px;
     font-weight: bold;
   }
 
+  p{
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    font-weight: bold;
+  }
+
   .btn {
     text-transform: uppercase;
   }
