@@ -103,7 +103,7 @@ class User < ActiveRecord::Base
   def has_payment_account?
     self.stripe_profile.present? || self.green_profile.present? ||
         self.amg_profile.present? || self.emb_profile.present? ||
-        self.fly_buy_profile_verified?
+        self.fly_buy_profile_account_added?
   end
 
   def armor_orders(type=nil)
@@ -219,7 +219,7 @@ class User < ActiveRecord::Base
     ap << Product::PaymentOptions[:green] if green_profile.present?
     ap << Product::PaymentOptions[:amg] if amg_profile.present?
     ap << Product::PaymentOptions[:emb] if emb_profile.present?
-    if fly_buy_profile_verified?
+    if fly_buy_profile_account_added?
       ap << Product::PaymentOptions[:fly_buy]
     end
     ap
@@ -238,7 +238,7 @@ class User < ActiveRecord::Base
     fly_buy_profile.synapse_node_id.present?
   end
 
-  def fly_buy_profile_verified?
+  def fly_buy_profile_account_added?
     fly_buy_profile_exist? && fly_buy_profile.permission_scope_verified == true
   end
 

@@ -6,7 +6,7 @@ class FlyBuyOrdersController < ApplicationController
     product = fly_buy_order.product
     seller_fee_percent, seller_fee_amount = get_seller_fees(fly_buy_order)
 
-    if current_user.fly_buy_profile_verified?
+    if current_user.fly_buy_profile_account_added?
       create_transaction_response = create_transaction_in_synapsepay(fly_buy_order, product)
       if create_transaction_response["recent_status"]["note"] == "Transaction created"
         fly_buy_order.update_attributes({

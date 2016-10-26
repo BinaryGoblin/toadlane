@@ -94,7 +94,7 @@ class Product < ActiveRecord::Base
     ap << PaymentOptions[:green] if green_present?
     ap << PaymentOptions[:amg] if amg_present?
     ap << PaymentOptions[:emb] if emb_present?
-    if user.fly_buy_profile_verified?
+    if user.fly_buy_profile_account_added?
       ap << PaymentOptions[:fly_buy]
     end
     ap

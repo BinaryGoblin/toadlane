@@ -214,7 +214,7 @@ class ProductsController < ApplicationController
 
     session[:fly_buy_order_id] = fly_buy_order.id
 
-    fly_buy_profile = current_user.fly_buy_profile_verified? ? current_user.fly_buy_profile : FlyBuyProfile.new
+    fly_buy_profile = current_user.fly_buy_profile_account_added? ? current_user.fly_buy_profile : FlyBuyProfile.new
 
     [fly_buy_order, fly_buy_profile]
   end
