@@ -1,8 +1,9 @@
 class FlyAndBuy::CreateTransaction
 
-	attr_accessor  :client, :fly_buy_profile, :client_user, :fly_buy_order
+	attr_accessor  :client, :fly_buy_profile, :client_user, :fly_buy_order, :signed_in_user
 
-	def initialize(fly_buy_profile, fly_buy_order)
+	def initialize(signed_in_user, fly_buy_profile, fly_buy_order)
+    @signed_in_user = signed_in_user
 		@fly_buy_profile = fly_buy_profile
 		@fly_buy_order = fly_buy_order
 		@client = FlyBuyService.get_client
@@ -125,7 +126,7 @@ class FlyAndBuy::CreateTransaction
         {
             layout: 'layouts/print.html.slim',
             file: Rails.root + '/app/views/shared/_invoice.html.slim',
-            locals: {order: fly_buy_order}
+            locals: {order: fly_buy_order, :user => signed_in_user}
         })
     kit = IMGKit.new(html)
     img = kit.to_png
