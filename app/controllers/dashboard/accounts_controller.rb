@@ -49,9 +49,14 @@ class Dashboard::AccountsController < DashboardController
         routing_num: fly_buy_params["routing_num"],
         address_id: fly_buy_params["address_id"]
       }
-      
-      CreateUserForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id)
-      AddBankDetailsForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id, bank_account_details)
+
+      if fly_buy_profile.synapse_user_id.present?
+        AddBankDetailsForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id, bank_account_details)
+      else 
+        CreateUserForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id)
+        AddBankDetailsForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id, bank_account_details)
+      end
+
       fly_buy_profile.update_attribute(:completed, true)
       redirect_to dashboard_accounts_path
     end
@@ -65,6 +70,7 @@ class Dashboard::AccountsController < DashboardController
     if request.post? && fly_buy_params.present?
       fly_buy_profile = current_user.fly_buy_profile
       FlyAndBuy::AnswerKbaQuestions.new(current_user, fly_buy_profile, fly_buy_params).process
+      fly_buy_profile.update_attribute(:completed, true)
       redirect_to dashboard_accounts_path
     end
   end
@@ -188,6 +194,33 @@ class Dashboard::AccountsController < DashboardController
           UserMailer.send_account_verified_notification_to_user(fly_buy_profile).deliver_later
         else
           UserMailer.send_account_not_verified_yet_notification_to_user(fly_buy_profile).deliver_later
+        end
+      elsif params["_id"]["$oid"].present? && params["documents"][1]["virtual_docs"][0]["status"] == "SUBMITTED|INVALID"
+        # This is for SSN entered `1111` and is not valid
+        synapse_user_id = params["_id"]["$oid"]
+        fly_buy_profile = FlyBuyProfile.find_by_synapse_user_id(synapse_user_id)
+
+        if fly_buy_profile.present?
+          fly_buy_profile.update_attributes({
+            permission_scope_verified: false,
+            kba_questions: {},
+            completed: false
+          })
+          UserMailer.send_ssn_num_not_valid_notification_to_user(fly_buy_profile).deliver_later
+        end
+      elsif params["_id"]["$oid"].present? && params["documents"][1]["virtual_docs"][0]["status"] == "SUBMITTED|MFA_PENDING"
+        # this is for SSN `3333`
+        synapse_user_id = params["_id"]["$oid"]
+        fly_buy_profile = FlyBuyProfile.find_by_synapse_user_id(synapse_user_id)
+
+        if fly_buy_profile.present?
+          questions = params["documents"][1]["virtual_docs"][0]["meta"]
+          fly_buy_profile.update_attributes({
+            permission_scope_verified: false,
+            kba_questions: questions,
+            completed: false
+          })
+          UserMailer.send_ssn_num_partially_valid_notification_to_user(fly_buy_profile).deliver_later
         end
       end
     end

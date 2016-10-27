@@ -154,7 +154,21 @@ class UserMailer < ActionMailer::Base
     @fly_buy_profile = fly_buy_profile
     @user = @fly_buy_profile.user
 
-    mail to: @user, subject: "Fly & Buy account notverified yet"
+    mail to: @user.email, subject: "Fly & Buy account not verified yet"
+  end
+
+  def send_ssn_num_not_valid_notification_to_user(fly_buy_profile)
+    @fly_buy_profile = fly_buy_profile
+    @user = @fly_buy_profile.user
+
+    mail to: @user.email, subject: "Social Security Number did not matched"
+  end
+
+  def send_ssn_num_partially_valid_notification_to_user(fly_buy_profile)
+    @fly_buy_profile = fly_buy_profile
+    @user = @fly_buy_profile.user
+
+    mail to: @user.email, subject: "Social Security Number partially matched"
   end
 
   def send_inspection_date_arriving_to_seller(order, days)
