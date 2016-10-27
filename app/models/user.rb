@@ -162,7 +162,8 @@ class User < ActiveRecord::Base
     elsif type == 'sold'
       FlyBuyOrder.where(seller_id: self.id)
     else
-      FlyBuyOrder.where('buyer_id = ? OR seller_id = ?', self.id, self.id)
+      fly_buy_orders = FlyBuyOrder.where('buyer_id = ? OR seller_id = ?', self.id, self.id)
+      fly_buy_orders.where.not(count: nil, status: nil)
     end
   end
 
