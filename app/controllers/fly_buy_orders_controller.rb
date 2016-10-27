@@ -35,8 +35,8 @@ class FlyBuyOrdersController < ApplicationController
                       user_id: current_user.id,
                       encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"],
                       synapse_ip_address: request.ip)
+        CreateUserForFlyBuyJob.perform_now(current_user.id, fly_buy_profile.id)
       end
-      CreateUserForFlyBuyJob.perform_now(current_user.id, fly_buy_profile.id)
 
       if fly_buy_order.update_attribute(:status, 'processing')
         product.sold_out += fly_buy_order.count
