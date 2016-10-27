@@ -44,9 +44,10 @@ class FlyBuyProfile < ActiveRecord::Base
   attr_accessor :account_num, :routing_num, :bank_name, :address, :email,
                   :question_1, :question_2, :question_3, :question_4, :question_5
 
-  EscrowNodeID = '57d7465386c2732e824b7c8b'
-  AppUserId = '57d745ff86c27319cbe0edf0'
-  AppFingerPrint = '8781321799f523327fb8d1f15ffa266d'
+  EscrowNodeID = Rails.env.development? ? Rails.application.secrets['SYNAPSEPAY_ESCROW_NODE_ID'] : ENV['SYNAPSEPAY_ESCROW_NODE_ID']
+  AppUserId = Rails.env.development? ? Rails.application.secrets['SYNAPSEPAY_APP_USER_ID'] : ENV['SYNAPSEPAY_APP_USER_ID']
+  AppFingerPrint = Rails.env.development? ? Rails.application.secrets['SYNAPSEPAY_APP_FINGERPRINT'] : ENV['SYNAPSEPAY_APP_FINGERPRINT']
+  EscrowFeeHolderNodeId = Rails.env.development? ? Rails.application.secrets['SYNAPSEPAY_ESCROW_FEE_HOLDER_NODE_ID'] : ENV['SYNAPSEPAY_ESCROW_FEE_HOLDER_NODE_ID']
 
   has_attached_file :eic_attachment
   has_attached_file :bank_statement
@@ -54,4 +55,5 @@ class FlyBuyProfile < ActiveRecord::Base
   do_not_validate_attachment_file_type :eic_attachment
   do_not_validate_attachment_file_type :bank_statement
   do_not_validate_attachment_file_type :gov_id
+
 end
