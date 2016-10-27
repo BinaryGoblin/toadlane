@@ -20,7 +20,7 @@ class FlyAndBuy::CreateTransaction
 	def create_transaction_process
 		get_user_and_instantiate_user
 
-		transaction_create_response = create_transcation
+		create_transaction_response = create_transcation
 
 		if create_transaction_response["recent_status"]["note"] == "Transaction created"
 			update_fly_buy_order(create_transaction_response)
@@ -121,13 +121,11 @@ class FlyAndBuy::CreateTransaction
   end
 
 	def convert_invoice_to_image
-		ac = ActionController::Base.new()
-    html = ac.render_to_string(
-        {
-            layout: 'layouts/print.html.slim',
-            file: Rails.root + '/app/views/shared/_invoice.html.slim',
-            locals: {order: fly_buy_order, :user => signed_in_user}
-        })
+    html = ActionController::Base.new.send(:render_to_string,
+                                :partial => 'shared/invoice',
+                                :locals => {order: fly_buy_order, :user => signed_in_user},
+                                :layouts => 'layouts/print.html.slim')
+
     kit = IMGKit.new(html)
     img = kit.to_png
     file  = Tempfile.new(["template_#{fly_buy_order.synapse_transaction_id}", 'png'], 'tmp',

@@ -82,4 +82,8 @@ class FlyBuyOrder < ActiveRecord::Base
   def order_a_million?
     total >= 1000000
   end
+
+  def get_toadlane_fee
+    Fee.find_by(:module_name => "Fly & Buy").value
+  end
 end
