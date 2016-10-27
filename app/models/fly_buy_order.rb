@@ -43,7 +43,7 @@ class FlyBuyOrder < ActiveRecord::Base
 
   enum status: [ :cancelled, :placed, :completed, :refunded,
                 :processing, :pending_confirmation, :pending_inspection, :pending_fund_release,
-                :processing_fund_release ]
+                :processing_fund_release, :queued ]
 
   def seller_not_mark_approved
     inspection_dates.buyer_added.not_marked_approved.last

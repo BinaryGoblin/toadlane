@@ -150,6 +150,22 @@ class UserMailer < ActionMailer::Base
     mail to: @seller.email, subject: "Payment released by #{@buyer.name} for order #{@order.id}"
   end
 
+  def send_order_queued_notification_to_seller(order)
+    @order = order
+    @seller = order.seller
+    @buyer = @order.buyer
+
+    mail to: @seller.email, subject: "OrderId ##{@order.id} is queued"
+  end
+
+  def send_order_queued_notification_to_buyer(order)
+    @order = order
+    @seller = order.seller
+    @buyer = @order.buyer
+
+    mail to: @buyer.email, subject: "OrderId ##{@order.id} is queued"
+  end
+
   def send_account_verified_notification_to_user(fly_buy_profile)
     @fly_buy_profile = fly_buy_profile
     @user = @fly_buy_profile.user

@@ -176,6 +176,10 @@ class Dashboard::AccountsController < DashboardController
            })
           UserMailer.send_payment_released_notification_to_seller(fly_buy_order).deliver_later
         end
+      elsif fly_buy_order.present? && params["recent_status"]["status"] == "QUEUED-BY-SYNAPSE"
+        fly_buy_order.update_attribute(:status, 'queued')
+        UserMailer.send_order_queued_notification_to_seller(fly_buy_order).deliver_later
+        UserMailer.send_order_queued_notification_to_buyer(fly_buy_order).deliver_later
       end
     end
     # Handling webhook for if permission status is 'SEND-AND-RECEIVE'
