@@ -127,6 +127,13 @@ class UserMailer < ActionMailer::Base
     mail to: @seller.email, subject: "Funds received in escrow"
   end
 
+  def send_transaction_settled_notification_to_buyer(order)
+    @order = order
+    @buyer = order.buyer
+
+    mail to: @buyer.email, subject: "Funds received in escrow"
+  end
+
   def send_payment_released_notification_to_buyer(promise_order)
     @order = promise_order
     @buyer = @order.buyer

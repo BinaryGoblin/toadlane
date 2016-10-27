@@ -168,6 +168,7 @@ class Dashboard::AccountsController < DashboardController
             funds_in_escrow: true
           })
           UserMailer.send_funds_received_notification_to_seller(fly_buy_order).deliver_later
+          UserMailer.send_transaction_settled_notification_to_buyer(fly_buy_order).deliver_later
         elsif params["account"]["extra"]["note"] == "Released Payment"
           fly_buy_order.update_attributes({
             payment_release: true,
