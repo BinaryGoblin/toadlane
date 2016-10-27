@@ -8,7 +8,7 @@ class FlyBuyOrdersController < ApplicationController
     seller_fee_percent, seller_fee_amount = get_seller_fees(fly_buy_order)
 
     if current_user.fly_buy_profile_account_added?
-      CreateTransactionForFlyBuyJobJob.perform_now(current_user.id, fly_buy_profile.id, fly_buy_order.id)
+      CreateTransactionForFlyBuyJobJob.perform_later(current_user.id, fly_buy_profile.id, fly_buy_order.id)
       # create_transaction_response = create_transaction_in_synapsepay(fly_buy_order, product)
       # if create_transaction_response["recent_status"]["note"] == "Transaction created"
       #   fly_buy_order.update_attributes({
@@ -37,7 +37,7 @@ class FlyBuyOrdersController < ApplicationController
                       user_id: current_user.id,
                       encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"],
                       synapse_ip_address: request.ip)
-        CreateUserForFlyBuyJob.perform_now(current_user.id, fly_buy_profile.id)
+        CreateUserForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id)
       end
 
       if fly_buy_order.update_attribute(:status, 'processing')
@@ -258,14 +258,14 @@ class FlyBuyOrdersController < ApplicationController
         routing_num: fly_buy_params["routing_num"],
         address_id: fly_buy_params["address_id"]
       }
-      AddBankDetailsForFlyBuyJob.perform_now(current_user.id, fly_buy_profile.id, bank_account_details)
+      AddBankDetailsForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id, bank_account_details)
       fly_buy_profile.update_attribute(:completed, true)
     end
 
     if current_user.fly_buy_profile.kba_questions.present? && current_user.fly_buy_profile.permission_scope_verified == false
       redirect_to product_checkout_path(product)
     else
-      CreateTransactionForFlyBuyJobJob.perform_now(current_user.id, fly_buy_profile.id, fly_buy_order.id)
+      CreateTransactionForFlyBuyJobJob.perform_later(current_user.id, fly_buy_profile.id, fly_buy_order.id)
       # create_transaction_response = create_transaction_in_synapsepay(fly_buy_order, product)
 
       # if create_transaction_response["recent_status"]["note"] == "Transaction created"
