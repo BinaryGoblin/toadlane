@@ -161,7 +161,7 @@ class UserMailer < ActionMailer::Base
     @fly_buy_profile = fly_buy_profile
     @user = @fly_buy_profile.user
 
-    mail to: @user.email, subject: "Social Security Number did not matched"
+    mail to: @user.email, subject: "Invalid Social Security Number"
   end
 
   def send_ssn_num_partially_valid_notification_to_user(fly_buy_profile)
