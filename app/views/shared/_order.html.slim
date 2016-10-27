@@ -10,4 +10,4 @@
       br
       br
       .pull-right
-        = link_to "Print Invoice", print_invoice_path(order, :type => params['type']), class: "btn btn-success"
+        = link_to "Print Invoice", print_invoice_path(order, :type => get_type(order)), class: "btn btn-success"

@@ -110,4 +110,18 @@ module FormHelper
   		# ['Travel/Leisure', 'Travel/Leisure']
   	]
   end
+
+  def get_type(order)
+    if order.instance_of? FlyBuyOrder
+      'fly_buy'
+    elsif order.instance_of? GreenOrder
+      'green'
+    elsif order.instance_of? StripeOrder
+      'stripe'
+    elsif order.instance_of? AmgOrder
+      'amg'
+    elsif order.instance_of? EmbOrder
+      'emb'
+    end
+  end
 end
