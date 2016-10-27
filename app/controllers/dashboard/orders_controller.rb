@@ -3,7 +3,7 @@ class Dashboard::OrdersController < DashboardController
 
   def index
     orders = []
-    fly_buy_orders = current_user.fly_buy_orders.with_transaction_id.not_deleted
+    fly_buy_orders = current_user.fly_buy_orders.not_deleted
     stripe_orders = current_user.stripe_orders.for_dashboard(params[:page], params[:per_page])
     green_orders = current_user.green_orders.for_dashboard(params[:page], params[:per_page])
     amg_orders = current_user.amg_orders.for_dashboard(params[:page], params[:per_page])
