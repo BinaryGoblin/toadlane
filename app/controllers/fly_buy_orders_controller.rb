@@ -4,29 +4,31 @@ class FlyBuyOrdersController < ApplicationController
   def place_order
     fly_buy_order = FlyBuyOrder.find_by_id(params[:fly_buy_order_id])
     product = fly_buy_order.product
+    fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
     seller_fee_percent, seller_fee_amount = get_seller_fees(fly_buy_order)
 
     if current_user.fly_buy_profile_account_added?
-      create_transaction_response = create_transaction_in_synapsepay(fly_buy_order, product)
-      if create_transaction_response["recent_status"]["note"] == "Transaction created"
-        fly_buy_order.update_attributes({
-            synapse_escrow_node_id: FlyBuyProfile::EscrowNodeID,
-            synapse_transaction_id: create_transaction_response["_id"],
-            status: 'pending_confirmation',
-            seller_fees_amount: seller_fee_amount,
-            seller_fees_percent: seller_fee_percent,
-          })
+      CreateTransactionForFlyBuyJobJob.perform_now(fly_buy_profile.id, fly_buy_order.id)
+      # create_transaction_response = create_transaction_in_synapsepay(fly_buy_order, product)
+      # if create_transaction_response["recent_status"]["note"] == "Transaction created"
+      #   fly_buy_order.update_attributes({
+      #       synapse_escrow_node_id: FlyBuyProfile::EscrowNodeID,
+      #       synapse_transaction_id: create_transaction_response["_id"],
+      #       status: 'pending_confirmation',
+      #       seller_fees_amount: seller_fee_amount,
+      #       seller_fees_percent: seller_fee_percent,
+      #     })
 
-        product.sold_out += fly_buy_order.count
-        product.save
+      #   product.sold_out += fly_buy_order.count
+      #   product.save
 
-        send_email_notification(fly_buy_order)
+      #   send_email_notification(fly_buy_order)
 
-        redirect_to dashboard_order_path(
-          fly_buy_order,
-          type: 'fly_buy'
-        ), notice: 'Your order was successfully placed.'
-      end
+      redirect_to dashboard_order_path(
+        fly_buy_order,
+        type: 'fly_buy'
+      ), notice: 'Your order was successfully placed.'
+      # end
     else
       if current_user.fly_buy_profile.present?
         fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
@@ -352,21 +354,6 @@ class FlyBuyOrdersController < ApplicationController
     mime_padding + encoded
   end
 
-  def convert_invoice_to_image(fly_buy_order)
-    html = render_to_string(
-        {
-            layout: 'layouts/print.html.slim',
-            file: Rails.root + '/app/views/shared/_invoice.html.slim',
-            locals: {order: fly_buy_order}
-        })
-    kit = IMGKit.new(html)
-    img = kit.to_png
-    file  = Tempfile.new(["template_#{fly_buy_order.synapse_transaction_id}", 'png'], 'tmp',
-                         :encoding => 'ascii-8bit')
-    file.write(img)
-
-    file
-  end
 
   def create_transaction_in_synapsepay(fly_buy_order, product)
     if Rails.env.development?
