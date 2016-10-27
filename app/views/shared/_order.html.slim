@@ -5,9 +5,9 @@
       h4.modal-title Purchase Order Invoice
 
     .modal-body
-      = render partial: '/shared/invoice', :locals => {:order => order}
+      = render partial: '/shared/invoice', :locals => {:order => order, :user => current_user}
 
       br
       br
       .pull-right
-          = link_to "Print Invoice", print_invoice_path(order, :type => params['type']), class: "btn btn-success"
+        = link_to "Print Invoice", print_invoice_path(order, :type => params['type']), class: "btn btn-success"

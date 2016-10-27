@@ -15,7 +15,7 @@
       th
       tr
         td
-          = render partial: '/shared/invoice', :locals => {:order => @order}
+          = render partial: '/shared/invoice', :locals => {:order => @order, :user => current_user}
 
           .pull-right
             = link_to "Print Invoice", print_invoice_path(@order, :type => params['type']), class: "btn btn-success"
