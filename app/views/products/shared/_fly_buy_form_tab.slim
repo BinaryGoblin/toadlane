@@ -23,7 +23,6 @@
           = f.radio_button field_name, answer["id"]
           = f.label answer["answer"]
     = f.submit "Submit", class: "btn btn-primary"
-    p Note: You need to have 80 as a KBA score for SSN to be considered  as valid.
 
 - elsif user.fly_buy_profile.present? && user.fly_buy_profile.synapse_document_id.present? && user.fly_buy_profile.permission_scope_verified == false && user.fly_buy_profile.kba_questions.empty?
     p <b>Status:</b> <span class="warning">You have added your bank account but it is not yet verified.</span>
