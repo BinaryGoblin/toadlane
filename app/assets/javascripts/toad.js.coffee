@@ -112,6 +112,9 @@ $(document).ready ->
 
   $("#green_order_phone").mask("999-999-9999");
 
+  $('#fly_buy_profile_tin_number').mask("xx-xxx9999")
+  $('#fly_buy_profile_ssn_number').mask("xx-xxx9999")
+
   if $('.vp-calculation-checkout').is(':visible')
     $('input[name="stripe_order[shipping_estimate_id]"]:first, input[name="green_order[shipping_estimate_id]"]:first, input[name="amg_order[shipping_estimate_id]"]:first, input[name="emb_order[shipping_estimate_id]"]:first').trigger('click');
 
@@ -517,48 +520,48 @@ $(document).ready ->
       form.submit()
       return
 
-  $('form.create_fly_buy_profile').validate
-    rules:
-      "fly_buy_profile[company_email]":
-        required: true
-        email: true
-      "fly_buy_profile[ssn_number]":
-        maxlength: 10
-        number: true
-        required: true
-      "fly_buy_profile[tin_number]":
-        maxlength: 10
-        number: true
-        required: true
-      "fly_buy_profile[eic_attachment]":
-        required: true,
-        extension: "jpeg|jpg|png|pdf"
-      "fly_buy_profile[bank_statement]":
-        required: true,
-        extension: "jpeg|jpg|png|pdf"
-      "fly_buy_profile[gov_id]":
-        required: true,
-        extension: "jpeg|jpg|png|pdf"
-      "fly_buy_profile[dob(1i)]":
-        check_date_of_birth: true
-    messages:
-      "fly_buy_profile[ssn_number]":
-        required: "Please enter no more than 10 digits."
-      "fly_buy_profile[eic_attachment]":
-        extension: "Only file extension jpg, jpeg and png is allowed. "
-    errorPlacement: (error, element) ->
-      # this is done for displaying the error message for DIRECT DEBIT AGREEMENT
-      # # below the checkbox
-      if element.attr('name') == "fly_buy_profile[terms_of_service]"
-        error.insertAfter(element.parent().parent())
-      else
-        error.insertAfter element
-      return
-    submitHandler: (form) ->
-      $('form.create_fly_buy_profile').find('input[type=submit]').prop 'disabled', true
-      $('*').css 'cursor', 'wait'
-      form.submit()
-      return
+  # $('form.create_fly_buy_profile').validate
+  #   rules:
+  #     "fly_buy_profile[company_email]":
+  #       required: true
+  #       email: true
+  #     "fly_buy_profile[ssn_number]":
+  #       maxlength: 10
+  #       number: true
+  #       required: true
+  #     "fly_buy_profile[tin_number]":
+  #       maxlength: 10
+  #       number: true
+  #       required: true
+  #     "fly_buy_profile[eic_attachment]":
+  #       required: true,
+  #       extension: "jpeg|jpg|png|pdf"
+  #     "fly_buy_profile[bank_statement]":
+  #       required: true,
+  #       extension: "jpeg|jpg|png|pdf"
+  #     "fly_buy_profile[gov_id]":
+  #       required: true,
+  #       extension: "jpeg|jpg|png|pdf"
+  #     "fly_buy_profile[dob(1i)]":
+  #       check_date_of_birth: true
+  #   messages:
+  #     "fly_buy_profile[ssn_number]":
+  #       required: "Please enter no more than 10 digits."
+  #     "fly_buy_profile[eic_attachment]":
+  #       extension: "Only file extension jpg, jpeg and png is allowed. "
+  #   errorPlacement: (error, element) ->
+  #     # this is done for displaying the error message for DIRECT DEBIT AGREEMENT
+  #     # # below the checkbox
+  #     if element.attr('name') == "fly_buy_profile[terms_of_service]"
+  #       error.insertAfter(element.parent().parent())
+  #     else
+  #       error.insertAfter element
+  #     return
+  #   submitHandler: (form) ->
+  #     $('form.create_fly_buy_profile').find('input[type=submit]').prop 'disabled', true
+  #     $('*').css 'cursor', 'wait'
+  #     form.submit()
+  #     return
 
   validator = $('form.create_fly_buy_profile').validate(
                 rules:
@@ -566,12 +569,8 @@ $(document).ready ->
                     required: true
                     email: true
                   "fly_buy_profile[ssn_number]":
-                    maxlength: 10
-                    number: true
                     required: true
                   "fly_buy_profile[tin_number]":
-                    maxlength: 10
-                    number: true
                     required: true
                   "fly_buy_profile[eic_attachment]":
                     required: true,
@@ -587,10 +586,8 @@ $(document).ready ->
                 messages:
                   "fly_buy_profile[ssn_number]":
                     required: "Please enter no more than 10 digits."
-                    number: "Please enter valid numbers."
                   "fly_buy_profile[tin_number]":
                     required: "Please enter no more than 10 digits."
-                    number: "Please enter valid numbers."
                   "fly_buy_profile[eic_attachment]":
                     extension: "Only file extension jpg, jpeg and png is allowed. "
                 errorPlacement: (error, element) ->
@@ -607,10 +604,3 @@ $(document).ready ->
                   form.submit()
                   return
               )
-
-  $('#fly_buy_profile_ssn_number').on 'input', ->
-    validator.element '#fly_buy_profile_ssn_number'
-
-  $('#fly_buy_profile_tin_number').on 'input', ->
-    validator.element '#fly_buy_profile_tin_number'
-
