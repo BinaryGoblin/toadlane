@@ -41,14 +41,14 @@ hr
         th
           h4 Address::
           br
-          .text-left
-            button.btn.btn-success.show-address-block-button = fa_icon 'plus', text: 'ADD ANOTHER ADDRESS'
-          br
     tbody
       = f.collection_radio_buttons(:address_id, address, :id, :get_inline_address) do |b, index|
         tr
           td
             = b.label { b.radio_button(:"checked" => (b.object.id == address.first.id)) + b.text }
+      br
+      .text-left
+        button.btn.btn-success.show-address-block-button = fa_icon 'plus', text: 'ADD ANOTHER ADDRESS'
   br
   .insert-new-address-block style="display:none;"
     - address_count = (address.count + 1).to_s
