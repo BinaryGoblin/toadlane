@@ -330,7 +330,7 @@ class Dashboard::AccountsController < DashboardController
     if current_user.fly_buy_profile.present?
       fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
       necessary_fly_buy_params = fly_buy_params.except(
-                                    :email, :address_id,
+                                    :email, :address_id, :ssn_number,
                                     :fingerprint, :bank_name,
                                     :name_on_account, :account_num
                                   )
@@ -345,7 +345,7 @@ class Dashboard::AccountsController < DashboardController
     else
 
       necessary_fly_buy_params = fly_buy_params.except(
-                                    :email, :address_id,
+                                    :email, :address_id, :ssn_number,
                                     :fingerprint, :bank_name,
                                     :name_on_account, :account_num
                                   )
