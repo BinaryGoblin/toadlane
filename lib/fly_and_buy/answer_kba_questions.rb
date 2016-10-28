@@ -46,7 +46,7 @@ class FlyAndBuy::AnswerKbaQuestions
   end
 	
 	def answer_kba_questions
-    if user_response["documents"][0]["virtual_docs"][0]["document_type"] == "TIN"
+    if user_response["documents"][0]["virtual_docs"][0]["document_type"] == "TIN" && user_response["documents"][0]["virtual_docs"][0]["meta"].present?
       kba_payload = {
         'documents' => [{
           'id' => user_response['documents'][0]['id'],
@@ -66,7 +66,7 @@ class FlyAndBuy::AnswerKbaQuestions
           }]
         }]
       }
-    elsif user_response["documents"][1]["virtual_docs"][0]["document_type"] == "SSN"
+    elsif user_response["documents"][1]["virtual_docs"][0]["document_type"] == "SSN" && user_response["documents"][1]["virtual_docs"][0]["meta"].present?
       kba_payload = {
         'documents' => [{
           'id' => user_response['documents'][1]['id'],
