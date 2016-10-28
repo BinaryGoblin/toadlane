@@ -46,25 +46,47 @@ class FlyAndBuy::AnswerKbaQuestions
   end
 	
 	def answer_kba_questions
-    kba_payload = {
-      'documents' => [{
-        'id' => user_response['documents'][1]['id'],
-        'virtual_docs' => [{
-          'id' => user_response['documents'][1]['virtual_docs'][0]['id'],
-          'meta' => {
-            'question_set' => {
-              'answers' => [
-                { "question_id": 1, "answer_id": kba_ques_details['question_1'].to_i },
-                { "question_id": 2, "answer_id": kba_ques_details['question_2'].to_i },
-                { "question_id": 3, "answer_id": kba_ques_details['question_3'].to_i },
-                { "question_id": 4, "answer_id": kba_ques_details['question_4'].to_i },
-                { "question_id": 5, "answer_id": kba_ques_details['question_5'].to_i }
-              ]
+    if user_response["documents"][0]["virtual_docs"][0]["document_type"] == "TIN"
+      kba_payload = {
+        'documents' => [{
+          'id' => user_response['documents'][0]['id'],
+          'virtual_docs' => [{
+            'id' => user_response['documents'][0]['virtual_docs'][0]['id'],
+            'meta' => {
+              'question_set' => {
+                'answers' => [
+                  { "question_id": 1, "answer_id": kba_ques_details['question_1'].to_i },
+                  { "question_id": 2, "answer_id": kba_ques_details['question_2'].to_i },
+                  { "question_id": 3, "answer_id": kba_ques_details['question_3'].to_i },
+                  { "question_id": 4, "answer_id": kba_ques_details['question_4'].to_i },
+                  { "question_id": 5, "answer_id": kba_ques_details['question_5'].to_i }
+                ]
+              }
             }
-          }
+          }]
         }]
-      }]
-    }
+      }
+    elsif user_response["documents"][1]["virtual_docs"][0]["document_type"] == "SSN"
+      kba_payload = {
+        'documents' => [{
+          'id' => user_response['documents'][1]['id'],
+          'virtual_docs' => [{
+            'id' => user_response['documents'][1]['virtual_docs'][0]['id'],
+            'meta' => {
+              'question_set' => {
+                'answers' => [
+                  { "question_id": 1, "answer_id": kba_ques_details['question_1'].to_i },
+                  { "question_id": 2, "answer_id": kba_ques_details['question_2'].to_i },
+                  { "question_id": 3, "answer_id": kba_ques_details['question_3'].to_i },
+                  { "question_id": 4, "answer_id": kba_ques_details['question_4'].to_i },
+                  { "question_id": 5, "answer_id": kba_ques_details['question_5'].to_i }
+                ]
+              }
+            }
+          }]
+        }]
+      }
+    end
 
     kba_response = client_user.users.update(payload: kba_payload)
 

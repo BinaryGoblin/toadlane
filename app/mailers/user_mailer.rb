@@ -201,6 +201,13 @@ class UserMailer < ActionMailer::Base
     mail to: @user.email, subject: "Social Security Number partially matched"
   end
 
+  def send_tin_num_partially_valid_notification_to_user(fly_buy_profile)
+    @fly_buy_profile = fly_buy_profile
+    @user = @fly_buy_profile.user
+
+    mail to: @user.email, subject: "Employer Identification Number partially matched"
+  end
+
   def send_inspection_date_arriving_to_seller(order, days)
     @order = order
     @seller = @order.seller
