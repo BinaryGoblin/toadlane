@@ -102,7 +102,7 @@
             - if user == order.seller
               = number_to_currency(number_with_precision(order.total - order.seller_fees_amount, precision: 2, delimiter: '')) if order.seller_fees_amount.present?
             - elsif user == order.buyer
-              = number_to_currency(number_with_precision(order.total + order.fee, precision: 2, delimiter: ''))
+              = number_to_currency(number_with_precision(order.total, precision: 2, delimiter: ''))
           - else
             = number_to_currency(number_with_precision(order.total, precision: 2, delimiter: ''))
           
