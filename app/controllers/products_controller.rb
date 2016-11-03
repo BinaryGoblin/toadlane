@@ -80,11 +80,11 @@ class ProductsController < ApplicationController
     end
 
     if current_user.present? && current_user.profile_complete? && current_user.name.present? && current_user.name.count(" ") == 0
-      return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must update your first and last name prior to submitting your company information" }
+      return redirect_to product_path(@product), :flash => { :account_error => "You must update your first and last name prior to submitting your company information" }
     end
 
     if current_user.present? && current_user.profile_complete? && current_user.company.present? == false
-      return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must add your company name prior to submitting your company information." }
+      return redirect_to product_path(@product), :flash => { :account_error => "You must add your company name prior to submitting your company information." }
     end
 
     if @product.default_payment_flybuy?
