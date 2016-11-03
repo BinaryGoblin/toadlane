@@ -220,7 +220,7 @@ class Dashboard::AccountsController < DashboardController
         fly_buy_profile = FlyBuyProfile.find_by_synapse_user_id(synapse_user_id)
 
         if fly_buy_profile.present? && fly_buy_profile.permission_scope_verified == false && fly_buy_profile.completed == true
-          questions = params["documents"][1]["virtual_docs"][0]
+          questions = params["documents"][1]["virtual_docs"][0]["meta"]
           fly_buy_profile.update_attributes({
             permission_scope_verified: false,
             kba_questions: questions,
@@ -246,7 +246,7 @@ class Dashboard::AccountsController < DashboardController
         fly_buy_profile = FlyBuyProfile.find_by_synapse_user_id(synapse_user_id)
 
         if fly_buy_profile.present? && fly_buy_profile.permission_scope_verified == false && fly_buy_profile.completed == true
-          questions = params["documents"][0]["virtual_docs"][0]
+          questions = params["documents"][0]["virtual_docs"][0]["meta"]
           fly_buy_profile.update_attributes({
             permission_scope_verified: false,
             kba_questions: questions,

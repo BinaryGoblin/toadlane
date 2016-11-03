@@ -46,9 +46,9 @@ class FlyAndBuy::AnswerKbaQuestions
   end
 	
 	def answer_kba_questions
-    if fly_buy_profile.kba_questions["document_type"] == "TIN"
+    if user_response["documents"][0]["virtual_docs"][0]["document_type"] == "TIN" && user_response["documents"][0]["virtual_docs"][0]["meta"].present?
       document_id = user_response['documents'][0]['id']
-    elsif fly_buy_profile.kba_questions["document_type"] == "SSN"
+    elsif user_response["documents"][1]["virtual_docs"][0]["document_type"] == "SSN" && user_response["documents"][1]["virtual_docs"][0]["meta"].present?
       document_id = user_response['documents'][1]['id']
     end
 
