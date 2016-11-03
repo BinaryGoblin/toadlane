@@ -207,7 +207,7 @@ class FlyBuyOrdersController < ApplicationController
         }
       }]
     }
-    create_transaction_response = client_user.trans.create(node_id: FlyBuyProfile::EscrowFeeHolderNodeId, payload: trans_payload)
+    create_transaction_response = client_user.trans.create(node_id: FlyBuyProfile::EscrowNodeID, payload: trans_payload)
 
     if create_transaction_response["error"].present? && create_transaction_response["error"]["en"] == "You do not have sufficient balance for this transfer."
       flash[:alert] = "The funds are not yet received in escrow. Please wait"
