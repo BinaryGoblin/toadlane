@@ -48,15 +48,17 @@ class FlyAndBuy::AnswerKbaQuestions
 	def answer_kba_questions
     if user_response["documents"][0]["virtual_docs"][0]["document_type"] == "TIN" && user_response["documents"][0]["virtual_docs"][0]["meta"].present?
       document_id = user_response['documents'][0]['id']
+      virtual_doc_id = user_response['documents'][0]["virtual_docs"][0]["id"]
     elsif user_response["documents"][1]["virtual_docs"][0]["document_type"] == "SSN" && user_response["documents"][1]["virtual_docs"][0]["meta"].present?
       document_id = user_response['documents'][1]['id']
+      virtual_doc_id = user_response['documents'][1]["virtual_docs"][0]["id"]
     end
 
     kba_payload = {
       'documents' => [{
         'id' => document_id,
         'virtual_docs' => [{
-          'id' => fly_buy_profile.kba_questions["id"],
+          'id' => virtual_doc_id,
           'meta' => {
             'question_set' => {
               'answers' => [
