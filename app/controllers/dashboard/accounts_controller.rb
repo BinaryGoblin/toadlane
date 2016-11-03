@@ -193,11 +193,13 @@ class Dashboard::AccountsController < DashboardController
           fly_buy_profile.destroy
         end
         if fly_buy_profile.present? && permission_array.include?('SEND') && permission_array.include?('RECEIVE')
-          fly_buy_profile.update_attributes({
-            permission_scope_verified: true,
-            kba_questions: {}
-          })
-          UserMailer.send_account_verified_notification_to_user(fly_buy_profile).deliver_later
+          if fly_buy_profile.permission_scope_verified == false
+            fly_buy_profile.update_attributes({
+              permission_scope_verified: true,
+              kba_questions: {}
+            })
+            UserMailer.send_account_verified_notification_to_user(fly_buy_profile).deliver_later
+          end
         else
           UserMailer.send_account_not_verified_yet_notification_to_user(fly_buy_profile).deliver_later
         end
