@@ -328,6 +328,9 @@ class FlyBuyOrdersController < ApplicationController
                           trans_id: fly_buy_order.synapse_transaction_id)
 
     if cancel_transaction.present? && cancel_transaction["recent_status"].present? && cancel_transaction["recent_status"]["status"] == "CANCELED"
+      product = fly_buy_order.product
+      product.sold_out -= fly_buy_order.count
+      product.save
       fly_buy_order.update_attribute(:status, 'cancelled')
       flash[:notice] = 'You order has been canceled.'
     elsif cancel_transaction["error"].present? && cancel_transaction["error"]["en"].present?
