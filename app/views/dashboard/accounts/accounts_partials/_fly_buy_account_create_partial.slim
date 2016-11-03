@@ -12,7 +12,7 @@
   - elsif user.fly_buy_profile.present? && user.fly_buy_profile.kba_questions.present?  && user.fly_buy_profile.permission_scope_verified == false
     p Your social security number has been matched. Please answer the questions below to verify your identity.
     = form_for fly_buy_profile, url: answer_kba_question_dashboard_accounts_path, method: "post" do |f|
-      - questions = user.fly_buy_profile.kba_questions["question_set"]["questions"]
+      - questions = user.fly_buy_profile.kba_questions["meta"]["question_set"]["questions"]
       ol
         - questions.each do |question|
           li = question["question"]

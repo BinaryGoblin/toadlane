@@ -107,7 +107,6 @@ class FlyAndBuy::AddingBankDetails
         }]
       }]
     }
-
     company_doc_response = client_user.users.update(payload: company_payload)
 
     # doc #2 for officer of company
@@ -150,10 +149,10 @@ class FlyAndBuy::AddingBankDetails
     if user_doc_response["documents"].present? && user_doc_response["documents"][0].present?
       fly_buy_profile.update_attribute(:synapse_document_id, user_doc_response["documents"][0]["id"])
       if user_doc_response["documents"][0]["virtual_docs"][0].present? && user_doc_response["documents"][1]["virtual_docs"][0]["document_type"] == "SSN" && user_doc_response["documents"][1]["virtual_docs"][0]["status"] == "SUBMITTED|MFA_PENDING"
-        questions = user_doc_response["documents"][1]["virtual_docs"][0]["meta"]
+        questions = user_doc_response["documents"][1]["virtual_docs"][0]
         fly_buy_profile.update_attribute(:kba_questions, questions)
       elsif user_doc_response["documents"][0]["virtual_docs"][0].present? && user_doc_response["documents"][0]["virtual_docs"][0]["document_type"] == "TIN" && user_doc_response["documents"][0]["virtual_docs"][0]["status"] == "SUBMITTED|MFA_PENDING"
-        questions = user_doc_response["documents"][0]["virtual_docs"][0]["meta"]
+        questions = user_doc_response["documents"][0]["virtual_docs"][0]
         fly_buy_profile.update_attribute(:kba_questions, questions)
       end
       if user_doc_response["permission"].present? && user_doc_response["permission"] == "SEND-AND-RECEIVE"

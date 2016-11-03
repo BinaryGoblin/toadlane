@@ -46,58 +46,40 @@ class FlyAndBuy::AnswerKbaQuestions
   end
 	
 	def answer_kba_questions
-    if user_response["documents"][0]["virtual_docs"][0]["document_type"] == "TIN" && user_response["documents"][0]["virtual_docs"][0]["meta"].present?
-      kba_payload = {
-        'documents' => [{
-          'id' => user_response['documents'][0]['id'],
-          'virtual_docs' => [{
-            'id' => user_response['documents'][0]['virtual_docs'][0]['id'],
-            'meta' => {
-              'question_set' => {
-                'answers' => [
-                  { "question_id": 1, "answer_id": kba_ques_details['question_1'].to_i },
-                  { "question_id": 2, "answer_id": kba_ques_details['question_2'].to_i },
-                  { "question_id": 3, "answer_id": kba_ques_details['question_3'].to_i },
-                  { "question_id": 4, "answer_id": kba_ques_details['question_4'].to_i },
-                  { "question_id": 5, "answer_id": kba_ques_details['question_5'].to_i }
-                ]
-              }
-            }
-          }]
-        }]
-      }
-    elsif user_response["documents"][1]["virtual_docs"][0]["document_type"] == "SSN" && user_response["documents"][1]["virtual_docs"][0]["meta"].present?
-      kba_payload = {
-        'documents' => [{
-          'id' => user_response['documents'][1]['id'],
-          'virtual_docs' => [{
-            'id' => user_response['documents'][1]['virtual_docs'][0]['id'],
-            'meta' => {
-              'question_set' => {
-                'answers' => [
-                  { "question_id": 1, "answer_id": kba_ques_details['question_1'].to_i },
-                  { "question_id": 2, "answer_id": kba_ques_details['question_2'].to_i },
-                  { "question_id": 3, "answer_id": kba_ques_details['question_3'].to_i },
-                  { "question_id": 4, "answer_id": kba_ques_details['question_4'].to_i },
-                  { "question_id": 5, "answer_id": kba_ques_details['question_5'].to_i }
-                ]
-              }
-            }
-          }]
-        }]
-      }
+    if fly_buy_profile.kba_questions["document_type"] == "TIN"
+      document_id = user_response['documents'][0]['id']
+    elsif fly_buy_profile.kba_questions["document_type"] == "SSN"
+      document_id = user_response['documents'][1]['id']
     end
+
+    kba_payload = {
+      'documents' => [{
+        'id' => document_id,
+        'virtual_docs' => [{
+          'id' => fly_buy_profile.kba_questions["id"],
+          'meta' => {
+            'question_set' => {
+              'answers' => [
+                { "question_id": 1, "answer_id": kba_ques_details['question_1'].to_i },
+                { "question_id": 2, "answer_id": kba_ques_details['question_2'].to_i },
+                { "question_id": 3, "answer_id": kba_ques_details['question_3'].to_i },
+                { "question_id": 4, "answer_id": kba_ques_details['question_4'].to_i },
+                { "question_id": 5, "answer_id": kba_ques_details['question_5'].to_i }
+              ]
+            }
+          }
+        }]
+      }]
+    }
 
     kba_response = client_user.users.update(payload: kba_payload)
 
-    if kba_response["permission"].present?
+    if kba_response["permission"].present? && kba_response["permission"] == "SEND-AND-RECEIVE"
       permission_array = kba_response["permission"].split('-')
       if permission_array.include?('SEND') && permission_array.include?('RECEIVE')
         fly_buy_profile.update_attribute(:permission_scope_verified, true)
         fly_buy_profile.update_attribute(:kba_questions, {})
       end
-    # elsif kba_response["error"].present? && kba_response["error"]["en"].present?
-    #   return kba_response
     end
 	end
 end

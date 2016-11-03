@@ -13,7 +13,7 @@
 - elsif user.fly_buy_profile.present? && user.fly_buy_profile.kba_questions.present?  && user.fly_buy_profile.permission_scope_verified == false
   p The SSN you entered has been matched partially, please fill the questionaire below to verify the KBA.
   = form_for fly_buy_profile, url: fly_buy_order_confirm_order_placed_path(fly_buy_order_id: fly_buy_order.id), method: "post" do |f|
-    - questions = user.fly_buy_profile.kba_questions["question_set"]["questions"]
+    - questions = user.fly_buy_profile.kba_questions["meta"]["question_set"]["questions"]
     ol
       - questions.each do |question|
         li = question["question"]
