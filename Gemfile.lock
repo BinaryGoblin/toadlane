@@ -527,7 +527,7 @@ DEPENDENCIES
   rspec-rails (~> 3.2.1)
   sass-rails (~> 5.0.1)
   sdoc (~> 0.4.1)
-  searchjoy
+  searchjoy (~> 0.0.10)
   searchkick (~> 0.8.7)
   shoulda (~> 3.5.0)
   shoulda-matchers (~> 2.8.0)
