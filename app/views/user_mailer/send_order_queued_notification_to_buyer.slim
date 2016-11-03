@@ -17,6 +17,8 @@ html[style="margin: 0;padding: 0;"]
       .message-each style=("margin: 0;padding: 0;")
         .message-section style=("margin: 0;padding: 15px;background: #eee;border-radius: 3px;margin-bottom: 20px;")
           | OrderID ##{@order.id} placed is stated as 'Queued'.
+          br
+          | The transaction id is:
           strong
             = @order.synapse_transaction_id
         .message-footer style=("margin: 0;padding: 0;")
