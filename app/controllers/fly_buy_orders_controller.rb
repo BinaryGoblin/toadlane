@@ -222,6 +222,22 @@ class FlyBuyOrdersController < ApplicationController
     redirect_to dashboard_orders_path, :flash => { :error => e.message }
   end
 
+def convert_invoice_to_image(fly_buy_order)
+    html = render_to_string(
+        {
+            layout: 'layouts/print.html.slim',
+            file: Rails.root + '/app/views/shared/_invoice.html.slim',
+            locals: {order: fly_buy_order, :user => current_user}
+        })
+    kit = IMGKit.new(html)
+    img = kit.to_png
+    file  = Tempfile.new(["template_#{fly_buy_order.synapse_transaction_id}", 'png'], 'tmp',
+                         :encoding => 'ascii-8bit')
+    file.write(img)
+
+    file
+  end
+
   def confirm_order_placed
     fly_buy_order = FlyBuyOrder.find_by_id(params[:fly_buy_order_id])
     product = fly_buy_order.product
