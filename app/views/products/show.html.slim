@@ -4,6 +4,15 @@
       | You must complete your&nbsp;
       = link_to 'profile', dashboard_profile_path, class: 'view'
       | &nbsp;to create order.
+  - elsif !flash[:account_error].nil?
+    .error-explanation.text-center
+      - if flash[:account_error] == "You must complete your profile before you can create a bank account."
+        | You must complete your&nbsp;
+        = link_to 'profile', dashboard_profile_path, class: 'view'
+        | &nbsp;to add bank account.
+      - else
+        = flash[:account_error]
+        = link_to 'Click Here To Edit', dashboard_profile_path, class: 'view'
 
 .actions-panel-product: .wrap-sm
   / = link_to 'Next product', '#', class: 'btn btn-default pull-right'
