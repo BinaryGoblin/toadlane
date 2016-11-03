@@ -218,7 +218,7 @@ class FlyBuyOrdersController < ApplicationController
       flash[:notice] = "Processing to release funds to seller."
     end
     redirect_to dashboard_orders_path
-  rescue SynapsePayments::Error => e
+  rescue SynapsePayRest::Error::Conflict => e
     redirect_to dashboard_orders_path, :flash => { :error => e.message }
   end
 
