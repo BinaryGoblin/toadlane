@@ -37,7 +37,7 @@ gem 'paperclip', '~> 4.2.1'
 gem 'paperclip-av-transcoder', '~> 0.6.4'
 gem 'aws-sdk', '< 2.0'
 gem 'searchkick', '~> 0.8.7'
-gem 'searchjoy'
+gem 'searchjoy', '~> 0.0.10'
 gem 'kaminari', '~> 0.16.3'
 gem 'delayed_job_active_record', '~> 4.0.3'
 
