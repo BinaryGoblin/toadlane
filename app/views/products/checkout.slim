@@ -17,6 +17,16 @@
           = error
       - else
         = flash[:error].scan(/[a-zA-Z0-9]+/).join(' ')
+  - elsif !flash[:account_error].nil?
+    .error-explanation
+      - if flash[:account_error] == "You must complete your profile before you can create a bank account."
+        | You must complete your&nbsp;
+        = link_to 'profile', dashboard_profile_path, class: 'view'
+        | &nbsp;to add bank account.
+      - else
+        = flash[:account_error]
+        = link_to 'Click Here To Edit', dashboard_profile_path, class: 'view'
+
   .row.margin-top-20
     .col-md-12
       table.table

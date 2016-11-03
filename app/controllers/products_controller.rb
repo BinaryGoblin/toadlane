@@ -79,6 +79,14 @@ class ProductsController < ApplicationController
       redirect_to product_path(@product), :flash => { :error => "You must complete your profile before you can view product details." }
     end
 
+    if current_user.present? && current_user.profile_complete? && current_user.name.present? && current_user.name.count(" ") == 0
+      return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must update your first and last name prior to submitting your company information" }
+    end
+
+    if current_user.present? && current_user.profile_complete? && current_user.company.present? == false
+      return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must add your company name prior to submitting your company information." }
+    end
+
     if @product.default_payment_flybuy?
       fee = Fee.find_by(:module_name => "Fly & Buy").value
     else
