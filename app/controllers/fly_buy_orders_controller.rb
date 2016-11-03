@@ -222,7 +222,7 @@ class FlyBuyOrdersController < ApplicationController
     redirect_to dashboard_orders_path, :flash => { :error => e.message }
   end
 
-def convert_invoice_to_image(fly_buy_order)
+  def convert_invoice_to_image(fly_buy_order)
     html = render_to_string(
         {
             layout: 'layouts/print.html.slim',
