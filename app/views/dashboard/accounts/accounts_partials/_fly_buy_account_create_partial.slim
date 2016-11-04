@@ -3,7 +3,7 @@
   h3
     |*Required for Fly & Buy Transactions
 
-  - if fly_buy_profile_account_added? && fly_buy_profile.kba_questions.empty? && fly_buy_profile.permission_scope_verified == true
+  - if user.fly_buy_profile_account_added? && fly_buy_profile.kba_questions.empty? && fly_buy_profile.permission_scope_verified == true
     p <b>Status:</b> <span class="success">You have successfully added your company information. You can now buy or sell using Fly & Buy.</span>
 
 
