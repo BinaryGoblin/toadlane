@@ -12,7 +12,7 @@
     - if fly_buy_profile.kba_questions["document_type"] == "TIN"
       p Your employee identification number has been matched. Please answer the questions below to verify your identity.
     - elsif fly_buy_profile.kba_questions["document_type"] == "SSN"
-      p Your social security number has been matched. Please answer the questions below to verify your identity.
+      p Your social security number has been partially matched. Please answer the questions below to verify your identity.
 
     = form_for fly_buy_profile, url: answer_kba_question_dashboard_accounts_path, method: "post" do |f|
 
