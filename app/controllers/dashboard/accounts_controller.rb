@@ -352,8 +352,8 @@ class Dashboard::AccountsController < DashboardController
         address = current_user.addresses.create(address_attributes_param)
         fly_buy_params.merge!(address_id: address.id).except!(:address_attributes)
       end
-      # fly_buy_params["ssn_number"] = fly_buy_params["ssn_number"].split("x").last
-      # fly_buy_params["tin_number"] = fly_buy_params["tin_number"].split("x").last
+      fly_buy_params["ssn_number"] = fly_buy_params["ssn_number"].split("*").last
+      fly_buy_params["tin_number"] = fly_buy_params["tin_number"].split("*").last
     end
 
     current_user.update_attribute(:phone, fly_buy_params["company_phone"])

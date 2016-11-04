@@ -111,6 +111,26 @@ $(document).ready ->
     return
 
   $("#green_order_phone").mask("999-999-9999");
+  retrieveValue = (ev) ->
+    $this = $(this)
+    val = $this.data('value')
+    if val
+      $this.val val
+    return
+
+  hideValue = (ev) ->
+    $this = $(this)
+    $this.data 'value', $this.val()
+    $this.val $this.val().replace(/^\d{5}/, '*****')
+    return
+
+  $('#fly_buy_profile_tin_number, #fly_buy_profile_ssn_number').focus retrieveValue
+  $('#fly_buy_profile_tin_number, #fly_buy_profile_ssn_number').blur hideValue
+  # $('#ssn_form').submit (ev) ->
+  #   ev.preventDefault()
+  #   retrieveValue.call $('#fly_buy_profile_tin_number')[0], ev
+  #   hideValue.call $('#fly_buy_profile_tin_number')[0], ev
+  #   return
 
   # $('#fly_buy_profile_tin_number').mask("xx-xxx9999")
   # $('#fly_buy_profile_ssn_number').mask("xx-xxx9999")
