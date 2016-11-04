@@ -139,8 +139,8 @@ html[style="margin: 0;padding: 0;"]
                 - else
                   = number_to_currency(@order.total)
       div[style="text-align: right;margin-top: 20px;margin: 0;padding: 0;"]
-        a.btn[href="#{dashboard_orders_url}" style="margin: 0;padding: 7px 13px;color: white;border: 1px solid transparent;border-bottom-color: #3d6411;border-top-color: #59af0c;text-decoration: none;background-image: linear-gradient(to bottom, #59af0c 0%, #5c8f10 100%);background-repeat: repeat-x;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF59AF0C', endColorstr='#FF5C8F10', GradientType=0);border-radius: 3px;display: inline-block;"]
-          | View All Orders
+        a.btn[href="#{dashboard_order_url(id: @order.id, type: 'fly_buy')}" style="margin: 0;padding: 7px 13px;color: white;border: 1px solid transparent;border-bottom-color: #3d6411;border-top-color: #59af0c;text-decoration: none;background-image: linear-gradient(to bottom, #59af0c 0%, #5c8f10 100%);background-repeat: repeat-x;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF59AF0C', endColorstr='#FF5C8F10', GradientType=0);border-radius: 3px;display: inline-block;"]
+          | View Order
     .text-center[style="margin: 0;padding: 0;text-align: center;"]
       a[href="#{faq_url}" style="margin: 0;padding: 0;color: #5c8f10;"]
         | FAQ
