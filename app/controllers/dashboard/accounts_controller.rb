@@ -244,6 +244,18 @@ class Dashboard::AccountsController < DashboardController
           })
           UserMailer.send_tin_num_partially_valid_notification_to_user(fly_buy_profile).deliver_later
         end
+      elsif params["_id"]["$oid"].present? && params["documents"][0]["virtual_docs"][0]["status"] == "SUBMITTED|INVALID"
+        # this is for EIN/TIN is entered `1111` and is not valid
+        synapse_user_id = params["_id"]["$oid"]
+        fly_buy_profile = FlyBuyProfile.find_by_synapse_user_id(synapse_user_id)
+
+        if fly_buy_profile.present? && fly_buy_profile.completed == true && fly_buy_profile.permission_scope_verified == false
+          fly_buy_profile.update_attributes({
+            completed: false
+          })
+
+          UserMailer.send_ein_num_not_valid_notification_to_user(fly_buy_profile).deliver_later
+        end
       end
     end
     render nothing: true, status: 200
