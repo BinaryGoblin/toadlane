@@ -226,24 +226,6 @@ $(document).ready ->
     $('#fly_buy_profile_fingerprint').val(result)
     return
 
-  # $('form.create_fly_buy_profile').submit ->
-  #   $(this).find(':submit').prop 'disabled', true
-  #   $('*').css 'cursor', 'wait'
-  #   return
-
-  # $('.create_fly_buy_profile').ready ->
-  #   if $('form.create_fly_buy_profile').is(':visible')
-  #     evaluateMonthDates()
-  #     return
-  
-  # $('.product_edit').ready ->
-  #   if $('form.product_edit').is(':visible')
-  #     evaluateInspectionDates()
-  #     return
-
-  # $('#product_inspection_date_attributes__date_1i').click ->
-  #   evaluateInspectionDates()
-  #   return
   $('.product_new').ready ->
     $('#product_inspection_date_attributes__date_1i').change ->
       month_select_block = $(this)[0].id
@@ -464,113 +446,18 @@ $(document).ready ->
     else
       $('.insert_inspection_dates').hide()
 
-  $('form.edit_armor_profile').validate
-    rules:
-      "armor_profile[phone]":
-        required: true
-        remote:
-          url: "/dashboard/accounts/check_valid_phone_number"
-          type: "GET"
-      "armor_profile[addresses][state]":
-        required: true
-        remote:
-          url: "/dashboard/accounts/check_valid_state"
-          type: "GET"
-    messages:
-      "armor_profile[phone]":
-        remote: "Phone number is not valid."
-      "armor_profile[addresses][state]":
-        remote: "State is not valid. "
-    errorPlacement: (error, element) ->
-      # this is done for displaying the error message for agreed_terms checkbox
-      # # below the checkbox
-      if element.attr('name') == "armor_profile[agreed_terms]"
-        error.insertAfter(element.parent().parent())
-      else
-        error.insertAfter element
-      return
-
-  $('form#new_promise_account').validate
-    rules:
-      "promise_account[bank_name]":
-        required: true
-      "promise_account[account_name]":
-        required: true
-      "promise_account[routing_number]":
-        required: true
-        minlength: 9
-        maxlength: 9
-        number: true
-      "promise_account[account_number]":
-        required: true
-        minlength: 10
-        maxlength: 10
-        number: true
-    errorPlacement: (error, element) ->
-      # this is done for displaying the error message for DIRECT DEBIT AGREEMENT
-      # # below the checkbox
-      if element.attr('name') == "promise_account[direct_debit_agreement]"
-        error.insertAfter(element.parent().parent())
-      else
-        error.insertAfter element
-      return
-    submitHandler: (form) ->
-      $('form#new_promise_account').find('input[type=submit]').prop 'disabled', true
-      $('*').css 'cursor', 'wait'
-      form.submit()
-      return
-
-  # $('form.create_fly_buy_profile').validate
-  #   rules:
-  #     "fly_buy_profile[company_email]":
-  #       required: true
-  #       email: true
-  #     "fly_buy_profile[ssn_number]":
-  #       maxlength: 10
-  #       number: true
-  #       required: true
-  #     "fly_buy_profile[tin_number]":
-  #       maxlength: 10
-  #       number: true
-  #       required: true
-  #     "fly_buy_profile[eic_attachment]":
-  #       required: true,
-  #       extension: "jpeg|jpg|png|pdf"
-  #     "fly_buy_profile[bank_statement]":
-  #       required: true,
-  #       extension: "jpeg|jpg|png|pdf"
-  #     "fly_buy_profile[gov_id]":
-  #       required: true,
-  #       extension: "jpeg|jpg|png|pdf"
-  #     "fly_buy_profile[dob(1i)]":
-  #       check_date_of_birth: true
-  #   messages:
-  #     "fly_buy_profile[ssn_number]":
-  #       required: "Please enter no more than 10 digits."
-  #     "fly_buy_profile[eic_attachment]":
-  #       extension: "Only file extension jpg, jpeg and png is allowed. "
-  #   errorPlacement: (error, element) ->
-  #     # this is done for displaying the error message for DIRECT DEBIT AGREEMENT
-  #     # # below the checkbox
-  #     if element.attr('name') == "fly_buy_profile[terms_of_service]"
-  #       error.insertAfter(element.parent().parent())
-  #     else
-  #       error.insertAfter element
-  #     return
-  #   submitHandler: (form) ->
-  #     $('form.create_fly_buy_profile').find('input[type=submit]').prop 'disabled', true
-  #     $('*').css 'cursor', 'wait'
-  #     form.submit()
-  #     return
-
   validator = $('form.create_fly_buy_profile').validate(
                 rules:
                   "fly_buy_profile[company_email]":
                     required: true
                     email: true
                   "fly_buy_profile[ssn_number]":
+                    minlength: 4
+                    maxlength: 10
                     required: true
                   "fly_buy_profile[tin_number]":
+                    minlength: 4
+                    maxlength: 10
                     required: true
                   "fly_buy_profile[eic_attachment]":
                     required: true,
