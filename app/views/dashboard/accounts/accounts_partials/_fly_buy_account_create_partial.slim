@@ -3,27 +3,20 @@
   h3
     |*Required for Fly & Buy Transactions
 
-  - if user.fly_buy_profile_account_added? && user.fly_buy_profile.kba_questions.empty? && user.fly_buy_profile.permission_scope_verified == true
+  - if fly_buy_profile_account_added? && fly_buy_profile.kba_questions.empty? && fly_buy_profile.permission_scope_verified == true
     p <b>Status:</b> <span class="success">You have successfully added your company information. You can now buy or sell using Fly & Buy.</span>
 
-  / - elsif user.fly_buy_profile.present? && user.fly_buy_profile.synapse_document_id.present? && user.fly_buy_profile.permission_scope_verified == false && user.fly_buy_profile.kba_questions.empty?
-  /   p <b>Status:</b> <span class="warning">You have added your bank account but it is not yet verified.</span>
 
-  - elsif user.fly_buy_profile.present? && user.fly_buy_profile.kba_questions.present?  && user.fly_buy_profile.permission_scope_verified == false
+  - elsif fly_buy_profile.present? && fly_buy_profile.kba_questions.present?  && fly_buy_profile.permission_scope_verified == false
     p Your social security number has been matched. Please answer the questions below to verify your identity.
     = form_for fly_buy_profile, url: answer_kba_question_dashboard_accounts_path, method: "post" do |f|
-      - questions = user.fly_buy_profile.kba_questions["question_set"]["questions"]
-      ol
-        - questions.each do |question|
-          li = question["question"]
-          - question_id = question["id"]
-          - question["answers"].each do |answer|
-            - field_name = "question" + "_" + question_id.to_s
-            = f.radio_button field_name, answer["id"]
-            = f.label answer["answer"]
+
+      = render partial: 'shared/kba_questions_partials',
+                    :locals => {  :f => f, :fly_buy_profile => fly_buy_profile}
+
       = f.submit "Submit", class: "btn btn-primary"
   
-  - elsif user.fly_buy_profile.present? && user.fly_buy_profile.completed == true && fly_buy_profile.permission_scope_verified == false
+  - elsif fly_buy_profile.present? && fly_buy_profile.completed == true && fly_buy_profile.permission_scope_verified == false
     p <b>Status:</b> <span class="warning">You have successfully submitted your information. You will receive updates as your account is verified.</span>
   
   - else

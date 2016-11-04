@@ -64,13 +64,6 @@
                                   data: @data,
                                   product: @product}
 
-        / - elsif @product.default_payment_armor?
-        /   = render partial: 'products/shared/armor_payment',
-        /             :locals => { armor_order: @armor_order,
-        /                           armor_profile: @armor_profile,
-        /                           user: current_user,
-        /                           data: @data,
-        /                           product: @product}
                                   
         - elsif @product.default_payment_flybuy?
           = render partial: 'products/shared/fly_buy_form_tab',

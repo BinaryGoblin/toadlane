@@ -222,7 +222,7 @@ class Dashboard::AccountsController < DashboardController
         fly_buy_profile = FlyBuyProfile.find_by_synapse_user_id(synapse_user_id)
 
         if fly_buy_profile.present? && fly_buy_profile.permission_scope_verified == false && fly_buy_profile.completed == true
-          questions = params["documents"][1]["virtual_docs"][0]["meta"]
+          questions = params["documents"][1]["virtual_docs"][0]
           fly_buy_profile.update_attributes({
             permission_scope_verified: false,
             kba_questions: questions,
@@ -230,25 +230,13 @@ class Dashboard::AccountsController < DashboardController
           })
           UserMailer.send_ssn_num_partially_valid_notification_to_user(fly_buy_profile).deliver_later
         end
-      elsif params["_id"]["$oid"].present? && params["documents"][0]["virtual_docs"][0]["status"] == "SUBMITTED|INVALID"
-        # this is for EIN/TIN invalid
-        synapse_user_id = params["_id"]["$oid"]
-        fly_buy_profile = FlyBuyProfile.find_by_synapse_user_id(synapse_user_id)
-
-        if fly_buy_profile.present? && fly_buy_profile.completed == true && fly_buy_profile.permission_scope_verified == false
-          fly_buy_profile.update_attributes({
-            completed: false
-          })
-
-          UserMailer.send_ein_num_not_valid_notification_to_user(fly_buy_profile).deliver_later
-        end
       elsif params["_id"]["$oid"].present? && params["documents"][0]["virtual_docs"][0]["status"] == "SUBMITTED|MFA_PENDING"
         # this is for EIN/TIN `3333`
         synapse_user_id = params["_id"]["$oid"]
         fly_buy_profile = FlyBuyProfile.find_by_synapse_user_id(synapse_user_id)
 
         if fly_buy_profile.present? && fly_buy_profile.permission_scope_verified == false && fly_buy_profile.completed == true
-          questions = params["documents"][0]["virtual_docs"][0]["meta"]
+          questions = params["documents"][0]["virtual_docs"][0]
           fly_buy_profile.update_attributes({
             permission_scope_verified: false,
             kba_questions: questions,

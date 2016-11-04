@@ -1,4 +1,4 @@
-- if fly_buy_order.status == "processing" && user.fly_buy_profile.present? && user.fly_buy_profile.synapse_node_id.nil? && fly_buy_profile.permission_scope_verified == false
+- if fly_buy_order.status == "processing" && fly_buy_profile.present? && fly_buy_profile.synapse_node_id.nil? && fly_buy_profile.permission_scope_verified == false
 
   .account-flybuy
     h2 Congratulations on your first time purchasing with Fly & Buy. Before wiring funds into Synapse Pay escrow tell us a little bit more about your business and the bank you will be wiring from.
@@ -10,21 +10,15 @@
 
         = f.submit "Submit", class: "btn btn-primary"
 
-- elsif user.fly_buy_profile.present? && user.fly_buy_profile.kba_questions.present?  && user.fly_buy_profile.permission_scope_verified == false
+- elsif fly_buy_profile.present? && fly_buy_profile.kba_questions.present?  && fly_buy_profile.permission_scope_verified == false
   p The SSN you entered has been matched partially, please fill the questionaire below to verify the KBA.
   = form_for fly_buy_profile, url: fly_buy_order_confirm_order_placed_path(fly_buy_order_id: fly_buy_order.id), method: "post" do |f|
-    - questions = user.fly_buy_profile.kba_questions["question_set"]["questions"]
-    ol
-      - questions.each do |question|
-        li = question["question"]
-        - question_id = question["id"]
-        - question["answers"].each do |answer|
-          - field_name = "question" + "_" + question_id.to_s
-          = f.radio_button field_name, answer["id"]
-          = f.label answer["answer"]
+    = render partial: 'shared/kba_questions_partials',
+                    :locals => {  :f => f, :fly_buy_profile => fly_buy_profile}
+
     = f.submit "Submit", class: "btn btn-primary"
 
-- elsif user.fly_buy_profile.present? && user.fly_buy_profile.synapse_document_id.present? && user.fly_buy_profile.permission_scope_verified == false && user.fly_buy_profile.kba_questions.empty?
+- elsif fly_buy_profile.present? && fly_buy_profile.synapse_document_id.present? && fly_buy_profile.permission_scope_verified == false && fly_buy_profile.kba_questions.empty?
     p <b>Status:</b> <span class="warning">You have added your bank account but it is not yet verified.</span>
 
 - else
