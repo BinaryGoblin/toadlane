@@ -240,7 +240,7 @@ class User < ActiveRecord::Base
   end
 
   def fly_buy_profile_account_added?
-    fly_buy_profile.present? && fly_buy_profile.completed == true
+    fly_buy_profile.present? && fly_buy_profile.completed == true && fly_buy_profile.error_details.present? == false
   end
 
   private

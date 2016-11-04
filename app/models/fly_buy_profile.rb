@@ -36,6 +36,7 @@
 #  tin_number                  :string
 #  completed                   :boolean          default(FALSE)
 #  company_phone               :string
+#  error_details               :json
 #
 
 class FlyBuyProfile < ActiveRecord::Base

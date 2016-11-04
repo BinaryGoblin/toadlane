@@ -17,6 +17,10 @@
       - else
         = flash[:account_error]
         = link_to 'Click Here To Edit', dashboard_profile_path, class: 'view'
+  - if @fly_buy_profile.present? && @fly_buy_profile.error_details.present?
+    .error-explanation.text-center
+      - if @fly_buy_profile.error_details["en"].present?
+        | Please provide a valid routing number.
 
   .row.account-table
     .col-md-3

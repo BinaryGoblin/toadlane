@@ -185,8 +185,17 @@ class FlyAndBuy::AddingBankDetails
   end
 
   def store_returned_node_id(response)
+    binding.pry
     if response["success"] == true
       fly_buy_profile.update_attribute(:synapse_node_id, response["nodes"][0]["_id"])
+      fly_buy_profile.update_attribute(:error_details, {})
+    elsif response["error"]
+      if response["error"]["en"].present?
+        if response["error"]["en"].include? "routing_num"
+          UserMailer.send_routing_number_incorrect_notification(signed_in_user).deliver_later
+        end
+      end
+      fly_buy_profile.update_attribute(:error_details, response["error"])
     end
   end
 

@@ -134,6 +134,12 @@ class UserMailer < ActionMailer::Base
     mail to: @buyer.email, subject: "Funds received in escrow"
   end
 
+  def send_routing_number_incorrect_notification(user)
+    @user = user
+
+    mail to: @user.email, subject: "Invalid routing number supplied"
+  end
+
   def send_payment_released_notification_to_buyer(promise_order)
     @order = promise_order
     @buyer = @order.buyer
