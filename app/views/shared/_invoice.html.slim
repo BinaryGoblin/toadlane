@@ -105,6 +105,10 @@
               = number_to_currency(number_with_precision(order.total, precision: 2, delimiter: ''))
           - else
             = number_to_currency(number_with_precision(order.total, precision: 2, delimiter: ''))
+  .invoice-note
+    h3 Note:
+    p For help and support, email <a href="mailto:johnb@toadlane.com">johnb@toadlane.com</a>.
+    p Payment instructions are sent via our payment partner, Synapse Financial Technologies, Inc. and are processed by Triumph Bank. To report complaints email <a href="mailto:issues@synapsepay.com">issues@synapsepay.com</a>.
           
   - if order.instance_of? GreenOrder
     table.table-checkout style="margin-top: 20px;"
