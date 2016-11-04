@@ -185,7 +185,6 @@ class FlyAndBuy::AddingBankDetails
   end
 
   def store_returned_node_id(response)
-    binding.pry
     if response["success"] == true
       fly_buy_profile.update_attribute(:synapse_node_id, response["nodes"][0]["_id"])
       fly_buy_profile.update_attribute(:error_details, {})
