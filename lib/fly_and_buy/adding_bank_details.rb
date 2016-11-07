@@ -41,7 +41,7 @@ class FlyAndBuy::AddingBankDetails
     add_doc_response = add_necessary_doc
     add_bank_acc_response  = create_bank_account
 
-    store_returned_node_id(add_bank_acc_response)
+    store_returned_node_id(add_bank_acc_response, add_doc_response)
   rescue SynapsePayRest::Error::Conflict => e
     return e
   end
@@ -155,15 +155,11 @@ class FlyAndBuy::AddingBankDetails
         questions = user_doc_response["documents"][0]["virtual_docs"][0]
         fly_buy_profile.update_attribute(:kba_questions, questions)
       end
-      if user_doc_response["permission"].present? && user_doc_response["permission"] == "SEND-AND-RECEIVE"
-        permission_array = user_doc_response["permission"].split("-")
-        if permission_array.include?("SEND") && permission_array.include?("RECEIVE")
-          fly_buy_profile.update_attribute(:permission_scope_verified, true)
-        end
-      end
     else
       return user_doc_response
     end
+
+    user_doc_response
   rescue SynapsePayRest::Error::Conflict => e
     return e
   end
@@ -184,10 +180,25 @@ class FlyAndBuy::AddingBankDetails
     client_user.nodes.add(payload: acct_rout_payload)
   end
 
-  def store_returned_node_id(response)
+  def store_returned_node_id(response, user_doc_response)
     if response["success"] == true
-      fly_buy_profile.update_attribute(:synapse_node_id, response["nodes"][0]["_id"])
-      fly_buy_profile.update_attribute(:error_details, {})
+      fly_buy_profile.update_attributes({
+        synapse_node_id: response["nodes"][0]["_id"],
+        error_details: {}
+      })
+
+      if user_doc_response["permission"].present? && user_doc_response["permission"] == "SEND-AND-RECEIVE"
+        permission_array = user_doc_response["permission"].split("-")
+        if permission_array.include?("SEND") && permission_array.include?("RECEIVE")
+          fly_buy_profile.update_attributes({
+            permission_scope_verified: true,
+            kba_questions: {},
+            completed: true
+          })
+
+          UserMailer.send_account_verified_notification_to_user(fly_buy_profile).deliver_later
+        end
+      end
     elsif response["error"]
       if response["error"]["en"].present?
         if response["error"]["en"].include? "routing_num"

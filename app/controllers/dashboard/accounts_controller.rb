@@ -193,7 +193,7 @@ class Dashboard::AccountsController < DashboardController
           fly_buy_profile.destroy
         end
         if fly_buy_profile.present? && permission_array.include?('SEND') && permission_array.include?('RECEIVE')
-          if fly_buy_profile.permission_scope_verified == false
+          if fly_buy_profile.permission_scope_verified == false && fly_buy_profile.synapse_node_id.present?
             fly_buy_profile.update_attributes({
               permission_scope_verified: true,
               kba_questions: {},
