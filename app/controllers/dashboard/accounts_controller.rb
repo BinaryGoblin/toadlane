@@ -360,14 +360,17 @@ class Dashboard::AccountsController < DashboardController
       fly_buy_params["tin_number"] = fly_buy_params["tin_number"].split("*").last
     end
 
-    current_user.update_attribute(:phone, fly_buy_params["company_phone"])
+    current_user.update_attributes({
+      phone: fly_buy_params["company_phone"],
+      company: fly_buy_params["company"]
+    })
 
     if current_user.fly_buy_profile.present?
       fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
       necessary_fly_buy_params = fly_buy_params.except(
                                     :email, :address_id,
                                     :fingerprint, :bank_name,
-                                    :name_on_account, :account_num
+                                    :name_on_account, :account_num, :company
                                   )
 
       necessary_fly_buy_params.merge!(
@@ -382,7 +385,7 @@ class Dashboard::AccountsController < DashboardController
       necessary_fly_buy_params = fly_buy_params.except(
                                     :email, :address_id,
                                     :fingerprint, :bank_name,
-                                    :name_on_account, :account_num
+                                    :name_on_account, :account_num, :company
                                   )
 
       necessary_fly_buy_params.merge!(

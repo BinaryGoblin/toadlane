@@ -8,8 +8,15 @@ br
 
   .col-md-6
     .form-group
+      = f.label :company, 'Comapny Name', class: 'required'
+      = f.text_field :company, class: 'form-control', required: true, value: user.company
+
+.row
+  .col-md-6
+    .form-group
         = f.label :company_phone, 'Phone', class: 'required'
         = f.telephone_field :company_phone, class: 'form-control', data: { behavior: 'IntlPhone' }, required: true, value: user.phone
+
 .row
   .col-md-6
     .form-group
