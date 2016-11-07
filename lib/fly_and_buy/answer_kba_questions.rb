@@ -79,8 +79,24 @@ class FlyAndBuy::AnswerKbaQuestions
     if kba_response["permission"].present? && kba_response["permission"] == "SEND-AND-RECEIVE"
       permission_array = kba_response["permission"].split('-')
       if permission_array.include?('SEND') && permission_array.include?('RECEIVE')
-        fly_buy_profile.update_attribute(:permission_scope_verified, true)
-        fly_buy_profile.update_attribute(:kba_questions, {})
+        fly_buy_profile.update_attributes({
+          permission_scope_verified: true,
+          kba_questions: {},
+          completed: true
+        })
+
+        UserMailer.send_account_verified_notification_to_user(fly_buy_profile).deliver_later
+      end
+    elsif user_response["permission"].present? && user_response["permission"] == "SEND-AND-RECEIVE"
+      permission_array = user_response["permission"].split("-")
+      if permission_array.include?("SEND") && permission_array.include?("RECEIVE")
+        fly_buy_profile.update_attributes({
+          permission_scope_verified: true,
+          kba_questions: {},
+          completed: true
+        })
+
+        UserMailer.send_account_verified_notification_to_user(fly_buy_profile).deliver_later
       end
     end
 	end
