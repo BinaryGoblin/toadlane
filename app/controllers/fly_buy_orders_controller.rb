@@ -9,26 +9,11 @@ class FlyBuyOrdersController < ApplicationController
 
     if current_user.fly_buy_profile_account_added?
       CreateTransactionForFlyBuyJobJob.perform_later(current_user.id, fly_buy_profile.id, fly_buy_order.id)
-      # create_transaction_response = create_transaction_in_synapsepay(fly_buy_order, product)
-      # if create_transaction_response["recent_status"]["note"] == "Transaction created"
-      #   fly_buy_order.update_attributes({
-      #       synapse_escrow_node_id: FlyBuyProfile::EscrowNodeID,
-      #       synapse_transaction_id: create_transaction_response["_id"],
-      #       status: 'pending_confirmation',
-      #       seller_fees_amount: seller_fee_amount,
-      #       seller_fees_percent: seller_fee_percent,
-      #     })
-
-      #   product.sold_out += fly_buy_order.count
-      #   product.save
-
-      #   send_email_notification(fly_buy_order)
-
+      
       redirect_to dashboard_order_path(
         fly_buy_order,
         type: 'fly_buy'
       ), notice: 'Your order was successfully placed.'
-      # end
     else
       if current_user.fly_buy_profile.present?
         fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
@@ -43,9 +28,6 @@ class FlyBuyOrdersController < ApplicationController
       if fly_buy_order.update_attribute(:status, 'processing')
         product.sold_out += fly_buy_order.count
         product.save
-        # email notification to buyer with order invoice and add bank account detail notificaiton
-
-        # send_email_notification(fly_buy_order)
       else
         flash[:notice] = 'Your order could not be placed.'
       end
@@ -261,7 +243,7 @@ class FlyBuyOrdersController < ApplicationController
       end
 
       fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
-      necessary_fly_buy_params = fly_buy_params.except(:email, :company_phone, :address_id, :fingerprint, :bank_name, :address, :name_on_account, :account_num)
+      necessary_fly_buy_params = fly_buy_params.except(:company, :email, :company_phone, :address_id, :fingerprint, :bank_name, :address, :name_on_account, :account_num)
       necessary_fly_buy_params.merge!(
                     company_email: fly_buy_params["email"],
                     company_phone: fly_buy_params["company_phone"])
@@ -284,30 +266,11 @@ class FlyBuyOrdersController < ApplicationController
       redirect_to product_checkout_path(product)
     else
       CreateTransactionForFlyBuyJobJob.perform_later(current_user.id, fly_buy_profile.id, fly_buy_order.id)
-      # create_transaction_response = create_transaction_in_synapsepay(fly_buy_order, product)
-
-      # if create_transaction_response["recent_status"]["note"] == "Transaction created"
-      #   fly_buy_order.update_attributes({
-      #       synapse_escrow_node_id: FlyBuyProfile::EscrowNodeID,
-      #       synapse_transaction_id: create_transaction_response["_id"],
-      #       status: 'pending_confirmation',
-      #       seller_fees_amount: seller_fee_amount,
-      #       seller_fees_percent: seller_fee_percent,
-      #     })
-
-      #   product.sold_out += fly_buy_order.count
-      #   product.save
-
-      #   send_email_notification(fly_buy_order)
-
-      #   UserMailer.send_wire_instruction_notification_to_buyer(fly_buy_order).deliver_later
-      #   UserMailer.wire_instruction_notification_sent_to_seller(fly_buy_order).deliver_later
 
       redirect_to dashboard_order_path(
         fly_buy_order,
         type: 'fly_buy'
       ), notice: 'You have been emailed wire instructions!'
-      # end
     end
   end
 
