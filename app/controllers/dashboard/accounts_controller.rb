@@ -27,16 +27,19 @@ class Dashboard::AccountsController < DashboardController
 
   def create_fly_buy_profile
     fly_buy_profile = create_update_flybuy_profile
-    
+
     if current_user.present? && current_user.profile_complete? == false
+      remove_ssn_tin_data(fly_buy_profile)
       return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must complete your profile before you can create a bank account." }
     end
 
     if current_user.present? && current_user.profile_complete? && current_user.name.present? && current_user.name.count(" ") == 0
+      remove_ssn_tin_data(fly_buy_profile)
       return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must update your first and last name prior to submitting your company information" }
     end
 
     if current_user.present? && current_user.profile_complete? && current_user.company.present? == false
+      remove_ssn_tin_data(fly_buy_profile)
       return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must add your company name prior to submitting your company information." }
     end
 
@@ -58,6 +61,7 @@ class Dashboard::AccountsController < DashboardController
       end
 
       fly_buy_profile.update_attribute(:completed, true)
+      remove_ssn_tin_data(fly_buy_profile)
       redirect_to dashboard_accounts_path
     end
   rescue SynapsePayRest::Error::Conflict => e
@@ -392,5 +396,12 @@ class Dashboard::AccountsController < DashboardController
       fly_buy_profile = FlyBuyProfile.create(necessary_fly_buy_params)
     end
     fly_buy_profile
+  end
+
+  def remove_ssn_tin_data(fly_buy_profile)
+    fly_buy_profile.update_attributes({
+      ssn_number: nil,
+      tin_number: nil
+    })
   end
 end
