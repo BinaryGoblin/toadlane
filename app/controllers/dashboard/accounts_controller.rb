@@ -61,7 +61,6 @@ class Dashboard::AccountsController < DashboardController
       end
 
       fly_buy_profile.update_attribute(:completed, true)
-      remove_ssn_tin_data(fly_buy_profile)
       redirect_to dashboard_accounts_path
     end
   rescue SynapsePayRest::Error::Conflict => e
