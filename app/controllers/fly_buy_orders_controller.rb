@@ -315,6 +315,14 @@ class FlyBuyOrdersController < ApplicationController
       fly_buy_order.update_attribute(:status, 'cancelled')
       flash[:notice] = 'You order has been canceled.'
     elsif cancel_transaction["error"].present? && cancel_transaction["error"]["en"].present?
+      transaction = client_user.trans.get(node_id: buyer_fly_buy_profile.synapse_node_id, trans_id: fly_buy_order.synapse_transaction_id)
+
+      if transaction["recent_status"].present? && transaction["recent_status"]["status_id"] == "4"
+        fly_buy_order.update_attributes({
+          status: 'pending_inspection',
+          funds_in_escrow: true
+        })
+      end
       flash[:cancel_trans_error] = cancel_transaction["error"]["en"].split("Error: ").last
     end 
     redirect_to dashboard_orders_path(
