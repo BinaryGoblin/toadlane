@@ -140,16 +140,16 @@ class UserMailer < ActionMailer::Base
     mail to: @user.email, subject: "Invalid routing number supplied"
   end
 
-  def send_payment_released_notification_to_buyer(promise_order)
-    @order = promise_order
+  def send_payment_released_notification_to_buyer(order)
+    @order = order
     @buyer = @order.buyer
     @seller = @order.seller
 
     mail to: @buyer.email, subject: "You have released payment for order #{@order.order_id}"
   end
 
-  def send_payment_released_notification_to_seller(promise_order)
-    @order = promise_order
+  def send_payment_released_notification_to_seller(order)
+    @order = order
     @seller = @order.seller
     @buyer = @order.buyer
 
