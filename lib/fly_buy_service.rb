@@ -17,19 +17,6 @@ class FlyBuyService
   end
 
   def self.get_client
-
-    # timeout_options = { write: 50, connect: 50, read: 50 }
-
-    # client = SynapsePayments::Client.new(
-    #                     client_id: ClientId,
-    #                     client_secret: ClientSecret,
-    #                     sandbox_mode: sandbox_mode, 
-    #                     timeout_options: timeout_options)
-
-    # client.subscriptions.create(url: 'http://requestb.in/w3n7h9w3', scope: ['USERS|POST', 'NODES|POST', 'TRANS|POST'])
-
-    # client
-
     options = {
       'client_id' => ClientId,
       'client_secret' => ClientSecret,
@@ -52,26 +39,6 @@ class FlyBuyService
   end
 
   def self.create_subscription
-    # url = "https://sandbox.synapsepay.com/api/3/subscriptions"
-
-    # create_payload = {
-    #   "client": {
-    #     "client_id": ClientId,
-    #     "client_secret": ClientSecret
-    #   },
-    #   "url": WebhookUrl,
-    #   "scope":[
-    #     "USERS|POST",
-    #     "NODES|POST",
-    #     "TRANS|POST"
-    #   ]
-    # }
-    # binding.pry
-    # RestClient.post(url,
-    #   create_payload.to_json,
-    #   :content_type => :json,
-    #   :accept => :json)
-
     puts `curl -X POST -H "Content-Type: application/json" -H "X-SP-GATEWAY: #{ClientId}|#{ClientSecret}" -H "X-SP-PROD: NO" -H "X-SP-LANG: EN" -d '{
         "url":"#{WebhookUrl}",
         "scope":[
