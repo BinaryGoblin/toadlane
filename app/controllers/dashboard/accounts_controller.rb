@@ -347,6 +347,11 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def create_update_flybuy_profile
+    current_user.update_attributes({
+      phone: fly_buy_params["company_phone"],
+      company: fly_buy_params["company"]
+    })
+
     if fly_buy_params["address_attributes"].present?
       address_attributes_param = fly_buy_params["address_attributes"][(current_user.addresses.count + 1).to_s]
       empty_keys = address_attributes_param.select {|k, v| v.empty?}
@@ -359,11 +364,6 @@ class Dashboard::AccountsController < DashboardController
       fly_buy_params["ssn_number"] = fly_buy_params["ssn_number"].split("*").last
       fly_buy_params["tin_number"] = fly_buy_params["tin_number"].split("*").last
     end
-
-    current_user.update_attributes({
-      phone: fly_buy_params["company_phone"],
-      company: fly_buy_params["company"]
-    })
 
     if current_user.fly_buy_profile.present?
       fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
