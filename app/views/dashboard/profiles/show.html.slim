@@ -8,7 +8,7 @@
 
     - if @user.errors.any?
       .error-explanation
-        h5= "#{pluralize(@user.errors.count, "error")} data from being saved:"
+        / h5= "Error:"
         ul
           - @user.errors.full_messages.each do |message|
             li = message
@@ -57,7 +57,7 @@
 
     hr
 
-    .row.profile-table
+    .row.profile-table.address-block
       .col-md-3
         h4 Addresses
       .col-md-9
@@ -99,10 +99,7 @@
               .form-group
                 = ff.label :country, 'Country:', class: 'required'
                 = ff.country_select 'country', [ 'US', 'GB' ], { iso_codes: true }, { class: 'form-control' }
-          hr
-        .text-right
-          button.btn.btn-success.submit type="submit"= fa_icon 'plus', text: 'ADD ADDRESS'
-
+            hr
     hr
 
     .row.profile-table.notification-settings
@@ -120,4 +117,4 @@
           | Receive emails with tips, hints, report on any new services
 
   .footer-actions: .fa-container: .wrap-sm.text-center
-    button.btn.btn-success.submit type="submit"= fa_icon 'check', text: 'SAVE CHANGES'
+    button.btn.btn-success.submit.profile-submit-btn type="submit"= fa_icon 'check', text: 'SAVE CHANGES'

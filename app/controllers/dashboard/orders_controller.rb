@@ -3,20 +3,16 @@ class Dashboard::OrdersController < DashboardController
 
   def index
     orders = []
-    armor_orders = current_user.armor_orders.for_dashboard(params[:page], params[:per_page]).with_order_id
+    fly_buy_orders = current_user.fly_buy_orders.not_deleted
     stripe_orders = current_user.stripe_orders.for_dashboard(params[:page], params[:per_page])
     green_orders = current_user.green_orders.for_dashboard(params[:page], params[:per_page])
     amg_orders = current_user.amg_orders.for_dashboard(params[:page], params[:per_page])
     emb_orders = current_user.emb_orders.for_dashboard(params[:page], params[:per_page])
 
-    orders << armor_orders
-    orders << stripe_orders
-    orders << green_orders
-    orders << amg_orders
-    orders << emb_orders
+    orders =  fly_buy_orders + stripe_orders + green_orders + amg_orders + emb_orders
 
-    # orders sorted by id
-    @orders = orders.flatten.sort_by{|order| order[:id]}
+    @orders = orders.sort_by(&:created_at).reverse
+    @fee = Fee.find_by(:module_name => "Fly & Buy").value
   end
 
   def show
@@ -31,18 +27,36 @@ class Dashboard::OrdersController < DashboardController
       @order = AmgOrder.find(params[:id])
     when 'emb'
       @order = EmbOrder.find(params[:id])
+    when 'fly_buy'
+      @fee = Fee.find_by(:module_name => "Fly & Buy").value
+      @order = FlyBuyOrder.find(params[:id])
     else
       @order = StripeOrder.find(params[:id])
     end
   end
 
   def delete_cascade
-    if params[:orders_ids].present?
-      params[:orders_ids].each do |id|
-        ArmorOrder.find(id).update(deleted: true)
+    if params["order_details"].present?
+      params["order_details"].each do |order_detail|
+        splited_order_detail = order_detail.split(",")
+        order_id = splited_order_detail.first
+        order_type = splited_order_detail.second
+        case order_type
+        when 'StripeOrder'
+          @order = StripeOrder.find(order_id).update(deleted: true)
+        when 'FlyBuyOrder'
+          @order = FlyBuyOrder.find(order_id).update(deleted: true)
+        when 'GreenOrder'
+          @order = GreenOrder.find(order_id).update(deleted: true)
+        when 'AmgOrder'
+          @order = AmgOrder.find(order_id).update(deleted: true)
+        when 'EmbOrder'
+          @order = EmbOrder.find(order_id).update(deleted: true)
+        else
+          @order = StripeOrder.find(order_id).update(deleted: true)
+        end
       end
     end
-
     render json: :ok
   end
 
@@ -90,23 +104,6 @@ class Dashboard::OrdersController < DashboardController
     end
     respond_to do |format|
       format.js { render :template => 'shared/update_flash' }
-    end
-  end
-
-  private
-  def get_order_status
-    @orders = ArmorOrder.where(deleted: false).own_orders(current_user.id)
-    if @orders.any?
-      client = ArmorService.new
-
-      @orders.each do |order|
-        begin
-          result = client.orders(current_user.armor_account_id).get(order.order_id)
-        rescue
-          ensure
-          order.update(status: result.data[:body]['status'].to_i) if result
-        end
-      end
     end
   end
 end

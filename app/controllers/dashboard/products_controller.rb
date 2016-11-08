@@ -2,9 +2,10 @@ class Dashboard::ProductsController < DashboardController
   def index
     @products = Product.where(user_id: current_user.id).paginate(page: params[:page], per_page: params[:count]).order('id DESC')
     @products_count = @products.count
-    if params["armor_order_id"].present?
-      @armor_order = ArmorOrder.find_by_id(params["armor_order_id"])
-      @buyer = @armor_order.buyer
+    @products.each do |product|
+      if product.default_payment_flybuy? && current_user.fly_buy_profile_account_added? == false
+        product.update_attribute(:status, false)
+      end
     end
   end
 
@@ -18,7 +19,7 @@ class Dashboard::ProductsController < DashboardController
       @product = Product.new
     else
       if !current_user.has_payment_account?
-        redirect_to dashboard_accounts_path, :flash => { :error => "You must create or link a Stripe account or a Green account or Armor account in order to accept payments."}
+        redirect_to dashboard_accounts_path, :flash => { :error => "You must create or link a payment method in order to accept payments."}
       else
         redirect_to dashboard_profile_path, :flash => { :error => "You must complete your profile before you can create product listings." }
       end
@@ -27,6 +28,11 @@ class Dashboard::ProductsController < DashboardController
 
   def create
     return if !current_user.profile_complete? || !current_user.has_payment_account?
+
+    if product_params['default_payment'] == "Fly And Buy" && current_user.fly_buy_profile.nil?
+      redirect_to request.referrer, :flash => { :error => "You must add your bank account in order to use the Fly & Buy method." }
+      return
+    end
 
     start_date = DateTime.new(product_params["start_date(1i)"].to_i, product_params["start_date(2i)"].to_i, product_params["start_date(3i)"].to_i, product_params["start_date(4i)"].to_i, product_params["start_date(5i)"].to_i)
     end_date = DateTime.new(product_params["end_date(1i)"].to_i, product_params["end_date(2i)"].to_i, product_params["end_date(3i)"].to_i, product_params["end_date(4i)"].to_i, product_params["end_date(5i)"].to_i)
@@ -67,16 +73,16 @@ class Dashboard::ProductsController < DashboardController
       )
     )
 
-    if params["product"]["inspection_date_attributes"].present?
-      inspection_attributes = params["product"]["inspection_date_attributes"]
-      inspection_attributes.each do |inspection_attribute|
-        inspection_date = DateTime.new(inspection_attribute["date(1i)"].to_i, inspection_attribute["date(2i)"].to_i, inspection_attribute["date(3i)"].to_i, inspection_attribute["date(4i)"].to_i, inspection_attribute["date(5i)"].to_i)
-        @product.inspection_dates.create({date: inspection_date, creator_type: "seller", product_id: @product.id})
-      end
-    end
-
     respond_to do |format|
       if @product.valid?
+        if params["product"]["inspection_date_attributes"].present? && params["product"]["default_payment"] == "Fly And Buy"
+          inspection_attributes = params["product"]["inspection_date_attributes"]
+          inspection_attributes.each do |inspection_attribute|
+            inspection_date = DateTime.new(inspection_attribute["date(1i)"].to_i, inspection_attribute["date(2i)"].to_i, inspection_attribute["date(3i)"].to_i, inspection_attribute["date(4i)"].to_i, inspection_attribute["date(5i)"].to_i)
+            @product.inspection_dates.create({date: inspection_date, creator_type: "seller", product_id: @product.id})
+          end
+        end
+        
         if images
           images[:images_attributes].each do |image|
             data = { image: image }
@@ -118,6 +124,11 @@ class Dashboard::ProductsController < DashboardController
 
   def update
     set_product
+
+    if product_params['default_payment'] == "Fly And Buy" && current_user.fly_buy_profile.nil?
+      redirect_to request.referrer, :flash => { :error => "You must add your bank account in order to use the Fly & Buy method." }
+      return
+    end
 
     start_date = DateTime.new(product_params["start_date(1i)"].to_i, product_params["start_date(2i)"].to_i, product_params["start_date(3i)"].to_i, product_params["start_date(4i)"].to_i, product_params["start_date(5i)"].to_i)
     end_date = DateTime.new(product_params["end_date(1i)"].to_i, product_params["end_date(2i)"].to_i, product_params["end_date(3i)"].to_i, product_params["end_date(4i)"].to_i, product_params["end_date(5i)"].to_i)
@@ -181,13 +192,18 @@ class Dashboard::ProductsController < DashboardController
       )
     )
 
-    if params["product"]["inspection_date_attributes"].present?
+    if params["product"]["inspection_date_attributes"].present? && params["product"]["default_payment"] == "Fly And Buy"
       inspection_attributes = params["product"]["inspection_date_attributes"]
       inspection_attributes.each do |inspection_attribute|
         inspection_date = DateTime.new(inspection_attribute["date(1i)"].to_i, inspection_attribute["date(2i)"].to_i, inspection_attribute["date(3i)"].to_i, inspection_attribute["date(4i)"].to_i, inspection_attribute["date(5i)"].to_i)
         if inspection_attribute["id"].present?
           existing_inspection_date = @product.inspection_dates.find_by_id(inspection_attribute["id"])
-          existing_inspection_date.update_attributes!({date: inspection_date})
+          if params["product"]["default_payment"] == "Fly And Buy"
+            existing_inspection_date.update_attributes!({date: inspection_date})
+          else
+            existing_inspection_date.date = inspection_date
+            existing_inspection_date.save(:validate => false)
+          end
         else
           @product.inspection_dates.create({date: inspection_date, creator_type: "seller", product_id: @product.id})
         end

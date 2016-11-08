@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161005070840) do
+ActiveRecord::Schema.define(version: 20161104091637) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,34 +87,36 @@ ActiveRecord::Schema.define(version: 20161005070840) do
   add_index "armor_invoices", ["product_id"], name: "index_armor_invoices_on_product_id", using: :btree
 
   create_table "armor_orders", force: :cascade do |t|
-    t.integer  "buyer_id",            limit: 8
-    t.integer  "seller_id",           limit: 8
-    t.integer  "account_id",          limit: 8
+    t.integer  "buyer_id",                   limit: 8
+    t.integer  "seller_id",                  limit: 8
+    t.integer  "account_id",                 limit: 8
     t.integer  "product_id"
-    t.integer  "order_id",            limit: 8
-    t.integer  "status",                          default: 0
+    t.integer  "order_id",                   limit: 8
+    t.integer  "status",                                 default: 0
     t.float    "unit_price"
     t.integer  "count"
     t.float    "amount"
-    t.string   "summary",             limit: 100
+    t.string   "summary",                    limit: 100
     t.text     "description"
     t.integer  "invoice_num"
     t.integer  "purchase_order_num"
     t.datetime "status_change"
     t.string   "uri"
-    t.boolean  "deleted",                         default: false
+    t.boolean  "deleted",                                default: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "taxes_price",                     default: 0
-    t.integer  "rebate_price",                    default: 0
-    t.integer  "rebate_percent",                  default: 0
+    t.integer  "taxes_price",                            default: 0
+    t.integer  "rebate_price",                           default: 0
+    t.integer  "rebate_percent",                         default: 0
     t.float    "fee"
     t.float    "rebate"
     t.float    "shipping_cost"
-    t.boolean  "inspection_complete",             default: false
+    t.boolean  "inspection_complete",                    default: false
     t.string   "payment_release_url"
-    t.boolean  "payment_release",                 default: false
-    t.boolean  "funds_in_escrow",                 default: false
+    t.boolean  "payment_release",                        default: false
+    t.boolean  "funds_in_escrow",                        default: false
+    t.float    "seller_charged_fee"
+    t.float    "amount_after_fee_to_seller"
   end
 
   create_table "armor_profiles", force: :cascade do |t|
@@ -293,6 +295,68 @@ ActiveRecord::Schema.define(version: 20161005070840) do
     t.decimal  "value",       precision: 5, scale: 3
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
+    t.string   "fee_type"
+  end
+
+  create_table "fly_buy_orders", force: :cascade do |t|
+    t.integer  "buyer_id"
+    t.integer  "seller_id"
+    t.integer  "product_id"
+    t.integer  "status"
+    t.float    "unit_price"
+    t.integer  "count"
+    t.float    "fee"
+    t.float    "rebate"
+    t.float    "rebate_price"
+    t.float    "total"
+    t.datetime "status_change"
+    t.boolean  "deleted",                default: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.string   "synapse_escrow_node_id"
+    t.string   "synapse_transaction_id"
+    t.boolean  "inspection_complete",    default: false
+    t.boolean  "payment_release",        default: false
+    t.boolean  "funds_in_escrow",        default: false
+    t.float    "seller_fees_percent"
+    t.float    "seller_fees_amount"
+  end
+
+  create_table "fly_buy_profiles", force: :cascade do |t|
+    t.string   "synapse_user_id"
+    t.integer  "user_id"
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
+    t.string   "encrypted_fingerprint"
+    t.string   "synapse_node_id"
+    t.string   "synapse_ip_address"
+    t.string   "eic_attachment_file_name"
+    t.string   "eic_attachment_content_type"
+    t.integer  "eic_attachment_file_size"
+    t.datetime "eic_attachment_updated_at"
+    t.string   "synapse_document_id"
+    t.string   "bank_statement_file_name"
+    t.string   "bank_statement_content_type"
+    t.integer  "bank_statement_file_size"
+    t.datetime "bank_statement_updated_at"
+    t.string   "gov_id_file_name"
+    t.string   "gov_id_content_type"
+    t.integer  "gov_id_file_size"
+    t.datetime "gov_id_updated_at"
+    t.boolean  "permission_scope_verified",   default: false
+    t.json     "kba_questions",               default: {}
+    t.boolean  "terms_of_service",            default: false
+    t.string   "name_on_account"
+    t.string   "ssn_number"
+    t.datetime "date_of_company"
+    t.datetime "dob"
+    t.string   "entity_type"
+    t.string   "entity_scope"
+    t.string   "company_email"
+    t.string   "tin_number"
+    t.boolean  "completed",                   default: false
+    t.string   "company_phone"
+    t.json     "error_details",               default: {}
   end
 
   create_table "green_checks", force: :cascade do |t|
@@ -386,8 +450,10 @@ ActiveRecord::Schema.define(version: 20161005070840) do
     t.integer  "product_id"
     t.integer  "armor_order_id"
     t.boolean  "approved"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.integer  "promise_order_id"
+    t.integer  "fly_buy_order_id"
   end
 
   create_table "mailboxer_conversation_opt_outs", force: :cascade do |t|
@@ -443,6 +509,21 @@ ActiveRecord::Schema.define(version: 20161005070840) do
   add_index "mailboxer_receipts", ["notification_id"], name: "index_mailboxer_receipts_on_notification_id", using: :btree
   add_index "mailboxer_receipts", ["receiver_id", "receiver_type"], name: "index_mailboxer_receipts_on_receiver_id_and_receiver_type", using: :btree
 
+  create_table "notifications", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "armor_order_id"
+    t.string   "title"
+    t.boolean  "read",             default: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.integer  "amg_order_id"
+    t.integer  "emb_order_id"
+    t.integer  "stripe_order_id"
+    t.integer  "green_order_id"
+    t.boolean  "deleted",          default: false
+    t.integer  "promise_order_id"
+  end
+
   create_table "pricebreaks", force: :cascade do |t|
     t.integer  "quantity"
     t.float    "price"
@@ -490,6 +571,42 @@ ActiveRecord::Schema.define(version: 20161005070840) do
 
   add_index "products", ["deleted_at"], name: "index_products_on_deleted_at", using: :btree
   add_index "products", ["user_id"], name: "index_products_on_user_id", using: :btree
+
+  create_table "promise_accounts", force: :cascade do |t|
+    t.string   "bank_account_id"
+    t.integer  "user_id"
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.integer  "credit_card_id"
+    t.boolean  "direct_debit_agreement", default: false
+  end
+
+  create_table "promise_orders", force: :cascade do |t|
+    t.integer  "buyer_id"
+    t.integer  "seller_id"
+    t.integer  "product_id"
+    t.integer  "status"
+    t.float    "unit_price"
+    t.integer  "count"
+    t.float    "fee"
+    t.float    "rebate"
+    t.float    "rebate_price"
+    t.float    "amount"
+    t.datetime "status_change"
+    t.boolean  "deleted",                     default: false
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
+    t.string   "promise_item_id"
+    t.boolean  "inspection_complete",         default: false
+    t.boolean  "funds_in_escrow",             default: false
+    t.float    "seller_charged_fee"
+    t.float    "amount_after_fee_to_seller"
+    t.boolean  "payment_release",             default: false
+    t.boolean  "refunded",                    default: false
+    t.float    "transaction_fee_amount"
+    t.float    "fraud_protection_fee_amount"
+    t.float    "end_user_support_fee_amount"
+  end
 
   create_table "refund_requests", force: :cascade do |t|
     t.integer  "green_order_id"

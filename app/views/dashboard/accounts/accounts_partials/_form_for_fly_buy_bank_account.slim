@@ -1,0 +1,197 @@
+h4 Company Information:
+br
+.row
+  .col-md-6
+    .form-group
+        = f.label :email, 'Email', class: 'required'
+        = f.text_field :email, class: 'form-control', required: true, value: user.email
+
+  .col-md-6
+    .form-group
+      = f.label :company, 'Comapny Name', class: 'required'
+      = f.text_field :company, class: 'form-control', required: true, value: user.company
+
+.row
+  .col-md-6
+    .form-group
+        = f.label :company_phone, 'Phone', class: 'required'
+        = f.telephone_field :company_phone, class: 'form-control', data: { behavior: 'IntlPhone' }, required: true, value: user.phone
+
+.row
+  .col-md-6
+    .form-group
+      .offer-item
+        .offer-date
+          label Company Formation Date:
+          = date_select :fly_buy_profile, :date_of_company, { :start_year => 20.years.ago.year, :end_year => Date.today.year, order: [:month, :day, :year]}, { class: "form-control" }
+  .col-md-6
+    .form-group
+        = f.label :tin_number, 'EIN Number:', class: 'required'
+        = f.text_field :tin_number, class: 'form-control', required: true
+.row
+  .col-md-6
+    .form-group
+      = f.label :entity_type, 'Entity Type:', class: 'required'
+      = f.select :entity_type, company_entity_types, {prompt: 'Please select an Entity Type'}, class: 'form-control', required: true
+
+  .col-md-6
+    .form-group
+      = f.label :entity_scope, 'Entity Scope:', class: 'required'
+      = f.select :entity_scope, user_company_entity_scopes, {prompt: 'Please select an Entity Scope'}, class: 'form-control', required: true
+
+hr
+.row.flybuy-address-block
+  - address = Address.where(:user => user).order('created_at')
+  .col-md-8
+    thead
+      tr
+        th
+          h4 Address::
+          br
+    tbody
+      = f.collection_radio_buttons(:address_id, address, :id, :get_inline_address) do |b, index|
+        tr
+          td
+            = b.label { b.radio_button(:"checked" => (b.object.id == address.first.id)) + b.text }
+      br
+      .text-left
+        button.btn.btn-success.show-address-block-button = fa_icon 'plus', text: 'ADD ANOTHER ADDRESS'
+  br
+  .insert-new-address-block style="display:none;"
+    - address_count = (address.count + 1).to_s
+    = f.fields_for :addresses do |ff|
+      - if ff.index == 0
+        i Default Address
+      .col-md-6
+        .form-group
+          = ff.label :name, 'Address Name:', class: 'required'
+          = ff.text_field :name, class: 'form-control', required: true, name: 'fly_buy_profile[address_attributes]['+ address_count  +'][name]', id: 'fly_buy_profile[address_attributes]['+ address_count  +'][name]'
+
+        .form-group
+          = ff.label :line1, 'Address Line 1:', class: 'required'
+          = ff.text_field :line1, class: 'form-control', required: true, name: 'fly_buy_profile[address_attributes]['+ address_count +'][line1]', id: 'fly_buy_profile[address_attributes]['+ address_count +'][line1]'
+
+        .form-group
+          = ff.label :city, 'City:', class: 'required'
+          = ff.text_field :city, class: 'form-control', required: true, name: 'fly_buy_profile[address_attributes]['+ address_count +'][city]', id: 'fly_buy_profile[address_attributes]['+ address_count +'][city]'
+
+      .col-md-6
+        .form-group
+          = ff.label :state, 'State:', class: 'required'
+          = ff.text_field :state, class: 'form-control', required: true, name: 'fly_buy_profile[address_attributes]['+ address_count +'][state]', id: 'fly_buy_profile[address_attributes]['+ address_count +'][state]'
+        .form-group
+          = ff.label :zip, 'Postal Code:', class: 'required'
+          = ff.text_field :zip, class: 'form-control', required: true, name: 'fly_buy_profile[address_attributes]['+ address_count +'][zip]', id: 'fly_buy_profile[address_attributes]['+ address_count +'][zip]'
+
+        .form-group
+          = ff.label :country, 'Country:', class: 'required'
+          = ff.country_select 'country', [ 'US', 'GB' ], { iso_codes: true }, { class: 'form-control', :name => "fly_buy_profile[address_attributes][#{address_count}][country]", :name => "fly_buy_profile[address_attributes][#{address_count}][country]" }
+
+    /   script#template-addressblock type="text/template"
+    /     .row.profile-table
+    /       .col-md-6
+    /         .form-group
+    /           = ff.label :name, 'Address Name:', class: 'required'
+    /           = ff.text_field :name, class: 'form-control', required: true, name: 'fly_buy_profile[address_attributes]['+ address_count +'][name]', id: 'fly_buy_profile[address_attributes]['+ address_count +'][name]'
+
+    /         .form-group
+    /           = ff.label :line1, 'Address Line 1:', class: 'required'
+    /           = ff.text_field :line1, class: 'form-control', required: true, name: 'fly_buy_profile[address_attributes]['+ address_count +'][line1]', id: 'fly_buy_profile[address_attributes]['+ address_count +'][line1]'
+
+    /         .form-group
+    /           = ff.label :city, 'City:', class: 'required'
+    /           = ff.text_field :city, class: 'form-control', required: true, name: 'fly_buy_profile[address_attributes]['+ address_count +'][city]', id: 'fly_buy_profile[address_attributes]['+ address_count +'][city]'
+
+    /       .col-md-6
+    /         .form-group
+    /           = ff.label :state, 'State:', class: 'required'
+    /           = ff.text_field :state, class: 'form-control', required: true, name: 'fly_buy_profile[address_attributes]['+ address_count +'][state]', id: 'fly_buy_profile[address_attributes]['+ address_count +'][state]'
+    /         .form-group
+    /           = ff.label :zip, 'Postal Code:', class: 'required'
+    /           = ff.text_field :zip, class: 'form-control', required: true, name: 'fly_buy_profile[address_attributes]['+ address_count +'][zip]', id: 'fly_buy_profile[address_attributes]['+ address_count +'][zip]'
+
+    /         .form-group
+    /           = ff.label :country, 'Country:', class: 'required'
+    /           = ff.country_select 'country', [ 'US', 'GB' ], { iso_codes: true }, { class: 'form-control', :prefix => "fly_buy_profile[address_attributes][#{address_count}][country]" }
+    /       hr
+    / .text-right
+    /   button.btn.btn-success.add-address-button data-behavior="AddAddressBlock"= fa_icon 'plus', text: 'Or ADD ADDRESS'
+  
+    
+
+hr
+h4 Company Documents:
+br
+.row
+  .col-md-6
+    .form-group
+      = f.label :eic_attachment, 'EIN Document:', class: 'required'
+      = link_to "Lost your ein?", 'https://www.irs.gov/businesses/small-businesses-self-employed/lost-or-misplaced-your-ein', class: 'view', target: '_blank'
+      = f.file_field :eic_attachment
+      p.warning Format must be png, jpg or pdf
+  
+  .col-md-6
+    .form-group
+      = f.label :bank_statement, 'Bank statement:', class: 'required'
+      = f.file_field :bank_statement, required: true
+      p.warning Format must be png, jpg or pdf
+hr
+
+h4 User Verification:
+br
+.row
+  .col-md-6
+    .form-group
+      .offer-item
+        .offer-date
+          label Your date of birth:
+          = date_select :fly_buy_profile, :dob, { :start_year => 60.year.ago.year, :end_year => Date.today.year, order: [:month, :day, :year]}, { class: "form-control" }
+  .col-md-6
+    .form-group
+        = f.label :ssn_number, 'SOCIAL SECURITY NUMBER:', class: 'required'
+        = f.text_field :ssn_number, class: 'form-control', required: true
+
+.row
+  .col-md-6
+    .form-group
+      = f.label :gov_id, 'GOVERNMENT ISSUED ID:', class: 'required'
+      = f.file_field :gov_id, required: true
+      p.warning Format must be png, jpg or pdf
+hr
+
+h4 Bank Account Verification:
+p.warning This is the account you use to send and receive funds with Fly & Buy
+br
+.row
+  .col-md-6
+    .form-group
+      = f.label :bank_name, 'Bank Name:', class: 'required'
+      = f.text_field :bank_name, class: 'form-control', required: true
+
+  .col-md-6
+    .form-group
+      = f.label :address, 'Bank Address:', class: 'required'
+      = f.text_field :address, class: 'form-control', required: true
+.row
+  .col-md-6
+    .form-group
+      = f.label :name_on_account, 'Account Name:', class: 'required'
+      = f.text_field :name_on_account, class: 'form-control', required: true
+
+  .col-md-6
+    .form-group
+      = f.label :account_num, 'Account Number:', class: 'required'
+      = f.text_field :account_num, class: 'form-control', required: true
+.row
+  .col-md-6
+    .form-group
+      = f.label :routing_num, 'Routing Number:', class: 'required'
+      = f.text_field :routing_num, class: 'form-control', required: true
+
+hr
+
+.row
+  .form-group
+    .checkbox: label
+      = f.check_box :terms_of_service, required: true
+      | &nbsp;By creating this account you agree to our Terms of Service & Privacy Policy and our financial software partner SynapsePay’s <a href="https://synapsepay.com/legal" target="_BLANK"> Terms of Service & Privacy Policy</a>

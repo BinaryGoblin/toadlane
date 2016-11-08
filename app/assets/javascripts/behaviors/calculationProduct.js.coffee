@@ -79,8 +79,9 @@ class Behavior.CalculationProduct
     total = quantity * @unitPrice
 
     if $('.user_accounts').children().find('span').text() == "Fly & Buy"
-      # TODO:: Fee is stated as $100 until fee algorithm is added
-      fees = 100  # ArmorFeeAmount
+      without_reduction_fees = total * (@fees || 0) / 100
+      reduction_in_fees = without_reduction_fees * 75 / 100
+      fees = without_reduction_fees - reduction_in_fees
     else
       fees              = total * (@fees || 0) / 100
 

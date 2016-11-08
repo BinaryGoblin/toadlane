@@ -1,18 +1,23 @@
 .wrap-sm.margin-top-30.vp-calculation-checkout data-options='{"pricebreaks":#{@product.pricebreaks.collect { |p| { quantity: (p.quantity - 1), price: p.price } }.to_json},"maxquantity":#{@data[:available_product].present? ? @data[:available_product].to_s : '"Infinity"'}}'
-  h1
-    | Checkout
+  - if current_user.fly_buy_profile_account_added? == false && params['fly_buy_order_id'].present? && @fly_buy_order.present? && @fly_buy_order.status == 'processing'
+    = link_to 'You have placed an order. Now what?', '#modal_order_place_now_what', class: 'link link-ulined order-placed-now-what',
+      data: { toggle: 'modal' }
+  - else
+    h1
+      | Please review your order prior to checking out
   br
   - if flash[:alert].present?
     .alert.alert-danger.margin-top-20 role="alert"
       em
         = flash[:alert]
   - if !flash[:error].nil?
-    .error-explanation
+    .error-explanation.text-center
       - if flash[:error].kind_of?(Array)
         - flash[:error].each do |error|
           = error
       - else
-        = flash[:error]
+        = flash[:error].scan(/[a-zA-Z0-9]+/).join(' ')
+
   .row.margin-top-20
     .col-md-12
       table.table
@@ -26,49 +31,45 @@
         tbody
           = render partial: 'products/shared/order_details',
                     locals: { product: @product,
-                              armor_order: @armor_order,
+                              fly_buy_order: @fly_buy_order,
                               data: @data }
 
     .col-md-12.checkout-payment-gateway
-      - if @armor_order.present? && @armor_order.uri.present?
-          = render partial: 'products/shared/payment_instruction_pop_up',
-                    locals: { armor_order: @armor_order }
+      .tab-content
+        - if @product.default_payment_stripe?
+          = render partial: 'products/shared/stripe_payment_tab',
+                    :locals => { stripe_order: @stripe_order,
+                                  user: current_user,
+                                  data: @data,
+                                  product: @product}
 
-          = link_to "View Order", dashboard_order_path(@armor_order, type: 'armor' ), class: "btn btn-primary pull-right"
-      - else
-        .tab-content
-          - if @product.default_payment_stripe?
-            = render partial: 'products/shared/stripe_payment_tab',
-                      :locals => { stripe_order: @stripe_order,
-                                    user: current_user,
-                                    data: @data,
-                                    product: @product}
+        - elsif @product.default_payment_green?
+          = render partial: 'products/shared/green_payment_tab',
+                    :locals => { green_order: @green_order,
+                                  user: current_user,
+                                  data: @data,
+                                  product: @product}
 
-          - if @product.default_payment_green?
-            = render partial: 'products/shared/green_payment_tab',
-                      :locals => { green_order: @green_order,
-                                    user: current_user,
-                                    data: @data,
-                                    product: @product}
+        - elsif @product.default_payment_amg?
+          = render partial: 'products/shared/amg_payment_tab',
+                    :locals => { amg_order: @amg_order,
+                                  user: current_user,
+                                  data: @data,
+                                  product: @product}
 
-          - if @product.default_payment_amg?
-            = render partial: 'products/shared/amg_payment_tab',
-                      :locals => { amg_order: @amg_order,
-                                    user: current_user,
-                                    data: @data,
-                                    product: @product}
+        - elsif @product.default_payment_emb?
+          = render partial: 'products/shared/emb_payment_tab',
+                    :locals => { emb_order: @emb_order,
+                                  user: current_user,
+                                  data: @data,
+                                  product: @product}
 
-          - if @product.default_payment_emb?
-            = render partial: 'products/shared/emb_payment_tab',
-                      :locals => { emb_order: @emb_order,
-                                    user: current_user,
-                                    data: @data,
-                                    product: @product}
+                                  
+        - elsif @product.default_payment_flybuy?
+          = render partial: 'products/shared/fly_buy_form_tab',
+                    :locals => { user: current_user,
+                                  fly_buy_order: @fly_buy_order,
+                                  product: @product,
+                                  fly_buy_profile: @fly_buy_profile}
 
-          - if @product.default_payment_armor?
-            = render partial: 'products/shared/armor_payment',
-                      :locals => { armor_order: @armor_order,
-                                    armor_profile: @armor_profile,
-                                    user: current_user,
-                                    data: @data,
-                                    product: @product}
+= render partial: 'products/shared/order_placed_now_what'

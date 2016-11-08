@@ -36,11 +36,11 @@ class Product < ActiveRecord::Base
   is_impressionable :counter_cache => true, :column_name => :views_count, :unique => :user_id
 
   PaymentOptions = {
-    armor: 'Fly And Buy',
     green: 'Echeck',
     stripe: 'Stripe',
     amg: 'Credit Card',
-    emb: 'Credit Card (EMB)'
+    emb: 'Credit Card (EMB)',
+    fly_buy: 'Fly And Buy'
   }
 
   belongs_to :user
@@ -55,6 +55,7 @@ class Product < ActiveRecord::Base
   has_many :armor_orders, dependent: :destroy
   has_many :amg_orders, dependent: :destroy
   has_many :emb_orders, dependent: :destroy
+  has_many :fly_buy_orders, dependent: :destroy
   has_many :product_categories
   has_many :categories, through: :product_categories, dependent: :destroy
   has_many :images, dependent: :destroy
@@ -79,18 +80,23 @@ class Product < ActiveRecord::Base
 
   validates_numericality_of :unit_price, :amount, only_integer: false, greater_than: 0, less_than: 1000000
   validates_presence_of :end_date, :status_characteristic
-  validates_presence_of :shipping_estimates
+  validates_presence_of :shipping_estimates, if: :default_payment_not_flybuy
   searchkick autocomplete: ['name'], fields: [:name, :main_category]
 
   scope :unexpired, -> { where("end_date > ?", DateTime.now).where(status: true) }
+  scope :fly_buy_default_payment, -> { where(default_payment: "Fly And Buy") }
 
   self.per_page = 16
 
   def available_payments
     ap = []
-    ap << PaymentOptions[:stripe] if user.stripe_profile.present?
-    ap << PaymentOptions[:green] if user.green_profile.present?
-    ap << PaymentOptions[:armor] if user.armor_profile.present?
+    ap << PaymentOptions[:stripe] if stripe_present?
+    ap << PaymentOptions[:green] if green_present?
+    ap << PaymentOptions[:amg] if amg_present?
+    ap << PaymentOptions[:emb] if emb_present?
+    if user.fly_buy_profile_account_added?
+      ap << PaymentOptions[:fly_buy]
+    end
     ap
   end
 
@@ -127,8 +133,9 @@ class Product < ActiveRecord::Base
     self.amount - sold_out
   end
 
-  def default_payment_armor?
-    default_payment == PaymentOptions[:armor]
+
+  def default_payment_flybuy?
+    default_payment == PaymentOptions[:fly_buy]
   end
 
   def default_payment_stripe?
@@ -163,5 +170,26 @@ class Product < ActiveRecord::Base
 
   def is_buyer_product_owner?(buyer)
     buyer == self.user
+  end
+
+  def promise_fee_for_buyer
+    Fee.find_by(:fee_type => "ACH").value
+  end
+
+  def default_payment_not_flybuy
+    default_payment != PaymentOptions[:fly_buy]
+  end
+
+  # fly_buy_inspection_date_not_passed => if the product's default payment is
+  # #   'Fly And buy', then only select those product whose all the inspection dates
+  # #    has not passed
+  def if_fly_buy_check_valid_inspection_date
+    if default_payment_flybuy?
+      unless inspection_dates.passed_inspection_date.count == inspection_dates.count
+        return self
+      end
+    else
+      return self
+    end
   end
 end

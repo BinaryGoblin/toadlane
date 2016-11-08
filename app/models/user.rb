@@ -57,6 +57,7 @@ class User < ActiveRecord::Base
   has_one :stripe_customer
   has_many :products
   has_many :addresses
+  has_one :fly_buy_profile
   accepts_nested_attributes_for :addresses,
   :allow_destroy => true,
   :reject_if => lambda { |a| (a[:name].empty? && a[:line1].empty? && a[:line2].empty? && a[:city].empty? && a[:state].empty? && a[:zip].empty?) }
@@ -64,6 +65,7 @@ class User < ActiveRecord::Base
   validates :name, presence: true, on: :create
   has_many :requests_of_sender, class_name: 'Request', foreign_key: :sender_id
   has_many :requests_of_receiver, class_name: 'Request', foreign_key: :receiver_id
+  has_many :notifications, dependent: :destroy
 
   has_one :certificate, dependent: :destroy
 
@@ -93,12 +95,15 @@ class User < ActiveRecord::Base
   # after_update :update_armor_api_account, if: :armor_api_account_changed?
 
   def profile_complete?
-    !self.addresses.nil? && !self.name.nil? && !self.email.nil? && !self.phone.nil?
+    addresses.present? && name.present? && email.present? && phone.present?
+    # !self.addresses.nil? && !self.name.nil? && !self.email.nil? && !self.phone.nil?
   end
 
   # user should have at least one payment method to create products
   def has_payment_account?
-    self.stripe_profile.present? || self.green_profile.present? || self.armor_profile.present?
+    self.stripe_profile.present? || self.green_profile.present? ||
+        self.amg_profile.present? || self.emb_profile.present? ||
+        self.fly_buy_profile_account_added?
   end
 
   def armor_orders(type=nil)
@@ -148,6 +153,17 @@ class User < ActiveRecord::Base
       EmbOrder.where(seller_id: self.id)
     else
       EmbOrder.where('buyer_id = ? OR seller_id = ?', self.id, self.id)
+    end
+  end
+
+  def fly_buy_orders(type=nil)
+    if type == 'bought'
+      FlyBuyOrder.where(buyer_id: self.id)
+    elsif type == 'sold'
+      FlyBuyOrder.where(seller_id: self.id)
+    else
+      fly_buy_orders = FlyBuyOrder.where('buyer_id = ? OR seller_id = ?', self.id, self.id)
+      fly_buy_orders.where.not(count: nil, status: nil)
     end
   end
 
@@ -202,10 +218,29 @@ class User < ActiveRecord::Base
     ap = []
     ap << Product::PaymentOptions[:stripe] if stripe_profile.present?
     ap << Product::PaymentOptions[:green] if green_profile.present?
-    ap << Product::PaymentOptions[:armor] if armor_profile.present?
     ap << Product::PaymentOptions[:amg] if amg_profile.present?
     ap << Product::PaymentOptions[:emb] if emb_profile.present?
+    if fly_buy_profile_account_added?
+      ap << Product::PaymentOptions[:fly_buy]
+    end
     ap
+  end
+
+  def first_name
+    name.split(" ")[0]
+  end
+
+  def last_name
+    name.split(" ")[1]
+  end
+
+  def fly_buy_profile_exist?
+    fly_buy_profile.present? && fly_buy_profile.synapse_user_id.present? &&
+    fly_buy_profile.synapse_node_id.present?
+  end
+
+  def fly_buy_profile_account_added?
+    fly_buy_profile.present? && fly_buy_profile.completed == true && fly_buy_profile.error_details.present? == false
   end
 
   private

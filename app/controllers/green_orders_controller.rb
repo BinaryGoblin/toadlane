@@ -113,7 +113,7 @@ class GreenOrdersController < ApplicationController
     }
     @fee = Fee.find_by(:module_name => 'Stripe').value
     @stripe_order = StripeOrder.new
-    @armor_order = ArmorOrder.new
+    @promise_order = PromiseOrder.new
     @amg_order = AmgOrder.new
     @emb_order = EmbOrder.new
     @green_order = GreenOrder.new(green_order_params)
@@ -137,6 +137,7 @@ class GreenOrdersController < ApplicationController
   def send_after_order_emails(green_order)
     UserMailer.sales_order_notification_to_seller(green_order).deliver_later
     UserMailer.sales_order_notification_to_buyer(green_order).deliver_later
+    NotificationCreator.new(green_order).after_order_created
   end
 
   def update_green_order_params(green_order_params, response)

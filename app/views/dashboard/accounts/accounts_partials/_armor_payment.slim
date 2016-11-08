@@ -1,0 +1,34 @@
+.account-armor
+  h4 Armor Payments:
+  p  Set up an armor payments account to sell using the Fly & Buy method
+  - if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
+    p <b>Status:</b> <span class="success">You are connected to Armor.</span>
+  - else
+    p <b>Status:</b> <span class="warning">You are not connected to Armor.</span>
+
+  .row.escrow-benefit-content
+    .col-md-2
+      = image_tag 'armor-payment.png', width: '250'
+      
+    .col-md-6.pull-right.benefit-content
+      p We’ve partnered with Payoneer to provide secure online escrow payment protection for buyers and sellers. Payoneer Escrow offers:
+      ul
+        li Reduced payment risk for both buyers and sellers
+        li Simple transaction flow
+        li Transparent and fair dispute resolution platform
+        li Faster payout through Payoneer account
+          
+  - if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
+    | Connect your&nbsp;
+    = link_to 'Payoneer Account', "javascript:void(0)", id: "armor-tabs"
+    | &nbsp;to send and receive funds through Armor Payments
+    .create-payoneer-btn
+      script src=get_script_src type="text/javascript"
+      button.btn.btn-primary onClick="armor.openModal('#{url}')" Payoneer Account
+  - else
+    - if current_user.armor_profile.nil?
+      = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path, class: "link link-ulined"
+
+    = render partial: 'products/shared/armor_account_create',
+              :locals => {  :user => user,
+                            :armor_profile => armor_profile}

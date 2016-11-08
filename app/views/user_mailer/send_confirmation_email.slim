@@ -16,7 +16,7 @@ html[style="margin: 0;padding: 0;"]
     .container style=("margin: 15px;padding: 15px;background: #fff;border: 1px solid #eaebec;border-radius: 3px;")
       .message-each style=("margin: 0;padding: 0;")
         .message-section style=("margin: 0;padding: 15px;background: #eee;border-radius: 3px;margin-bottom: 20px;")
-          | Click below to confirm your account
+          | Click below to confirm your Armor Payments account so you can sell with Fly & Buy.
         .message-footer style=("margin: 0;padding: 0;")
           - if @armor_order.present? && @product.present?
             = link_to 'Confirm my account', set_armor_profile_dashboard_accounts_url(product_id: @product.id, armor_order_id: @armor_order.id, confirmed_email: true),

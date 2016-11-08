@@ -51,7 +51,7 @@ Toad::Application.configure do
   config.paperclip_defaults = {
      :storage => :s3,
      :s3_credentials => {
-        :s3_host_name => 's3-us-west-2.amazonaws.com',
+        # :s3_host_name => 's3-us-west-2.amazonaws.com',
         :bucket => 'staging-toad',
         :access_key_id => 'AKIAJBUNG3ZF7WAMUW5A',
         :secret_access_key => '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'

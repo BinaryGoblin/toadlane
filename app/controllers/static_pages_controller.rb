@@ -10,6 +10,8 @@ class StaticPagesController < ApplicationController
   end
 
   def faq;end
+  def escrow_faq
+  end
 
   def home
     if current_user
@@ -21,7 +23,7 @@ class StaticPagesController < ApplicationController
 
   def terms_of_service
   end
-  
+
   def account_deactivated
     render 'static_pages/account_deactivated'
   end

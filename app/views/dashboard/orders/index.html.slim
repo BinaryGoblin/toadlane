@@ -1,6 +1,15 @@
 = render '/shared/tabs'
 
 .wrap-sm
+  - if !flash[:error].nil?
+    .error-explanation
+      - if flash[:error].kind_of?(Array)
+        - flash[:error].each do |error|
+          = error
+      - else
+        = flash[:error].scan(/[a-zA-Z0-9]+/).join(' ')
+  .error-explanation
+    = flash[:cancel_trans_error] if flash[:cancel_trans_error].present?
   .table-options
     table width="100%"
       tr
@@ -10,7 +19,7 @@
             = link_to 'Delete', delete_cascade_dashboard_orders_path, method: :delete, remote: true, data: {confirm: 'Are you sure?'}, class: 'label label-red'
 
   .table-responsive
-    table.table data-behavior="TableCheckbox" data-options='{"paramName":"orders_ids"}'
+    table.table data-behavior="TableCheckbox" data-options='{"paramName":"order_details"}'
       thead
         tr
           th: input type="checkbox"
@@ -21,23 +30,24 @@
           th Order Total:
           th.text-center Details:
           th.text-center Action:
-          th.text-center Type:
+          th.text-center Payment Type:
+          th.text-center Inspection Date:
 
       tbody
         - @orders.each do |order|
           tr
-            td: input type="checkbox" value="#{order.id}"
+            td: input type="checkbox" value="#{order.id}" data-order-type="#{order.class.name}"
             td= order.id
             td
               span.label
-                = order.status
+                - if order.status == 'pending_confirmation'
+                  = link_to order.status, '#modal_pending_confirmation', class: 'link link-ulined pending_confirmation_status', data: { toggle: 'modal' }
+                - else
+                  = order.status
             td.text-center= link_to order.product.name.titleize, product_path(order.product, cat_id: order.product.main_category), class: 'link link-ulined', target: '_blank'
             td.text-center= order.count
             td.text-center
-              -if order.instance_of? ArmorOrder
-                = number_to_currency(order.amount, :unit => "$", precision: 2)
-              -else
-                = number_to_currency(order.total, :unit => "$", precision: 2)
+              = number_to_currency(order.total, :unit => "$", precision: 2)
             td.text-center
               = link_to 'View', '#modal_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
               - if is_cancellable?(order)
@@ -47,25 +57,26 @@
                 | &nbsp;
                 = link_to 'Refund Requested', dashboard_refund_requests_path, class: 'view'
             td.text-center
-              - if order.instance_of?(ArmorOrder)
-                - if current_user == order.buyer && order.not_inspected
-                  = link_to 'Complete Inspection', armor_order_complete_inspection_path(order.id), class: 'view'
-                - elsif order.funds_in_escrow == false
-                  | Funds are not transfered to escrow yet.
+              - if order.buyer && order.status != 'cancelled' && order.instance_of?(FlyBuyOrder)
+                - if order.status == 'pending_confirmation' && order.funds_in_escrow == false
+                  = link_to 'Cancel Order', '#modal_cancel_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
+                - elsif order.status == 'queued' && order.funds_in_escrow == false
+                  = link_to 'Cancel Order', '#modal_cancel_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
+                - if order.not_inspected && order.status == 'pending_inspection' && order.inspection_date_today? && order.funds_in_escrow == true
+                  = link_to 'Complete Inspection', fly_buy_order_complete_inspection_path(order.id), class: 'view'
+                - elsif order.inspected && order.status == 'placed' && order.funds_in_escrow == true
+                  = link_to 'Release Payment', fly_buy_order_release_payment_path(order.id), class: 'view'
                 - elsif order.payment_release == true
                   span.label
                     | Payment Released
-                - elsif order.funds_in_escrow == true
-                  a.html5lightbox.btn.btn-primary data-height="411" data-width="730" href="#{order.payment_release_url}" Release Payment
-                - else
-                  | -
+                | -
               - else
                 | -
             td.text-center
               // for displaying type of order
-              - if order.instance_of? ArmorOrder
+              - if order.instance_of? FlyBuyOrder
                 span.label.label-orange
-                  | Armor
+                  | Fly & Buy
               - elsif order.instance_of? GreenOrder
                 span.label.label-green
                   | Green By Phone
@@ -87,7 +98,13 @@
               - elsif current_user.id == order.seller_id
                 span.label.label-green
                   | Sold
+            td.text-center
+              - if order.instance_of?(FlyBuyOrder) && order.selected_inspection_date.present?
+                = order.selected_inspection_date.get_inspection_date
 
+          = render partial: 'dashboard/orders/cancel_transaction_pop_up', locals: { order: order}
 .footer-actions: .fa-container: .wrap-sm
 
 = render partial: '/shared/order', collection: @orders
+
+= render partial: 'dashboard/orders/pending_confirmation_pop_up'

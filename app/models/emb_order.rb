@@ -38,6 +38,7 @@ class EmbOrder < ActiveRecord::Base
   belongs_to :product
   belongs_to :shipping_estimate
   belongs_to :address
+  has_many :notifications, dependent: :destroy
 
   attr_accessor :first_name, :last_name, :address1, :rebate_percent
 
@@ -93,21 +94,21 @@ class EmbOrder < ActiveRecord::Base
   end
 
   private_class_method
-    def self.emb_api_ready_params(emb_params, product_id, buyer_id, amount)
-      api_ready_params = {}
-      api_ready_params["type"] = "sale"
-      api_ready_params["first_name"] = "#{emb_params[:first_name]}"
-      api_ready_params["last_name"] = "#{emb_params[:last_name]}"
-      api_ready_params["address1"] = "#{emb_params[:address1]}"
-      api_ready_params["city"] = "#{emb_params[:address_city]}"
-      api_ready_params["state"] = "#{emb_params[:address_state].try(:upcase)}"
-      api_ready_params["zipcode"] = "#{emb_params[:address_zip]}"
-      api_ready_params["country"] = "#{emb_params[:address_country]}"
-      api_ready_params["ccnumber"] = "#{emb_params['billing-cc-number']}"
-      api_ready_params["ccexp"] = "#{emb_params['billing-cc-exp']}"
-      api_ready_params["cvv"] = "#{emb_params['billing-cvv']}"
-      api_ready_params["amount"] = "#{amount}"
-      api_ready_params["order_description"] = "p:#{product_id}u:#{buyer_id}t:#{Time.now.to_i}"
-      api_ready_params
-    end
+  def self.emb_api_ready_params(emb_params, product_id, buyer_id, amount)
+    api_ready_params = {}
+    api_ready_params["type"] = "sale"
+    api_ready_params["first_name"] = "#{emb_params[:first_name]}"
+    api_ready_params["last_name"] = "#{emb_params[:last_name]}"
+    api_ready_params["address1"] = "#{emb_params[:address1]}"
+    api_ready_params["city"] = "#{emb_params[:address_city]}"
+    api_ready_params["state"] = "#{emb_params[:address_state].try(:upcase)}"
+    api_ready_params["zipcode"] = "#{emb_params[:address_zip]}"
+    api_ready_params["country"] = "#{emb_params[:address_country]}"
+    api_ready_params["ccnumber"] = "#{emb_params['billing-cc-number']}"
+    api_ready_params["ccexp"] = "#{emb_params['billing-cc-exp']}"
+    api_ready_params["cvv"] = "#{emb_params['billing-cvv']}"
+    api_ready_params["amount"] = "#{amount}"
+    api_ready_params["order_description"] = "p:#{product_id}u:#{buyer_id}t:#{Time.now.to_i}"
+    api_ready_params
+  end
 end

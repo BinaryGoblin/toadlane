@@ -37,6 +37,7 @@ class StripeOrder < ActiveRecord::Base
   belongs_to :stripe_card
   belongs_to :shipping_estimate
   belongs_to :address
+  has_many :notifications, dependent: :destroy
 
   scope :for_dashboard, -> (page, per_page) do
     where(deleted: false).order('created_at DESC').paginate(page: page, per_page: per_page)
@@ -98,18 +99,18 @@ class StripeOrder < ActiveRecord::Base
     )
 
     charge = Stripe::Charge.create({
-        :amount => (total * 100).to_i,
-        :application_fee => (fee * 100).to_i,
-        :description => "Purchase on Toadlane.com",
-        :currency => "usd",
-        :source => token
-      },
-      { :stripe_account => seller.stripe_profile.stripe_uid }
-    )
+      :amount => (total * 100).to_i,
+      :application_fee => (fee * 100).to_i,
+      :description => "Purchase on Toadlane.com",
+      :currency => "usd",
+      :source => token
+    },
+    { :stripe_account => seller.stripe_profile.stripe_uid }
+  )
 
-    self.stripe_charge_id = charge.id
+  self.stripe_charge_id = charge.id
 
-    self.placed!
-    self.save
-  end
+  self.placed!
+  self.save
+end
 end

@@ -1,3 +1,19 @@
+.complete-profile-error.wrap-sm
+  - if !flash[:error].nil?
+    .error-explanation.text-center
+      | You must complete your&nbsp;
+      = link_to 'profile', dashboard_profile_path, class: 'view'
+      | &nbsp;to create order.
+  - elsif !flash[:account_error].nil?
+    .error-explanation.text-center
+      - if flash[:account_error] == "You must complete your profile before you can create a bank account."
+        | You must complete your&nbsp;
+        = link_to 'profile', dashboard_profile_path, class: 'view'
+        | &nbsp;to add bank account.
+      - else
+        = flash[:account_error]
+        = link_to 'Click Here To Edit', dashboard_profile_path, class: 'view'
+
 .actions-panel-product: .wrap-sm
   / = link_to 'Next product', '#', class: 'btn btn-default pull-right'
   / = link_to 'Previous', '#', class: 'btn btn-default pull-right'
@@ -94,9 +110,8 @@
                 span <span class="calc-rebate">0.00</span>% rebate for purchasing <span class="calc-pcs">0</span> pcs:
                 b.pull-right.calc-rebate-price 0.00
               li
-                / TODO:: Fee is stated as $100 until fee algorithm is added
-                - if @product.default_payment_armor?
-                  span Toadlane Fee <span class="calc-fees"></span>:
+                - if @product.default_payment_flybuy?
+                  span Toadlane Fee (<span class="calc-fees">#{@fee}</span>% - #{Fee::FlyBuyReductionFeeAmount}% reduced):
                 - else
                   span Toadlane Fee (<span class="calc-fees">#{@fee}</span>%):
                 b.pull-right.calc-fees-price 0.00
@@ -122,57 +137,17 @@
 
           .white-panel.wp-table
             - if current_user.present?
-              - if current_user.profile_complete?
-                -if @product.status_characteristic == 'sell'
-                  = form_tag(product_checkout_path(product_id: @product, armor_order_id: params[:armor_order_id]), method: :post, class: 'text-center') do
-                    = hidden_field_tag :total
-                    = hidden_field_tag :count
-                    = hidden_field_tag :fee
-                    = hidden_field_tag :shipping_cost
-                    = hidden_field_tag :rebate
-                    = hidden_field_tag :rebate_percent
-
-                    - if @product.is_buyer_product_owner?(current_user)
-                      | You cannot buy your own product.
-                    - elsif strip_tags(time_left(@product.end_date)) == 'Time ended'
-                      | The End Time of this product is over.
-                    - else
-                      - if @product.default_payment_armor? && @product.inspection_dates.present?
-                        .inspection_date_select
-                          - if params[:armor_order_id].present? && params[:inspection_date_by_seller] == "true"
-                            p
-                              | Select Inpsection Date:
-                            br
-                            = collection_radio_buttons(:inspection_date, :inspection_date_id, @armor_order.inspection_dates.buyer_added, :id, :get_inspection_date) do |b, index|
-                              tr
-                                td
-                                  = b.label { b.radio_button(:"checked" => (b.object.id == @armor_order.inspection_dates.buyer_added.first.id)) + b.text }
-                                  br
-                          - else
-                            p
-                              | Select Inpsection Date:
-                            br
-                            = collection_radio_buttons(:inspection_date, :inspection_date_id, @product.seller_set_inspection_dates, :id, :get_inspection_date) do |b, index|
-                              tr
-                                td
-                                  = b.label { b.radio_button(:"checked" => (b.object.id == @product.inspection_dates.first.id)) + b.text }
-                                  br
-                      - if @product.default_payment.present?
-                        input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
-
-                  - unless @product.is_buyer_product_owner?(current_user)
-                    - if @product.default_payment_armor? && @product.negotiable?
-                      - unless params[:armor_order_id].present? && params[:inspection_date_by_seller] == "true"
-                        a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here
-                        span
-                        | &nbsp;to set inspection date
-                -else
-                  .text-center= link_to 'Make Sale', '#', class: 'btn btn-success-sell btn-lg checkout', data: {  toggle: 'modal', target: '#stripe_form_checkout'  }
-              - else
-                .wrong.text-center
-                  |
-                    Please fill out your profile details. <br>
-                    Until your profile is complete, you will not be able to create orders.
+              -if @product.status_characteristic == 'sell'
+                - if strip_tags(time_left(@product.end_date)) == 'Time ended'
+                  .wrong.text-center
+                    | The Time allocated by seller has ended for this product.
+                - else
+                  = render partial: 'products/shared/product_checkout_form',
+                      locals: { product: @product, fly_buy_order: @fly_buy_order,
+                                user: current_user }
+                end
+              -else
+                .text-center= link_to 'Make Sale', '#', class: 'btn btn-success-sell btn-lg checkout', data: {  toggle: 'modal', target: '#stripe_form_checkout'  }
             - else
               .wrong.text-center
                 | Please&nbsp;
@@ -223,10 +198,7 @@
                   p
                     b PAYMENT METHOD:
                     br
-                    - if @product.default_payment_armor?
-                      span.label.label-orange
-                        | Fly & Buy
-                    - elsif @product.default_payment_green?
+                    - if @product.default_payment_green?
                       span.label.label-green
                         | Echeck
                     - elsif @product.default_payment_stripe?
@@ -238,6 +210,9 @@
                     - elsif @product.default_payment_emb?
                       span.label.label-dark-blue
                         | EMB
+                    - elsif @product.default_payment_flybuy?
+                      span.label.label-orange
+                        | Fly & Buy
                     - else
                         | Payment option has not been selected by the seller for this product.
                   - if current_user == @product.user
@@ -289,7 +264,9 @@
 
 = render partial: 'modals', locals: { product: @product }
 
-= render partial: 'products/shared/set_inspection_date_by_buyer', :locals => { product: @product, data: @data, armor_order: ArmorOrder.new }
+= render partial: 'products/shared/set_inspection_date_by_buyer',
+    :locals => { product: @product, data: @data, fly_buy_order: @fly_buy_order }
 
-- if params[:armor_order_id].present? && params[:buyer_request_inspection_date] == "true"
-  = render partial: 'set_inspection_date_by_seller', locals: { product: @product, armor_order: @armor_order }
+- if params[:fly_buy_order_id].present? && params[:buyer_request_inspection_date] == "true"
+  = render partial: 'set_inspection_date_by_seller',
+      locals: { product: @product, fly_buy_order: @fly_buy_order }

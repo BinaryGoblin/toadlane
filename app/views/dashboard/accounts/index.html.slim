@@ -2,12 +2,25 @@
 
 .wrap-sm
   - if !flash[:error].nil?
-    .error-explanation
+    .error-explanation.text-center
       - if flash[:error].kind_of?(Array)
         - flash[:error].each do |error|
           = error
       - else
-        = flash[:error]
+        = flash[:error].scan(/[a-zA-Z0-9]+/).join(' ')
+  - elsif !flash[:account_error].nil?
+    .error-explanation.text-center
+      - if flash[:account_error] == "You must complete your profile before you can create a bank account."
+        | You must complete your&nbsp;
+        = link_to 'profile', dashboard_profile_path, class: 'view'
+        | &nbsp;to add bank account.
+      - else
+        = flash[:account_error]
+        = link_to 'Click Here To Edit', dashboard_profile_path, class: 'view'
+  - if @fly_buy_profile.present? && @fly_buy_profile.error_details.present?
+    .error-explanation.text-center
+      - if @fly_buy_profile.error_details["en"].present?
+        | Please provide a valid routing number.
 
   .row.account-table
     .col-md-3
@@ -15,114 +28,32 @@
     .col-md-9
       .row.account-list-table
         .col-md-8
-          h4 Stripe:
-          p Stripe is one of the most trusted and popular payment gateways online. Toadlane has connected with
-            Stripe in order to provide safe and reliable payment processing. Connect with a Stripe account in order
-            to accept credit card, ACH, and Bitcoin payments in the Toadlane marketplace.
-          - if @user.stripe_profile.nil?
-            p <b>Status:</b> <span class="warning">You are not connected to Stripe.</span>
-          - else
-            p <b>Status:</b> <span class="success">You are connected to Stripe.</span>
-        .col-md-4
-          - if @user.stripe_profile.nil?
-            - if Rails.env.development?
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
-                                                                                           :redirect_uri => "http://localhost:3000/users/auth/stripe_connect/callback")
-            - else
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect)
-          - else
-            - if Rails.env.development?
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
-                                                                                           :stripe_landing => "login",
-                                                                                           :redirect_uri => "http://localhost:3000/users/auth/stripe_connect/callback")
-            - else
-              = link_to image_tag('stripe_button_small.png'), user_omniauth_authorize_path(:stripe_connect,
-                                                                                           :stripe_landing => "login")
+          = render partial: 'dashboard/accounts/accounts_partials/fly_buy_account_create_partial',
+                    :locals => {  :user => @user,
+                                  :fly_buy_profile => @fly_buy_profile }
       hr
       .row.account-list-table
-        .col-md-8
-          .account-green
-            h4 Green By Phone:
-            p Merchant Gateway, Verification Services, Consulting
-            = form_for @green_profile, url: create_green_profile_dashboard_accounts_path do |f|
-              .form-group
-                = f.label :green_client_id, "Client ID:"
-                = f.text_field :green_client_id, class: "form-control", required: true
-              .form-group
-                = f.label :green_api_password, "API Password:"
-                = f.text_field :green_api_password, class: "form-control", required: true
-              = f.submit "Submit", class: "btn btn-primary"
-            - if @user.green_profile.nil?
-              p <b>Status:</b> <span class="warning">You are not connected to Green By Phone.</span>
-              a.link.link-ulined href="http://www.green.money/#!sign-up/i2m2l" target="_blank"
-                | Apply to be a merchant
-            - else
-              p <b>Status:</b> <span class="success">You are connected to Green By Phone.</span>
+        = render partial: 'dashboard/accounts/accounts_partials/stripe_payment',
+                  :locals => { :user => @user }
 
-      / hr
-      / .row.account-list-table
-      /   .col-md-8
-      /     .account-armor#armor-profile-section
-      /       h4 Armor Payments:
-      /       p  Set up an armor payments account to sell using the Fly & Buy method
-      /       - if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
-      /         p <b>Status:</b> <span class="success">You are connected to Armor.</span>
-      /       - else
-      /         p <b>Status:</b> <span class="warning">You are not connected to Armor.</span>
-      / 
-      /       - if current_user.armor_profile.present? && current_user.armor_profile.armor_account_id.present?
-      /         | Connect your Payoneer account to send and receive funds through Armor Payments
-      /         br
-      /         script src="https://app.armorpayments.com/assets/js/modal.min.js" type="text/javascript"
-      /         script src="get_" type="text/javascript"
-      /         button.btn.btn-primary onClick="armor.openModal('#{@url}')" Payoneer Account
-      /       
-      /       - else
-      /         - if current_user.armor_profile.nil?
-      /           = link_to "Send confirmation email", send_confirmation_email_dashboard_accounts_path, class: "link link-ulined"
-      / 
-      /         = render partial: 'products/shared/armor_account_create',
-      /                   :locals => {  :user => current_user,
-      /                                 :armor_profile => @armor_profile,
-      /                               }
       hr
       .row.account-list-table
         .col-md-8
-          .account-amg
-            h4 Advanced Merchant Group
-            p A simple payments solution for your business and your customers
-            = form_for @amg_profile, url: create_amg_profile_dashboard_accounts_path do |f|
-              .form-group
-                = f.label :username, "AMG Username:"
-                = f.text_field :username, class: "form-control", required: true
-              .form-group
-                = f.label :password, "AMG Password:"
-                = f.password_field :password, class: "form-control", required: true
-              = f.submit "Submit", class: "btn btn-primary"
-            - if @user.amg_profile.nil?
-              p <b>Status:</b> <span class="warning">You are not connected to Advanced Merchant Group.</span>
-              a.link.link-ulined href="https://amgsecurepay.com/clientlogin/" target="_blank"
-                | Apply to be a merchant
-            - else
-              p <b>Status:</b> <span class="success">You are connected to Advanced Merchant Group.</span>
+          = render partial: 'dashboard/accounts/accounts_partials/green_payment',
+                    :locals => { :green_profile => @green_profile }
+
       hr
       .row.account-list-table
         .col-md-8
-          .account-amg
-            h4 e Merchant Broker
-            p We Are High Risk Merchant Account Specialists
-            = form_for @emb_profile, url: create_emb_profile_dashboard_accounts_path do |f|
-              .form-group
-                = f.label :username, "EMB Username:"
-                = f.text_field :username, class: "form-control", required: true
-              .form-group
-                = f.label :password, "EMB Password:"
-                = f.password_field :password, class: "form-control", required: true
-              = f.submit "Submit", class: "btn btn-primary"
-            - if @user.emb_profile.nil?
-              p <b>Status:</b> <span class="warning">You are not connected to e Merchant Broker.</span>
-              a.link.link-ulined href="https://onlineapp.emerchantbroker.com/control/main" target="_blank"
-                | Apply to be a merchant
-            - else
-              p <b>Status:</b> <span class="success">You are connected to e Merchant Broker.</span>
+          = render partial: 'dashboard/accounts/accounts_partials/amg_payment',
+                    :locals => {  :user => @user,
+                                  :amg_profile => @amg_profile}
+
+      hr
+      .row.account-list-table
+        .col-md-8
+          = render partial: 'dashboard/accounts/accounts_partials/emb_payment',
+                    :locals => {  :user => @user,
+                                  :emb_profile => @emb_profile}
+                    
       hr

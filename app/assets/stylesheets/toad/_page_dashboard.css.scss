@@ -97,6 +97,10 @@
     .success {
       color: green;
     }
+
+    .info {
+      color: #5bc0de;
+    }
   }
 }
 
@@ -430,3 +434,91 @@
 #html5-watermark {
     display:none !important;
  }
+
+.account-list-table{
+  .account-armor{
+    .create-payoneer-btn{
+      margin-top: 15px;
+      margin-bottom: 20px;
+    }
+    .benefit-content{
+      text-align: justify;
+    }
+    .escrow-benefit-content{
+      margin-bottom: 15px;
+    }
+  }
+  .tabs-for-armor{
+    ul.nav.nav-tabs{
+      margin-bottom: 20px;
+    }
+
+    .tab-content{
+      text-align: justify;
+    }
+  }
+  .account-flybuy{
+    p.warning{
+      color: red;
+    }
+    .create_fly_buy_profile{
+      .offer-item {
+        @include clearfix;
+
+        &:first-child {
+          margin-bottom: 20px;
+        }
+
+        > label {
+          width: 145px;
+          float: left;
+          margin-top: 26px;
+        }
+
+        > div {
+          float: left;
+
+          label {
+            display: block;
+          }
+        }
+
+        .selectize-input {
+          padding-right: 20px;
+        }
+
+        .offer-date {
+          margin-right: 20px;
+          width: 300px;
+
+          .selectize-control {
+            float: left;
+
+            &:nth-child(3) {
+              width: 96px;
+              margin-right: 5px;
+            }
+
+            &:nth-child(5) {
+              width: 50px;
+              margin-right: 5px;
+            }
+
+            &:nth-child(7) {
+              width: 64px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+a.pending_confirmation_status{
+  color: white;
+}
+
+.invoice-note{
+  padding-left: 10px;
+}

@@ -138,6 +138,7 @@ class EmbOrdersController < ApplicationController
   def send_after_order_emails(emb_order)
     UserMailer.sales_order_notification_to_seller(emb_order).deliver_later
     UserMailer.sales_order_notification_to_buyer(emb_order).deliver_later
+    NotificationCreator.new(emb_order).after_order_created
   end
 
   def update_emb_order_params(emb_order_params, response)

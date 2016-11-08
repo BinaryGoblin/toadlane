@@ -392,7 +392,7 @@
 }
 
 .table-checkout {
-  width: 101.5%;
+  width: 100%;
   border-spacing: 5px;
   line-height: 1;
   margin: -5px;
@@ -404,6 +404,7 @@
     text-transform: uppercase;
     border: 1px solid #cccfd3;
     padding: 6px 0 4px;
+    text-align: center;
   }
 
   td {
@@ -412,7 +413,7 @@
     font-size: 14px;
 
     &:last-child {
-      text-align: right;
+      text-align: left;
     }
   }
 
@@ -421,7 +422,7 @@
   }
 
   dt {
-    width: 90px;
+    width: 80px;
     float: left;
     clear: both;
   }
@@ -430,6 +431,10 @@
     font-weight: 800;
     margin: 5px 0;
     display: block;
+
+    &:last-child {
+      margin-bottom: 15px;
+    }
   }
 
   .no-border {
@@ -536,12 +541,24 @@
   }
 }
 
-.greenDetails{
+.greenDetails, .promiseDetails{
   margin-top: 20px;
   p.help-block{
     margin-bottom: 0;
   }
 }
+.account-promisepay{
+  .promiseDetails{
+    .new_promise_account{
+      .form-group{
+        .checkbox label {
+          padding-left: 0px;
+        }
+      }
+    }
+  }
+}
+
 .show_green{
   display: inline-block !important;
 }

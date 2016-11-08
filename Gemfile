@@ -54,6 +54,19 @@ gem 'postmark-rails', '>= 0.10.0'
 # Added for validating phone number as armor uses this library
 gem 'phonelib', '~> 0.6.2'
 
+# payment method PromisePay
+gem 'promisepay', '~> 1.1.0'
+
+gem 'iso_country_codes', '~> 0.7.5'
+
+gem 'whenever', :require => false
+
+gem 'synapse_pay_rest', '~> 0.0.13'
+
+gem 'synapse_payments', '~> 0.10.0'
+
+gem 'roo', '~> 2.4.0'
+
 # Dev - debugging group
 group :development do
   gem 'pry-rails'
@@ -101,3 +114,6 @@ gem 'annotate', '~> 2.7.1'
 gem 'impressionist', '~> 1.5.1'
 gem 'paranoia', '~> 2.0'
 gem 'blogo', '~> 0.1.4'
+
+gem 'imgkit', '~> 1.6.1'
+gem 'wkhtmltoimage-binary', '~> 0.12.2'

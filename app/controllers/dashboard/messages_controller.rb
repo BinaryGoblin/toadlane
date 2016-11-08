@@ -21,10 +21,10 @@ class Dashboard::MessagesController < DashboardController
     current_user.reply_to_conversation(conversation, conversation_params[:body], conversation_params[:subject])
     receiver = User.find_by_id(params[:user_id])
     MessageMailer.new_message(receiver,
-                                conversation_params[:body],
-                                conversation_params[:subject],
-                                current_user,
-                                conversation.id).deliver
+      conversation_params[:body],
+      conversation_params[:subject],
+      current_user,
+    conversation.id).deliver
     redirect_to :back
   end
 
@@ -44,15 +44,15 @@ class Dashboard::MessagesController < DashboardController
   end
 
   private
-    def conversation_params
-      params.require(:conversation).permit(:subject, :body)
-    end
+  def conversation_params
+    params.require(:conversation).permit(:subject, :body)
+  end
 
-    def mailbox
-      @mailbox ||= current_user.mailbox
-    end
+  def mailbox
+    @mailbox ||= current_user.mailbox
+  end
 
-    def conversation
-      @conversation ||= mailbox.conversations.find(params[:id])
-    end
+  def conversation
+    @conversation ||= mailbox.conversations.find(params[:id])
+  end
 end

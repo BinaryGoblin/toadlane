@@ -8,4 +8,5 @@
     li= tab_link_to 'Verify', dashboard_forms_path, is: 'forms'
     li= tab_link_to 'Financing', dashboard_finances_path, is: 'finances'
     li= tab_link_to "Messages (#{get_user_unread_message_notifications})", dashboard_messages_path(box: 'inbox'), is: 'messages'
+    li= tab_link_to "Notifications (#{get_user_unread_notifications})", dashboard_notifications_path, is: 'notifications'
     li= link_to fa_icon('power-off', text: 'Logout'), destroy_user_session_path, class: 'btn btn-success'

@@ -5,9 +5,12 @@ Toad::Application.routes.draw do
   match "/404", :to => "errors#not_found", :via => :all
   match "/500", :to => "errors#internal_server_error", :via => :all
 
+  match "/callbacks", :to => "promise_orders#callbacks", :via => :all
+
   resources :armor_orders, except: [:edit, :new] do
     collection do
       post :set_inspection_date, to: 'armor_orders#set_inspection_date', as: 'set_inspection_date'
+      get :set_inspection_date
       post :armor_webhooks
     end
     post :confirm_inspection_date_by_seller
@@ -26,17 +29,49 @@ Toad::Application.routes.draw do
 
   resources :emb_orders
 
+  resources :promise_orders, except: [:edit, :new, :create, :show, :index, :destroy, :update] do
+    collection do
+      post :set_inspection_date, to: 'promise_orders#set_inspection_date', as: 'set_inspection_date'
+      get :set_inspection_date
+    end
+    post :confirm_inspection_date_by_seller
+    get :complete_inspection
+    post :place_order
+    get :refund
+  end
+
+  resources :fly_buy_orders, except: [:edit, :new, :create, :show, :index, :destroy, :update] do
+    collection do
+      post :set_inspection_date, to: 'fly_buy_orders#set_inspection_date', as: 'set_inspection_date'
+      get :set_inspection_date
+    end
+    post :confirm_inspection_date_by_seller
+    get :complete_inspection
+    get :release_payment
+    post :place_order
+    post :confirm_order_placed
+    get :resend_wire_instruction
+    get :cancel_transaction
+  end
+
   get 'print/invoice.:id', to: 'print#invoice', as: 'print/invoice'
 
   get 'search/autocomplete'
   get 'search/index', as: :search
 
+  get 'escrow' => 'static_pages#escrow_faq', as: :escrow_faq
   get 'faq' => 'static_pages#faq', as: :faq
   get 'terms_of_service' => 'static_pages#terms_of_service'
   get 'account_deactivated' => 'static_pages#account_deactivated'
   root 'static_pages#home'
 
   namespace :dashboard do
+    resources :notifications, only: [:index] do
+      collection do
+        delete :delete_cascade
+      end
+    end
+
     resource :profile, only: [:update, :show]
 
     resources :accounts do
@@ -49,6 +84,10 @@ Toad::Application.routes.draw do
         get :check_valid_state
         post :create_amg_profile
         post :create_emb_profile
+        post :create_fly_buy_profile
+        post :answer_kba_question
+        get :callback
+        post :callback
       end
     end
 

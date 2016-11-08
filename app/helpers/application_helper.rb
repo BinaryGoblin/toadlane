@@ -250,9 +250,9 @@ module ApplicationHelper
   end
 
   def product_button_color(product)
-	  if product.present?
-	    product.status_characteristic == "sell" ? "btn btn-success" : "btn btn-success-sell"
-	  end
+    if product.present?
+      product.status_characteristic == "sell" ? "btn btn-success" : "btn btn-success-sell"
+    end
   end
 
   def get_user_notifications
@@ -273,11 +273,29 @@ module ApplicationHelper
     end
   end
 
+  def get_user_unread_notifications
+    unread_notifications ||= current_user.notifications.where(read: 'false')
+
+    if unread_notifications
+      unread_notifications.count
+    else
+      0
+    end
+  end
+
   def is_cancellable?(order)
     order.is_a?(GreenOrder) && order.status == "placed" && current_user.id == order.buyer_id && order.refund_request.nil?
   end
 
   def refund_requested?(order)
     order.is_a?(GreenOrder) && order.status == "challenged" && current_user.id == order.buyer_id && order.refund_request.present?
+  end
+
+  def get_script_src
+    if Rails.env.production?
+      "https://app.armorpayments.com/assets/js/modal.min.js"
+    else
+      "https://sandbox.armorpayments.com/assets/js/modal.min.js"
+    end
   end
 end

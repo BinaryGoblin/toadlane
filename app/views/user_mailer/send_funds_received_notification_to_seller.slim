@@ -10,13 +10,13 @@ html[style="margin: 0;padding: 0;"]
       img.logo[src="https://www.toadlane.com/assets/logo-header-09ff685e51c99351a07e5332f0996ef2.png" alt="Toadlane Logo" style="margin: 0;padding: 0;height: 100px;"]
       .pull-right[style="margin: 0;padding: 0;float: right;margin-top: 25px;"]
         strong
-          = get_email_or_name(@buyer)
-        = image_tag get_image(@buyer.asset(:small)), height: '50', :class => "pro-img", :style => "margin: 0;padding: 5px;height: 30px;vertical-align: middle;margin-right: 15px;border-radius: 5px;border: 1px solid #eaebec;background-color: #fff;margin-left: 10px;"
+          = get_email_or_name(@seller)
+        = image_tag get_image(@seller.asset(:small)), height: '50', :class => "pro-img", :style => "margin: 0;padding: 5px;height: 30px;vertical-align: middle;margin-right: 15px;border-radius: 5px;border: 1px solid #eaebec;background-color: #fff;margin-left: 10px;"
 
     .container style=("margin: 15px;padding: 15px;background: #fff;border: 1px solid #eaebec;border-radius: 3px;")
       .message-each style=("margin: 0;padding: 0;")
         .message-section style=("margin: 0;padding: 15px;background: #eee;border-radius: 3px;margin-bottom: 20px;")
-          | Send funds into escrow to complete order.
+          | Congratulations! The buyer has officially wired funds into escrow. See you at the inspection
 
     .text-center[style="margin: 0;padding: 0;text-align: center;"]
       a[href="#{faq_url}" style="margin: 0;padding: 0;color: #5c8f10;"]

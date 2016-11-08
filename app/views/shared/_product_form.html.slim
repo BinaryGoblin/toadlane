@@ -1,16 +1,19 @@
-= form_for [ controller.class.name.split("::").first.underscore.to_sym, setup_product(@product)], :html => { multipart: true, class: 'product_form_partial' } do |f|
+= form_for [ controller.class.name.split("::").first.underscore.to_sym, setup_product(@product)], :html => { multipart: true, class: "product_form_partial product_#{params["action"]}" } do |f|
   .wrap-sm: .product-form
     - if @product.errors.any?
       .error-explanation
-        h5= "#{pluralize(@product.errors.count, "error")} prohibited this test from being saved:"
+        h5= "Error:"
         ul
           - @product.errors.full_messages.each do |message|
             li = message
     - elsif @errors.present?
       .error-explanation
-        h5= "Errors prohibited this test from being saved:"
+        / h5= "Error:"
         ul
           li = @errors
+    - elsif flash[:error].present?
+      .error-explanation
+        = flash[:error]
 
 
     - if current_user.has_role?(:admin) or current_user.has_role?(:superadmin)
@@ -354,12 +357,14 @@
       ul.inspectiondates
         - if @product.seller_set_inspection_dates.any?
           - @product.seller_set_inspection_dates.each_with_index do |inspection_date, index|
+            - hidden_field_name = "inspection_date" + "_" + inspection_date.id.to_s
+            = f.hidden_field :hidden_field_name, :value => inspection_date.date.to_date
             li.inspectiondate
               .index= index+1
               .offer-item
                 .offer-date
                   label Date:
-                  = date_select :inspection_date, :date, { :default => inspection_date.date, order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" , :value => inspection_date.date }, { class: "form-control" }
+                  = date_select :inspection_date, :date, { :start_year => f.object.start_date.year, :end_year => f.object.end_date.year, :default => inspection_date.date, order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" , :value => inspection_date.date }, { class: "form-control" }
 
                 .offer-time
                   label Time:
@@ -375,7 +380,10 @@
             .offer-item
               .offer-date
                 label Date:
-                = date_select :inspection_date, :date, { :default => DateTime.tomorrow, order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" }, { class: "form-control" }
+                - if f.object.start_date.present?
+                  = date_select :inspection_date, :date, { :start_year => f.object.start_date.year, :end_year => f.object.end_date.year, :default => DateTime.tomorrow, order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" }, { class: "form-control" }
+                - else
+                  = date_select :inspection_date, :date, { :default => DateTime.tomorrow, order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" }, { class: "form-control" }
 
               .offer-time
                 label Time:
@@ -391,7 +399,10 @@
           .offer-item
             .offer-date
               label Date:
-              = date_select :inspection_date, :date, { :default => DateTime.tomorrow, order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" }, { class: "form-control" }
+              - if f.object.start_date.present?
+                = date_select :inspection_date, :date, { :start_year => f.object.start_date.year, :end_year => f.object.end_date.year, :default => DateTime.tomorrow, order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" }, { class: "form-control" }
+              - else
+                = date_select :inspection_date, :date, { :default => DateTime.tomorrow, order: [:month, :day, :year], :prefix => "product[inspection_date_attributes][]" }, { class: "form-control" }
 
             .offer-time
               label Time:

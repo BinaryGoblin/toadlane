@@ -1,6 +1,3 @@
-div
-  h4.text-uppercase Toadlane.com
-
 .text-center = image_tag 'logo-header.png'
 
 .table-responsive
@@ -10,10 +7,10 @@ div
         td colspan="4" valign="top" alrign="left"
           p
             - if order.instance_of? StripeOrder
-            - if order.instance_of? ArmorOrder
+            - if order.instance_of? FlyBuyOrder
               div
-                | Armor Order Id #
-                = order.order_id
+                | Transaction Id #
+                = order.synapse_transaction_id
           div Date: #{order.created_at.strftime('%m-%d-%Y')}
 
 
@@ -29,9 +26,6 @@ div
               dt Address:
               dd= order.buyer.addresses[0].line1 + (order.buyer.addresses[0].line2 || "")
 
-              dt Postal-Code:
-              dd= order.buyer.addresses[0].zip
-
               dt City:
               dd= order.buyer.addresses[0].city
 
@@ -40,6 +34,9 @@ div
 
               dt Country:
               dd= order.buyer.addresses[0].country
+
+              dt Postal-Code:
+              dd= order.buyer.addresses[0].zip
 
             dt Phone:
             dd= order.buyer.phone
@@ -69,69 +66,50 @@ div
       tr
         td= order.product.name
         td= order.count
-        td $ #{number_with_precision(order.unit_price, precision: 2, delimiter: '')}
-        td $ #{number_with_precision(order.count * order.unit_price, precision: 2, delimiter: '')}
+        td  #{number_to_currency(number_with_precision(order.unit_price, precision: 2, delimiter: ''))}
+        td  #{number_to_currency(number_with_precision(order.count * order.unit_price, precision: 2, delimiter: ''))}
 
       tr
-        - if order.instance_of? StripeOrder
-          td colspan="3" #{number_with_precision(order.rebate, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
-          td -$ #{number_with_precision(order.rebate, precision: 2, delimiter: '')}
-        - if order.instance_of? ArmorOrder
-          td colspan="3" #{number_with_precision(order.rebate, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
-          td -$ #{number_with_precision(order.rebate, precision: 2, delimiter: '')}
-        - if order.instance_of? GreenOrder
-          td colspan="3" #{number_with_precision(order.rebate, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
-          td -$ #{number_with_precision(order.rebate, precision: 2, delimiter: '')}
-        - if order.instance_of? AmgOrder
-          td colspan="3" #{number_with_precision(order.rebate, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
-          td -$ #{number_with_precision(order.rebate, precision: 2, delimiter: '')}
-        - if order.instance_of? EmbOrder
-          td colspan="3" #{number_with_precision(order.rebate, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
-          td -$ #{number_with_precision(order.rebate, precision: 2, delimiter: '')}
+        td colspan="3" #{number_with_precision(order.rebate, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
+        - if order.instance_of? FlyBuyOrder
+          td - #{number_to_currency(number_with_precision(order.rebate_price, precision: 2, delimiter: ''))}
+        - else
+          td - #{number_to_currency(number_with_precision(get_amount_for_rebate(order), precision: 2, delimiter: ''))}
 
       tr
-        td colspan="3" Fees
-        - if order.instance_of? StripeOrder
-          td $ #{number_with_precision(order.fee, precision: 2, delimiter: '')}
-        - if order.instance_of? ArmorOrder
-          td $ #{number_with_precision(order.fee, precision: 2, delimiter: '')}
-        - if order.instance_of? GreenOrder
-          td $ #{number_with_precision(order.fee, precision: 2, delimiter: '')}
-        - if order.instance_of? AmgOrder
-          td $ #{number_with_precision(order.fee, precision: 2, delimiter: '')}
-        - if order.instance_of? EmbOrder
-          td $ #{number_with_precision(order.fee, precision: 2, delimiter: '')}
-
-      - if order.instance_of? StripeOrder
+      - if order.instance_of?(FlyBuyOrder)
+        - if user == order.seller
+          tr
+            td colspan="3" Toadlane Fee (#{order.get_toadlane_fee}% - #{Fee::FlyBuyReductionFeeAmount}% reduced)
+            td #{number_to_currency(number_with_precision(order.fee, precision: 2, delimiter: ''))}
+          tr
+            td colspan="3" Seller Fees #{order.seller_fees_percent}%
+            td - #{number_to_currency(number_with_precision(order.seller_fees_amount, precision: 2, delimiter: ''))}
+        - elsif user == order.buyer
+          tr
+            td colspan="3" Toadlane Fee (#{order.get_toadlane_fee}% - #{Fee::FlyBuyReductionFeeAmount}% reduced)
+            td #{number_to_currency(number_with_precision(order.fee, precision: 2, delimiter: ''))}
+      - else
         tr
           td colspan="3" Shipping
-          td $ #{number_with_precision(order.shipping_cost, precision: 2, delimiter: '')}
-      - if order.instance_of? GreenOrder
-        tr
-          td colspan="3" Shipping
-          td $ #{number_with_precision(order.shipping_cost, precision: 2, delimiter: '')}
-      - if order.instance_of? AmgOrder
-        tr
-          td colspan="3" Shipping
-          td $ #{number_with_precision(order.shipping_cost, precision: 2, delimiter: '')}
-      - if order.instance_of? EmbOrder
-        tr
-          td colspan="3" Shipping
-          td $ #{number_with_precision(order.shipping_cost, precision: 2, delimiter: '')}
+          td  #{number_to_currency(number_with_precision(order.shipping_cost, precision: 2, delimiter: ''))}
 
       tr
         td.no-border colspan="2"
         td.text-center: b.text-uppercase Total:
-        - if order.instance_of? StripeOrder
-          td: b $ #{number_with_precision(order.total, precision: 2, delimiter: '')}
-        - if order.instance_of? ArmorOrder
-          td: b $ #{number_with_precision(order.amount, precision: 2, delimiter: '')}
-        - if order.instance_of? GreenOrder
-          td: b $ #{number_with_precision(order.total, precision: 2, delimiter: '')}
-        - if order.instance_of? AmgOrder
-          td: b $ #{number_with_precision(order.total, precision: 2, delimiter: '')}
-        - if order.instance_of? EmbOrder
-          td: b $ #{number_with_precision(order.total, precision: 2, delimiter: '')}
+        td: b  
+          - if order.instance_of?(FlyBuyOrder)
+            - if user == order.seller
+              = number_to_currency(number_with_precision(order.total - order.seller_fees_amount, precision: 2, delimiter: '')) if order.seller_fees_amount.present?
+            - elsif user == order.buyer
+              = number_to_currency(number_with_precision(order.total, precision: 2, delimiter: ''))
+          - else
+            = number_to_currency(number_with_precision(order.total, precision: 2, delimiter: ''))
+  .invoice-note
+    h3 Note:
+    p For help and support, email <a href="mailto:johnb@toadlane.com">johnb@toadlane.com</a>.
+    p Payment instructions are sent via our payment partner, Synapse Financial Technologies, Inc. and are processed by Triumph Bank. To report complaints email <a href="mailto:issues@synapsepay.com">issues@synapsepay.com</a>.
+          
   - if order.instance_of? GreenOrder
     table.table-checkout style="margin-top: 20px;"
       thead

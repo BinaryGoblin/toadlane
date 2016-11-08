@@ -1,0 +1,63 @@
+- if product.is_buyer_product_owner?(user)
+  .wrong.text-center
+    | You cannot buy your own product.
+- else
+
+  = form_tag(product_checkout_path(product_id: product, fly_buy_order_id: params[:fly_buy_order_id]), method: :post, class: 'text-center') do
+    = hidden_field_tag :total
+    = hidden_field_tag :count
+    = hidden_field_tag :fee
+    = hidden_field_tag :shipping_cost
+    = hidden_field_tag :rebate
+    = hidden_field_tag :rebate_percent
+
+    - if product.default_payment_flybuy? && product.inspection_dates.seller_added.present?
+      .inspection_date_select
+        - if params[:fly_buy_order_id].present? && params[:inspection_date_by_seller] == "true"
+          p
+            | Select Inspection Date:
+          br
+          = collection_radio_buttons(:inspection_date, :inspection_date_id, fly_buy_order.inspection_dates.buyer_added, :id, :get_inspection_date) do |b, index|
+            tr
+              td
+                = b.label { b.radio_button(:"checked" => (b.object.id == fly_buy_order.inspection_dates.buyer_added.first.id)) + b.text }
+                br
+        - elsif params[:fly_buy_order_id].present? && fly_buy_order.inspection_date_rejected_by_seller.present?
+          p
+            | Select Inspection Date:
+          br
+          = collection_radio_buttons(:inspection_date, :inspection_date_id, fly_buy_order.inspection_dates.seller_added, :id, :get_inspection_date) do |b, index|
+            tr
+              td
+                = b.label { b.radio_button(:"checked" => (b.object.id == fly_buy_order.inspection_dates.seller_added.first.id)) + b.text }
+                br
+        - else
+          p
+            | Select Inspection Date:
+          br
+          = collection_radio_buttons(:inspection_date, :inspection_date_id, product.seller_set_inspection_dates, :id, :get_inspection_date) do |b, index|
+            tr
+              td
+                = b.label { b.radio_button(:"checked" => (b.object.id == product.inspection_dates.first.id)) + b.text }
+                br
+
+      - if product.default_payment.present?
+        - if fly_buy_order.seller_not_mark_approved.present? && fly_buy_order.inspection_dates.seller_added.nil?
+          p You have requested inspection date, you will be informed when seller responds.
+        - elsif product.inspection_dates.passed_inspection_date.count == product.inspection_dates.count
+          p The inspection date set by buyer has been passed.
+        - else
+          input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
+
+  / Set inspection date link
+  - unless product.inspection_dates.passed_inspection_date.count == product.inspection_dates.count
+    - if !product.is_buyer_product_owner?(user) && product.default_payment_flybuy? && product.negotiable?
+      - unless params[:fly_buy_order_id].present? && params[:inspection_date_by_seller] == "true"
+        - if user.profile_complete?
+          - if fly_buy_order.seller_not_mark_approved.nil?
+            a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here
+        - else
+          = link_to 'Click Here', set_inspection_date_fly_buy_orders_path(product_id: product.id)
+        - if fly_buy_order.seller_not_mark_approved.nil?
+          span
+          | &nbsp;to set inspection date

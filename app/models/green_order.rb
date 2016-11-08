@@ -41,6 +41,7 @@ class GreenOrder < ActiveRecord::Base
   belongs_to :product
   belongs_to :shipping_estimate
   belongs_to :address
+  has_many :notifications, dependent: :destroy
 
   has_one :refund_request, -> { where deleted: false }
   has_many :green_checks, dependent: :destroy
@@ -179,29 +180,29 @@ class GreenOrder < ActiveRecord::Base
   end
 
   private_class_method
-    def self.has_green_bank_info?(green_params)
-      ![green_params[:routing_number], green_params[:account_number], green_params[:bank_name]].any? {|p| p.blank?}
-    end
+  def self.has_green_bank_info?(green_params)
+    ![green_params[:routing_number], green_params[:account_number], green_params[:bank_name]].any? {|p| p.blank?}
+  end
 
-    def self.green_api_ready_params(green_params, product_id, buyer_id, amount)
-      api_ready_params = {}
-      api_ready_params["Name"] = "#{green_params[:name]}"
-      api_ready_params["EmailAddress"] = "#{green_params[:email_address]}"
-      api_ready_params["Phone"] = "#{green_params[:phone]}"
-      api_ready_params["PhoneExtension"] = ""
-      api_ready_params["Address1"] = "#{green_params[:address1]}"
-      api_ready_params["Address2"] = "#{green_params[:address2]}"
-      api_ready_params["City"] = "#{green_params[:address_city]}"
-      api_ready_params["State"] = "#{green_params[:address_state].try(:upcase)}"
-      api_ready_params["Zip"] = "#{green_params[:address_zip]}"
-      api_ready_params["Country"] = "#{green_params[:address_country]}"
-      api_ready_params["RoutingNumber"] = "#{green_params[:routing_number]}"
-      api_ready_params["AccountNumber"] = "#{green_params[:account_number]}"
-      api_ready_params["BankName"] = "#{green_params[:bank_name]}"
-      api_ready_params["CheckMemo"] = "p:#{product_id}u:#{buyer_id}t:#{Time.now.to_i}"
-      api_ready_params["CheckAmount"] = "#{amount.round(2)}"
-      api_ready_params["CheckDate"] = "#{Time.now.strftime("%m/%d/%Y")}"
-      api_ready_params["CheckNumber"] = ""
-      api_ready_params
-    end
+  def self.green_api_ready_params(green_params, product_id, buyer_id, amount)
+    api_ready_params = {}
+    api_ready_params["Name"] = "#{green_params[:name]}"
+    api_ready_params["EmailAddress"] = "#{green_params[:email_address]}"
+    api_ready_params["Phone"] = "#{green_params[:phone]}"
+    api_ready_params["PhoneExtension"] = ""
+    api_ready_params["Address1"] = "#{green_params[:address1]}"
+    api_ready_params["Address2"] = "#{green_params[:address2]}"
+    api_ready_params["City"] = "#{green_params[:address_city]}"
+    api_ready_params["State"] = "#{green_params[:address_state].try(:upcase)}"
+    api_ready_params["Zip"] = "#{green_params[:address_zip]}"
+    api_ready_params["Country"] = "#{green_params[:address_country]}"
+    api_ready_params["RoutingNumber"] = "#{green_params[:routing_number]}"
+    api_ready_params["AccountNumber"] = "#{green_params[:account_number]}"
+    api_ready_params["BankName"] = "#{green_params[:bank_name]}"
+    api_ready_params["CheckMemo"] = "p:#{product_id}u:#{buyer_id}t:#{Time.now.to_i}"
+    api_ready_params["CheckAmount"] = "#{amount.round(2)}"
+    api_ready_params["CheckDate"] = "#{Time.now.strftime("%m/%d/%Y")}"
+    api_ready_params["CheckNumber"] = ""
+    api_ready_params
+  end
 end

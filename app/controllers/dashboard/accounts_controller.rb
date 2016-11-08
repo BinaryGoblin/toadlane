@@ -1,15 +1,14 @@
 class Dashboard::AccountsController < DashboardController
   include ProductHelper
-  before_action :set_armor_service, only: [:index, :create_armor_profile]
+
+  before_filter :authenticate_user!, except: [:callback]
 
   def index
-    response.headers["X-FRAME-OPTIONS"] = "SAMEORIGIN"
     set_user
     set_green_profile
-    set_profile_for_armor
-    retrieve_payoneer_create_url
     set_amg_profile
     set_emb_profile
+    set_fly_buy_profile
   end
 
   def create_green_profile
@@ -26,41 +25,59 @@ class Dashboard::AccountsController < DashboardController
     end
   end
 
-  def create_armor_profile
-    if current_user.armor_profile.present?
-      agreed_terms = armor_params['agreed_terms'] == '1' ? true : false
+  def create_fly_buy_profile
+    fly_buy_profile = create_update_flybuy_profile
 
-      current_user.armor_profile.update_attribute(:agreed_terms, agreed_terms)
+    if current_user.present? && current_user.profile_complete? == false
+      remove_ssn_tin_data(fly_buy_profile)
+      return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must complete your profile before you can create a bank account." }
+    end
 
-      current_user.update_attributes({
-        name: armor_params['name'],
-        phone: armor_params['phone'],
-        company: armor_params['company']
-      })
+    if current_user.present? && current_user.profile_complete? && current_user.name.present? && current_user.name.count(" ") == 0
+      remove_ssn_tin_data(fly_buy_profile)
+      return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must update your first and last name prior to submitting your company information" }
+    end
 
-      if current_user.valid?
-        retrieve_account_user_id(armor_params, agreed_terms)
-        redirect_to :back, :flash => { :notice => "Armor Profile successfully created." }
-      else
-        redirect_to :back, :flash => { :alert => "#{current_user.errors.full_messages.to_sentence}" }
+    if current_user.present? && current_user.profile_complete? && current_user.company.present? == false
+      remove_ssn_tin_data(fly_buy_profile)
+      return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must add your company name prior to submitting your company information." }
+    end
+
+    if request.post? && fly_buy_params.present?
+      bank_account_details = {
+        bank_name: fly_buy_params["bank_name"],
+        address: fly_buy_params["address"],
+        name_on_account: fly_buy_params["name_on_account"],
+        account_num: fly_buy_params["account_num"],
+        routing_num: fly_buy_params["routing_num"],
+        address_id: fly_buy_params["address_id"]
+      }
+
+      if fly_buy_profile.synapse_user_id.present?
+        AddBankDetailsForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id, bank_account_details)
+      else 
+        CreateUserForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id)
+        AddBankDetailsForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id, bank_account_details)
       end
-    else
-      redirect_to :back
+
+      fly_buy_profile.update_attribute(:completed, true)
+      redirect_to dashboard_accounts_path
     end
-  rescue ArmorService::BadResponseError => e
-    redirect_to :back, :flash => { :error => e.errors.values.flatten }
+  rescue SynapsePayRest::Error::Conflict => e
+    puts e
+    flash[:error] = e
+    redirect_to dashboard_accounts_path
   end
 
-  def send_confirmation_email
-    product = Product.find_by_id(params[:product_id]) if params[:product_id].present?
-    armor_order = ArmorOrder.find_by_id(params[:armor_order_id]) if params[:armor_order_id].present?
-    email = UserMailer.send_confirmation_email(current_user, product, armor_order).deliver_now
-    if product.present? && armor_order.present?
-      redirect_to product_checkout_path(product_id: product.id, armor_order_id: armor_order.id), :flash => { :notice => "Confirmation email has been sent. Please check your email." }
-    else
-      redirect_to dashboard_accounts_path, :flash => { :notice => "Confirmation email has been sent. Please check your email." }
+  def answer_kba_question
+    if request.post? && fly_buy_params.present?
+      fly_buy_profile = current_user.fly_buy_profile
+      FlyAndBuy::AnswerKbaQuestions.new(current_user, fly_buy_profile, fly_buy_params).process
+      fly_buy_profile.update_attribute(:completed, true)
+      redirect_to dashboard_accounts_path
     end
   end
+
 
   def create_amg_profile
     if amg_params.present?
@@ -106,22 +123,6 @@ class Dashboard::AccountsController < DashboardController
     end
   end
 
-  def set_armor_profile
-    current_armor_profile = current_user.armor_profile
-    if current_armor_profile.present?
-      armor_profile = current_armor_profile
-    elsif params[:confirmed_email].present? && current_armor_profile.nil?
-      armor_profile = ArmorProfile.create(:confirmed_email => params[:confirmed_email], :user_id => current_user.id)
-    else
-      armor_profile = ArmorProfile.new
-    end
-
-    if params[:product_id].present? && params[:armor_order_id].present?
-      redirect_to product_checkout_path(product_id: params[:product_id], armor_order_id: params[:armor_order_id], armor_profile_id: armor_profile.id), :flash => { :notice => "Your email has been confirmed successfully. fill up other details to create armor profile" }
-    else
-      redirect_to dashboard_accounts_path(armor_profile_id: armor_profile.id), :flash => { :notice => "Your email has been confirmed successfully. fill up other details to create armor profile" }
-    end
-  end
 
   # for valid phone number
   def check_valid_phone_number
@@ -152,11 +153,120 @@ class Dashboard::AccountsController < DashboardController
     end
   end
 
+  def callback
+    # Handled wehbook for when the status of the transaction is "SETTLED"
+    if params["account"].present?
+      if params["account"]["extra"]["note"] == "Transaction Created"
+        synapse_transaction_id = params["_id"]["$oid"]
+        fly_buy_order = FlyBuyOrder.find_by_synapse_transaction_id(synapse_transaction_id)
+      elsif params["account"]["extra"]["note"] == "Released Payment" && params["account"]["extra"]["supp_id"].present?
+        fly_buy_order_id = params["account"]["extra"]["supp_id"].split("_").last
+        fly_buy_order = FlyBuyOrder.find_by_id(fly_buy_order_id)
+      end
+
+      if fly_buy_order.present? && params["recent_status"]["status"] == "SETTLED" && params["recent_status"]["status_id"] == "4"
+        if params["account"]["extra"]["note"] == "Transaction Created" && fly_buy_order.funds_in_escrow == false
+          fly_buy_order.update_attributes({
+            status: 'pending_inspection',
+            funds_in_escrow: true
+          })
+          UserMailer.send_funds_received_notification_to_seller(fly_buy_order).deliver_later
+          UserMailer.send_transaction_settled_notification_to_buyer(fly_buy_order).deliver_later
+        elsif params["account"]["extra"]["note"] == "Released Payment" && fly_buy_order.payment_release == false
+          fly_buy_order.update_attributes({
+            payment_release: true,
+            status: 'completed'
+           })
+          UserMailer.send_payment_released_notification_to_seller(fly_buy_order).deliver_later
+        end
+      elsif fly_buy_order.present? && params["recent_status"]["status"] == "QUEUED-BY-SYNAPSE"
+        fly_buy_order.update_attribute(:status, 'queued')
+        UserMailer.send_order_queued_notification_to_seller(fly_buy_order).deliver_later
+        UserMailer.send_order_queued_notification_to_buyer(fly_buy_order).deliver_later
+      end
+    end
+
+    if params["documents"].present?
+      if params["_id"]["$oid"].present? && params["permission"] == "SEND-AND-RECEIVE"
+        # Handling webhook for if permission status is 'SEND-AND-RECEIVE'
+        permission_array = params["permission"].split('-')
+        synapse_user_id = params["_id"]["$oid"]
+        fly_buy_profile = FlyBuyProfile.find_by_synapse_user_id(synapse_user_id)
+        if fly_buy_profile.present? && fly_buy_profile.created_at.to_date > Date.today
+          fly_buy_profile.destroy
+        end
+        if fly_buy_profile.present? && permission_array.include?('SEND') && permission_array.include?('RECEIVE')
+          if fly_buy_profile.permission_scope_verified == false && fly_buy_profile.synapse_node_id.present?
+            fly_buy_profile.update_attributes({
+              permission_scope_verified: true,
+              kba_questions: {},
+              completed: true
+            })
+            UserMailer.send_account_verified_notification_to_user(fly_buy_profile).deliver_later
+          end
+        else
+          UserMailer.send_account_not_verified_yet_notification_to_user(fly_buy_profile).deliver_later
+        end
+      elsif params["_id"]["$oid"].present? && params["documents"][1]["virtual_docs"][0]["status"] == "SUBMITTED|INVALID"
+        # This is for SSN entered `1111` and is not valid
+        synapse_user_id = params["_id"]["$oid"]
+        fly_buy_profile = FlyBuyProfile.find_by_synapse_user_id(synapse_user_id)
+
+        if fly_buy_profile.present? && fly_buy_profile.completed == true
+          fly_buy_profile.update_attributes({
+            permission_scope_verified: false,
+            kba_questions: {},
+            completed: false
+          })
+          UserMailer.send_ssn_num_not_valid_notification_to_user(fly_buy_profile).deliver_later
+        end
+      elsif params["_id"]["$oid"].present? && params["documents"][1]["virtual_docs"][0]["status"] == "SUBMITTED|MFA_PENDING"
+        # this is for SSN `3333`
+        synapse_user_id = params["_id"]["$oid"]
+        fly_buy_profile = FlyBuyProfile.find_by_synapse_user_id(synapse_user_id)
+
+        if fly_buy_profile.present? && fly_buy_profile.permission_scope_verified == false && fly_buy_profile.completed == true
+          questions = params["documents"][1]["virtual_docs"][0]
+          fly_buy_profile.update_attributes({
+            permission_scope_verified: false,
+            kba_questions: questions,
+            completed: false
+          })
+          UserMailer.send_ssn_num_partially_valid_notification_to_user(fly_buy_profile).deliver_later
+        end
+      elsif params["_id"]["$oid"].present? && params["documents"][0]["virtual_docs"][0]["status"] == "SUBMITTED|MFA_PENDING"
+        # this is for EIN/TIN `3333`
+        synapse_user_id = params["_id"]["$oid"]
+        fly_buy_profile = FlyBuyProfile.find_by_synapse_user_id(synapse_user_id)
+
+        if fly_buy_profile.present? && fly_buy_profile.permission_scope_verified == false && fly_buy_profile.completed == true
+          questions = params["documents"][0]["virtual_docs"][0]
+          fly_buy_profile.update_attributes({
+            permission_scope_verified: false,
+            kba_questions: questions,
+            completed: false
+          })
+          UserMailer.send_tin_num_partially_valid_notification_to_user(fly_buy_profile).deliver_later
+        end
+      elsif params["_id"]["$oid"].present? && params["documents"][0]["virtual_docs"][0]["status"] == "SUBMITTED|INVALID"
+        # this is for EIN/TIN is entered `1111` and is not valid
+        synapse_user_id = params["_id"]["$oid"]
+        fly_buy_profile = FlyBuyProfile.find_by_synapse_user_id(synapse_user_id)
+
+        if fly_buy_profile.present? && fly_buy_profile.completed == true && fly_buy_profile.permission_scope_verified == false
+          fly_buy_profile.update_attributes({
+            completed: false
+          })
+
+          UserMailer.send_ein_num_not_valid_notification_to_user(fly_buy_profile).deliver_later
+        end
+      end
+    end
+    render nothing: true, status: 200
+  end
+
   private
 
-  def set_armor_service
-    @client = ArmorService.new
-  end
   def set_user
     @user = current_user
   end
@@ -170,14 +280,14 @@ class Dashboard::AccountsController < DashboardController
     end
   end
 
-  def set_profile_for_armor
-    current_armor_profile = current_user.armor_profile
-    if current_armor_profile.present?
-      @armor_profile = current_armor_profile
-    elsif params['armor_profile_id'].present?
-      @armor_profile = ArmorProfile.find_by_id(params['armor_profile_id'])
+  def set_fly_buy_profile
+    current_fly_buy_profile = current_user.fly_buy_profile
+    if current_fly_buy_profile.present?
+      @fly_buy_profile = current_fly_buy_profile
+    elsif params['fly_buy_profile_id'].present?
+      @fly_buy_profile = FlyBuyProfile.find_by_id(params['fly_buy_profile_id'])
     else
-      @armor_profile = ArmorProfile.new
+      @fly_buy_profile = FlyBuyProfile.new
     end
   end
 
@@ -193,29 +303,16 @@ class Dashboard::AccountsController < DashboardController
     params.require(:armor_profile).permit!
   end
 
+  def fly_buy_params
+    params.require(:fly_buy_profile).permit!
+  end
+
   def create_update_address(armor_params)
     if armor_params['addresses'].present?
       current_user.addresses.create(armor_params['addresses'])
       selected_address = current_user.addresses.first
     else
       selected_address = current_user.addresses.find_by_id(armor_params[:address_id])
-    end
-  end
-
-  def retrieve_account_user_id(armor_params, agreed_terms)
-    selected_address = create_update_address(armor_params)
-
-    account_data = set_account_data(armor_params, agreed_terms, selected_address)
-
-    result = @client.accounts.create(account_data)
-    current_user.armor_profile.update_attribute(:armor_account_id, result.data[:body]['account_id'])
-
-    users = @client.users(current_user.armor_profile.armor_account_id).all
-    current_user.armor_profile.update_attribute(:armor_user_id, users.data[:body][0]['user_id'].to_i)
-
-    if current_user.armor_profile.armor_account_id.present? &&
-      current_user.armor_profile.armor_user_id.present?
-      UserMailer.send_armor_profile_created_notification(current_user).deliver_later
     end
   end
 
@@ -241,45 +338,72 @@ class Dashboard::AccountsController < DashboardController
     params.require(:user).permit!
   end
 
-  def set_account_data(armor_params, agreed_terms, selected_address)
-    phone_number = Phonelib.parse(armor_params['phone'])
-    {
-      'company' => armor_params['company'],
-      'user_name' => armor_params['name'],
-      'user_email' => armor_params['email'],
-      'user_phone' => phone_number.international,
-      'address' => selected_address.line1.present? ? selected_address.line1 : selected_address.line2,
-      'city' => selected_address.city,
-      'state' => get_state(selected_address.state),
-      'zip' => selected_address.zip,
-      'country' => selected_address.country.downcase,
-      'email_confirmed' => armor_params['confirmed_email'],
-      'agreed_terms' => agreed_terms
-    }
-  end
-
-  def retrieve_payoneer_create_url
-    if current_user.armor_profile.present? &&
-      current_user.armor_profile.armor_account_id.present?
-      account_id = current_user.armor_profile.armor_account_id
-      user_id = current_user.armor_profile.armor_user_id
-      response = @client.accounts.bankaccounts(account_id).all
-      uri = response.data[:path]
-
-      auth_data = {
-        'uri' => uri,
-        'action' => 'create'
-      }
-      result = @client.users(account_id).authentications(user_id).create(auth_data)
-      @url = result.data[:body]["url"]
-    end
-  end
-
   def amg_params
     params.require(:amg_profile).permit!
   end
 
   def emb_params
     params.require(:emb_profile).permit!
+  end
+
+  def create_update_flybuy_profile
+    if fly_buy_params["address_attributes"].present?
+      address_attributes_param = fly_buy_params["address_attributes"][(current_user.addresses.count + 1).to_s]
+      empty_keys = address_attributes_param.select {|k, v| v.empty?}
+      if empty_keys.count == 5
+        fly_buy_params.except!(:address_attributes)
+      else
+        address = current_user.addresses.create(address_attributes_param)
+        fly_buy_params.merge!(address_id: address.id).except!(:address_attributes)
+      end
+      fly_buy_params["ssn_number"] = fly_buy_params["ssn_number"].split("*").last
+      fly_buy_params["tin_number"] = fly_buy_params["tin_number"].split("*").last
+    end
+
+    current_user.update_attributes({
+      phone: fly_buy_params["company_phone"],
+      company: fly_buy_params["company"]
+    })
+
+    if current_user.fly_buy_profile.present?
+      fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
+      necessary_fly_buy_params = fly_buy_params.except(
+                                    :email, :address_id,
+                                    :fingerprint, :bank_name,
+                                    :name_on_account, :account_num, :company
+                                  )
+
+      necessary_fly_buy_params.merge!(
+        synapse_ip_address: request.ip,
+        encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"],
+        user_id: current_user.id, company_email: fly_buy_params["email"]
+      )
+
+      fly_buy_profile.update(necessary_fly_buy_params)
+    else
+
+      necessary_fly_buy_params = fly_buy_params.except(
+                                    :email, :address_id,
+                                    :fingerprint, :bank_name,
+                                    :name_on_account, :account_num, :company
+                                  )
+
+      necessary_fly_buy_params.merge!(
+        synapse_ip_address: request.ip,
+        encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"],
+        user_id: current_user.id,
+        company_email: fly_buy_params["email"]
+      )
+
+      fly_buy_profile = FlyBuyProfile.create(necessary_fly_buy_params)
+    end
+    fly_buy_profile
+  end
+
+  def remove_ssn_tin_data(fly_buy_profile)
+    fly_buy_profile.update_attributes({
+      ssn_number: nil,
+      tin_number: nil
+    })
   end
 end

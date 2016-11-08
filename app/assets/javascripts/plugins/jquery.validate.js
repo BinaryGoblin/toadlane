@@ -316,7 +316,7 @@ $.extend( $.validator, {
 		url: "Please enter a valid URL.",
 		date: "Please enter a valid date.",
 		dateISO: "Please enter a valid date ( ISO ).",
-		number: "Please enter a valid number.",
+		number: "Please enter a valid numbers.",
 		digits: "Please enter only digits.",
 		creditcard: "Please enter a valid credit card number.",
 		equalTo: "Please enter the same value again.",
@@ -1363,3 +1363,16 @@ $.extend($.fn, {
 });
 
 }));
+
+
+$.validator.addMethod('check_date_of_birth', (function(value, element) {
+  var currentyear, minimunage, minyear, year;
+  year = $('#fly_buy_profile_dob_1i').val();
+  if (year === '') {
+    return false;
+  }
+  minimunage = 18;
+  currentyear = new Date().getFullYear();
+  minyear = currentyear - year;
+  return minyear > minimunage;
+}), 'You have to be at least 18 years of age.');

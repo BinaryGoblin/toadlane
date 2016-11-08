@@ -1,0 +1,9 @@
+- questions = fly_buy_profile.kba_questions["meta"]["question_set"]["questions"]
+ol
+  - questions.each do |question|
+    li = question["question"]
+    - question_id = question["id"]
+    - question["answers"].each do |answer|
+      - field_name = "question" + "_" + question_id.to_s
+      = f.radio_button field_name, answer["id"]
+      = f.label answer["answer"]

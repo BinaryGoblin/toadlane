@@ -2,6 +2,15 @@
 
 .wrap-sm
   .pull-right
+    = link_to asset_path("fly_buy_wire_instructions.pdf"), class: "btn btn-success back-to-order-btn", :target => "_blank"
+      | View Wire Instructions
+    - if @order.instance_of?(FlyBuyOrder) && @order.order_a_million?
+      = link_to asset_path("risk-assessment.pdf"), class: "btn btn-success back-to-order-btn", :target => "_blank"
+        | View Risk Assessment
+    - if @order.buyer && @order.status != 'cancelled' && @order.instance_of?(FlyBuyOrder)
+      - if @order.status == 'pending_confirmation' && @order.funds_in_escrow == false
+        = link_to 'Cancel Order', '#modal_cancel_order_' + @order.id.to_s, class: "btn btn-success back-to-order-btn", data: { toggle: 'modal' }
+    / = link_to "Resend Wire Instructions", fly_buy_order_resend_wire_instruction_path(@order.id), class: "btn btn-success back-to-order-btn"
     = link_to "Close", dashboard_orders_path, class: "btn btn-success back-to-order-btn"
   .table-options
     table width="100%"
@@ -9,9 +18,11 @@
       th
       tr
         td
-          = render partial: '/shared/invoice', :locals => {:order => @order}
+          = render partial: '/shared/invoice', :locals => {:order => @order, :user => current_user}
 
           .pull-right
-            = link_to "Print Invoice", print_invoice_path(@order, :type => params['type']), class: "btn btn-success"
+            = link_to "Print Invoice", print_invoice_path(@order, :type => get_type(@order)), class: "btn btn-success"
 
 .footer-actions: .fa-container: .wrap-sm
+
+= render partial: 'dashboard/orders/cancel_transaction_pop_up', locals: { order: @order}
