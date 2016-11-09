@@ -59,7 +59,7 @@ Toad::Application.routes.draw do
   get 'search/autocomplete'
   get 'search/index', as: :search
 
-  get 'escrow' => 'static_pages#escrow_faq', as: :escrow_faq
+  get 'fly' => 'static_pages#escrow_faq', as: :escrow_faq
   get 'faq' => 'static_pages#faq', as: :faq
   get 'terms_of_service' => 'static_pages#terms_of_service'
   get 'account_deactivated' => 'static_pages#account_deactivated'
