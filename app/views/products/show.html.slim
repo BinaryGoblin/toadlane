@@ -1,10 +1,12 @@
 #getting-started
 javascript:
-  $("#getting-started")
-  .countdown("2017/01/01", function(event) {
-    $(this).text(
-      event.strftime('%D days %H hours %M min %S sec')
-    );
+  $(function(){
+    $('[data-countdown]').each(function() {
+      var $this = $(this), finalDate = $(this).data('countdown');
+      $this.countdown(finalDate, function(event) {
+        $this.html(event.strftime('%D days %H:%M:%S'));
+      });
+    });
   });
 
 .complete-profile-error.wrap-sm
@@ -165,10 +167,7 @@ javascript:
         = commontator_thread(@product)
       .col-md-5
         .vp-right-col
-          .time-left
-            = hidden_field_tag 'product_end_year', @product.end_date.year
-            = hidden_field_tag 'product_end_month', @product.end_date.month
-            = hidden_field_tag 'product_end_day', @product.end_date.day
+          .time-left data-countdown="#{@product.end_date}"
             h3 time left:
             = time_left @product.end_date
 

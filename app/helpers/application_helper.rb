@@ -298,4 +298,12 @@ module ApplicationHelper
       "https://sandbox.armorpayments.com/assets/js/modal.min.js"
     end
   end
+
+  def field_class(resource, field_name)
+    if resource.errors[field_name]
+      return "error form-control".html_safe
+    else
+      return "form-control".html_safe
+    end
+  end
 end
