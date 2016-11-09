@@ -1,17 +1,3 @@
-javascript:
-  $(function(){
-    $('[data-countdown]').each(function() {
-      var $this = $(this), finalDate = $(this).data('countdown');
-      $this.countdown(finalDate, function(event) {
-        $(this).parent().find('.days').find('span:nth-child(1)').text(event.strftime('%D'))
-        $(this).parent().find('.hours').find('span:nth-child(1)').text(event.strftime('%H'))
-        $(this).parent().find('.min').find('span:nth-child(1)').text(event.strftime('%M'))
-        $(this).parent().find('.sec').find('span:nth-child(1)').text(event.strftime('%S'))
-        //$this.html(event.strftime('%D days %H hours %M min %S sec'));
-      });
-    });
-  });
-
 .complete-profile-error.wrap-sm
   - if !flash[:error].nil?
     .error-explanation.text-center
@@ -285,3 +271,17 @@ javascript:
 - if params[:fly_buy_order_id].present? && params[:buyer_request_inspection_date] == "true"
   = render partial: 'set_inspection_date_by_seller',
       locals: { product: @product, fly_buy_order: @fly_buy_order }
+
+javascript:
+  $(function(){
+    $('[data-countdown]').each(function() {
+      var $this = $(this), finalDate = $(this).data('countdown');
+      $this.countdown(finalDate, function(event) {
+        $(this).parent().find('.days').find('span:nth-child(1)').text(event.strftime('%D'))
+        $(this).parent().find('.hours').find('span:nth-child(1)').text(event.strftime('%H'))
+        $(this).parent().find('.min').find('span:nth-child(1)').text(event.strftime('%M'))
+        $(this).parent().find('.sec').find('span:nth-child(1)').text(event.strftime('%S'))
+        //$this.html(event.strftime('%D days %H hours %M min %S sec'));
+      });
+    });
+  });
