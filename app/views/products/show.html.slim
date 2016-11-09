@@ -153,7 +153,8 @@
                 | Please&nbsp;
                 = link_to "sign in", new_user_session_path
                 | &nbsp;to place an order.
-        = commontator_thread(@product)
+        .comment-block
+          = commontator_thread(@product)
       .col-md-5
         .vp-right-col
           .time-left
