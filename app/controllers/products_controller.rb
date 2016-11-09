@@ -30,9 +30,9 @@ class ProductsController < ApplicationController
     #   return
     # end
     set_product
-    if current_user.present? && current_user != @product.user
-      impressionist(@product)
-    end
+
+    impressionist(@product)
+
     @stripe_order = StripeOrder.new
     if @product.default_payment_flybuy?
       @fee = Fee.find_by(:module_name => "Fly & Buy").value

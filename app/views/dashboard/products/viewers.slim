@@ -1,6 +1,13 @@
 = render '/shared/tabs'
 
 .wrap-sm
+  .table-options
+    table width="100%"
+      tr
+        td.pull-right
+          strong
+            p #{@product.views_count - @users.count } Viewed from preview mode
+
   .table-responsive
     table.table
       thead
