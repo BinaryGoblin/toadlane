@@ -67,6 +67,8 @@ gem 'synapse_payments', '~> 0.10.0'
 
 gem 'roo', '~> 2.4.0'
 
+gem 'countdown', '~> 0.1.0'
+
 # Dev - debugging group
 group :development do
   gem 'pry-rails'

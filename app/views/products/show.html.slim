@@ -27,7 +27,7 @@
   h1= @product.name
 
 .view-product
-  .wrap-sm
+  .wrap-sm.product-show-block
     .row
       .col-md-7
         - if @product.amount.present?
@@ -153,12 +153,14 @@
                 | Please&nbsp;
                 = link_to "sign in", new_user_session_path
                 | &nbsp;to place an order.
-        = commontator_thread(@product)
+        .comment-block
+          = commontator_thread(@product)
       .col-md-5
         .vp-right-col
           .time-left
             h3 time left:
             = time_left @product.end_date
+            .product-end-date-countdown data-countdown="#{@product.end_date.utc}"
 
           .vp-seller: .white-panel
             - if @product.status_characteristic == 'sell'
@@ -270,3 +272,17 @@
 - if params[:fly_buy_order_id].present? && params[:buyer_request_inspection_date] == "true"
   = render partial: 'set_inspection_date_by_seller',
       locals: { product: @product, fly_buy_order: @fly_buy_order }
+
+javascript:
+  $(function(){
+    $('[data-countdown]').each(function() {
+      var $this = $(this), finalDate = $(this).data('countdown');
+      $this.countdown(finalDate, function(event) {
+        $(this).parent().find('.days').find('span:nth-child(1)').text(event.strftime('%D'))
+        $(this).parent().find('.hours').find('span:nth-child(1)').text(event.strftime('%H'))
+        $(this).parent().find('.min').find('span:nth-child(1)').text(event.strftime('%M'))
+        $(this).parent().find('.sec').find('span:nth-child(1)').text(event.strftime('%S'))
+        //$this.html(event.strftime('%D days %H hours %M min %S sec'));
+      });
+    });
+  });

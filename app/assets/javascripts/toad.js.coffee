@@ -126,14 +126,6 @@ $(document).ready ->
 
   $('#fly_buy_profile_tin_number, #fly_buy_profile_ssn_number').focus retrieveValue
   $('#fly_buy_profile_tin_number, #fly_buy_profile_ssn_number').blur hideValue
-  # $('#ssn_form').submit (ev) ->
-  #   ev.preventDefault()
-  #   retrieveValue.call $('#fly_buy_profile_tin_number')[0], ev
-  #   hideValue.call $('#fly_buy_profile_tin_number')[0], ev
-  #   return
-
-  # $('#fly_buy_profile_tin_number').mask("xx-xxx9999")
-  # $('#fly_buy_profile_ssn_number').mask("xx-xxx9999")
 
   if $('.vp-calculation-checkout').is(':visible')
     $('input[name="stripe_order[shipping_estimate_id]"]:first, input[name="green_order[shipping_estimate_id]"]:first, input[name="amg_order[shipping_estimate_id]"]:first, input[name="emb_order[shipping_estimate_id]"]:first').trigger('click');
