@@ -113,22 +113,22 @@ module ApplicationHelper
       diff_days = TimeDifference.between(start_time, end_time).in_days.to_i
 
       days = content_tag :div, class: 'days' do
-        concat content_tag :span, diff_days
+        concat content_tag :span
         concat content_tag :span, 'days'
       end
 
       hours = content_tag :div, class: 'hours' do
-        concat content_tag :span, diff_general[:hours]
+        concat content_tag :span
         concat content_tag :span, 'hours'
       end
 
       minutes = content_tag :div, class: 'min' do
-        concat content_tag :span, diff_general[:minutes]
+        concat content_tag :span
         concat content_tag :span, 'min.'
       end
 
       seconds = content_tag :div, class: 'sec' do
-        concat content_tag :span, diff_general[:seconds]
+        concat content_tag :span
         concat content_tag :span, 'sec.'
       end
 
