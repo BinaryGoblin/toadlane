@@ -130,6 +130,8 @@ GEM
       compass (~> 1.0.0)
       sass-rails (< 5.1)
       sprockets (< 2.13)
+    countdown (0.1.0)
+      json
     countries (0.9.3)
       currencies (~> 0.4.2)
     country_select (2.1.1)
@@ -486,6 +488,7 @@ DEPENDENCIES
   coffee-rails (~> 4.1.0)
   commontator (~> 4.11.1)
   compass-rails (~> 2.0.4)
+  countdown (~> 0.1.0)
   country_select (~> 2.1.1)
   database_cleaner (~> 1.4.0)
   delayed_job_active_record (~> 4.0.3)
