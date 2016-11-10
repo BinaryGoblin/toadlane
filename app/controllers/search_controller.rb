@@ -18,7 +18,7 @@ class SearchController < ApplicationController
     conditions[:start_date] = {lt: Time.now}
     conditions[:end_date] = {gt: Time.now}
 
-    @products = Product.search query, operator: "or", fields: [{name: :word }, {description: :word}], where: conditions, order: orders, page: params[:page], per_page: params[:count], track: {user_id: current_user.try(:id)}
+    @products = Product.search query, operator: "or", fields: [{name: :word_start }, {description: :word_start}], where: conditions, order: orders, page: params[:page], per_page: params[:count], track: {user_id: current_user.try(:id)}
 
     unless query == '*'
       query_arr_with_percentage = query.split(" ").map {|val| "%#{val}%" }
