@@ -15,15 +15,15 @@ class Behavior.SliderRates
       max: @options.max
       value: 1
       slide: (e, ui) => @calculation e, ui
-      stop: (e, ui) => @aa e,ui
-      start: (e, ui) => @aa e,ui
-      change: (e, ui) => @aa e,ui
+      stop: (e, ui) => @remove_class e, ui
+      start: (e, ui) => @remove_class e, ui
+      change: (e, ui) => @remove_class e, ui
 
-  aa: (e, ui) =>
+  remove_class: (e, ui) =>
     ui.handle.classList.remove("ui-state-focus")
 
   calculation: (e, ui) =>
-    ui.handle.classList.remove("ui-state-focus")
+    @remove_class e, ui
     cost = 0
     save = 0
 
