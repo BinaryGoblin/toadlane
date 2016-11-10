@@ -193,6 +193,11 @@ module ApplicationHelper
     pricebreaks = pricebreaks.order('quantity asc')
 
     medium = ((pricebreaks.last.quantity || 0) / 2).round
+
+    if medium == 0
+      medium = ''
+    end
+
     max = pricebreaks.last.quantity
 
     options_pricebreak = '"pricebreaks":' + pricebreaks.map { |p| { price: p.price, quantity: p.quantity } }.to_json
@@ -200,7 +205,7 @@ module ApplicationHelper
     options = '{"max":"' + max.to_s + '","unit_price":"' + unit_price + '",' + options_pricebreak + '}'
 
     rates = content_tag :div, class: 'rates', data: { behavior: 'SliderRates', options: options } do
-      concat content_tag :span, '1', class: 'min'
+      concat content_tag :span, '0', class: 'min'
       concat content_tag :span, medium, class: 'medium'
       concat content_tag :span, max, class: 'max'
     end
