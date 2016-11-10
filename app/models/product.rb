@@ -81,7 +81,8 @@ class Product < ActiveRecord::Base
   validates_numericality_of :unit_price, :amount, only_integer: false, greater_than: 0, less_than: 1000000
   validates_presence_of :end_date, :status_characteristic
   validates_presence_of :shipping_estimates, if: :default_payment_not_flybuy
-  searchkick autocomplete: ['name'], fields: [:name, :main_category]
+  # searchkick autocomplete: ['name'], fields: [:name, :main_category]
+  searchkick word_start: ['name'], fields: [:name, :description]
 
   scope :unexpired, -> { where("end_date > ?", DateTime.now).where(status: true) }
   scope :fly_buy_default_payment, -> { where(default_payment: "Fly And Buy") }

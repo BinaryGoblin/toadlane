@@ -12,7 +12,11 @@
         | &nbsp;to add bank account.
       - else
         = flash[:account_error]
-        = link_to 'Click Here To Edit', dashboard_profile_path, class: 'view'
+        | &nbsp;
+        - if flash[:account_error].include? "company name"
+          = link_to 'Click Here To Edit', dashboard_profile_path(req_company: true), class: 'view'
+        - else
+          = link_to 'Click Here To Edit', dashboard_profile_path(req_name: true), class: 'view'
 
 .actions-panel-product: .wrap-sm
   / = link_to 'Next product', '#', class: 'btn btn-default pull-right'

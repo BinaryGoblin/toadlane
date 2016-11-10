@@ -87,6 +87,10 @@ $(document).ready ->
     autocomplete: true
   });
 
+  $('.ui-slider-handle').click ->
+    if jQuery.inArray( "ui-state-focus", this.classList ) >= 0
+      this.classList.remove("ui-state-focus")
+
   $(".html5lightbox").html5lightbox()
 
   $('#set_new_inspection').click ->
