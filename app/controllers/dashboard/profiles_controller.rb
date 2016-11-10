@@ -4,6 +4,12 @@ class Dashboard::ProfilesController < DashboardController
   def show
     session[:previous_url] = request.referrer
     @user = current_user
+
+    if params["req_company"] == "true"
+      @user.errors.add(:company, 'is required')
+    elsif params["req_name"] == "true"
+      @user.errors.add(:name, 'must have first and last name')
+    end
   end
 
   def update
@@ -41,7 +47,7 @@ class Dashboard::ProfilesController < DashboardController
 
     respond_to do |format|
       if @user.update(user_params)
-        if current_user.profile_complete? == false && session[:previous_url].present? && session[:previous_url] != products_url
+        if session[:previous_url].present? && session[:previous_url] != products_url
           previous_visited_url = session[:previous_url]
           session.delete(:previous_url)
           format.html { redirect_to previous_visited_url, :flash => { :notice => 'Congratulations! You are ready to place an order!'} }
