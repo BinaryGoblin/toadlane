@@ -36,7 +36,7 @@
           .col-md-6
             .form-group
               = f.label :name, 'Name:', class: 'required'
-              = f.text_field :name, class: field_class(current_user, :name), required: true
+              = f.text_field :name, class: 'form-control', required: true
 
             .form-group
               = f.label :phone, 'Phone:', class: 'required'
@@ -44,7 +44,7 @@
 
             .form-group
               = f.label :company, 'Company:'
-              = f.text_field :company, class: field_class(current_user, :company)
+              = f.text_field :company, class: 'form-control'
 
           .col-md-6
             .form-group
