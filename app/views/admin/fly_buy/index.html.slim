@@ -32,7 +32,7 @@
             td = user.fly_buy_profile.permission_scope_verified
             td
               - if user.fly_buy_profile.unverify_by_admin == false
-                = link_to 'Unverify User', 'modal_unverify_user_' + user.id.to_s, class: 'view', data: { toggle: 'modal' }
+                = link_to 'Unverify User', '#modal_unverify_user_' + user.id.to_s, class: 'view', data: { toggle: 'modal' }
               = render partial: '/shared/unverify_user_pop_up', locals: { user: user}
             
           
