@@ -58,4 +58,6 @@ class FlyBuyProfile < ActiveRecord::Base
   do_not_validate_attachment_file_type :bank_statement
   do_not_validate_attachment_file_type :gov_id
 
+  scope :permission_verified, -> { where(permission_scope_verified: true) }
+
 end

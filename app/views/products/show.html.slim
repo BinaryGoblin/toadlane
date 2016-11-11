@@ -15,7 +15,7 @@
         | &nbsp;
         - if flash[:account_error].include? "company name"
           = link_to 'Click Here To Edit', dashboard_profile_path(req_company: true), class: 'view'
-        - else
+        - elsif flash[:account_error].include? "first and"
           = link_to 'Click Here To Edit', dashboard_profile_path(req_name: true), class: 'view'
 
 .actions-panel-product: .wrap-sm
