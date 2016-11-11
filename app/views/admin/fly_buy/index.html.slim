@@ -1,0 +1,45 @@
+= render 'admin/users/tabs'
+
+.wrap-sm
+  .table-responsive
+    table.table
+      thead
+        tr
+          th ID
+          th Name
+          th Company
+          th Last Sign-In
+          th Terms Accepted
+          th User Verified
+          th 
+
+      tbody
+        - @users.each do |user|
+          tr
+            td = user.id
+            td = user.name
+            td = user.company
+            td
+              -if user.last_sign_in_at
+                = user.last_sign_in_at.strftime('%m-%d-%Y')
+              -else
+                | Never
+            td
+              -if user.terms_accepted_at
+                = user.terms_accepted_at.strftime('%m-%d-%Y')
+              -else
+                | Never
+            td = user.fly_buy_profile.permission_scope_verified
+            td
+              - if user.fly_buy_profile.unverify_by_admin == false
+                = link_to 'Unverify User', 'modal_unverify_user_' + user.id.to_s, class: 'view', data: { toggle: 'modal' }
+              = render partial: '/shared/unverify_user_pop_up', locals: { user: user}
+            
+          
+.footer-actions: .fa-container: .wrap-sm
+  .show_all style="font-size:14px;padding-top:8px"
+    | #{@users.count} Users 
+    - unless params[:count].present? || @users.count < 20
+      = link_to 'Show all', admin_users_managements_path(count: @users.count), class: 'link link-ulined'
+
+  = will_paginate @users

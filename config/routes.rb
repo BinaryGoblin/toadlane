@@ -136,6 +136,12 @@ Toad::Application.routes.draw do
   devise_for :users, :controllers => { :registrations => "registrations", confirmations: 'confirmations', :omniauth_callbacks => "omniauth_callbacks", :sessions => "users/sessions" }
 
   namespace :admin do
+    resources :fly_buy, only: [:index]  do
+      collection do
+        get :mark_user_unverify
+      end
+    end
+    
     resources :categories
 
     resources :fees

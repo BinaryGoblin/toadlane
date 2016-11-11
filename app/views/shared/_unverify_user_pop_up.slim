@@ -1,0 +1,10 @@
+.modal.modal-lg.fade tabindex="-1" role="dialog" id="modal_unverify_user_#{user.id.to_s}"
+  .modal-dialog: .modal-content
+    .modal-header
+      .pull-right data-dismiss="modal"= fa_icon 'close'
+      h4.modal-title Mark user as unverify
+
+    .modal-body
+      p Are you sure you want to mark User #{user.name.titleize} as unverify?
+      .pull-right
+        = link_to "Yes", admin_fly_buy_index_path(user_id: user.id), class: "btn btn-success"
