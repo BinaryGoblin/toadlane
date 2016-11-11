@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161104091637) do
+ActiveRecord::Schema.define(version: 20161111053535) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -357,6 +357,7 @@ ActiveRecord::Schema.define(version: 20161104091637) do
     t.boolean  "completed",                   default: false
     t.string   "company_phone"
     t.json     "error_details",               default: {}
+    t.boolean  "unverify_by_admin",           default: false
   end
 
   create_table "green_checks", force: :cascade do |t|
