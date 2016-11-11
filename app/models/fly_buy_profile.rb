@@ -37,6 +37,7 @@
 #  completed                   :boolean          default(FALSE)
 #  company_phone               :string
 #  error_details               :json
+#  unverify_by_admin           :boolean          default(FALSE)
 #
 
 class FlyBuyProfile < ActiveRecord::Base
