@@ -139,6 +139,7 @@ Toad::Application.routes.draw do
     resources :fly_buy, only: [:index]  do
       collection do
         get :mark_user_unverify
+        get :mark_user_verify
       end
     end
     

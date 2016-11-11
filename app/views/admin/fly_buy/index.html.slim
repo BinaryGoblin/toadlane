@@ -11,7 +11,8 @@
           th Last Sign-In
           th Terms Accepted
           th User Verified
-          th 
+          th Marked as unverified
+          th
 
       tbody
         - @users.each do |user|
@@ -30,10 +31,14 @@
               -else
                 | Never
             td = user.fly_buy_profile.permission_scope_verified
+            td = user.fly_buy_profile.unverify_by_admin
             td
               - if user.fly_buy_profile.unverify_by_admin == false
                 = link_to 'Unverify User', '#modal_unverify_user_' + user.id.to_s, class: 'view', data: { toggle: 'modal' }
-              = render partial: '/shared/unverify_user_pop_up', locals: { user: user}
+              - elsif user.fly_buy_profile.unverify_by_admin == true
+                = link_to 'Verify User', '#modal_verify_user_' + user.id.to_s, class: 'view', data: { toggle: 'modal' }
+          = render partial: '/shared/unverify_user_pop_up', locals: { user: user}
+          = render partial: '/shared/unverify_user_pop_up', locals: { user: user}
             
           
 .footer-actions: .fa-container: .wrap-sm
