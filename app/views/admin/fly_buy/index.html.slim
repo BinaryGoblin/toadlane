@@ -6,10 +6,11 @@
           th ID
           th Name
           th Company
-          th Last Sign-In
-          th Terms Accepted
+          th Email
+          th Phone
           th User Verified
           th Marked as unverified
+          th
           th
 
       tbody
@@ -18,16 +19,8 @@
             td = user.id
             td = user.name
             td = user.company
-            td
-              -if user.last_sign_in_at
-                = user.last_sign_in_at.strftime('%m-%d-%Y')
-              -else
-                | Never
-            td
-              -if user.terms_accepted_at
-                = user.terms_accepted_at.strftime('%m-%d-%Y')
-              -else
-                | Never
+            td = mail_to user.email
+            td = user.phone
             td = user.fly_buy_profile.permission_scope_verified
             td = user.fly_buy_profile.unverify_by_admin
             td
@@ -35,8 +28,9 @@
                 = link_to 'Unverify User', '#modal_unverify_user_' + user.id.to_s, class: 'view', data: { toggle: 'modal' }
               - elsif user.fly_buy_profile.unverify_by_admin == true
                 = link_to 'Verify User', '#modal_verify_user_' + user.id.to_s, class: 'view', data: { toggle: 'modal' }
+            td.text-center=link_to 'Message', '#modal_message_' + user.id.to_s, class: 'view', data: { toggle: 'modal' }
           = render partial: '/shared/unverify_user_pop_up', locals: { user: user}
-          = render partial: '/shared/unverify_user_pop_up', locals: { user: user}
+          = render partial: '/shared/verify_user_pop_up', locals: { user: user}
             
           
 .footer-actions: .fa-container: .wrap-sm
@@ -46,3 +40,5 @@
       = link_to 'Show all', admin_users_managements_path(count: @users.count), class: 'link link-ulined'
 
   = will_paginate @users
+
+= render partial: 'dashboard/products/user', collection: @users
