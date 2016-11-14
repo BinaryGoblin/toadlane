@@ -244,4 +244,16 @@ class UserMailer < ActionMailer::Base
 
     mail to: @seller.email, subject: "Notification to buyer sent"
   end
+
+  def send_account_marked_unverified_notification(user)
+    @user = user
+
+    mail to: @user.email, subject: "Fly Buy account marked unverified"
+  end
+
+  def send_account_marked_verified_notification(user)
+    @user = user
+
+    mail to: @user.email, subject: "Fly Buy account marked verified"
+  end
 end

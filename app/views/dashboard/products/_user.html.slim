@@ -9,7 +9,10 @@
       .modal-body
         .form-group
           = label_tag 'subject', 'Subject:'
-          = text_field_tag 'message[subject]', "#{product.try(:name)} listing", class: 'form-control'
+          - if controller_name == "fly_buy"
+            = text_field_tag 'message[subject]', "", class: 'form-control'
+          - else
+            = text_field_tag 'message[subject]', "#{product.try(:name)} listing", class: 'form-control'
           = label_tag 'message_body', 'Message:'
           = text_area_tag 'message[body]', nil, class: 'form-control'
 

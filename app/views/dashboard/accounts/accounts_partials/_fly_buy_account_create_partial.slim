@@ -4,7 +4,10 @@
     |*Required for Fly & Buy Transactions
 
   - if user.fly_buy_profile_account_added? && fly_buy_profile.kba_questions.empty? && fly_buy_profile.permission_scope_verified == true
-    p <b>Status:</b> <span class="success">You have successfully added your company information. You can now buy or sell using Fly & Buy.</span>
+    - if fly_buy_profile.unverify_by_admin == true
+      p <b>Status:</b> <span class="warning">You cannot currently use Fly & Buy services. Please contact <a href="mailto:johnb@toadlane.com">johnb@toadlane.com</a> for more information</span>
+    - else
+      p <b>Status:</b> <span class="success">You have successfully added your company information. You can now buy or sell using Fly & Buy.</span>
 
 
   - elsif fly_buy_profile.present? && fly_buy_profile.kba_questions.present?  && fly_buy_profile.permission_scope_verified == false

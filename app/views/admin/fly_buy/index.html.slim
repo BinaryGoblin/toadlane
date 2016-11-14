@@ -1,0 +1,43 @@
+.wrap-sm.fly-buy-container
+  .table-responsive
+    table.table
+      thead
+        tr
+          th ID
+          th Name
+          th Company
+          th.text-center Email
+          th Phone
+          th User Verified By Synapsepay
+          th
+          th
+
+      tbody
+        - @users.each do |user|
+          tr
+            td = user.id
+            td = user.name
+            td = user.company
+            td = mail_to user.email
+            td = user.phone
+            td.text-center = user.fly_buy_profile.permission_scope_verified
+            td
+              - if user.fly_buy_profile.permission_scope_verified == true
+                - if user.fly_buy_profile.unverify_by_admin == false
+                  = link_to 'Unverify User', '#modal_unverify_user_' + user.id.to_s, class: 'view', data: { toggle: 'modal' }
+                - elsif user.fly_buy_profile.unverify_by_admin == true
+                  = link_to 'Verify User', '#modal_verify_user_' + user.id.to_s, class: 'view', data: { toggle: 'modal' }
+            td.text-center=link_to 'Message', '#modal_message_' + user.id.to_s, class: 'view', data: { toggle: 'modal' }
+          = render partial: '/shared/unverify_user_pop_up', locals: { user: user}
+          = render partial: '/shared/verify_user_pop_up', locals: { user: user}
+            
+          
+.footer-actions: .fa-container: .wrap-sm
+  .show_all style="font-size:14px;padding-top:8px"
+    | #{@users.count} Users 
+    - unless params[:count].present? || @users.count < 20
+      = link_to 'Show all', admin_users_managements_path(count: @users.count), class: 'link link-ulined'
+
+  = will_paginate @users
+
+= render partial: 'dashboard/products/user', collection: @users

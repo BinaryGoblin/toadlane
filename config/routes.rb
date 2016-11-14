@@ -5,18 +5,6 @@ Toad::Application.routes.draw do
   match "/404", :to => "errors#not_found", :via => :all
   match "/500", :to => "errors#internal_server_error", :via => :all
 
-  match "/callbacks", :to => "promise_orders#callbacks", :via => :all
-
-  resources :armor_orders, except: [:edit, :new] do
-    collection do
-      post :set_inspection_date, to: 'armor_orders#set_inspection_date', as: 'set_inspection_date'
-      get :set_inspection_date
-      post :armor_webhooks
-    end
-    post :confirm_inspection_date_by_seller
-    get :complete_inspection
-  end
-
   resources :stripe_orders do
     collection do
       post :purchase
@@ -28,17 +16,6 @@ Toad::Application.routes.draw do
   resources :amg_orders
 
   resources :emb_orders
-
-  resources :promise_orders, except: [:edit, :new, :create, :show, :index, :destroy, :update] do
-    collection do
-      post :set_inspection_date, to: 'promise_orders#set_inspection_date', as: 'set_inspection_date'
-      get :set_inspection_date
-    end
-    post :confirm_inspection_date_by_seller
-    get :complete_inspection
-    post :place_order
-    get :refund
-  end
 
   resources :fly_buy_orders, except: [:edit, :new, :create, :show, :index, :destroy, :update] do
     collection do
@@ -76,9 +53,7 @@ Toad::Application.routes.draw do
 
     resources :accounts do
       collection do
-        get :set_armor_profile
         post :create_green_profile
-        post :create_armor_profile
         get :send_confirmation_email
         get :check_valid_phone_number
         get :check_valid_state
@@ -161,6 +136,13 @@ Toad::Application.routes.draw do
   devise_for :users, :controllers => { :registrations => "registrations", confirmations: 'confirmations', :omniauth_callbacks => "omniauth_callbacks", :sessions => "users/sessions" }
 
   namespace :admin do
+    resources :fly_buy, only: [:index]  do
+      collection do
+        get :mark_user_unverify
+        get :mark_user_verify
+      end
+    end
+    
     resources :categories
 
     resources :fees

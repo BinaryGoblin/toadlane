@@ -87,6 +87,10 @@ class ProductsController < ApplicationController
       return redirect_to product_path(@product), :flash => { :account_error => "You must add your company name prior to submitting your company information." }
     end
 
+    if current_user.present? && current_user.fly_buy_profile_account_added? && current_user.fly_buy_unverified_by_admin == true
+      redirect_to product_path(@product), :flash => { :account_error => "You cannot currently use Fly & Buy services. Please contact johnb@toadlane.com for more information." }
+    end
+
     if @product.default_payment_flybuy?
       fee = Fee.find_by(:module_name => "Fly & Buy").value
     else
