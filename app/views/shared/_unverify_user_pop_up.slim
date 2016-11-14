@@ -7,4 +7,4 @@
     .modal-body
       p Are you sure you want to mark User <strong>#{user.name.titleize}</strong> as unverify?
       .pull-right
-        = link_to "Yes", mark_user_verify_admin_fly_buy_index_path(user_id: user.id), class: "btn btn-success"
+        = link_to "Yes", mark_user_unverify_admin_fly_buy_index_path(user_id: user.id), class: "btn btn-success"
