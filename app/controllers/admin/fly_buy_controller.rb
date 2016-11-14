@@ -9,14 +9,20 @@ class Admin::FlyBuyController < ApplicationController
 	def mark_user_unverify
 		user = User.find_by_id(params[:user_id])
 
-		user.fly_buy_profile.update_attribute(:unverify_by_admin, true)
+		if user.fly_buy_profile.update_attribute(:unverify_by_admin, true)
+			UserMailer.send_account_marked_unverified_notification(user).deliver_later
+		end
+
 		redirect_to admin_fly_buy_index_path
 	end
 
 	def mark_user_verify
 		user = User.find_by_id(params[:user_id])
 
-		user.fly_buy_profile.update_attribute(:unverify_by_admin, false)
+		if user.fly_buy_profile.update_attribute(:unverify_by_admin, false)
+			UserMailer.send_account_marked_verified_notification(user).deliver_later
+		end
+
 		redirect_to admin_fly_buy_index_path
 	end
 end
