@@ -25,7 +25,11 @@ class FlyAndBuy::UserOperations
   end
 
   def creating_user_synapse
-    url = "https://sandbox.synapsepay.com/api/v3/user/create"
+    if Rails.env.development?
+      url = Rails.application.secrets['SYNAPSEPAY_DASHBOARD_URL']
+    else
+      url = ENV['SYNAPSEPAY_DASHBOARD_URL']
+    end
 
     create_payload = {
       "client": {
