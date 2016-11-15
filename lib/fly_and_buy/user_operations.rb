@@ -25,10 +25,10 @@ class FlyAndBuy::UserOperations
   end
 
   def creating_user_synapse
-    if Rails.env.production?
-      url = ENV['SYNAPSEPAY_DASHBOARD_URL']
-    else
+    if Rails.env.development?
       url = Rails.application.secrets['SYNAPSEPAY_DASHBOARD_URL']
+    else
+      url = ENV['SYNAPSEPAY_DASHBOARD_URL']
     end
 
     create_payload = {
