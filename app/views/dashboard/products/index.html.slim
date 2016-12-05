@@ -40,6 +40,9 @@
               = link_to product.name, product_path(product, cat_id: product.main_category), class: 'link link-ulined', target: '_blank'
               br
               = link_to "#{product_views_text(product.views_count)}", viewers_dashboard_products_path(product), class: 'link-ulined text-success'
+              - if product.group.present?
+                br
+                = link_to "#{product.group.name}", dashboard_group_path(product.group), class: 'link-ulined text-success'
             td= number_to_currency(product.unit_price, :unit => "$", precision: 2)
             td
               small.date= product.start_date.strftime('%d-%m-%Y')

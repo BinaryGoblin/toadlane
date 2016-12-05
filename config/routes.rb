@@ -76,6 +76,13 @@ Toad::Application.routes.draw do
         get '/:id/viewers', to: 'products#viewers', as: 'viewers'
       end
     end
+    resources :groups do
+      collection do
+        get :accept_deal
+        get :reject_deal
+        post :assign_role
+      end
+    end
 
     resources :orders, only: [:index, :show] do
       collection do
@@ -133,13 +140,21 @@ Toad::Application.routes.draw do
     match '/checkout', to: 'products#checkout', :via => [:get, :post]
   end
 
-  devise_for :users, :controllers => { :registrations => "registrations", confirmations: 'confirmations', :omniauth_callbacks => "omniauth_callbacks", :sessions => "users/sessions" }
+  devise_for :users, :controllers => { :registrations => "registrations", confirmations: 'confirmations', :omniauth_callbacks => "omniauth_callbacks", :sessions => "users/sessions", :invitations => "users/invitations" }
 
   namespace :admin do
-    resources :fly_buy, only: [:index]  do
-      collection do
-        get :mark_user_unverify
-        get :mark_user_verify
+    namespace :fly_buy do
+      resources :account_verifications, only: [:index]  do
+        collection do
+          get :mark_user_unverify
+          get :mark_user_verify
+        end
+      end
+      resources :group_verifications, only: [:index] do
+        collection do
+          get :mark_group_verify
+          get :mark_group_unverify
+        end
       end
     end
     

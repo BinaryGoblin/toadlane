@@ -283,6 +283,69 @@
         span.btn.btn-default.remove= fa_icon 'trash-o'
 
     hr
+
+    label.lg Seller Group:
+    .warning Note: This feature is only available for Fly & Buy sellers.
+    .row
+      .col-md-6
+        .form-group
+          = f.label :group_name, 'Group Name:'
+          = f.text_field :group_name, class: 'form-control', value: @product.group.present? ? @product.group.name : nil
+
+    label.lg Add Additional Seller:
+    ul.sellergroups
+      - if @product.group.present?
+        - @product.group_sellers.each_with_index do |seller, index|
+          li.sellergroup
+            .index= index+1
+            .form-group.add-seller-block.select-seller-group
+              label Add Additional Seller:
+              = f.collection_select :additional_seller_ids,
+                get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
+                { include_blank: true, selected: seller.user_id }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
+              
+            .form-group.set-commision
+              label set per unit commission:
+              = f.number_field :value, class: 'form-control set-commission-text-box', value: seller.additional_seller_fee.value, :name =>"product[additional_seller_attributes][][value]", :id => "product[additional_seller_attributes][][value]"
+
+            input type="hidden" name="product[additional_seller_attributes][][id]" value="#{seller.id}"
+
+            span.btn.btn-default.remove= fa_icon 'trash-o'
+            .hide: input type="checkbox" name="product[additional_seller_delete][]" value="#{seller.id}"
+
+      - else
+        li.sellergroup
+          .index 1
+          .form-group.add-seller-block.select-seller-group
+            label Add Additional Seller:
+            = f.collection_select :additional_seller_ids,
+                  get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
+                    { include_blank: true, selected: @group.additional_sellers.present? ? @group.additional_sellers.map(&:id) : nil }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
+              
+
+          .form-group.set-commision
+            label set per unit commission:
+            = f.number_field :value, class: 'form-control set-commission-text-box', value: @product.try(:group_fee).try(:value), :name =>"product[additional_seller_attributes][][value]", :id => "product[additional_seller_attributes][][value]"
+
+          span.btn.btn-default.remove= fa_icon 'trash-o'
+
+      li.add-seller data-behavior="AddSeller"= fa_icon 'plus', text: 'Add another Additional Seller'
+
+    script#template-addseller type="text/template"
+      li.sellergroup
+        .index 1
+        .form-group.add-seller-block.select-seller-group
+          label Add Additional Seller:
+          = f.collection_select :additional_seller_ids,
+            get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
+            { include_blank: true}, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
+          
+        .form-group.set-commision
+          label set per unit commission:
+          = f.number_field :value, class: 'form-control set-commission-text-box', :name =>"product[additional_seller_attributes][][value]", :id => "product[additional_seller_attributes][][value]"
+
+        span.btn.btn-default.remove= fa_icon 'trash-o'
+    hr
       .dimensions
         .dimensions-label
           label.lg Shipping Dimensions:

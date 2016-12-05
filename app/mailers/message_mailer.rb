@@ -15,8 +15,14 @@ class MessageMailer < ActionMailer::Base
       reply_to = "c8b7ddb781077404c27659d9ef85d353+#{conversation_id}@inbound.postmarkapp.com"
     end
 
+    if @subject.present?
+      subject = @subject
+    else
+      subject = "New Message from #{@sender.name || @sender.email}"
+    end
+
     mail( to: @receiver.email,
-          subject: "New Message from #{@sender.name || @sender.email}",
+          subject: subject,
           reply_to: reply_to)
   end
 end

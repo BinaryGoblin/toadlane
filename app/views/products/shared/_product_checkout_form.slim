@@ -1,6 +1,10 @@
 - if product.is_buyer_product_owner?(user)
   .wrong.text-center
     | You cannot buy your own product.
+- elsif product.is_buyer_additional_seller?(user)
+  .wrong.text-center
+    | You are listed as the additional seller for this product. You cannot buy your own product.
+
 - else
 
   = form_tag(product_checkout_path(product_id: product, fly_buy_order_id: params[:fly_buy_order_id]), method: :post, class: 'text-center') do

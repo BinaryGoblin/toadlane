@@ -31,6 +31,7 @@
 #
 
 class Product < ActiveRecord::Base
+  include AdditionalSeller
   acts_as_commontable
   acts_as_paranoid
   is_impressionable :counter_cache => true, :column_name => :views_count, :unique => :session_hash
@@ -43,7 +44,7 @@ class Product < ActiveRecord::Base
     fly_buy: 'Fly And Buy'
   }
 
-  belongs_to :user
+  belongs_to :owner, class_name: 'User', foreign_key: 'user_id'
 
   self.inheritance_column = nil # So that the :type enum doesn't complain about Single Table Inheritance
   enum type: [ :on_sale, :in_demand ]
@@ -65,6 +66,7 @@ class Product < ActiveRecord::Base
   has_many :shipping_estimates, dependent: :destroy
   has_many :certificates, dependent: :destroy
   has_many :inspection_dates, dependent: :destroy
+  has_one :group
 
   accepts_nested_attributes_for :shipping_estimates,
   :allow_destroy => true,
@@ -88,6 +90,8 @@ class Product < ActiveRecord::Base
   scope :fly_buy_default_payment, -> { where(default_payment: "Fly And Buy") }
 
   self.per_page = 16
+
+  alias :user :owner
 
   def available_payments
     ap = []
@@ -173,6 +177,10 @@ class Product < ActiveRecord::Base
     buyer == self.user
   end
 
+  def is_buyer_additional_seller?(buyer)
+    additional_sellers.include?(buyer)
+  end
+
   def promise_fee_for_buyer
     Fee.find_by(:fee_type => "ACH").value
   end
@@ -192,5 +200,9 @@ class Product < ActiveRecord::Base
     else
       return self
     end
+  end
+
+  def is_group_verified_by_admin?
+    group.verified_by_admin
   end
 end

@@ -1,0 +1,76 @@
+.row
+  .col-md-6
+    .form-group
+      = f.label :name, 'Group Name:', class: 'required'
+      = f.text_field :name, class: 'form-control', requried: true
+
+
+.row
+  .col-md-12
+    label.lg Add Additional Seller:
+    ul.sellergroups
+      - if group.present?
+        - group.group_sellers.each_with_index do |seller, index|
+          li.sellergroup
+            .index= index+1
+            .col-md-6
+              .form-group
+                label Add Additional Seller:
+                = f.collection_select :additional_seller_ids,
+                  get_all_user_except_current_added_user(current_user, group.product), :id, :label_for_select,
+                  { include_blank: true, selected: seller.user_id }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"group[additional_seller_attributes][][user_id]", :id => "group[additional_seller_attributes][][user_id]"}
+              
+
+            / .form-group
+              label set per unit commission:
+              = f.number_field :value, class: 'form-control', value: seller.additional_seller_fee.value , :name =>"group[additional_seller_attributes][][value]", :id => "group[additional_seller_attributes][][value]"
+
+            input type="hidden" name="group[additional_seller_attributes][][id]" value="#{seller.id}"
+
+            span.btn.btn-default.remove= fa_icon 'trash-o'
+            .hide: input type="checkbox" name="group[additional_seller_delete][]" value="#{seller.id}"
+
+      - else
+        li.sellergroup
+          .index 1
+          .col-md-6
+            .form-group
+              label Add Additional Seller:
+              = f.collection_select :additional_seller_ids,
+                    get_all_user_except_current_added_user(current_user, group.product), :id, :label_for_select,
+                    { include_blank: true, selected: group.additional_sellers.present? ? group.additional_sellers.map(&:id) : nil }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"group[additional_seller_attributes][][user_id]", :id => "group[additional_seller_attributes][][user_id]"}
+              
+
+          / .form-group
+            label set per unit commission:
+            = f.number_field :value, class: 'form-control', value: '' , :name =>"product[additional_seller_attributes][][value]", :id => "product[additional_seller_attributes][][value]"
+
+          span.btn.btn-default.remove= fa_icon 'trash-o'
+
+      li.add-seller data-behavior="AddSeller"= fa_icon 'plus', text: 'Add another Additional Seller'
+
+    script#template-addseller type="text/template"
+      li.sellergroup
+        .index 1
+        .col-md-6
+          .form-group
+            label Add Additional Seller:
+            = f.collection_select :additional_seller_ids,
+                  get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
+                  { include_blank: true}, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"group[additional_seller_attributes][][user_id]", :id => "group[additional_seller_attributes][][user_id]"}
+              
+
+        / .form-group
+          label set per unit commission:
+          = f.number_field :value, class: 'form-control', value: '' , :name =>"group[additional_seller_attributes][][value]", :id => "group[additional_seller_attributes][][value]"
+
+        span.btn.btn-default.remove= fa_icon 'trash-o'
+br
+.row
+  .col-md-6
+    .form-group
+    	= f.label :product_id, 'select a product to sell', class: 'required'
+    	= f.collection_select :product_id,
+          get_current_user_product(current_user, group.try(:product).try(:id)), :id, :name,
+          { include_blank: true, selected: group.product_id },
+          { :multiple=>false, :data => { :placeholder => 'Select one Product'}, class: 'form-control', requried: true}

@@ -232,6 +232,22 @@ $(document).ready ->
       form.submit()
       return
 
+  $('form#new_group').validate
+    rules:
+      "group[name]":
+        required: true
+      "group[product_id]":
+        required: true
+      "group[fee_percent]":
+        required: true
+        number: true
+      "group[additional_seller_ids][]":
+        required: true
+    submitHandler: (form) ->
+      $('form#new_group').find('input[type=submit]').prop 'disabled', true
+      form.submit()
+      return
+
   $('form.product_form_partial').validate
     rules:
       "product[videos_attributes][]":
@@ -461,6 +477,19 @@ $(document).ready ->
       return
     else
       $('.insert_inspection_dates').hide()
+  $ ->
+    # enable chosen js
+    $('.chosen-select').chosen
+      allow_single_deselect: true
+      no_results_text: 'No results matched'
+      width: '200px'
+  $('.chosen-select').trigger 'chosen:updated'
+
+  $ ->
+    $('.assign_role_to_additional_seller').change ->
+      $('form#'+ this.id).submit()
+      return
+    return
 
   validator = $('form.create_fly_buy_profile').validate(
                 rules:

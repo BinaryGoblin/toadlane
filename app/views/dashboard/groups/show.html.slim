@@ -1,0 +1,38 @@
+= render '/shared/tabs'
+
+.wrap-sm
+  .table-options
+    = link_to "Close", dashboard_groups_path, class: "btn btn-success pull-right"
+  .table-responsive
+    table.table.products-table data-behavior="TableCheckbox"
+      thead
+        tr
+          th User Name:
+          th Deal Accepted:
+          th Profile Completed:
+          th FlyBuy Account Added:
+          th FlyBuy Account Verified:
+          th Role:
+          th Fee($)
+          th
+
+      tbody
+        - @group.group_sellers.each do |group_member|
+          tr
+            td = group_member.user.name
+            td = group_member.accept_deal
+            td = group_member.profile_complete?
+            td = group_member.user.fly_buy_profile_account_added?
+            td = group_member.fly_buy_profile_verified?
+            td
+              .form-group
+                = form_tag assign_role_dashboard_groups_path(product_id: @product.id, user_id: group_member.user.id, group_seller_id: group_member.id ), method: :post, :class => "assign_role_to_additional_seller", :id => "assign_role_to_#{group_member.user.id}"
+                  - if current_user.roles.include? @group_admin
+                    = select_tag 'role_id', options_for_select(Role.where(name: ['group admin', 'additional seller']).collect{ |u| [u.name, u.id] }, :selected => get_selected_role(group_member.user) ), prompt: "Select Role", class: 'form-control'
+                  - else
+                    = select_tag 'role_id', options_for_select(Role.where(name: ['group admin', 'additional seller']).collect{ |u| [u.name, u.id] }, :selected => get_selected_role(group_member.user) ), prompt: "Select Role", class: 'form-control', :disabled => true
+            td = group_member.additional_seller_fee.value
+            td.text-center=link_to 'Message', '#modal_message_' + group_member.user.id.to_s, class: 'view', data: { toggle: 'modal' }
+
+            = render partial: 'dashboard/products/user', locals: {user: group_member.user}
+            

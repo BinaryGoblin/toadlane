@@ -11,12 +11,14 @@ class Dashboard::ProductsController < DashboardController
 
   def edit
     set_product
+    @group = @product.group.present? ? @product.group : Group.new
     @history = PaperTrail::Version.where(item_id: @product.id).order('created_at DESC')
   end
 
   def new
     if current_user.profile_complete? && current_user.has_payment_account?
       @product = Product.new
+      @group  = Group.new
     else
       if !current_user.has_payment_account?
         redirect_to dashboard_accounts_path, :flash => { :error => "You must create or link a payment method in order to accept payments."}
@@ -75,6 +77,33 @@ class Dashboard::ProductsController < DashboardController
 
     respond_to do |format|
       if @product.valid?
+        if params["product"]["additional_seller_attributes"].present?
+          params["product"]["additional_seller_attributes"].each do |additional_seller|
+            if additional_seller["user_id"].present?
+              user = User.find_by_id(additional_seller["user_id"])
+              if user.nil?
+                user = User.invite!({:email => additional_seller["user_id"], :invited_by_id => current_user.id}, current_user )
+              end
+              @product.add_additional_sellers(user)
+              group_seller = @product.group_sellers.where(user_id: user.id, product_id: @product.id).first
+              existing_group = Group.find_by_product_id(@product.id)
+              if existing_group.nil?
+                group = Group.create(product_id: @product.id, name: params["product"]["name"], group_owner_id: @product.owner.id)
+              else
+                existing_group.update_attributes(product_id: @product.id, name: params["product"]["name"])
+                group = existing_group
+              end
+              user.add_role 'additional seller'
+              group_seller.update_attribute(:group_id, group.id)
+              AdditionalSellerFee.create(group_id: group.id, value: additional_seller["value"], group_seller_id: group_seller.id)
+              UserMailer.send_added_as_additional_seller_notification(current_user, user, @product, group_seller.id).deliver_later
+            end
+            # if @product.group_sellers.present?
+            #   UserMailer.send_group_created_notification_to_admin(@product).deliver_later
+            # end
+          end
+        end
+
         if params["product"]["inspection_date_attributes"].present? && params["product"]["default_payment"] == "Fly And Buy"
           inspection_attributes = params["product"]["inspection_date_attributes"]
           inspection_attributes.each do |inspection_attribute|
@@ -212,6 +241,39 @@ class Dashboard::ProductsController < DashboardController
 
     respond_to do |format|
       if @product.valid?
+        if params["product"]["additional_seller_attributes"].present?
+          params["product"]["additional_seller_attributes"].each do |additional_seller|
+            if additional_seller["user_id"].present?
+              user = User.find_by_id(additional_seller["user_id"])
+              if user.nil?
+                user = User.invite!({:email => additional_seller["user_id"], :invited_by_id => current_user.id}, current_user )
+              end
+              @product.add_additional_sellers(user)
+              group_seller = @product.group_sellers.where(user_id: user.id, product_id: @product.id).first
+              existing_group = Group.find_by_product_id(@product.id)
+              if existing_group.nil?
+                group = Group.create(product_id: @product.id, name: params["product"]["name"], group_owner_id: @product.owner.id)
+              else
+                existing_group.update_attributes(product_id: @product.id, name: params["product"]["name"])
+                group = existing_group
+              end
+              user.add_role 'additional seller'
+              group_seller.update_attribute(:group_id, group.id)
+              AdditionalSellerFee.create(group_id: group.id, value: additional_seller["value"], group_seller_id: group_seller.id)
+              UserMailer.send_added_as_additional_seller_notification(current_user, user, @product, group_seller.id).deliver_later
+            end
+            # if @product.group_sellers.present?
+            #   UserMailer.send_group_created_notification_to_admin(@product).deliver_later
+            # end
+          end
+        end
+
+        if params["product"]["additional_seller_delete"].present?
+          params["product"]["additional_seller_delete"].each do |group_seller_id|
+            group_seller = GroupSeller.find_by_id(group_seller_id)
+            group_seller.destroy if group_seller.present?
+          end
+        end
 
         if images
           images[:images_attributes].each do |image|
@@ -348,7 +410,7 @@ class Dashboard::ProductsController < DashboardController
       :dimension_height, :dimension_depth,
       :dimension_weight, :main_category,
       :pricebreaks_attributes, :default_payment,
-      :shipping_estimates_attributes,
+      :shipping_estimates_attributes, :fee_percent,
       :shipping_estimates_delete, :sku,
       :slug, :images_attributes => [], :images_attributes_delete => [],
       :certificates_attributes => [], :certificates_attributes_delete => [],

@@ -36,6 +36,14 @@
 #  armor_user_id          :integer
 #  terms_of_service       :boolean
 #  terms_accepted_at      :datetime
+#  invitation_token       :string
+#  invitation_created_at  :datetime
+#  invitation_sent_at     :datetime
+#  invitation_accepted_at :datetime
+#  invitation_limit       :integer
+#  invited_by_id          :integer
+#  invited_by_type        :string
+#  invitations_count      :integer          default(0)
 #
 
 class User < ActiveRecord::Base
@@ -45,9 +53,9 @@ class User < ActiveRecord::Base
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable, :confirmable,
+  devise :invitable, :database_authenticatable, :registerable, :confirmable,
   :recoverable, :rememberable, :trackable, :validatable,
-  :omniauthable
+  :omniauthable, :invitable
 
   has_one :stripe_profile
   has_one :green_profile
@@ -55,7 +63,6 @@ class User < ActiveRecord::Base
   has_one :amg_profile
   has_one :emb_profile
   has_one :stripe_customer
-  has_many :products
   has_many :addresses
   has_one :fly_buy_profile
   accepts_nested_attributes_for :addresses,
@@ -66,6 +73,8 @@ class User < ActiveRecord::Base
   has_many :requests_of_sender, class_name: 'Request', foreign_key: :sender_id
   has_many :requests_of_receiver, class_name: 'Request', foreign_key: :receiver_id
   has_many :notifications, dependent: :destroy
+  # user.products -> those products which the user is the owner
+  has_many :products
 
   has_one :certificate, dependent: :destroy
 
@@ -253,6 +262,12 @@ class User < ActiveRecord::Base
 
   def fly_buy_unverified_by_admin
     fly_buy_profile.unverify_by_admin
+  end
+
+  def label_for_select
+    if name && company.present?
+      name + ", " + company
+    end
   end
 
   private

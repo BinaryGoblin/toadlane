@@ -124,4 +124,30 @@ module FormHelper
       'emb'
     end
   end
+
+  def get_selected_role(user)
+    existed_role = user.roles.all.map &:name
+    if existed_role.include?'additional seller'
+      selected_role = user.roles.find_by_name('additional seller')
+      selected_role_id = selected_role.id
+    elsif existed_role.include?'group admin'
+      selected_role = user.roles.find_by_name('group admin')
+      selected_role_id = selected_role.id
+    else
+      selected_role_id = nil
+    end
+
+    selected_role_id
+  end
+
+  def get_current_user_product(user, product_id=nil)
+    if product_id == nil
+      products = user.products - user.products.joins(:group)
+    else
+      products =  user.products - user.products.joins(:group)
+      product = Product.find_by_id(product_id)
+      products << product
+    end
+    products
+  end
 end

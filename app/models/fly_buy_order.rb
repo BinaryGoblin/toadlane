@@ -24,12 +24,21 @@
 #  funds_in_escrow        :boolean          default(FALSE)
 #  seller_fees_percent    :float
 #  seller_fees_amount     :float
+#  group_seller_id        :integer
+#  group_seller           :boolean          default(FALSE)
 #
 
 class FlyBuyOrder < ActiveRecord::Base
+  #
+  ## group_seller => If the product has additional seller i.e group then this field is true else false
+  ## group_id => If the product has additional seller i.e. group, then this filed represents the group id
+  ### if the group_seller is true, then then the `seller_id` field will be the id of the product owner 
+  ####  i.e the initial seller who creates group and adds the other additional sellers
+
   has_many :inspection_dates, dependent: :destroy
   belongs_to :buyer, class_name: 'User', foreign_key: 'buyer_id'
   belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'
+  belongs_to :seller_group, class_name: 'Group', foreign_key: 'group_seller_id'
   belongs_to :product
 
   scope :with_transaction_id, -> { where.not(synapse_transaction_id: nil) }

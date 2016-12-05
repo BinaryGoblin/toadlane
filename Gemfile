@@ -69,6 +69,10 @@ gem 'roo', '~> 2.4.0'
 
 gem 'countdown', '~> 0.1.0'
 
+gem 'chosen-rails', '~> 1.5.2'
+
+gem 'devise_invitable', '~> 1.6.1'
+
 # Dev - debugging group
 group :development do
   gem 'pry-rails'

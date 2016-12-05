@@ -13,7 +13,7 @@ class Admin::FlyBuyController < ApplicationController
 			UserMailer.send_account_marked_unverified_notification(user).deliver_later
 		end
 
-		redirect_to admin_fly_buy_index_path
+		redirect_to admin_fly_buy_account_verifications_path
 	end
 
 	def mark_user_verify
@@ -23,6 +23,9 @@ class Admin::FlyBuyController < ApplicationController
 			UserMailer.send_account_marked_verified_notification(user).deliver_later
 		end
 
-		redirect_to admin_fly_buy_index_path
+		redirect_to admin_fly_buy_account_verifications_path
+	end
+
+	def group_verifications
 	end
 end

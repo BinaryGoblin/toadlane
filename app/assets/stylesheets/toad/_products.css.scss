@@ -529,7 +529,8 @@ $sell-color: #FF8724;
   }
 
   .pricebreaks,
-  .inspectiondates {
+  .inspectiondates,
+  .sellergroups {
     list-style: none;
     padding: 0;
     margin: 0 0 -29px -3%;
@@ -560,8 +561,15 @@ $sell-color: #FF8724;
     }
   }
 
+  .sellergroups{
+    li{
+      width: 46.3333%;
+    }
+  }
+
   .pricebreak,
-  .inspectiondate {
+  .inspectiondate,
+  .sellergroup {
     border-color: #cccfd3;
     background: white;
     padding-top: 16px;
@@ -609,7 +617,7 @@ $sell-color: #FF8724;
     }
   }
 
-  .add-pricebreak, .add-inspectiondate {
+  .add-pricebreak, .add-inspectiondate, .add-seller {
     border-color: $buy-color;
     text-align: center;
     font-size: 14px;
@@ -1108,4 +1116,17 @@ $sell-color: #FF8724;
 .complete-profile-error{
   margin-top: 20px;
   font-size: 16px;
+}
+
+.warning{
+  color: red;
+}
+
+.product-form .sellergroups .sellergroup{
+  .set-commision{
+    width: 147px;
+  }
+  .select-seller-group{
+    width: 190px;
+  }
 }

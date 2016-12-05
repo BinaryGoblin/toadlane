@@ -352,7 +352,7 @@
       }
     }
   }
-  .product-form .pricebreaks,
+  .product-form .pricebreaks, .product-form .sellergroups,
   .product-form .inspectiondates{
     margin: 0;
     li{
@@ -362,15 +362,29 @@
       height: auto;
       padding: 10px;
       margin-bottom: 10px;
+      .col-md-6 .form-group{
+        margin-bottom: 10px;
+        .chosen-container{
+          width: 100% !important;
+        }
+      }
+      .add-seller-block{
+        padding-left: 0;
+        padding-right: 0;
+      }
     }
     .pricebreak,
-    .inspectiondate{
+    .inspectiondate,
+    .sellergroup{
       position: relative;
       .btn.remove{
         position: absolute;
         right: 10px;
         top: 10px;
         margin: 0;
+      }
+      .set-commission-text-box{
+        width: 200px;
       }
     }
     .index{

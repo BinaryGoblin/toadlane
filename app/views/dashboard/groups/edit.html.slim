@@ -1,0 +1,10 @@
+= render '/shared/tabs'
+
+.wrap-sm: .product-form: h4 Edit Group:
+
+= form_for @group, url: dashboard_group_path(@group.id), method: "put" do |f|
+  .wrap-sm: .product-form
+    = render partial: 'dashboard/groups/group_form', locals: { group: @group, f: f}
+  
+  .footer-actions: .fa-container: .wrap-sm
+    = f.submit 'Save', class: "btn btn-success pull-right"

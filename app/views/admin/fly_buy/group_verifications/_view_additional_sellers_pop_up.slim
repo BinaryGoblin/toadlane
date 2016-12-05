@@ -1,0 +1,28 @@
+.modal.modal-lg.fade tabindex="-1" role="dialog" id="modal_view_additional_sellers_#{group.id.to_s}"
+  .modal-dialog: .modal-content
+    .modal-header
+      .pull-right data-dismiss="modal"= fa_icon 'close'
+      h4.modal-title 
+
+    .modal-body
+      p Listed are the additional sellers for the product <strong>#{group.product.name.titleize}</strong>
+      .table-responsive
+		    table.table
+		      thead
+		        tr
+		          th ID
+		          th Name
+		          th Company
+		          th.text-center Email
+		          th Phone
+		          th User Verified By Synapsepay
+
+		      tbody
+		        - group.additional_sellers.each do |user|
+		          tr
+		            td = user.id
+		            td = user.name
+		            td = user.company
+		            td = mail_to user.email
+		            td = user.phone
+		            td.text-center = user.fly_buy_profile.permission_scope_verified if user.fly_buy_profile.present?

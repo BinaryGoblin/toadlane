@@ -26,7 +26,7 @@
 - elsif fly_buy_profile.present? && fly_buy_profile.synapse_document_id.present? && fly_buy_profile.permission_scope_verified == false && fly_buy_profile.kba_questions.empty?
     p <b>Status:</b> <span class="warning">You have added your bank account but it is not yet verified.</span>
 
-- elsif fly_buy_profile_account_added? && fly_buy_profile.unverify_by_admin == true
+- elsif user.fly_buy_profile_account_added? && fly_buy_profile.unverify_by_admin == true
   p <b>Status:</b> <span class="warning">You cannot currently use Fly & Buy services. Please contact <a href="mailto:johnb@toadlane.com">johnb@toadlane.com</a> for more information</span>
 
 - else
