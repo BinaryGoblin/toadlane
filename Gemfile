@@ -108,7 +108,7 @@ gem 'will_paginate', '~> 3.0.7'
 gem 'mailboxer', github: 'lacco/mailboxer'
 
 gem 'paper_trail', '~> 3.0.7'
-gem 'puma', '~> 2.11.1'
+gem 'puma', '~> 3.6.2'
 
 gem 'httparty', '~> 0.13.7'
 gem 'carmen-rails', '~> 1.0.0'
