@@ -32,10 +32,11 @@
                 | -
             td
               = link_to 'View', dashboard_group_path(group), class: 'view'
-              |  |
-              = link_to 'Edit', edit_dashboard_group_path(group), class: 'view'
-              |  |
-              = link_to 'Delete', dashboard_group_path(group), method: :delete, data: { confirm: 'Are you sure?' }, class: 'view view-red'
+              - if current_user == group.owner || current_user.roles.include?(@group_admin)
+                |  |
+                = link_to 'Edit', edit_dashboard_group_path(group), class: 'view'
+                |  |
+                = link_to 'Delete', dashboard_group_path(group), method: :delete, data: { confirm: 'Are you sure?' }, class: 'view view-red'
             
 
 

@@ -81,6 +81,7 @@ Toad::Application.routes.draw do
         get :accept_deal
         get :reject_deal
         post :assign_role
+        post :change_visibility_of_member
       end
     end
 

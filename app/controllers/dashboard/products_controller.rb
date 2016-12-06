@@ -88,16 +88,17 @@ class Dashboard::ProductsController < DashboardController
               group_seller = @product.group_sellers.where(user_id: user.id, product_id: @product.id).first
               existing_group = Group.find_by_product_id(@product.id)
               if existing_group.nil?
-                group = Group.create(product_id: @product.id, name: params["product"]["name"], group_owner_id: @product.owner.id)
+                group = Group.create(product_id: @product.id, name: params["product"]["group_name"], group_owner_id: @product.owner.id)
               else
-                existing_group.update_attributes(product_id: @product.id, name: params["product"]["name"])
+                existing_group.update_attributes(product_id: @product.id, name: params["product"]["group_name"])
                 group = existing_group
               end
               user.add_role 'additional seller'
-              group_seller.update_attribute(:group_id, group.id)
+              group_seller.update_attributes({group_id: group.id, user_id: additional_seller["user_id"]})
               AdditionalSellerFee.create(group_id: group.id, value: additional_seller["value"], group_seller_id: group_seller.id)
               UserMailer.send_added_as_additional_seller_notification(current_user, user, @product, group_seller.id).deliver_later
             end
+            @product.owner.add_role 'group admin'
             # if @product.group_sellers.present?
             #   UserMailer.send_group_created_notification_to_admin(@product).deliver_later
             # end
@@ -252,16 +253,25 @@ class Dashboard::ProductsController < DashboardController
               group_seller = @product.group_sellers.where(user_id: user.id, product_id: @product.id).first
               existing_group = Group.find_by_product_id(@product.id)
               if existing_group.nil?
-                group = Group.create(product_id: @product.id, name: params["product"]["name"], group_owner_id: @product.owner.id)
+                group = Group.create(product_id: @product.id, name: params["product"]["group_name"], group_owner_id: @product.owner.id)
               else
-                existing_group.update_attributes(product_id: @product.id, name: params["product"]["name"])
+                existing_group.update_attributes(product_id: @product.id, name: params["product"]["group_name"])
                 group = existing_group
               end
               user.add_role 'additional seller'
-              group_seller.update_attribute(:group_id, group.id)
-              AdditionalSellerFee.create(group_id: group.id, value: additional_seller["value"], group_seller_id: group_seller.id)
+              group_seller.update_attributes({group_id: group.id, user_id: additional_seller["user_id"]})
+              if group_seller.additional_seller_fee.present?
+                group_seller.additional_seller_fee.update_attributes({
+                  group_id: group.id,
+                  value: additional_seller["value"],
+                  group_seller_id: group_seller.id
+                })
+              else
+                AdditionalSellerFee.create(group_id: group.id, value: additional_seller["value"], group_seller_id: group_seller.id)
+              end
               UserMailer.send_added_as_additional_seller_notification(current_user, user, @product, group_seller.id).deliver_later
             end
+            @product.owner.add_role 'group admin'
             # if @product.group_sellers.present?
             #   UserMailer.send_group_created_notification_to_admin(@product).deliver_later
             # end

@@ -65,6 +65,18 @@
     margin-right: 30px !important;
   }
 }
+
+@media (max-width:960px) {
+  .group-table{
+    .member-role{
+      display: inline-block;
+    }
+    thead > tr > th{
+      border-bottom: 0px
+    }
+  }
+}
+
 @media (max-width:767px) {
   body{
     padding-bottom: 0;

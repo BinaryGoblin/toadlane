@@ -69,6 +69,7 @@ class Dashboard::GroupsController < ApplicationController
 
 	def create
 		product = Product.find_by_id(group_params["product_id"])
+		product.owner.add_role 'group admin'
 
 		if params["group"]["additional_seller_attributes"].present?
 	    params["group"]["additional_seller_attributes"].each do |additional_seller|
@@ -110,6 +111,7 @@ class Dashboard::GroupsController < ApplicationController
 
 	def update
 		product = Product.find_by_id(group_params["product_id"])
+		product.owner.add_role 'group admin'
 
 		if params["group"]["additional_seller_attributes"].present?
 	    params["group"]["additional_seller_attributes"].each do |additional_seller|
@@ -156,6 +158,28 @@ class Dashboard::GroupsController < ApplicationController
     group = Group.find_by_id(params["id"])
     group.destroy
 		redirect_to dashboard_groups_path
+  end
+
+  def change_visibility_of_member
+  	product = Product.find_by_id(params[:product_id])
+		user = User.find_by_id(params["user_id"])
+		group_seller = GroupSeller.find_by_id(params["group_seller_id"])
+		private_seller = params["private_seller"] == "0" ? true : false
+		total_sellers_in_group = product.group.group_sellers.count
+		if private_seller == true
+			count = 0
+			product.group.group_sellers.each do |group_seller|
+				if group_seller.private_seller == true
+					count = count + 1
+				end
+			end
+		end
+		if private_seller == true && total_sellers_in_group - count == 1
+			flash[:error] = "You cannot change your visibility option, as all of the other group members are private. There needs to be ateast one public member in a group."
+		else
+			group_seller.update_attribute(:private_seller, private_seller)
+		end
+		redirect_to dashboard_group_path(group_seller.group.id)
   end
 
 	private

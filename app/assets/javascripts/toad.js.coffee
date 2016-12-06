@@ -491,6 +491,15 @@ $(document).ready ->
       return
     return
 
+  $('.iCheck-helper').click ->
+    if this.parentElement.classList.contains("checked")
+      this.parentElement.firstChild.value=0
+    else
+      this.parentElement.firstChild.value=1
+      
+    $('form#'+ this.parentNode.parentElement.id).submit()
+    return
+
   validator = $('form.create_fly_buy_profile').validate(
                 rules:
                   "fly_buy_profile[company_email]":
