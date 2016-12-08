@@ -25,6 +25,8 @@ Toad::Application.routes.draw do
     post :confirm_inspection_date_by_seller
     get :complete_inspection
     get :release_payment
+    get :release_payment_to_additional_sellers_not_possible
+    get :release_payment_to_additional_sellers
     post :place_order
     post :confirm_order_placed
     get :resend_wire_instruction

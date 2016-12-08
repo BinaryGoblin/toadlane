@@ -156,6 +156,7 @@ class UserMailer < ActionMailer::Base
     mail to: @seller.email, subject: "Payment released by #{@buyer.name} for order #{@order.id}"
   end
 
+
   def send_order_queued_notification_to_seller(order)
     @order = order
     @seller = order.seller
@@ -322,5 +323,22 @@ class UserMailer < ActionMailer::Base
     @user = user
 
     mail to: @user.email, subject: "Group marked verified"
+  end
+
+  def release_payment_not_possible_notification_to_additional_seller(fly_buy_order, add_seller)
+    @fly_buy_order = fly_buy_order
+    @product = @fly_buy_order.product
+    @group = @fly_buy_order.seller_group
+    @add_seller = add_seller
+    @fly_buy_profile = @add_seller.fly_buy_profile
+
+    mail to: @add_seller.email, subject: "Release Payment not possible"
+  end
+
+  def send_payment_release_to_additional_seller(order, additional_seller)
+    @order = order
+    @additional_seller = additional_seller
+
+    mail to: @additional_seller.email, subject: "Payment released by #{@order.seller.name} for order #{@order.id}"
   end
 end

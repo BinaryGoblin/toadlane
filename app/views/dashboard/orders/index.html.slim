@@ -70,10 +70,20 @@
                   = link_to 'Complete Inspection', fly_buy_order_complete_inspection_path(order.id), class: 'view'
                 - elsif order.inspected && order.status == 'placed' && order.funds_in_escrow == true
                   = link_to 'Release Payment', fly_buy_order_release_payment_path(order.id), class: 'view'
-                - elsif order.payment_release == true
+                - elsif order.payment_release == true && order.status == 'completed'
                   span.label
                     | Payment Released
-                | -
+              - elsif order.seller == current_user && order.status == 'completed'&& order.instance_of?(FlyBuyOrder) && order.payment_release == true
+                - if order.seller_group.present?
+                  - if order.additional_sellers_account_created_verified? == false
+                    = link_to 'Release Payment To Additional Sellers', '#modal_release_payment_info_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
+                  - else
+                    = link_to 'Release Payment To Additional Sellers', fly_buy_order_release_payment_to_additional_sellers_path(order.id), class: 'view'
+                - else
+                  = link_to 'Release Payment To Additional Sellers', fly_buy_order_release_payment_to_additional_sellers_path(order.id), class: 'view'
+              - elsif order.seller == current_user && order.payment_released_to_group == true
+                  span.label
+                    | Payment Released To Group
               - else
                 | -
             td.text-center
@@ -107,6 +117,7 @@
                 = order.selected_inspection_date.get_inspection_date
 
           = render partial: 'dashboard/orders/cancel_transaction_pop_up', locals: { order: order}
+          = render partial: 'dashboard/orders/release_payment_group_seller_flybuy_account_not_created', locals: { order: order}
 .footer-actions: .fa-container: .wrap-sm
 
 = render partial: '/shared/order', collection: @orders

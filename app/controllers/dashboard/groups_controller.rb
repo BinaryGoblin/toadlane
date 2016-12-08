@@ -146,7 +146,7 @@ class Dashboard::GroupsController < ApplicationController
 	      if params["group"]["additional_seller_delete"].present?
 	      	params["group"]["additional_seller_delete"].each do |group_seller_id|
 	      		group_seller = GroupSeller.find_by_id(group_seller_id)
-	      		group_seller.destroy
+	      		group_seller.destroy if group_seller.present?
 	      	end
 	      end
 	    end
@@ -156,7 +156,7 @@ class Dashboard::GroupsController < ApplicationController
 
 	def destroy
     group = Group.find_by_id(params["id"])
-    group.destroy
+    group.destroy if group.present?
 		redirect_to dashboard_groups_path
   end
 

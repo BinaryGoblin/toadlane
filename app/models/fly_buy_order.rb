@@ -2,30 +2,31 @@
 #
 # Table name: fly_buy_orders
 #
-#  id                     :integer          not null, primary key
-#  buyer_id               :integer
-#  seller_id              :integer
-#  product_id             :integer
-#  status                 :integer
-#  unit_price             :float
-#  count                  :integer
-#  fee                    :float
-#  rebate                 :float
-#  rebate_price           :float
-#  total                  :float
-#  status_change          :datetime
-#  deleted                :boolean          default(FALSE)
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#  synapse_escrow_node_id :string
-#  synapse_transaction_id :string
-#  inspection_complete    :boolean          default(FALSE)
-#  payment_release        :boolean          default(FALSE)
-#  funds_in_escrow        :boolean          default(FALSE)
-#  seller_fees_percent    :float
-#  seller_fees_amount     :float
-#  group_seller_id        :integer
-#  group_seller           :boolean          default(FALSE)
+#  id                        :integer          not null, primary key
+#  buyer_id                  :integer
+#  seller_id                 :integer
+#  product_id                :integer
+#  status                    :integer
+#  unit_price                :float
+#  count                     :integer
+#  fee                       :float
+#  rebate                    :float
+#  rebate_price              :float
+#  total                     :float
+#  status_change             :datetime
+#  deleted                   :boolean          default(FALSE)
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  synapse_escrow_node_id    :string
+#  synapse_transaction_id    :string
+#  inspection_complete       :boolean          default(FALSE)
+#  payment_release           :boolean          default(FALSE)
+#  funds_in_escrow           :boolean          default(FALSE)
+#  seller_fees_percent       :float
+#  seller_fees_amount        :float
+#  group_seller_id           :integer
+#  group_seller              :boolean          default(FALSE)
+#  payment_released_to_group :boolean          default(FALSE)
 #
 
 class FlyBuyOrder < ActiveRecord::Base
@@ -48,11 +49,12 @@ class FlyBuyOrder < ActiveRecord::Base
   #  This is assuming the money has not been wired into escrow.
   ## if the money has been wired into the escrow the status of the order would be
   ##  “Pending Inspection”, and on the date of inspection the status changes to
-  ###  “Pending Fund Release”, and then the final status should be “Placed”.
+  ###  “Pending Fund Release”, and then the final status should be “Completed”.
 
   enum status: [ :cancelled, :placed, :completed, :refunded,
                 :processing, :pending_confirmation, :pending_inspection, :pending_fund_release,
-                :processing_fund_release, :queued ]
+                :processing_fund_release, :queued, :processing_fund_release_to_group,
+                :payment_released_to_group]
 
   def seller_not_mark_approved
     inspection_dates.buyer_added.not_marked_approved.last
@@ -94,5 +96,15 @@ class FlyBuyOrder < ActiveRecord::Base
 
   def get_toadlane_fee
     Fee.find_by(:module_name => "Fly & Buy").value
+  end
+
+  def additional_sellers_account_created_verified?
+    product.additional_sellers.each do |add_seller|
+      if add_seller.fly_buy_profile.nil? || add_seller.fly_buy_profile_account_added? == false || add_seller.fly_buy_unverified_by_admin == true
+        false
+      else
+        true
+      end
+    end
   end
 end
