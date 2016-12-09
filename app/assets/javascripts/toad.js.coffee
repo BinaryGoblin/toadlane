@@ -236,13 +236,6 @@ $(document).ready ->
     rules:
       "group[name]":
         required: true
-      "group[product_id]":
-        required: true
-      "group[fee_percent]":
-        required: true
-        number: true
-      "group[additional_seller_ids][]":
-        required: true
     submitHandler: (form) ->
       $('form#new_group').find('input[type=submit]').prop 'disabled', true
       form.submit()

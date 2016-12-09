@@ -68,41 +68,18 @@ class Dashboard::GroupsController < ApplicationController
 	end
 
 	def create
-		product = Product.find_by_id(group_params["product_id"])
-		product.owner.add_role 'group admin'
+		if params["group"]["create_new_product"] == "true" || params["group"]["create_new_product"] == "0"
+			# render new product page with the details of group submitted
+			@product = Product.new
+      @group  = Group.new(name: params["group"]["name"], group_owner_id: current_user.id)
 
-		if params["group"]["additional_seller_attributes"].present?
-	    params["group"]["additional_seller_attributes"].each do |additional_seller|
-	      if additional_seller["user_id"].present?
-	        user = User.find_by_id(additional_seller["user_id"])
-	        if user.nil?
-	          user = User.invite!({:email => additional_seller["user_id"], :invited_by_id => current_user.id}, current_user )
-	        end
+			render "dashboard/products/new", layout: true
+		# elsif params["group"]["create_new_product"].nil?
+		# 	# a product should be selected => validation
+		# 	# # and redirect to product edit page
+		# 	redirect_to dashboard_groups_path
+		end
 
-	        already_added_as_seller = product.additional_sellers.include?(user) ? true : false
-	        
-	        product.add_additional_sellers(user)
-	        group_seller = product.group_sellers.where(user_id: user.id, product_id: product.id).first
-	        existing_group = Group.find_by_product_id(product.id)
-	        if existing_group.nil?
-	          group = Group.create(product_id: product.id, name: params["group"]["name"], group_owner_id: product.owner.id)
-	        else
-	          existing_group.update_attributes(product_id: product.id, name: params["group"]["name"])
-	          group = existing_group
-	        end
-	        user.add_role 'additional seller'
-	        group_seller.update_attribute(:group_id, group.id)
-	        AdditionalSellerFee.create(group_id: group.id, value: additional_seller["value"], group_seller_id: group_seller.id)
-	        if already_added_as_seller == false
-		        UserMailer.send_added_as_additional_seller_notification(current_user, user, product, group_seller.id).deliver_later
-		      end
-	      end
-	      # if product.group_sellers.present?
-	      #   UserMailer.send_group_created_notification_to_admin(product).deliver_later
-	      # end
-	    end
-	  end
-		redirect_to dashboard_groups_path
 	end
 
 	def edit

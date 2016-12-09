@@ -16,7 +16,7 @@ class Group < ActiveRecord::Base
 	has_many :group_sellers
 	belongs_to :owner, class_name: "User", foreign_key: :group_owner_id
 
-	attr_accessor :additional_seller_ids
+	attr_accessor :additional_seller_ids, :create_new_product
 
 	def additional_sellers
 		group_sellers.map { |group_seller| group_seller.user }

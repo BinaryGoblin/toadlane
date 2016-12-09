@@ -290,11 +290,29 @@
       .col-md-6
         .form-group
           = f.label :group_name, 'Group Name:'
-          = f.text_field :group_name, class: 'form-control', value: @product.group.present? ? @product.group.name : nil
+          = f.text_field :group_name, class: 'form-control', value: @product.group.present? ? @product.group.name : @group.name
 
     label.lg Add Additional Seller:
     ul.sellergroups
-      - if @product.group.present?
+      - if params["group"].present?
+        - params["group"]["additional_seller_attributes"].each_with_index do |seller, index|
+          li.sellergroup
+            .index= index+1
+            .form-group.add-seller-block.select-seller-group
+              label Add Additional Seller:
+              = f.collection_select :additional_seller_ids,
+                get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
+                { include_blank: true, selected: seller['user_id'] }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
+              
+            .form-group.set-commision
+              label set per unit commission:
+              = f.number_field :value, class: 'form-control set-commission-text-box', :name =>"product[additional_seller_attributes][][value]", :id => "product[additional_seller_attributes][][value]"
+
+            input type="hidden" name="product[additional_seller_attributes][][id]" value="#{seller['user_id']}"
+
+            span.btn.btn-default.remove= fa_icon 'trash-o'
+            .hide: input type="checkbox" name="product[additional_seller_delete][]" value="#{seller['user_id']}"
+      - elsif @product.group.present?
         - @product.group_sellers.each_with_index do |seller, index|
           li.sellergroup
             .index= index+1
@@ -312,6 +330,7 @@
 
             span.btn.btn-default.remove= fa_icon 'trash-o'
             .hide: input type="checkbox" name="product[additional_seller_delete][]" value="#{seller.id}"
+
 
       - else
         li.sellergroup
