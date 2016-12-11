@@ -229,9 +229,8 @@ class User < ActiveRecord::Base
     ap << Product::PaymentOptions[:green] if green_profile.present?
     ap << Product::PaymentOptions[:amg] if amg_profile.present?
     ap << Product::PaymentOptions[:emb] if emb_profile.present?
-    if fly_buy_profile_account_added? && fly_buy_verified_by_admin?
-      ap << Product::PaymentOptions[:fly_buy]
-    end
+    ap << Product::PaymentOptions[:fly_buy]
+
     ap
   end
 
