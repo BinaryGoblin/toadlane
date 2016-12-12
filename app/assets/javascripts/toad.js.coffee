@@ -251,6 +251,47 @@ $(document).ready ->
     $('#fly_buy_profile_fingerprint').val(result)
     return
 
+  $('#group_product_id').change ->
+    $('.error-message').html('')
+    checkSelectedDataForGroup()
+
+  $('.new_group .iCheck-helper, .edit_group .iCheck-helper').click ->
+    $('.error-message').html('')
+    checkSelectedDataForGroup()
+
+  checkSelectedDataForGroup = ->
+    if $('.group-submit-btn').is(":disabled") == true
+      if $('#group_create_new_product:checked').length == 0
+        $('.group-submit-btn').prop 'disabled', false
+      else if $('#group_create_new_product:checked').length == 0 && $('#group_product_id').val() != "" ||
+      $('#group_create_new_product:checked').length == 1 && $('#group_product_id').val() == ""
+        $('.group-submit-btn').prop 'disabled', false
+        $('form.new_group, form.edit_group').submit()
+      else
+        $('.group-submit-btn').prop 'disabled', true
+        $('.error-message').html('You can either select a product or create new product.')
+    else if $('.group-submit-btn').is(":disabled") == true
+      if $('#group_create_new_product:checked').length == 0 && $('#group_product_id').val() != "" ||
+      $('#group_create_new_product:checked').length == 1 && $('#group_product_id').val() == ""
+        $('.group-submit-btn').prop 'disabled', false
+        $('form.new_group, form.edit_group').submit()
+      else
+        $('.error-message').html('You can either select a product or create new product.')
+        $('.group-submit-btn').prop 'disabled', true
+
+
+  $('.group-submit-btn').click ->
+    if $('#group_create_new_product:checked').length == 0 && $('#group_product_id').val() != "" ||
+    $('#group_create_new_product:checked').length == 1 && $('#group_product_id').val() == ""
+      $(this).prop 'disabled', false
+      $('form.new_group, form.edit_group').submit()
+    else if $('#group_create_new_product:checked').length == 0 && $('#group_product_id').val() == ""
+      $(this).prop 'disabled', true
+      $('.error-message').html('You have to select a product or create new product.')
+    else
+      $('.error-message').html('You can either select a product or create new product.')
+      $(this).prop 'disabled', true
+
   $('.product_new').ready ->
     $('#product_inspection_date_attributes__date_1i').change ->
       month_select_block = $(this)[0].id
@@ -484,7 +525,7 @@ $(document).ready ->
       return
     return
 
-  $('.iCheck-helper').click ->
+  $('.group-table .iCheck-helper').click ->
     if this.parentElement.classList.contains("checked")
       this.parentElement.firstChild.value=0
     else
