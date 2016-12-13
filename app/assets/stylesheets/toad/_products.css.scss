@@ -546,6 +546,10 @@ $sell-color: #FF8724;
       margin-left: 3%;
       height: 96px;
       float: left;
+
+      .offer-date {
+        width: 215px;
+      }
     }
   }
 
@@ -985,7 +989,7 @@ $sell-color: #FF8724;
 
   .offer-date {
     margin-right: 20px;
-    width: 220px;
+    width: 240px;
 
     .selectize-control {
       float: left;

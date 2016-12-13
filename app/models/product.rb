@@ -81,7 +81,7 @@ class Product < ActiveRecord::Base
   accepts_nested_attributes_for :pricebreaks, :reject_if => :all_blank
 
   validates_numericality_of :unit_price, :amount, only_integer: false, greater_than: 0, less_than: 1000000
-  validates_presence_of :end_date, :status_characteristic
+  validates_presence_of :end_date, :status_characteristic, :name
   validates_presence_of :shipping_estimates, if: :default_payment_not_flybuy
   # searchkick autocomplete: ['name'], fields: [:name, :main_category]
   searchkick word_start: ['name'], fields: [:name, :description]

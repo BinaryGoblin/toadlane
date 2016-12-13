@@ -198,29 +198,30 @@
                 input type="file" name="product[videos_attributes][]" accept="video/*, video/3gpp, .mkv, video/x-flv, video/3gpp2, video/mpeg, .m2v"
     hr
     .row
-      .col-md-6
+      .col-md-12
         .offer-from-until
           .offer-item
             label.lg.required OFFER valid from:
 
             .offer-date
               label Date:
-              = date_select :product, :start_date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+              = date_select :product, :start_date, { order: [:month, :day, :year] }, { class: "form-control" , data: {current_date: Date.today}}
+              p.product-start-date-error
 
             .offer-time
               label Time:
-              = time_select :product, :start_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+              = time_select :product, :start_date, { ignore_date: true, minute_step: 10 }, { class: "form-control" }
 
           .offer-item
             label.lg.required OFFER valid until:
 
             .offer-date
               label Date:
-              = date_select :product, :end_date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+              = date_select :product, :end_date, { order: [:month, :day, :year] }, { class: "form-control" }
 
             .offer-time
               label Time:
-              = time_select :product, :end_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+              = time_select :product, :end_date, { ignore_date: true, minute_step: 10 }, { class: "form-control" }
     hr
     .price-stock.clearfix
       .unit
@@ -290,7 +291,7 @@
       .col-md-6
         .form-group
           = f.label :group_name, 'Group Name:'
-          = f.text_field :group_name, class: 'form-control', value: @product.group.present? ? @product.group.name : @group.name
+          = f.text_field :group_name, class: 'form-control', value: @product.group.present? ? @product.group.name : @group.try(:name)
 
     label.lg Add Additional Seller:
     ul.sellergroups
@@ -340,7 +341,7 @@
             label Add Additional Seller:
             = f.collection_select :additional_seller_ids,
                   get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
-                    { include_blank: true, selected: @group.additional_sellers.present? ? @group.additional_sellers.map(&:id) : nil }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
+                    { include_blank: true, selected: @group.try(:additional_sellers).present? ? @group.additional_sellers.map(&:id) : nil }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
               
 
           .form-group.set-commision

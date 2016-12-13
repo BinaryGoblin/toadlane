@@ -147,6 +147,17 @@ $(document).ready ->
     @optional(element) or (element.files[0].size <= mult_param)
   ), 'File size must be less than {0} MB'
 
+  jQuery.validator.addMethod 'check_product_start_date', ((value, element) ->
+    selected_month = parseInt($('#product_start_date_2i').val())
+    selected_date = parseInt($('#product_start_date_3i').val())
+    selected_year = parseInt($('#product_start_date_1i').val())
+    current_date = new Date()
+
+    user_selected_date = new Date(selected_year, selected_month - 1, selected_date, 0, 0, 0, 0)
+
+    return user_selected_date > current_date 
+  ), 'Please enter date greater than today.'
+
   $('select#green_order_address_country').change (event) ->
     select_wrapper = $('.order_state_code_wrapper')
 
@@ -251,9 +262,31 @@ $(document).ready ->
 
   $('form.product_form_partial').validate
     rules:
+      "product[name]":
+        required: true
       "product[videos_attributes][]":
         required: false
         filesize: 5
+      "product[start_date(2i)]":
+        required: true
+        check_product_start_date: true
+    messages:
+      "product[start_date(2i)]":
+        remote: "The start date cannot be past date."
+    errorPlacement: (error, element) ->
+      # this is done for displaying the error message for Product Start Date
+      # # below the start date select boxes
+      if element.attr('name') == "product[start_date(2i)]"
+        $('#product_start_date_3i').addClass('error')
+        $('#product_start_date_1i').addClass('error')
+        error.appendTo('.product-start-date-error')
+      else
+        error.insertAfter element
+      return
+    submitHandler: (form) ->
+      $('form.product_form_partial').find('input[type=submit]').prop 'disabled', true
+      form.submit()
+      return
 
   (new Fingerprint2).get (result) ->
     $('#fly_buy_profile_fingerprint').val(result)
