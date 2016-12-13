@@ -205,12 +205,12 @@
 
             .offer-date
               label Date:
-              = date_select :product, :start_date, { order: [:month, :day, :year] }, { class: "form-control" , data: {current_date: Date.today}}
+              = date_select :product, :start_date, {  order: [:month, :day, :year] }, { class: "form-control" , data: {current_date: Date.today}}
               p.product-start-date-error
 
             .offer-time
               label Time:
-              = time_select :product, :start_date, { ignore_date: true, minute_step: 10 }, { class: "form-control" }
+              = time_select :product, :start_date, { :ampm => true, ignore_date: true, minute_step: 10 }, { class: "form-control" }
 
           .offer-item
             label.lg.required OFFER valid until:
@@ -221,7 +221,7 @@
 
             .offer-time
               label Time:
-              = time_select :product, :end_date, { ignore_date: true, minute_step: 10 }, { class: "form-control" }
+              = time_select :product, :end_date, { :ampm => true, ignore_date: true, minute_step: 10 }, { class: "form-control" }
     hr
     .price-stock.clearfix
       .unit
