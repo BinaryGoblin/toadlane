@@ -4,6 +4,12 @@
 
 = form_for @group, url: dashboard_group_path(@group.id), method: "put" do |f|
   .wrap-sm: .product-form
+  	- if @group.errors.any?
+      .error-explanation
+        h5= "Error:"
+        ul
+          - @group.errors.full_messages.each do |message|
+            li = message
     = render partial: 'dashboard/groups/group_form', locals: { group: @group, f: f}
   
   .footer-actions: .fa-container: .wrap-sm

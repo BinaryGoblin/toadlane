@@ -84,6 +84,7 @@ Toad::Application.routes.draw do
         get :reject_deal
         post :assign_role
         post :change_visibility_of_member
+        get :validate_group_name, as: :validate_group_name
       end
     end
 

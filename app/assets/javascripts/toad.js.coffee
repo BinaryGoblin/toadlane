@@ -236,6 +236,14 @@ $(document).ready ->
     rules:
       "group[name]":
         required: true
+        remote:
+          url: "/dashboard/groups/validate_group_name"
+          type: "GET"
+          data:
+            group_name: $("#group_name").val()
+    messages:
+      "group[name]":
+        remote: "This group name has already been taken."
     submitHandler: (form) ->
       $('form#new_group').find('input[type=submit]').prop 'disabled', true
       form.submit()

@@ -88,9 +88,9 @@ class Dashboard::ProductsController < DashboardController
               group_seller = @product.group_sellers.where(user_id: user.id, product_id: @product.id).first
               existing_group = Group.find_by_product_id(@product.id)
               if existing_group.nil?
-                group = Group.create(product_id: @product.id, name: params["product"]["group_name"], group_owner_id: @product.owner.id)
+                group = Group.create(product_id: @product.id, name: params["product"]["group_name"].downcase, group_owner_id: @product.owner.id)
               else
-                existing_group.update_attributes(product_id: @product.id, name: params["product"]["group_name"])
+                existing_group.update_attributes(product_id: @product.id, name: params["product"]["group_name"].downcase)
                 group = existing_group
               end
               user.add_role 'additional seller'
@@ -251,9 +251,9 @@ class Dashboard::ProductsController < DashboardController
               group_seller = @product.group_sellers.where(user_id: user.id, product_id: @product.id).first
               existing_group = Group.find_by_product_id(@product.id)
               if existing_group.nil?
-                group = Group.create(product_id: @product.id, name: params["product"]["group_name"], group_owner_id: @product.owner.id)
+                group = Group.create(product_id: @product.id, name: params["product"]["group_name"].downcase, group_owner_id: @product.owner.id)
               else
-                existing_group.update_attributes(product_id: @product.id, name: params["product"]["group_name"])
+                existing_group.update_attributes(product_id: @product.id, name: params["product"]["group_name"].downcase)
                 group = existing_group
               end
               user.add_role 'additional seller'

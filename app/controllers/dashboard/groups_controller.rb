@@ -68,21 +68,24 @@ class Dashboard::GroupsController < ApplicationController
 	end
 
 	def create
-		if params["group"]["create_new_product"] == "true" || params["group"]["create_new_product"] == "0"
-			# render new product page with the details of group submitted
-			@product = Product.new
-      @group  = Group.new(name: params["group"]["name"], group_owner_id: current_user.id)
+    @group  = Group.new(name: params["group"]["name"].downcase, group_owner_id: current_user.id)
 
-			render "dashboard/products/new", layout: true
-		elsif params["group"]["create_new_product"].nil? && params["group"]["product_id"].present?
-			# a product should be selected => validation
-			# # and redirect to product edit page
-			@product = Product.find_by_id(group_params["product_id"])
-      @group  = Group.new(name: params["group"]["name"], group_owner_id: current_user.id)
+    if @group.valid?
+			if params["group"]["create_new_product"] == "true" || params["group"]["create_new_product"] == "0"
+				# render new product page with the details of group submitted
+				@product = Product.new
 
-			render "dashboard/products/edit", layout: true
+				render "dashboard/products/new", layout: true
+			elsif params["group"]["create_new_product"].nil? && params["group"]["product_id"].present?
+				# a product should be selected => validation
+				# # and redirect to product edit page
+				@product = Product.find_by_id(group_params["product_id"])
+
+				render "dashboard/products/edit", layout: true
+			end
+		else
+			render action: 'new'
 		end
-
 	end
 
 	def edit
@@ -90,6 +93,7 @@ class Dashboard::GroupsController < ApplicationController
 	end
 
 	def update
+		@group = Group.find(params["id"])
 		if params["group"]["additional_seller_delete"].present?
     	params["group"]["additional_seller_delete"].each do |group_seller_id|
     		group_seller = GroupSeller.find_by_id(group_seller_id)
@@ -109,14 +113,14 @@ class Dashboard::GroupsController < ApplicationController
 		if params["group"]["create_new_product"] == "true" || params["group"]["create_new_product"] == "0"
 			# render new product page with the details of group submitted
 			@product = Product.new
-      @group  = Group.new(name: params["group"]["name"], group_owner_id: current_user.id)
+      @group  = @group.update_attributes({name: params["group"]["name"].downcase, group_owner_id: current_user.id})
 
 			render "dashboard/products/new", layout: true
 		elsif params["group"]["create_new_product"].nil? && params["group"]["product_id"].present?
 			# a product should be selected => validation
 			# # and redirect to product edit page
 			@product = Product.find_by_id(group_params["product_id"])
-      @group  = Group.new(name: params["group"]["name"], group_owner_id: current_user.id)
+      @group  = @group.update_attributes({name: params["group"]["name"].downcase, group_owner_id: current_user.id})
 			
 			render "dashboard/products/edit", layout: true
 		end
@@ -148,6 +152,21 @@ class Dashboard::GroupsController < ApplicationController
 			group_seller.update_attribute(:private_seller, private_seller)
 		end
 		redirect_to dashboard_group_path(group_seller.group.id)
+  end
+
+  def validate_group_name
+		entered_group_name = params["group"]["name"].downcase
+		group = Group.find_by_name(params["group"]["name"])
+
+		if group.nil?
+			group = true
+		else
+			group = false
+		end
+
+		respond_to do |format|
+			format.json { render :json => group }
+		end
   end
 
 	private
