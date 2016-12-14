@@ -158,6 +158,18 @@ $(document).ready ->
     return user_selected_date > current_date 
   ), 'Please enter date greater than today.'
 
+  jQuery.validator.addMethod 'check_fee_exceeds_product_price', ((value, element) ->
+    product_retail_price = parseFloat($('#product_unit_price').val())
+    added_additional_sellers = $('ul.sellergroups').find('li.sellergroup .set-commission-text-box')
+    added_fee = 0
+
+    jQuery.each added_additional_sellers, (i, val) ->
+      added_fee = added_fee + parseFloat(val.value)
+      return
+
+    return added_fee < product_retail_price
+  ), "The additional seller fee exceeds the product's price."
+
   $('select#green_order_address_country').change (event) ->
     select_wrapper = $('.order_state_code_wrapper')
 
@@ -270,6 +282,8 @@ $(document).ready ->
       "product[start_date(2i)]":
         required: true
         check_product_start_date: true
+      "product[additional_seller_attributes][][value]":
+        check_fee_exceeds_product_price: true
     messages:
       "product[start_date(2i)]":
         remote: "The start date cannot be past date."
@@ -280,6 +294,12 @@ $(document).ready ->
         $('#product_start_date_3i').addClass('error')
         $('#product_start_date_1i').addClass('error')
         error.appendTo('.product-start-date-error')
+      else if element.attr('name') == "product[additional_seller_attributes][][value]"
+        added_additional_sellers = $('ul.sellergroups').find('li.sellergroup .set-commission-text-box')
+        error = error
+        jQuery.each added_additional_sellers, (i, val) ->
+          error.insertAfter val
+          return
       else
         error.insertAfter element
       return

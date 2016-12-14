@@ -294,6 +294,7 @@
           = f.text_field :group_name, class: 'form-control', value: @product.group.present? ? @product.group.name : @group.try(:name)
 
     label.lg Add Additional Seller:
+    p.warning.additional-seller-fee-exceeded-error
     ul.sellergroups
       - if params["group"].present? && params["group"]["additional_seller_attributes"].present?
         - params["group"]["additional_seller_attributes"].each_with_index do |seller, index|
