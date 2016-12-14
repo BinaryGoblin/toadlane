@@ -95,7 +95,7 @@ class Dashboard::ProductsController < DashboardController
               end
               user.add_role 'additional seller'
               group_seller.update_attributes({group_id: group.id, user_id: additional_seller["user_id"]})
-              AdditionalSellerFee.create(group_id: group.id, value: additional_seller["value"].to_f, group_seller_id: group_seller.id)
+              AdditionalSellerFee.create!(group_id: group.id, value: additional_seller["value"].to_f, group_seller_id: group_seller.id)
               UserMailer.send_added_as_additional_seller_notification(current_user, user, @product, group_seller.id).deliver_later
             end
             @product.owner.add_role 'group admin'
@@ -259,13 +259,13 @@ class Dashboard::ProductsController < DashboardController
               user.add_role 'additional seller'
               group_seller.update_attributes({group_id: group.id, user_id: additional_seller["user_id"]})
               if group_seller.additional_seller_fee.present?
-                group_seller.additional_seller_fee.update_attributes({
+                group_seller.additional_seller_fee.update_attributes!({
                   group_id: group.id,
                   value: additional_seller["value"].to_f,
                   group_seller_id: group_seller.id
                 })
               else
-                AdditionalSellerFee.create(group_id: group.id, value: additional_seller["value"].to_f, group_seller_id: group_seller.id)
+                AdditionalSellerFee.create!(group_id: group.id, value: additional_seller["value"].to_f, group_seller_id: group_seller.id)
               end
               UserMailer.send_added_as_additional_seller_notification(current_user, user, @product, group_seller.id).deliver_later
             end

@@ -148,14 +148,17 @@ $(document).ready ->
   ), 'File size must be less than {0} MB'
 
   jQuery.validator.addMethod 'check_product_start_date', ((value, element) ->
-    selected_month = parseInt($('#product_start_date_2i').val())
-    selected_date = parseInt($('#product_start_date_3i').val())
-    selected_year = parseInt($('#product_start_date_1i').val())
-    current_date = new Date()
+    if $('form.product_new').length >= 1
+      selected_month = parseInt($('#product_start_date_2i').val())
+      selected_date = parseInt($('#product_start_date_3i').val())
+      selected_year = parseInt($('#product_start_date_1i').val())
+      current_date = new Date()
 
-    user_selected_date = new Date(selected_year, selected_month - 1, selected_date, 0, 0, 0, 0)
+      user_selected_date = new Date(selected_year, selected_month - 1, selected_date, 0, 0, 0, 0)
 
-    return user_selected_date > current_date 
+      return user_selected_date > current_date
+    else
+      return true
   ), 'Please enter date greater than today.'
 
   jQuery.validator.addMethod 'check_fee_exceeds_product_price', ((value, element) ->
