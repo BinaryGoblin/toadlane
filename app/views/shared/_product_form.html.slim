@@ -327,7 +327,7 @@
               
             .form-group.set-commision
               label set per unit commission:
-              = f.number_field :value, class: 'form-control set-commission-text-box', value: seller.additional_seller_fee.value, :name =>"product[additional_seller_attributes][][value]", :id => "product[additional_seller_attributes][][value]"
+              = f.number_field :value, class: 'form-control set-commission-text-box', value: seller.additional_seller_fee.try(:value), :name =>"product[additional_seller_attributes][][value]", :id => "product[additional_seller_attributes][][value]"
 
             input type="hidden" name="product[additional_seller_attributes][][id]" value="#{seller.id}"
 
@@ -500,3 +500,5 @@
     = f.button fa_icon('save', text: 'Save & add new'), value: 'new', class: 'btn btn-default pull-right'
     = f.button fa_icon('plus', text: 'Save & stay edit'), value: 'edit', class: 'btn btn-default pull-right'
     = link_to fa_icon('trash-o', text: 'Delete this product'), dashboard_product_path(@product.id), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default pull-left' if @product.id?
+
+= render partial: '/dashboard/products/popup_to_verify_payment_as_fly_buy', locals: { product: @product}

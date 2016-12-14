@@ -77,7 +77,7 @@ class Dashboard::ProductsController < DashboardController
           @product.update_attribute(:status, false)
         end
 
-        if params["product"]["additional_seller_attributes"].present?
+        if params["product"]["additional_seller_attributes"].present? && params["product"]["default_payment"] == "Fly And Buy"
           params["product"]["additional_seller_attributes"].each do |additional_seller|
             if additional_seller["user_id"].present?
               user = User.find_by_id(additional_seller["user_id"])
@@ -240,7 +240,7 @@ class Dashboard::ProductsController < DashboardController
         unless current_user.fly_buy_profile_account_added?
           @product.update_attribute(:status, false)
         end
-        if params["product"]["additional_seller_attributes"].present?
+        if params["product"]["additional_seller_attributes"].present? && params["product"]["default_payment"] == "Fly And Buy"
           params["product"]["additional_seller_attributes"].each do |additional_seller|
             if additional_seller["user_id"].present?
               user = User.find_by_id(additional_seller["user_id"])

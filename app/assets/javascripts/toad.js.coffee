@@ -598,6 +598,25 @@ $(document).ready ->
     $('form#'+ this.parentNode.parentElement.id).submit()
     return
 
+  $('form.product_form_partial .btn-success').click (event)->
+    if $('.product_form_partial').valid() == true
+      if $('#product_default_payment').val() != "Fly And Buy"
+        event.preventDefault()
+        $('#modalPopupToVerifyPayment').modal('show')
+      else if $('#product_default_payment').val() == "Fly And Buy"
+        $('form.product_form_partial').submit()
+
+  $('#product_group_name').change ->
+    $('#product_default_payment').val("Fly And Buy")
+    $('.insert_inspection_dates').show()
+
+  $(".chosen-select, .set-commission-text-box").change ->
+    $('#product_default_payment').val("Fly And Buy")
+    $('.insert_inspection_dates').show()
+
+  $("#continueAndSave").click ->
+    $('form.product_form_partial').submit()
+
   validator = $('form.create_fly_buy_profile').validate(
                 rules:
                   "fly_buy_profile[company_email]":

@@ -19,10 +19,13 @@ class AdditionalSellerFee < ActiveRecord::Base
 		if group.present?
 			product = group.product
 			product_unit_price = product.unit_price
-			total_fee_of_additional_sellers = AdditionalSellerFee.where(group_id: group.id).sum(:value)
+			additional_sellers_except_self = AdditionalSellerFee.where(group_id: group.id).where.not(id: self.id)
+			if additional_sellers_except_self.present?
+				total_fee_of_additional_sellers = additional_sellers_except_self.sum(:value)
 
-			if total_fee_of_additional_sellers >= value
-				errors.add(:value, "The additional seller fee exceeds the product's price.")
+				if total_fee_of_additional_sellers.present? && value.present? && total_fee_of_additional_sellers.to_f >= product_unit_price
+					errors.add(:value, "The additional seller fee exceeds the product's price.")
+				end
 			end
 		end
 	end
