@@ -9,7 +9,7 @@
   .col-md-12
     label.lg Add Additional Seller:
     ul.sellergroups
-      - if group.present?
+      - if group.present? && group.group_sellers.present?
         - group.group_sellers.each_with_index do |seller, index|
           li.sellergroup
             .index= index+1
