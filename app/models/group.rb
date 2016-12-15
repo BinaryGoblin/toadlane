@@ -18,7 +18,7 @@ class Group < ActiveRecord::Base
 
 	validates_uniqueness_of :name
 
-	attr_accessor :additional_seller_ids, :create_new_product
+	attr_accessor :additional_seller_ids, :create_new_product, :role
 
 	def additional_sellers
 		group_sellers.map { |group_seller| group_seller.user }

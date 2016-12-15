@@ -150,4 +150,12 @@ module FormHelper
     end
     products
   end
+
+  def get_seller_fee_value(group_seller_id)
+    group_seller = GroupSeller.find(group_seller_id)
+
+    if group_seller.present?
+      group_seller.additional_seller_fee.value
+    end
+  end
 end

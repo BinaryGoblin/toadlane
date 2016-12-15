@@ -11,21 +11,28 @@ class Behavior.AddSeller
 
   addNewSeller: ->
     if $('form.product_form_partial').length == 1
-      product_retail_price = parseFloat($('#product_unit_price').val())
-      added_additional_sellers = $('ul.sellergroups').find('li.sellergroup .set-commission-text-box')
-      added_fee = 0
-
-      jQuery.each added_additional_sellers, (i, val) ->
-        added_fee = added_fee + parseFloat(val.value)
-        return
-
-      if added_fee > product_retail_price
-        $('form.product_form_partial').find('input[type=submit]').prop 'disabled', true
-        $('.additional-seller-fee-exceeded-error').html("The additional seller fee exceeds the product's price.")
-      else if added_fee < product_retail_price
-        $('form.product_form_partial').find('input[type=submit]').prop 'disabled', false
-        $('.additional-seller-fee-exceeded-error').html("")
+      product_retail_price = $('#product_unit_price').val()
+      if product_retail_price == ""
         @addBlock()
+      else
+        product_retail_price = parseFloat($('#product_unit_price').val())
+
+        added_additional_sellers = $('ul.sellergroups').find('li.sellergroup .set-commission-text-box')
+        added_fee = 0
+
+        jQuery.each added_additional_sellers, (i, val) ->
+          added_fee = added_fee + parseFloat(val.value)
+          return
+
+        if added_fee > product_retail_price
+          $('form.product_form_partial').find('input[type=submit]').prop 'disabled', true
+          $('.additional-seller-fee-exceeded-error').html("The additional seller fee exceeds the product's price.")
+        else if added_fee < product_retail_price
+          $('form.product_form_partial').find('input[type=submit]').prop 'disabled', false
+          $('.additional-seller-fee-exceeded-error').html("")
+          @addBlock()
+        else if added_fee == product_form_partial
+          $('.additional-seller-fee-exceeded-error').html("The additional seller fee is equal to the product's price. Now you cannot add another additional seller.")
 
     else if $('form.product_form_partial').length == 0
       @addBlock()

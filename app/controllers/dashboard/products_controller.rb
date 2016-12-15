@@ -93,15 +93,24 @@ class Dashboard::ProductsController < DashboardController
                 existing_group.update_attributes(product_id: @product.id, name: params["product"]["group_name"].downcase)
                 group = existing_group
               end
-              user.add_role 'additional seller'
+
               group_seller.update_attributes({group_id: group.id, user_id: additional_seller["user_id"]})
               AdditionalSellerFee.create!(group_id: group.id, value: additional_seller["value"].to_f, group_seller_id: group_seller.id)
+
+              selected_role = Role.find(additional_seller["role_id"])
+
+              if user.has_role?'group admin'
+                role = Role.find_by_name('group admin')
+                role.users.delete(user)
+              elsif user.has_role?'additional seller'
+                role = Role.find_by_name('additional seller')
+                role.users.delete(user)
+              end
+              user.add_role selected_role.name
+
               UserMailer.send_added_as_additional_seller_notification(current_user, user, @product, group_seller.id).deliver_later
             end
             @product.owner.add_role 'group admin'
-            # if @product.group_sellers.present?
-            #   UserMailer.send_group_created_notification_to_admin(@product).deliver_later
-            # end
           end
         end
 
@@ -256,7 +265,7 @@ class Dashboard::ProductsController < DashboardController
                 existing_group.update_attributes(product_id: @product.id, name: params["product"]["group_name"].downcase)
                 group = existing_group
               end
-              user.add_role 'additional seller'
+
               group_seller.update_attributes({group_id: group.id, user_id: additional_seller["user_id"]})
               if group_seller.additional_seller_fee.present?
                 group_seller.additional_seller_fee.update_attributes!({
@@ -267,12 +276,19 @@ class Dashboard::ProductsController < DashboardController
               else
                 AdditionalSellerFee.create!(group_id: group.id, value: additional_seller["value"].to_f, group_seller_id: group_seller.id)
               end
+              selected_role = Role.find(additional_seller["role_id"])
+
+              if user.has_role?'group admin'
+                role = Role.find_by_name('group admin')
+                role.users.delete(user)
+              elsif user.has_role?'additional seller'
+                role = Role.find_by_name('additional seller')
+                role.users.delete(user)
+              end
+              user.add_role selected_role.name
               UserMailer.send_added_as_additional_seller_notification(current_user, user, @product, group_seller.id).deliver_later
             end
             @product.owner.add_role 'group admin'
-            # if @product.group_sellers.present?
-            #   UserMailer.send_group_created_notification_to_admin(@product).deliver_later
-            # end
           end
         end
 

@@ -3,7 +3,7 @@
 .wrap-sm: .product-form: h4 New Group:
 
 = form_for @group, url: dashboard_groups_path, method: "post" do |f|
-  .wrap-sm: .product-form
+  .wrap-sm: .group-form
     - if @group.errors.any?
       .error-explanation
         h5= "Error:"

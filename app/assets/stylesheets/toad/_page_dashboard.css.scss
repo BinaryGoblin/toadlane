@@ -528,12 +528,21 @@ a.pending_confirmation_status{
     width: 155px;
   }
 }
-.product-form{
+.product-form,
+.group-form{
   ul.sellergroups{
     li.sellergroup{
       .add-additional-seller{
         width: 192px;
       }
+    }
+  }
+}
+
+.group-form{
+  .sellergroup{
+    .select-additional-seller-role{
+      width: 150px;
     }
   }
 }

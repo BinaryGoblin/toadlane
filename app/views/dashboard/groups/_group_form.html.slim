@@ -4,7 +4,6 @@
       = f.label :name, 'Group Name:', class: 'required'
       = f.text_field :name, class: 'form-control', requried: true
 
-
 .row
   .col-md-12
     label.lg Add Additional Seller:
@@ -13,12 +12,15 @@
         - group.group_sellers.each_with_index do |seller, index|
           li.sellergroup
             .index= index+1
-            .col-md-6
-              .form-group.add-additional-seller
-                label Add Additional Seller:
-                = f.collection_select :additional_seller_ids,
-                  get_all_user_except_current_added_user(current_user, group.product), :id, :label_for_select,
-                  { include_blank: true, selected: seller.user_id }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"group[additional_seller_attributes][][user_id]", :id => "group[additional_seller_attributes][][user_id]"}
+            .form-group.add-additional-seller
+              label Add Additional Seller:
+              = f.collection_select :additional_seller_ids,
+                get_all_user_except_current_added_user(current_user, group.product), :id, :label_for_select,
+                { include_blank: true, selected: seller.user_id }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"group[additional_seller_attributes][][user_id]", :id => "group[additional_seller_attributes][][user_id]"}
+
+            .form-group.select-additional-seller-role
+              = f.label :role, 'Role:'
+              = f.select :role, options_for_select(Role.where(name: ['group admin', 'additional seller']).collect{ |role| [role.name, role.id] }, :selected => get_selected_role(seller.user) ), {}, class: 'form-control', :name =>"group[additional_seller_attributes][][role_id]", :id => "group[additional_seller_attributes][][role_id]"
               
             input type="hidden" name="group[additional_seller_attributes][][id]" value="#{seller.id}"
 
@@ -28,12 +30,15 @@
       - else
         li.sellergroup
           .index 1
-          .col-md-6
-            .form-group.add-additional-seller
-              label Add Additional Seller:
-              = f.collection_select :additional_seller_ids,
-                    get_all_user_except_current_added_user(current_user, group.product), :id, :label_for_select,
-                    { include_blank: true, selected: group.additional_sellers.present? ? group.additional_sellers.map(&:id) : nil }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"group[additional_seller_attributes][][user_id]", :id => "group[additional_seller_attributes][][user_id]"}
+          .form-group.add-additional-seller
+            label Add Additional Seller:
+            = f.collection_select :additional_seller_ids,
+                  get_all_user_except_current_added_user(current_user, group.product), :id, :label_for_select,
+                  { include_blank: true, selected: group.additional_sellers.present? ? group.additional_sellers.map(&:id) : nil }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"group[additional_seller_attributes][][user_id]", :id => "group[additional_seller_attributes][][user_id]"}
+
+          .form-group.select-additional-seller-role
+            = f.label :role, 'Role:'
+            = f.select :role, options_for_select(Role.where(name: ['group admin', 'additional seller']).collect{ |role| [role.name, role.id] }, :selected => Role.find_by_name('additional seller').name), {}, class: 'form-control', :name =>"group[additional_seller_attributes][][role_id]", :id => "group[additional_seller_attributes][][role_id]"
               
           span.btn.btn-default.remove= fa_icon 'trash-o'
 
@@ -42,12 +47,15 @@
     script#template-addseller type="text/template"
       li.sellergroup
         .index 1
-        .col-md-6
-          .form-group.add-additional-seller
-            label Add Additional Seller:
-            = f.collection_select :additional_seller_ids,
-                  get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
-                  { include_blank: true}, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"group[additional_seller_attributes][][user_id]", :id => "group[additional_seller_attributes][][user_id]"}
+        .form-group.add-additional-seller
+          label Add Additional Seller:
+          = f.collection_select :additional_seller_ids,
+                get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
+                { include_blank: true}, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"group[additional_seller_attributes][][user_id]", :id => "group[additional_seller_attributes][][user_id]"}
+
+        .form-group.select-additional-seller-role
+          = f.label :role, 'Role:'
+          = f.select :role, Role.where(name: ['group admin', 'additional seller']).collect{ |role| [role.name, role.id] }, {}, class: 'form-control', :name =>"group[additional_seller_attributes][][role_id]", :id => "group[additional_seller_attributes][][role_id]"
               
         span.btn.btn-default.remove= fa_icon 'trash-o'
 br

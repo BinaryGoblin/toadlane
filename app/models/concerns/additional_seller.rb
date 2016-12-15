@@ -3,7 +3,7 @@ module AdditionalSeller
 	extend ActiveSupport::Concern
 	
 	included do 
-	  attr_accessor :additional_seller_ids, :group_name, :value
+	  attr_accessor :additional_seller_ids, :group_name, :value, :role
 
 		has_many :users, through: :group_sellers
   	has_many :group_sellers

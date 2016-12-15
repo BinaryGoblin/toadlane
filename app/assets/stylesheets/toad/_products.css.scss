@@ -418,7 +418,7 @@ $sell-color: #FF8724;
   }
 }
 
-.product-form {
+.product-form, .group-form {
   h4 {
     line-height: 1;
     font-size: 20px;
@@ -1127,11 +1127,23 @@ $sell-color: #FF8724;
   color: red;
 }
 
-.product-form .sellergroups .sellergroup{
+.product-form .sellergroups .sellergroup,
+.group-form .sellergroups .sellergroup {
   .set-commision{
     width: 147px;
   }
   .select-seller-group{
     width: 190px;
+  }
+}
+
+.product-form {
+  .sellergroups{
+    li {
+      width: 65%;
+    }
+    .select-additional-seller-role{
+      width: 150px;
+    }
   }
 }
