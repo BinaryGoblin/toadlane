@@ -1,4 +1,26 @@
-.wrap
+
+= render '/shared/tabs'
+
+.wrap.internalWrapper 
+
+  .miniDashboard
+    .subSection
+      span.subSectionCount $1,234
+      span.subsectionDetail Earned
+    
+    .subSection
+      span.subSectionCount 0
+      span.subsectionDetail Available Products
+        
+    .subSection
+      span.subSectionCount 12
+      span.subsectionDetail Orders Pending
+      
+    .subSection
+      span.subSectionCount.productViewCount 44
+      span.subsectionDetail Product Views
+      
+  
   .carousel-product-title
     h3 Recommended
     .actions

@@ -1,5 +1,4 @@
 .wrap {
-  margin: auto;
   max-width: $wrap-width-default;
   padding: 0 15px;
   position: relative;
@@ -8,6 +7,9 @@
 
 .wrap-sm {
   max-width: $wrap-width-small;
+  float:right;
+  width:85%;
+  padding-top:30px;
   @extend .wrap;
 }
 
