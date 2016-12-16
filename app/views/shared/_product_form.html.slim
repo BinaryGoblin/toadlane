@@ -303,9 +303,14 @@
               .index= index+1
               .form-group.add-seller-block.select-seller-group
                 label Add Additional Seller:
-                = f.collection_select :additional_seller_ids,
+                - if seller["user_id"].include? '@'
+                  = f.collection_select :additional_seller_ids,
                   get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
-                  { include_blank: true, selected: seller['user_id'] }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
+                  { include_blank: true, selected: User.find_by_email(seller["user_id"]).id }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
+                - else
+                  = f.collection_select :additional_seller_ids,
+                    get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
+                    { include_blank: true, selected: seller['user_id'] }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
 
               .form-group.set-commision
                 label set per unit commission:

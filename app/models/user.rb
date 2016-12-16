@@ -266,6 +266,8 @@ class User < ActiveRecord::Base
   def label_for_select
     if name && company.present?
       name + ", " + company
+    else name.present?
+      name
     end
   end
 

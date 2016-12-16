@@ -71,6 +71,14 @@ class Dashboard::GroupsController < ApplicationController
     @group  = Group.new(name: params["group"]["name"].downcase, group_owner_id: current_user.id)
 
     if @group.valid?
+    	params["group"]["additional_seller_attributes"].each do |additional_seller|
+        if additional_seller["user_id"].present?
+          user = User.find_by_id(additional_seller["user_id"])
+          if user.nil? && additional_seller["user_id"].include?('@')
+            user = User.invite!({:email => additional_seller["user_id"], :invited_by_id => current_user.id, :name => additional_seller["user_id"].split("@").first}, current_user )
+          end
+        end
+      end
 			if params["group"]["create_new_product"] == "true" || params["group"]["create_new_product"] == "0"
 				# render new product page with the details of group submitted
 				@product = Product.new
@@ -110,6 +118,16 @@ class Dashboard::GroupsController < ApplicationController
     		params["group"]["additional_seller_attributes"].first["id"]== params["group"]["additional_seller_delete"].first
     	end
     end
+
+    params["group"]["additional_seller_attributes"].each do |additional_seller|
+      if additional_seller["user_id"].present?
+        user = User.find_by_id(additional_seller["user_id"])
+        if user.nil? && additional_seller["user_id"].include?('@')
+          user = User.invite!({:email => additional_seller["user_id"], :invited_by_id => current_user.id, :name => additional_seller["user_id"].split("@").first}, current_user )
+        end
+      end
+    end
+
 		if params["group"]["create_new_product"] == "true" || params["group"]["create_new_product"] == "0"
 			# render new product page with the details of group submitted
 			@product = Product.new

@@ -81,9 +81,10 @@ class Dashboard::ProductsController < DashboardController
           params["product"]["additional_seller_attributes"].each do |additional_seller|
             if additional_seller["user_id"].present?
               user = User.find_by_id(additional_seller["user_id"])
-              if user.nil?
-                user = User.invite!({:email => additional_seller["user_id"], :invited_by_id => current_user.id}, current_user )
+              if user.nil? && additional_seller["user_id"].include?('@')
+                user = User.invite!({:email => additional_seller["user_id"], :invited_by_id => current_user.id, :name => additional_seller["user_id"].split("@").first}, current_user )
               end
+              already_added_as_seller = @product.additional_sellers.include?(user) ? true : false
               @product.add_additional_sellers(user)
               group_seller = @product.group_sellers.where(user_id: user.id, product_id: @product.id).first
               existing_group = Group.find_by_product_id(@product.id)
@@ -108,7 +109,9 @@ class Dashboard::ProductsController < DashboardController
               end
               user.add_role selected_role.name
 
-              UserMailer.send_added_as_additional_seller_notification(current_user, user, @product, group_seller.id).deliver_later
+              if already_added_as_seller == false
+                UserMailer.send_added_as_additional_seller_notification(current_user, user, @product, group_seller.id).deliver_later
+              end
             end
             @product.owner.add_role 'group admin'
           end
@@ -253,9 +256,10 @@ class Dashboard::ProductsController < DashboardController
           params["product"]["additional_seller_attributes"].each do |additional_seller|
             if additional_seller["user_id"].present?
               user = User.find_by_id(additional_seller["user_id"])
-              if user.nil?
-                user = User.invite!({:email => additional_seller["user_id"], :invited_by_id => current_user.id}, current_user )
+              if user.nil? && additional_seller["user_id"].include?('@')
+                user = User.invite!({:email => additional_seller["user_id"], :invited_by_id => current_user.id, :name => additional_seller["user_id"].split("@").first}, current_user )
               end
+              already_added_as_seller = @product.additional_sellers.include?(user) ? true : false
               @product.add_additional_sellers(user)
               group_seller = @product.group_sellers.where(user_id: user.id, product_id: @product.id).first
               existing_group = Group.find_by_product_id(@product.id)
@@ -286,7 +290,9 @@ class Dashboard::ProductsController < DashboardController
                 role.users.delete(user)
               end
               user.add_role selected_role.name
-              UserMailer.send_added_as_additional_seller_notification(current_user, user, @product, group_seller.id).deliver_later
+              if already_added_as_seller == false
+                UserMailer.send_added_as_additional_seller_notification(current_user, user, @product, group_seller.id).deliver_later
+              end
             end
             @product.owner.add_role 'group admin'
           end
