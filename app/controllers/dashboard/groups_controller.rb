@@ -55,8 +55,8 @@ class Dashboard::GroupsController < ApplicationController
 		if user.has_role?'group admin'
 			role = Role.find_by_name('group admin')
 			role.users.delete(user)
-		elsif user.has_role?'additional seller'
-			role = Role.find_by_name('additional seller')
+		elsif user.has_role?'seller'
+			role = Role.find_by_name('seller')
 			role.users.delete(user)
 		end
 		user.add_role selected_role.name

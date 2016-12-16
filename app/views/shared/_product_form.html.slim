@@ -313,7 +313,7 @@
 
               .form-group.select-additional-seller-role
                 = f.label :role, 'Role:'
-                = f.select :role, options_for_select(Role.where(name: ['group admin', 'additional seller']).collect{ |role| [role.name, role.id] }, :selected => seller["role_id"]), {prompt: 'Select a role type'}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]", :id => "product[additional_seller_attributes][][role_id]"
+                = f.select :role, options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |role| [role.name, role.id] }, :selected => seller["role_id"]), {prompt: 'Select a role type'}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]", :id => "product[additional_seller_attributes][][role_id]"
 
               input type="hidden" name="product[additional_seller_attributes][][id]" value="#{seller['user_id']}"
 
@@ -335,7 +335,7 @@
 
             .form-group.select-additional-seller-role
               = f.label :role, 'Role:'
-              = f.select :role, options_for_select(Role.where(name: ['group admin', 'additional seller']).collect{ |role| [role.name, role.id] }, :selected => get_selected_role(seller.user)), {}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]", :id => "product[additional_seller_attributes][][role_id]"
+              = f.select :role, options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |role| [role.name, role.id] }, :selected => get_selected_role(seller.user)), {}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]", :id => "product[additional_seller_attributes][][role_id]"
 
             input type="hidden" name="product[additional_seller_attributes][][id]" value="#{seller.id}"
 
@@ -359,7 +359,7 @@
 
           .form-group.select-additional-seller-role
             = f.label :role, 'Role:'
-            = f.select :role, options_for_select(Role.where(name: ['group admin', 'additional seller']).collect{ |role| [role.name, role.id] }, :selected => Role.find_by_name('additional seller').name), {}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]", :id => "product[additional_seller_attributes][][role_id]"
+            = f.select :role, options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |role| [role.name, role.id] }, :selected => Role.find_by_name('seller').name), {}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]", :id => "product[additional_seller_attributes][][role_id]"
 
           span.btn.btn-default.remove= fa_icon 'trash-o'
 
@@ -380,7 +380,7 @@
 
         .form-group.select-additional-seller-role
           = f.label :role, 'Role:'
-          = f.select :role, Role.where(name: ['group admin', 'additional seller']).collect{ |role| [role.name, role.id] }, {prompt: 'Select a role type'}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]", :id => "product[additional_seller_attributes][][role_id]"
+          = f.select :role, Role.where(name: ['group admin', 'seller']).collect{ |role| [role.name, role.id] }, {prompt: 'Select a role type'}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]", :id => "product[additional_seller_attributes][][role_id]"
 
         span.btn.btn-default.remove= fa_icon 'trash-o'
     hr

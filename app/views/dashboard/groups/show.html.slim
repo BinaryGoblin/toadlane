@@ -37,9 +37,9 @@
                 .form-group
                   = form_tag assign_role_dashboard_groups_path(product_id: @product.id, user_id: group_member.user.id, group_seller_id: group_member.id ), method: :post, :class => "assign_role_to_additional_seller", :id => "assign_role_to_#{group_member.user.id}"
                     - if group_member.product.owner == current_user || current_user.roles.include?(@group_admin)
-                      = select_tag 'role_id', options_for_select(Role.where(name: ['group admin', 'additional seller']).collect{ |u| [u.name, u.id] }, :selected => get_selected_role(group_member.user) ), class: 'form-control'
+                      = select_tag 'role_id', options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |u| [u.name, u.id] }, :selected => get_selected_role(group_member.user) ), class: 'form-control'
                     - else
-                      = select_tag 'role_id', options_for_select(Role.where(name: ['group admin', 'additional seller']).collect{ |u| [u.name, u.id] }, :selected => get_selected_role(group_member.user) ), class: 'form-control', :disabled => true
+                      = select_tag 'role_id', options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |u| [u.name, u.id] }, :selected => get_selected_role(group_member.user) ), class: 'form-control', :disabled => true
               td
                 - if current_user == group_member.user
                   - if group_member.accept_deal == nil || group_member.accept_deal == false

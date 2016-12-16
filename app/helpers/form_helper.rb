@@ -127,8 +127,8 @@ module FormHelper
 
   def get_selected_role(user)
     existed_role = user.roles.all.map &:name
-    if existed_role.include?'additional seller'
-      selected_role = user.roles.find_by_name('additional seller')
+    if existed_role.include?'seller'
+      selected_role = user.roles.find_by_name('seller')
       selected_role_id = selected_role.id
     elsif existed_role.include?'group admin'
       selected_role = user.roles.find_by_name('group admin')
