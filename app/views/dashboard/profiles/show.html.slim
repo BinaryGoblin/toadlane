@@ -52,7 +52,7 @@
               = f.text_field :email, class: 'form-control', disabled: true, required: true
 
             .form-group
-              label I am selling:
+              label I buy and sell:
               = f.select :benefits, @user.benefits, {}, multiple: true, data: { behavior: 'Select', options: '{"plugins":["remove_button"],"create":"true"}' }
 
     hr
