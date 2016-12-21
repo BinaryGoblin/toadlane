@@ -2,7 +2,11 @@
 
 .header {
   background: white;
-  height: 95px;
+  float:left;
+  width:100%;
+  z-index:999;
+  position: fixed;
+  top:0;
 
   .wrap {
     padding-top: 30px;
@@ -96,4 +100,21 @@
       background: image-url('user-header-arrow.png');
     }
   }
+}
+.logoSideNav
+{
+  width:10%;
+  float:left;
+  text-align:center;
+  cursor:pointer;
+  position:relative;
+  top:-5px;
+  margin-left:15%;
+}
+.logoSideNav img
+{
+  width: 90%;
+  position: relative;
+  top: 8px;
+  left: -10px;
 }

@@ -20,7 +20,20 @@
 #= require_tree ./helpers/
 #= require_tree ./behaviors/
 
+
 $(document).ready ->
+  # $('html,body').animate { scrollTop: 0 }, 100
+  #
+  # $(window).scroll ->
+  # scroll = $(window).scrollTop()
+  # sticky = $('.wrap')
+  # alert(scroll)
+  # if scroll >= 70
+  #   sticky.addClass 'headerFixed'
+  # else
+  #   sticky.removeClass 'headerFixed'
+
+
   Elemental.addNamespace App
   Elemental.load document
   $(".fe-toggle").tooltip({tooltipClass: "search-tooltip"})
@@ -246,7 +259,7 @@ $(document).ready ->
     $('#product_inspection_date_attributes__date_1i').change ->
       month_select_block = $(this)[0].id
       month_select_box = $('#'+month_select_block)
-      
+
       $(month_select_box).each ->
         endMonthSelected = $('#product_end_date_2i').val()
         endYearSelected = $('#product_end_date_1i').val()
@@ -295,7 +308,7 @@ $(document).ready ->
     $('#product_inspection_date_attributes__date_1i').change ->
       month_select_block = $(this)[0].id
       month_select_box = $('#'+month_select_block)
-      
+
       $(month_select_box).each ->
         inspection_date_value = $('#product_hidden_field_name').val()
         inspection_date_array = inspection_date_value.split("-")
@@ -441,6 +454,26 @@ $(document).ready ->
       return
     return
 
+
+  $('.peopleInviteIcon').click ->
+    if $('.InvitePpl').is(':visible')
+      $('.InvitePpl').hide()
+    else
+      $('.InvitePpl').show()
+    return
+
+  $('.logoutIcon').click ->
+    if $('.logOutOptions').is(':visible')
+      $('.logOutOptions').hide()
+    else
+      $('.logOutOptions').show()
+    return
+
+
+
+
+
+
   $('#product_default_payment').change ->
     if $('#product_default_payment').find(":selected").text() == "Fly And Buy"
       $('.insert_inspection_dates').show()
@@ -507,3 +540,13 @@ $(document).ready ->
                   form.submit()
                   return
               )
+
+$(document).mouseup (e) ->
+
+  container = $('.InvitePpl')
+  containerLogout = $('.logOutOptions')
+
+  if !container.is(e.target) and container.has(e.target).length == 0
+    container.hide()
+    containerLogout.hide()
+  return

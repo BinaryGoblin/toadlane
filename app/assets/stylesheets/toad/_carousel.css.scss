@@ -3,6 +3,8 @@ $height-carousel-default: 670px;
 .carousel {
   position: relative;
   height: $height-carousel-default;
+  width:100%;
+  float:left;
 }
 
 .carousel-inner {
