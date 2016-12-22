@@ -14,10 +14,13 @@ namespace :db do
 
     # TODO without array
     data_users = ["user1@example.com", "user2@example.com", "user3@example.com", "user4@example.com", "user5@example.com"]
+
     user = User.find_by_email(data_users.sample).id
 
     (1..10).each do |data|
       unless Product.unexpired.find_by(name: "Product No. #{data}")
+        shipping_estimate = ShippingEstimate.create(cost: 10.0, description: "two day shipping")
+
         product = Product.new(
           name: "Product No. #{data}",
           description: 'description',
@@ -28,8 +31,11 @@ namespace :db do
           amount: rand(15..170),
           user_id: user,
           status_action: ["active", "disabled", "futured", "recommended", "best"].sample,
-          status_characteristic: ["sell", "buy"].sample
+          # status_characteristic: ["sell", "buy"].sample
+          status_characteristic: "sell"
         )
+        product.shipping_estimates << shipping_estimate
+
         product.save!
         puts "---> added product #{product.name}"
 

@@ -524,3 +524,27 @@ a.pending_confirmation_status{
 .invoice-note{
   padding-left: 10px;
 }
+
+.group-table{
+  .member-role{
+    width: 155px;
+  }
+}
+.product-form,
+.group-form{
+  ul.sellergroups{
+    li.sellergroup{
+      .add-additional-seller{
+        width: 192px;
+      }
+    }
+  }
+}
+
+.group-form{
+  .sellergroup{
+    .select-additional-seller-role{
+      width: 150px;
+    }
+  }
+}

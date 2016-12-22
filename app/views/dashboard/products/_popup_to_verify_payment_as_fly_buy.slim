@@ -1,0 +1,14 @@
+#modalPopupToVerifyPayment.modal.fade aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1"
+  .modal-dialog
+	  .modal-content
+	    .modal-header
+	      button.close aria-hidden="true" data-dismiss="modal" type="button"  ×
+	      h3#myModalLabel Default Payment Selected
+	    .modal-body
+	      p You have added group details but have not selected default payment as Fly And Buy.
+	      P The group you entered will not be saved if you click 'Continue'
+	    .modal-footer
+	      button#donotsaveAndEdit.btn aria-hidden="true" data-dismiss="modal" Cancel
+	      button#continueAndSave.btn.btn-primary Continue
+#content.container-fluid
+  a#confirmButton.btn data-toggle="modal" href="#modal-3" role="button"  Confirm

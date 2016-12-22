@@ -198,33 +198,34 @@
                 input type="file" name="product[videos_attributes][]" accept="video/*, video/3gpp, .mkv, video/x-flv, video/3gpp2, video/mpeg, .m2v"
     hr
     .row
-      .col-md-6
+      .col-md-12
         .offer-from-until
           .offer-item
             label.lg.required OFFER valid from:
 
             .offer-date
               label Date:
-              = date_select :product, :start_date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+              = date_select :product, :start_date, {  order: [:month, :day, :year] }, { class: "form-control" , data: {current_date: Date.today}}
+              p.product-start-date-error
 
             .offer-time
               label Time:
-              = time_select :product, :start_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+              = time_select :product, :start_date, { :ampm => true, ignore_date: true, minute_step: 10 }, { class: "form-control" }
 
           .offer-item
             label.lg.required OFFER valid until:
 
             .offer-date
               label Date:
-              = date_select :product, :end_date, { order: [:month, :day, :year] }, { data: { behavior: 'Select', options: '{"sortField":"$score"}' } }
+              = date_select :product, :end_date, { order: [:month, :day, :year] }, { class: "form-control" }
 
             .offer-time
               label Time:
-              = time_select :product, :end_date, { ignore_date: true, minute_step: 10 }, { data: { behavior: 'Select' } }
+              = time_select :product, :end_date, { :ampm => true, ignore_date: true, minute_step: 10 }, { class: "form-control" }
     hr
     .price-stock.clearfix
       .unit
-        = f.label :unit_price, 'Base unit price (USD):', class: 'required lg'
+        = f.label :unit_price, 'Retail price (USD):', class: 'required lg'
         = f.number_field :unit_price, in: 0...1000000, step: "any", class: 'form-control'
 
       .amount-stock
@@ -282,6 +283,111 @@
 
         span.btn.btn-default.remove= fa_icon 'trash-o'
 
+    hr
+
+    label.lg Seller Group:
+    .warning Note: This feature is only available for Fly & Buy sellers.
+    .row
+      .col-md-6
+        .form-group
+          = f.label :group_name, 'Group Name:'
+          = f.text_field :group_name, class: 'form-control', value: @product.group.present? ? @product.group.name : @group.try(:name)
+
+    label.lg Add Additional Seller:
+    p.warning.additional-seller-fee-exceeded-error
+    ul.sellergroups
+      - if params["group"].present? && params["group"]["additional_seller_attributes"].present?
+        - params["group"]["additional_seller_attributes"].each_with_index do |seller, index|
+          - if seller.present?
+            li.sellergroup
+              .index= index+1
+              .form-group.add-seller-block.select-seller-group
+                label Add Additional Seller:
+                - if seller["user_id"].include? '@'
+                  = f.collection_select :additional_seller_ids,
+                  get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
+                  { include_blank: true, selected: User.find_by_email(seller["user_id"]).id }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
+                - else
+                  = f.collection_select :additional_seller_ids,
+                    get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
+                    { include_blank: true, selected: seller['user_id'] }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
+
+              .form-group.set-commision
+                label set per unit commission:
+                = f.number_field :value, class: 'form-control set-commission-text-box', value: get_seller_fee_value(seller["id"]), :name =>"product[additional_seller_attributes][][value]", :id => "product[additional_seller_attributes][][value]"
+
+              .form-group.select-additional-seller-role
+                = f.label :role, 'Role:'
+                = f.select :role, options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |role| [role.name, role.id] }, :selected => seller["role_id"]), {prompt: 'Select a role type'}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]", :id => "product[additional_seller_attributes][][role_id]"
+
+              input type="hidden" name="product[additional_seller_attributes][][id]" value="#{seller['user_id']}"
+
+              span.btn.btn-default.remove= fa_icon 'trash-o'
+              .hide: input type="checkbox" name="product[additional_seller_delete][]" value="#{seller['user_id']}"
+      - elsif @product.group.present? && @product.group_sellers.present?
+        - @product.group_sellers.each_with_index do |seller, index|
+          li.sellergroup
+            .index= index+1
+            .form-group.add-seller-block.select-seller-group
+              label Add Additional Seller:
+              = f.collection_select :additional_seller_ids,
+                get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
+                { include_blank: true, selected: seller.user_id }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
+              
+            .form-group.set-commision
+              label set per unit commission:
+              = f.number_field :value, class: 'form-control set-commission-text-box', value: seller.additional_seller_fee.try(:value), :name =>"product[additional_seller_attributes][][value]", :id => "product[additional_seller_attributes][][value]"
+
+            .form-group.select-additional-seller-role
+              = f.label :role, 'Role:'
+              = f.select :role, options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |role| [role.name, role.id] }, :selected => get_selected_role(seller.user)), {}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]", :id => "product[additional_seller_attributes][][role_id]"
+
+            input type="hidden" name="product[additional_seller_attributes][][id]" value="#{seller.id}"
+
+            span.btn.btn-default.remove= fa_icon 'trash-o'
+            .hide: input type="checkbox" name="product[additional_seller_delete][]" value="#{seller.id}"
+
+
+      - else
+        li.sellergroup
+          .index 1
+          .form-group.add-seller-block.select-seller-group
+            label Add Additional Seller:
+            = f.collection_select :additional_seller_ids,
+                  get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
+                    { include_blank: true}, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
+              
+
+          .form-group.set-commision
+            label set per unit commission:
+            = f.number_field :value, class: 'form-control set-commission-text-box', :name =>"product[additional_seller_attributes][][value]", :id => "product[additional_seller_attributes][][value]"
+
+          .form-group.select-additional-seller-role
+            = f.label :role, 'Role:'
+            = f.select :role, options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |role| [role.name, role.id] }, :selected => Role.find_by_name('seller').name), {}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]", :id => "product[additional_seller_attributes][][role_id]"
+
+          span.btn.btn-default.remove= fa_icon 'trash-o'
+
+      li.add-seller data-behavior="AddSeller"= fa_icon 'plus', text: 'Add another Additional Seller'
+
+    script#template-addseller type="text/template"
+      li.sellergroup
+        .index 1
+        .form-group.add-seller-block.select-seller-group
+          label Add Additional Seller:
+          = f.collection_select :additional_seller_ids,
+            get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
+            { include_blank: true}, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
+          
+        .form-group.set-commision
+          label set per unit commission:
+          = f.number_field :value, class: 'form-control set-commission-text-box', :name =>"product[additional_seller_attributes][][value]", :id => "product[additional_seller_attributes][][value]"
+
+        .form-group.select-additional-seller-role
+          = f.label :role, 'Role:'
+          = f.select :role, Role.where(name: ['group admin', 'seller']).collect{ |role| [role.name, role.id] }, {prompt: 'Select a role type'}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]", :id => "product[additional_seller_attributes][][role_id]"
+
+        span.btn.btn-default.remove= fa_icon 'trash-o'
     hr
       .dimensions
         .dimensions-label
@@ -415,3 +521,5 @@
     = f.button fa_icon('save', text: 'Save & add new'), value: 'new', class: 'btn btn-default pull-right'
     = f.button fa_icon('plus', text: 'Save & stay edit'), value: 'edit', class: 'btn btn-default pull-right'
     = link_to fa_icon('trash-o', text: 'Delete this product'), dashboard_product_path(@product.id), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default pull-left' if @product.id?
+
+= render partial: '/dashboard/products/popup_to_verify_payment_as_fly_buy', locals: { product: @product}

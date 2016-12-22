@@ -418,7 +418,7 @@ $sell-color: #FF8724;
   }
 }
 
-.product-form {
+.product-form, .group-form {
   h4 {
     line-height: 1;
     font-size: 20px;
@@ -529,7 +529,8 @@ $sell-color: #FF8724;
   }
 
   .pricebreaks,
-  .inspectiondates {
+  .inspectiondates,
+  .sellergroups {
     list-style: none;
     padding: 0;
     margin: 0 0 -29px -3%;
@@ -545,6 +546,10 @@ $sell-color: #FF8724;
       margin-left: 3%;
       height: 96px;
       float: left;
+
+      .offer-date {
+        width: 215px;
+      }
     }
   }
 
@@ -560,8 +565,15 @@ $sell-color: #FF8724;
     }
   }
 
+  .sellergroups{
+    li{
+      width: 46.3333%;
+    }
+  }
+
   .pricebreak,
-  .inspectiondate {
+  .inspectiondate,
+  .sellergroup {
     border-color: #cccfd3;
     background: white;
     padding-top: 16px;
@@ -609,7 +621,7 @@ $sell-color: #FF8724;
     }
   }
 
-  .add-pricebreak, .add-inspectiondate {
+  .add-pricebreak, .add-inspectiondate, .add-seller {
     border-color: $buy-color;
     text-align: center;
     font-size: 14px;
@@ -977,7 +989,7 @@ $sell-color: #FF8724;
 
   .offer-date {
     margin-right: 20px;
-    width: 220px;
+    width: 240px;
 
     .selectize-control {
       float: left;
@@ -1105,7 +1117,33 @@ $sell-color: #FF8724;
   }
 }
 
-.complete-profile-error{
+.complete-profile-error,
+.group-error{
   margin-top: 20px;
   font-size: 16px;
+}
+
+.warning{
+  color: red;
+}
+
+.product-form .sellergroups .sellergroup,
+.group-form .sellergroups .sellergroup {
+  .set-commision{
+    width: 147px;
+  }
+  .select-seller-group{
+    width: 190px;
+  }
+}
+
+.product-form {
+  .sellergroups{
+    li {
+      width: 65%;
+    }
+    .select-additional-seller-role{
+      width: 150px;
+    }
+  }
 }

@@ -1,4 +1,8 @@
-.wrap-sm.fly-buy-container
+.admin-tabs: .wrap-sm
+  ul
+    li= tab_link_to 'Account Verification', admin_fly_buy_account_verifications_path, is: 'account_verifications'
+    li= tab_link_to 'Group Verification', admin_fly_buy_group_verifications_path, is: 'group_verifications'
+.wrap-sm
   .table-responsive
     table.table
       thead

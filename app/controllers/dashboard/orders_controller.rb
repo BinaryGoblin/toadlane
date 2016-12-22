@@ -9,7 +9,12 @@ class Dashboard::OrdersController < DashboardController
     amg_orders = current_user.amg_orders.for_dashboard(params[:page], params[:per_page])
     emb_orders = current_user.emb_orders.for_dashboard(params[:page], params[:per_page])
 
-    orders =  fly_buy_orders + stripe_orders + green_orders + amg_orders + emb_orders
+    current_user_involved_groups = Group.joins(:group_sellers).where(
+                                          'group_sellers.user_id' => current_user.id)
+
+    current_user_involved_orders = FlyBuyOrder.where(group_seller_id: current_user_involved_groups.ids).where.not(count: nil, status: nil)
+
+    orders =  fly_buy_orders + stripe_orders + green_orders + amg_orders + emb_orders + current_user_involved_orders
 
     @orders = orders.sort_by(&:created_at).reverse
     @fee = Fee.find_by(:module_name => "Fly & Buy").value

@@ -17,6 +17,9 @@
           = link_to 'Click Here To Edit', dashboard_profile_path(req_company: true), class: 'view'
         - elsif flash[:account_error].include? "first and"
           = link_to 'Click Here To Edit', dashboard_profile_path(req_name: true), class: 'view'
+  - if flash[:sign_up_error].present?
+    .error-explanation.text-center
+      = flash[:sign_up_error]
 
 .actions-panel-product: .wrap-sm
   / = link_to 'Next product', '#', class: 'btn btn-default pull-right'

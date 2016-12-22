@@ -1,0 +1,54 @@
+= render '/shared/tabs'
+
+.group-error.wrap-sm
+  - if flash[:error]
+    .error-explanation.text-center
+      = flash[:error]
+.wrap-sm
+  .table-options
+    = link_to "Close", dashboard_groups_path, class: "btn btn-success pull-right"
+  .table-responsive
+    table.table.group-table data-behavior="TableCheckbox"
+      thead
+        tr
+          th User Name:
+          th Deal Accepted:
+          th Profile Completed:
+          th FlyBuy Account Added:
+          th FlyBuy Account Verified:
+          th.member-role Role:
+          th Private Member:
+          th Fee($)
+
+      tbody
+        - @group.group_sellers.each do |group_member|
+          - if group_member.private_seller == false || group_member.product.owner == current_user || group_member.user == current_user
+            tr
+              td = group_member.user.name
+              td 
+                - if group_member.accept_deal == nil
+                  .warning Invited
+                - else
+                  = group_member.accept_deal
+              td = group_member.profile_complete?
+              td = group_member.user.fly_buy_profile_account_added?
+              td = group_member.fly_buy_profile_verified?
+              td
+                .form-group
+                  = form_tag assign_role_dashboard_groups_path(product_id: @product.id, user_id: group_member.user.id, group_seller_id: group_member.id ), method: :post, :class => "assign_role_to_additional_seller", :id => "assign_role_to_#{group_member.user.id}"
+                    - if group_member.product.owner == current_user || current_user.roles.include?(@group_admin)
+                      = select_tag 'role_id', options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |u| [u.name, u.id] }, :selected => get_selected_role(group_member.user) ), class: 'form-control'
+                    - else
+                      = select_tag 'role_id', options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |u| [u.name, u.id] }, :selected => get_selected_role(group_member.user) ), class: 'form-control', :disabled => true
+              td
+                - if current_user == group_member.user
+                  - if group_member.accept_deal == nil || group_member.accept_deal == false
+                    .warning You need to first accept the deal.
+                  - else
+                    .form-group
+                      = form_tag change_visibility_of_member_dashboard_groups_path(product_id: @product.id, user_id: group_member.user.id, group_seller_id: group_member.id ), method: :post, :class => "form_change_user_visibility", :id => "change_user_visibility_role_#{group_member.user.id}"
+                        = check_box_tag 'private_seller', true, group_member.private_seller
+                - else
+                  = group_member.private_seller
+              td = group_member.additional_seller_fee.value
+            

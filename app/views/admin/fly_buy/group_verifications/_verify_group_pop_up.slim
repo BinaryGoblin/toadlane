@@ -1,0 +1,10 @@
+.modal.modal-lg.fade tabindex="-1" role="dialog" id="modal_verify_group_#{group.id.to_s}"
+  .modal-dialog: .modal-content
+    .modal-header
+      .pull-right data-dismiss="modal"= fa_icon 'close'
+      h4.modal-title Mark user as unverify
+
+    .modal-body
+      p Are you sure you want to mark Gruop <strong>#{}</strong> as unverify?
+      .pull-right
+        = link_to "Yes", mark_group_verify_admin_fly_buy_group_verifications_path(group_id: group.id), class: "btn btn-success"

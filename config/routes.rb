@@ -25,6 +25,8 @@ Toad::Application.routes.draw do
     post :confirm_inspection_date_by_seller
     get :complete_inspection
     get :release_payment
+    get :release_payment_to_additional_sellers_not_possible
+    get :release_payment_to_additional_sellers
     post :place_order
     post :confirm_order_placed
     get :resend_wire_instruction
@@ -74,6 +76,15 @@ Toad::Application.routes.draw do
         post :active_cascade
         post :inactive_cascade
         get '/:id/viewers', to: 'products#viewers', as: 'viewers'
+      end
+    end
+    resources :groups do
+      collection do
+        get :accept_deal
+        get :reject_deal
+        post :assign_role
+        post :change_visibility_of_member
+        get :validate_group_name, as: :validate_group_name
       end
     end
 
@@ -133,13 +144,21 @@ Toad::Application.routes.draw do
     match '/checkout', to: 'products#checkout', :via => [:get, :post]
   end
 
-  devise_for :users, :controllers => { :registrations => "registrations", confirmations: 'confirmations', :omniauth_callbacks => "omniauth_callbacks", :sessions => "users/sessions" }
+  devise_for :users, :controllers => { :registrations => "registrations", confirmations: 'confirmations', :omniauth_callbacks => "omniauth_callbacks", :sessions => "users/sessions", :invitations => "users/invitations" }
 
   namespace :admin do
-    resources :fly_buy, only: [:index]  do
-      collection do
-        get :mark_user_unverify
-        get :mark_user_verify
+    namespace :fly_buy do
+      resources :account_verifications, only: [:index]  do
+        collection do
+          get :mark_user_unverify
+          get :mark_user_verify
+        end
+      end
+      resources :group_verifications, only: [:index] do
+        collection do
+          get :mark_group_verify
+          get :mark_group_unverify
+        end
       end
     end
     

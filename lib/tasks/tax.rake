@@ -5,8 +5,8 @@ namespace :db do
   desc 'populate db by Tax'
   task populate_db_tax: :environment do
     [ 0.0, 1.0, 2.0, 3.0 ].each do |data| 
-      unless Tax.find_by_value(data)
-        tax = Tax.new(
+      unless Fee.find_by_value(data)
+        tax = Fee.new(
           value: data
         )
         tax.save!
@@ -17,7 +17,7 @@ namespace :db do
 
   desc 'truncate Tax'
   task truncate_db_tax: :environment do
-    Tax.delete_all
+    Fee.delete_all
     puts '---> delete data from Tax'
   end
 end
