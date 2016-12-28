@@ -104,7 +104,7 @@ form .wrap-sm
   width: 85%;
   float: left;
   left: 15%;
-  padding-top: 4%;
+  padding-top:68px;
 }
 .fa
 {
@@ -127,7 +127,7 @@ form .wrap-sm
   width:100% !important;
   float:left !important;
   padding:0px !important;
-  max-width:1540px !important;
+  max-width:100% !important;
 }
 .footer .wrap
 {
@@ -142,11 +142,11 @@ form .wrap-sm
 }
 .header .pull-right {
     float: left !important;
-    width: 25%;
+    width: 30%;
 }
 .fe-search
 {
-  width:47% !important;
+  width:60% !important;
   float:left;
 }
 .footer-actions .fa-container
@@ -661,3 +661,111 @@ box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
 {
   background: #f07d0c;
 }
+.header{ background:#333;}
+.header .fe-search [type="text"]{ position:absolute; left:129px; width:70%; top:-2px;}
+.fe-search .btn-warning{ z-index:1;}
+.few{width:100%; padding-bottom:100px;}
+.footer .logo{ left:0px; }
+.copy{ left:0px;}
+.footer .wrap, .footer .wrap-sm, .wrap, .wrap-sm{  margin:0px auto;} 
+.find-and-explore{ max-width:1180px; margin:0px auto; float:none;}
+.find-and-explore:after, .find-and-explore:before{ clear:both; display:table; line-height:1px; content:"";}
+ .logoSideNav{ margin-left:0px;}
+ .buy-sell{ width:100%; display:inline-block;}
+ .tabs ul, .admin-tabs ul{ margin-top:110px;}
+ .product-carousel{ width:100%; display:inline-block;}
+ .wrap-sm{ float:none;  padding-bottom:15px; width:100%;}
+ .infos-title{ height:auto; padding-top:52px;}
+ .infos-title .wrap-sm{ padding-bottom:0px; }
+.tabs.wrap-sm{ width:15%;  padding-bottom:0px;}
+.edit_user > .wrap-sm{ padding-top:85px;}
+.footer-actions .fa-container, .footer{ z-index:1;}
+
+@media only screen and (max-width:1180px) {
+  .find-and-explore{ padding:10px 15px;}
+  .logoSideNav{ padding-right:15px; width:15%; margin:0px;}
+  .header .pull-right{ width:34%;}
+  .fe-search{ width:51% !important;}
+  .few{ width:100%;}
+  .brands-logo{ width:100%; display:inline-block;}
+  .brands-logo > a{ width:33.33%; float:left; padding:0px 15px;}
+  .copy{ left:0px;}
+  .footer .logo{ left:0px;}
+  .few img{ margin:0px auto; max-width:100%;}
+  .internalWrapper{ float:none; width:auto; left:0px; margin-left:180px !important;}
+  .tabs, .admin-tabs, .tabs.wrap-sm{ width:180px;}
+  .tabs ul, .admin-tabs ul, .admin-tabs ul{ margin-top:121px;}
+  .subSectionCount{font-size:30px;}
+  .subsectionDetail{ top:-5px;}
+  .subSection{ padding:0px 5px;}
+  form .wrap-sm{ float:none !important; max-width:inherit; width:auto; left:0px !important; margin-left:183px; padding-bottom:0px !important;}
+  .profile-table h4{ padding-bottom:10px;}
+  } 
+@media only screen and (max-width:990px) {
+  .profile-table hr{ display:none;}
+  }
+@media only screen and (max-width:854px) {
+  .logoSideNav{ padding-right:0px;}
+  .few img{ height:50px;}
+  .subSectionCount{ font-size:23px;}
+  .subsectionDetail{ top:-3px;}
+  .subSection{ width:50%; margin:5px 0px;}
+  .headerIcons{ margin-left:10px;}
+  .otherNotification{ margin-left:15px !important; }
+  .peopleInviteIcon, .logoutIcon{  margin-left:15px; top:20px;}
+  .logoutIcon{ padding:5px 0 5px 7px;}
+  }
+@media only screen and (max-width:767px) {
+  .header .pull-right{ width:48%; margin-left:2%;} 
+  .logoSideNav{ width:130px; margin:0px auto 14px auto; display:table; float:none;}
+  .navbar-default .navbar-toggle{ margin-top:-29px;}
+  .fe-search{ width:100% !important; margin-bottom:10px;}
+  .header .pull-right{ width:100%; margin:0px; text-align:center;}
+  .header .pull-right .sellBtn{ margin:0px; float:none; display:inline-block; padding:7px 13px 6px !important; font-size:14px; position:relative; left:4px;}
+  .header-user a.btn{ width:auto; margin:-8px 0px 0px 15px;}
+  .footer{ width:100%; display:inline-block;}
+  .footer .logo{ height:28px;margin:16px auto 10px;}
+  .few{ padding-bottom:30px;}
+  .buy-sell{ background-position:50% 50%; padding-bottom:0px;}
+  .buy-sell .main-buy{ padding-bottom:55px; }
+  .buy-sell .main-sell{ padding-top:55px; }
+  .buy-sell .wrap div, .buy-sell .wrap-sm div, .buy-sell .wrap-sm div{ width:100%; margin:0px !important;}
+  .header{ position:inherit;}
+  .tabs ul, .admin-tabs ul, .admin-tabs ul{ margin-top:216px;}
+  .tabs, .admin-tabs, .tabs.wrap-sm{ position:absolute;}
+  .devise{ top:20px;}
+  .infos-title{  width:100%; display:inline-block; padding-top:0px;}
+  .headerIcons, .peopleInviteIcon, .logoutIcon{ float:none; top:0px;  float:none; display:inline-block;}
+  .peopleInviteIcon, .logoutIcon{ width:21px !important;}
+  .headerIcons{ margin-left:20px;}
+  }
+  @media only screen and (max-width:668px) {
+  .few img{ height:36px;}
+  .buy-sell { background-position: 50% 50%; background-size: 150px auto;}
+ .carousel-product-title h3{ font-size:23px;}
+  }
+@media only screen and (max-width:480px) {
+   .header .fe-search [type="text"]{ left:0px; top:29px; width:100%;}
+   .fe-search{ border-bottom:none;}  
+   .fe-search .fe-btn.btn-warning{ background:#14ba62 url("/assets/search-icon.png") no-repeat center center !important; background-size:25px !important;border-color:#14ba62; top:0px;}
+   .brands-logo > a{ width:100%;}
+   .brands-logo > a + a{ margin-top:15px;}
+   .carousel-content h1{ font-size:40px;}
+   .tabs, .admin-tabs, .tabs.wrap-sm{ position:inherit; width:100%; float:left;}
+   .tabs ul, .admin-tabs ul, .admin-tabs ul, .admin-tabs ul{ margin:10px 0px; padding:0px 15px; position:relative;}
+   .tabs ul li, .admin-tabs ul li{ padding-left:126px;}
+   .tabs li a, .admin-tabs li a{ padding:3px 5px;}
+   .miniDashboard{ padding:0px;}
+   .subSection{ text-align:left; padding:5px 15px; margin:0px; }
+   .internalWrapper{ margin-left:0px !important; display:inline-block; padding-top:20px;} 
+   #profilePicRow{ position:absolute; width:120px; padding:0px; margin:0px;}
+   #profilePicRow .userPic{ width:100%; margin-left:0px;}   
+   #profilePicRow .userDetails{ width:100%;}
+   #profilePicRow .userDetails .userName{ font-size:14px; top:0px; text-align:center;}
+   #profilePicRow .userDetails .editProfile{ left:0px;text-align:center; }
+   #profilePicRow .userPic img{ max-width:60px; margin:0 auto; display:block; float:none;}
+   }
+  @media only screen and (max-width:400px) {
+   .subSection{ width:100%;}  
+   .subSection + .subSection{ border-top:1px solid #334248;} 
+   }  
