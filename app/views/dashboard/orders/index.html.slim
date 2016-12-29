@@ -44,7 +44,11 @@
                   = link_to order.status, '#modal_pending_confirmation', class: 'link link-ulined pending_confirmation_status', data: { toggle: 'modal' }
                 - else
                   = order.status
-            td.text-center= link_to order.product.name.titleize, product_path(order.product, cat_id: order.product.main_category), class: 'link link-ulined', target: '_blank'
+            td.text-center
+              = link_to order.product.name.titleize, product_path(order.product, cat_id: order.product.main_category), class: 'link link-ulined', target: '_blank'
+              - if order.seller_group.present?
+                br
+                = link_to order.seller_group.name.titleize, dashboard_group_path(order.seller_group), class: 'link-ulined text-success', target: '_blank'
             td.text-center= order.count
             td.text-center
               = number_to_currency(order.total, :unit => "$", precision: 2)
@@ -57,7 +61,7 @@
                 | &nbsp;
                 = link_to 'Refund Requested', dashboard_refund_requests_path, class: 'view'
             td.text-center
-              - if order.buyer && order.status != 'cancelled' && order.instance_of?(FlyBuyOrder)
+              - if order.buyer == current_user && order.status != 'cancelled' && order.instance_of?(FlyBuyOrder)
                 - if order.status == 'pending_confirmation' && order.funds_in_escrow == false
                   = link_to 'Cancel Order', '#modal_cancel_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
                 - elsif order.status == 'queued' && order.funds_in_escrow == false
@@ -66,10 +70,20 @@
                   = link_to 'Complete Inspection', fly_buy_order_complete_inspection_path(order.id), class: 'view'
                 - elsif order.inspected && order.status == 'placed' && order.funds_in_escrow == true
                   = link_to 'Release Payment', fly_buy_order_release_payment_path(order.id), class: 'view'
-                - elsif order.payment_release == true
+                - elsif order.payment_release == true && order.status == 'completed'
                   span.label
                     | Payment Released
-                | -
+              - elsif order.seller == current_user && order.status == 'completed'&& order.instance_of?(FlyBuyOrder) && order.payment_release == true
+                - if order.seller_group.present?
+                  - if order.additional_sellers_account_created_verified? == false
+                    = link_to 'Release Payment To Additional Sellers', '#modal_release_payment_info_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
+                  - else
+                    = link_to 'Release Payment To Additional Sellers', fly_buy_order_release_payment_to_additional_sellers_path(order.id), class: 'view'
+                - else
+                  = link_to 'Release Payment To Additional Sellers', fly_buy_order_release_payment_to_additional_sellers_path(order.id), class: 'view'
+              - elsif order.seller == current_user && order.payment_released_to_group == true
+                  span.label
+                    | Payment Released To Group
               - else
                 | -
             td.text-center
@@ -103,6 +117,7 @@
                 = order.selected_inspection_date.get_inspection_date
 
           = render partial: 'dashboard/orders/cancel_transaction_pop_up', locals: { order: order}
+          = render partial: 'dashboard/orders/release_payment_group_seller_flybuy_account_not_created', locals: { order: order}
 .footer-actions: .fa-container: .wrap-sm
 
 = render partial: '/shared/order', collection: @orders

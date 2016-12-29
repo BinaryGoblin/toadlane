@@ -227,7 +227,14 @@ class ProductsController < ApplicationController
     session[:fly_buy_order_id] = fly_buy_order.id
 
     fly_buy_profile = current_user.fly_buy_profile_account_added? ? current_user.fly_buy_profile : FlyBuyProfile.new
-
+    
+    if product.group.present?
+      fly_buy_order.update_attributes({
+        group_seller_id: product.group.id,
+        group_seller: true
+      })
+    end
+    
     [fly_buy_order, fly_buy_profile]
   end
 

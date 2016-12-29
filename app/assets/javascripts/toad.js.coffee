@@ -160,6 +160,32 @@ $(document).ready ->
     @optional(element) or (element.files[0].size <= mult_param)
   ), 'File size must be less than {0} MB'
 
+  jQuery.validator.addMethod 'check_product_start_date', ((value, element) ->
+    if $('form.product_new').length >= 1
+      selected_month = parseInt($('#product_start_date_2i').val())
+      selected_date = parseInt($('#product_start_date_3i').val())
+      selected_year = parseInt($('#product_start_date_1i').val())
+      current_date = new Date()
+
+      user_selected_date = new Date(selected_year, selected_month - 1, selected_date, 0, 0, 0, 0)
+
+      return user_selected_date > current_date
+    else
+      return true
+  ), 'Please enter date greater than today.'
+
+  jQuery.validator.addMethod 'check_fee_exceeds_product_price', ((value, element) ->
+    product_retail_price = parseFloat($('#product_unit_price').val())
+    added_additional_sellers = $('ul.sellergroups').find('li.sellergroup .set-commission-text-box')
+    added_fee = 0
+
+    jQuery.each added_additional_sellers, (i, val) ->
+      added_fee = added_fee + parseFloat(val.value)
+      return
+
+    return added_fee < product_retail_price
+  ), "The additional seller fee exceeds the product's price."
+
   $('select#green_order_address_country').change (event) ->
     select_wrapper = $('.order_state_code_wrapper')
 
@@ -245,15 +271,103 @@ $(document).ready ->
       form.submit()
       return
 
+  $('form#new_group').validate
+    rules:
+      "group[name]":
+        required: true
+        remote:
+          url: "/dashboard/groups/validate_group_name"
+          type: "GET"
+          data:
+            group_name: $("#group_name").val()
+    messages:
+      "group[name]":
+        remote: "This group name has already been taken."
+    submitHandler: (form) ->
+      $('form#new_group').find('input[type=submit]').prop 'disabled', true
+      form.submit()
+      return
+
   $('form.product_form_partial').validate
     rules:
+      "product[name]":
+        required: true
       "product[videos_attributes][]":
         required: false
         filesize: 5
+      "product[start_date(2i)]":
+        required: true
+        check_product_start_date: true
+      "product[additional_seller_attributes][][value]":
+        check_fee_exceeds_product_price: true
+    messages:
+      "product[start_date(2i)]":
+        remote: "The start date cannot be past date."
+    errorPlacement: (error, element) ->
+      # this is done for displaying the error message for Product Start Date
+      # # below the start date select boxes
+      if element.attr('name') == "product[start_date(2i)]"
+        $('#product_start_date_3i').addClass('error')
+        $('#product_start_date_1i').addClass('error')
+        error.appendTo('.product-start-date-error')
+      else if element.attr('name') == "product[additional_seller_attributes][][value]"
+        added_additional_sellers = $('ul.sellergroups').find('li.sellergroup .set-commission-text-box')
+        error = error
+        jQuery.each added_additional_sellers, (i, val) ->
+          error.insertAfter val
+          return
+      else
+        error.insertAfter element
+      return
+    submitHandler: (form) ->
+      $('form.product_form_partial').find('input[type=submit]').prop 'disabled', true
+      form.submit()
+      return
 
   (new Fingerprint2).get (result) ->
     $('#fly_buy_profile_fingerprint').val(result)
     return
+
+  $('#group_product_id').change ->
+    $('.error-message').html('')
+    checkSelectedDataForGroup()
+
+  $('.new_group .iCheck-helper, .edit_group .iCheck-helper').click ->
+    $('.error-message').html('')
+    checkSelectedDataForGroup()
+
+  checkSelectedDataForGroup = ->
+    if $('.group-submit-btn').is(":disabled") == true
+      if $('#group_create_new_product:checked').length == 0
+        $('.group-submit-btn').prop 'disabled', false
+      else if $('#group_create_new_product:checked').length == 0 && $('#group_product_id').val() != "" ||
+      $('#group_create_new_product:checked').length == 1 && $('#group_product_id').val() == ""
+        $('.group-submit-btn').prop 'disabled', false
+        $('form.new_group, form.edit_group').submit()
+      else
+        $('.group-submit-btn').prop 'disabled', true
+        $('.error-message').html('You can either select a product or create new product.')
+    else if $('.group-submit-btn').is(":disabled") == true
+      if $('#group_create_new_product:checked').length == 0 && $('#group_product_id').val() != "" ||
+      $('#group_create_new_product:checked').length == 1 && $('#group_product_id').val() == ""
+        $('.group-submit-btn').prop 'disabled', false
+        $('form.new_group, form.edit_group').submit()
+      else
+        $('.error-message').html('You can either select a product or create new product.')
+        $('.group-submit-btn').prop 'disabled', true
+
+
+  $('.group-submit-btn').click ->
+    if $('#group_create_new_product:checked').length == 0 && $('#group_product_id').val() != "" ||
+    $('#group_create_new_product:checked').length == 1 && $('#group_product_id').val() == ""
+      $(this).prop 'disabled', false
+      $('form.new_group, form.edit_group').submit()
+    else if $('#group_create_new_product:checked').length == 0 && $('#group_product_id').val() == ""
+      $(this).prop 'disabled', true
+      $('.error-message').html('You have to select a product or create new product.')
+    else
+      $('.error-message').html('You can either select a product or create new product.')
+      $(this).prop 'disabled', true
 
   $('.product_new').ready ->
     $('#product_inspection_date_attributes__date_1i').change ->
@@ -494,6 +608,47 @@ $(document).ready ->
       return
     else
       $('.insert_inspection_dates').hide()
+  $ ->
+    # enable chosen js
+    $('.chosen-select').chosen
+      allow_single_deselect: true
+      no_results_text: 'No results matched'
+      width: '200px'
+  $('.chosen-select').trigger 'chosen:updated'
+
+  $ ->
+    $('.assign_role_to_additional_seller').change ->
+      $('form#'+ this.id).submit()
+      return
+    return
+
+  $('.group-table .iCheck-helper').click ->
+    if this.parentElement.classList.contains("checked")
+      this.parentElement.firstChild.value=0
+    else
+      this.parentElement.firstChild.value=1
+      
+    $('form#'+ this.parentNode.parentElement.id).submit()
+    return
+
+  $('form.product_form_partial .btn-success').click (event)->
+    if $('.product_form_partial').valid() == true
+      if $('#product_default_payment').val() != "Fly And Buy"
+        event.preventDefault()
+        $('#modalPopupToVerifyPayment').modal('show')
+      else if $('#product_default_payment').val() == "Fly And Buy"
+        $('form.product_form_partial').submit()
+
+  $('#product_group_name').change ->
+    $('#product_default_payment').val("Fly And Buy")
+    $('.insert_inspection_dates').show()
+
+  $(".chosen-select, .set-commission-text-box").change ->
+    $('#product_default_payment').val("Fly And Buy")
+    $('.insert_inspection_dates').show()
+
+  $("#continueAndSave").click ->
+    $('form.product_form_partial').submit()
 
   validator = $('form.create_fly_buy_profile').validate(
                 rules:

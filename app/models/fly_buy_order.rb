@@ -2,34 +2,44 @@
 #
 # Table name: fly_buy_orders
 #
-#  id                     :integer          not null, primary key
-#  buyer_id               :integer
-#  seller_id              :integer
-#  product_id             :integer
-#  status                 :integer
-#  unit_price             :float
-#  count                  :integer
-#  fee                    :float
-#  rebate                 :float
-#  rebate_price           :float
-#  total                  :float
-#  status_change          :datetime
-#  deleted                :boolean          default(FALSE)
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#  synapse_escrow_node_id :string
-#  synapse_transaction_id :string
-#  inspection_complete    :boolean          default(FALSE)
-#  payment_release        :boolean          default(FALSE)
-#  funds_in_escrow        :boolean          default(FALSE)
-#  seller_fees_percent    :float
-#  seller_fees_amount     :float
+#  id                        :integer          not null, primary key
+#  buyer_id                  :integer
+#  seller_id                 :integer
+#  product_id                :integer
+#  status                    :integer
+#  unit_price                :float
+#  count                     :integer
+#  fee                       :float
+#  rebate                    :float
+#  rebate_price              :float
+#  total                     :float
+#  status_change             :datetime
+#  deleted                   :boolean          default(FALSE)
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  synapse_escrow_node_id    :string
+#  synapse_transaction_id    :string
+#  inspection_complete       :boolean          default(FALSE)
+#  payment_release           :boolean          default(FALSE)
+#  funds_in_escrow           :boolean          default(FALSE)
+#  seller_fees_percent       :float
+#  seller_fees_amount        :float
+#  group_seller_id           :integer
+#  group_seller              :boolean          default(FALSE)
+#  payment_released_to_group :boolean          default(FALSE)
 #
 
 class FlyBuyOrder < ActiveRecord::Base
+  #
+  ## group_seller => If the product has additional seller i.e group then this field is true else false
+  ## group_id => If the product has additional seller i.e. group, then this filed represents the group id
+  ### if the group_seller is true, then then the `seller_id` field will be the id of the product owner 
+  ####  i.e the initial seller who creates group and adds the other additional sellers
+
   has_many :inspection_dates, dependent: :destroy
   belongs_to :buyer, class_name: 'User', foreign_key: 'buyer_id'
   belongs_to :seller, class_name: 'User', foreign_key: 'seller_id'
+  belongs_to :seller_group, class_name: 'Group', foreign_key: 'group_seller_id'
   belongs_to :product
 
   scope :with_transaction_id, -> { where.not(synapse_transaction_id: nil) }
@@ -39,11 +49,12 @@ class FlyBuyOrder < ActiveRecord::Base
   #  This is assuming the money has not been wired into escrow.
   ## if the money has been wired into the escrow the status of the order would be
   ##  “Pending Inspection”, and on the date of inspection the status changes to
-  ###  “Pending Fund Release”, and then the final status should be “Placed”.
+  ###  “Pending Fund Release”, and then the final status should be “Completed”.
 
   enum status: [ :cancelled, :placed, :completed, :refunded,
                 :processing, :pending_confirmation, :pending_inspection, :pending_fund_release,
-                :processing_fund_release, :queued ]
+                :processing_fund_release, :queued, :processing_fund_release_to_group,
+                :payment_released_to_group]
 
   def seller_not_mark_approved
     inspection_dates.buyer_added.not_marked_approved.last
@@ -85,5 +96,15 @@ class FlyBuyOrder < ActiveRecord::Base
 
   def get_toadlane_fee
     Fee.find_by(:module_name => "Fly & Buy").value
+  end
+
+  def additional_sellers_account_created_verified?
+    product.additional_sellers.each do |add_seller|
+      if add_seller.fly_buy_profile.nil? || add_seller.fly_buy_profile_account_added? == false || add_seller.fly_buy_unverified_by_admin == true
+        false
+      else
+        true
+      end
+    end
   end
 end

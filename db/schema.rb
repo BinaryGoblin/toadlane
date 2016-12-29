@@ -11,10 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161111053535) do
+ActiveRecord::Schema.define(version: 20161207101805) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "pg_stat_statements"
+
+  create_table "additional_seller_fees", force: :cascade do |t|
+    t.integer  "group_id"
+    t.integer  "group_seller_id"
+    t.decimal  "value"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
 
   create_table "addresses", force: :cascade do |t|
     t.integer  "user_id"
@@ -310,16 +319,19 @@ ActiveRecord::Schema.define(version: 20161111053535) do
     t.float    "rebate_price"
     t.float    "total"
     t.datetime "status_change"
-    t.boolean  "deleted",                default: false
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.boolean  "deleted",                   default: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
     t.string   "synapse_escrow_node_id"
     t.string   "synapse_transaction_id"
-    t.boolean  "inspection_complete",    default: false
-    t.boolean  "payment_release",        default: false
-    t.boolean  "funds_in_escrow",        default: false
+    t.boolean  "inspection_complete",       default: false
+    t.boolean  "payment_release",           default: false
+    t.boolean  "funds_in_escrow",           default: false
     t.float    "seller_fees_percent"
     t.float    "seller_fees_amount"
+    t.integer  "group_seller_id"
+    t.boolean  "group_seller",              default: false
+    t.boolean  "payment_released_to_group", default: false
   end
 
   create_table "fly_buy_profiles", force: :cascade do |t|
@@ -405,6 +417,25 @@ ActiveRecord::Schema.define(version: 20161111053535) do
     t.integer  "user_id"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+  end
+
+  create_table "group_sellers", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "product_id"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.boolean  "accept_deal"
+    t.integer  "group_id"
+    t.boolean  "private_seller", default: false
+  end
+
+  create_table "groups", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "product_id"
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.boolean  "verified_by_admin", default: false
+    t.integer  "group_owner_id"
   end
 
   create_table "images", force: :cascade do |t|
@@ -759,10 +790,21 @@ ActiveRecord::Schema.define(version: 20161111053535) do
     t.integer  "armor_user_id",          limit: 8
     t.boolean  "terms_of_service"
     t.datetime "terms_accepted_at"
+    t.string   "invitation_token"
+    t.datetime "invitation_created_at"
+    t.datetime "invitation_sent_at"
+    t.datetime "invitation_accepted_at"
+    t.integer  "invitation_limit"
+    t.integer  "invited_by_id"
+    t.string   "invited_by_type"
+    t.integer  "invitations_count",                default: 0
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["invitation_token"], name: "index_users_on_invitation_token", unique: true, using: :btree
+  add_index "users", ["invitations_count"], name: "index_users_on_invitations_count", using: :btree
+  add_index "users", ["invited_by_id"], name: "index_users_on_invited_by_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
   create_table "users_roles", id: false, force: :cascade do |t|

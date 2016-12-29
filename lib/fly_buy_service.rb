@@ -32,7 +32,7 @@ class FlyBuyService
     'client_id' => ClientId,
     'client_secret' => ClientSecret,
     'ip_address' => ip_address,
-    'development_mode' => true}
+    'development_mode' => SandboxMode}
 
 
     SynapsePayRest::Client.new options: options, user_id: user_id

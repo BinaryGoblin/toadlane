@@ -65,6 +65,18 @@
     margin-right: 30px !important;
   }
 }
+
+@media (max-width:960px) {
+  .group-table{
+    .member-role{
+      display: inline-block;
+    }
+    thead > tr > th{
+      border-bottom: 0px
+    }
+  }
+}
+
 @media (max-width:767px) {
   body{
     padding-bottom: 0;
@@ -352,7 +364,7 @@
       }
     }
   }
-  .product-form .pricebreaks,
+  .product-form .pricebreaks, .product-form .sellergroups, .group-form .sellergroups,
   .product-form .inspectiondates{
     margin: 0;
     li{
@@ -362,15 +374,29 @@
       height: auto;
       padding: 10px;
       margin-bottom: 10px;
+      .col-md-6 .form-group{
+        margin-bottom: 10px;
+        .chosen-container{
+          width: 100% !important;
+        }
+      }
+      .add-seller-block{
+        padding-left: 0;
+        padding-right: 0;
+      }
     }
     .pricebreak,
-    .inspectiondate{
+    .inspectiondate,
+    .sellergroup{
       position: relative;
       .btn.remove{
         position: absolute;
         right: 10px;
         top: 10px;
         margin: 0;
+      }
+      .set-commission-text-box{
+        width: 200px;
       }
     }
     .index{

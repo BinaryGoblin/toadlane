@@ -311,4 +311,44 @@ module ApplicationHelper
       return "form-control".html_safe
     end
   end
+
+  def get_all_user_except_current_added_user(user, product=nil)
+    all_user_except_current_user = User.where.not(id: user.id)
+    if product.present?
+      additional_sellers_ids = product.additional_sellers.map(&:id)
+      all_user_except_current_user.where.not(id: additional_sellers_ids)
+    end
+    all_user_except_current_user
+  end
+
+  def get_product_and_owner(invited_user)
+    # i.e additional_seller obj is the join table
+    additional_seller = AdditionalSeller.find_by_user_id(invited_user.id)
+    product = additional_seller.product
+    product_owner = product.owner
+
+    [product_owner, product]
+  end
+
+  def get_product_owner(invited_user)
+    # i.e additional_seller obj is the join table
+    User.find_by_id(invited_user.invited_by_id)
+  end
+
+
+
+  # def get_image(image_path)
+  #   attachments.inline[image_path] = open(image_path).read
+  #   attachments[image_path].url
+  # rescue
+  #   "http://staging-toad.s3-us-west-2.amazonaws.com/users/assets/000/000/031/small/missing.png"
+  # end
+
+  # def get_email_or_name(user)
+  #   if user.name.present?
+  #     user.name.titleize
+  #   else
+  #     user.email
+  #   end
+  # end
 end

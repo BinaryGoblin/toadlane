@@ -156,6 +156,7 @@ class UserMailer < ActionMailer::Base
     mail to: @seller.email, subject: "Payment released by #{@buyer.name} for order #{@order.id}"
   end
 
+
   def send_order_queued_notification_to_seller(order)
     @order = order
     @seller = order.seller
@@ -245,6 +246,7 @@ class UserMailer < ActionMailer::Base
     mail to: @seller.email, subject: "Notification to buyer sent"
   end
 
+  # for additional_seller
   def send_account_marked_unverified_notification(user)
     @user = user
 
@@ -255,5 +257,88 @@ class UserMailer < ActionMailer::Base
     @user = user
 
     mail to: @user.email, subject: "Fly Buy account marked verified"
+  end
+
+  def send_added_as_additional_seller_notification(owner, additional_seller, product, group_seller_id)
+    @owner = owner
+    @additional_seller = additional_seller
+    @product = product
+    @group_seller_id = group_seller_id
+
+    mail to: @additional_seller.email, subject: "#{@owner.name.titleize} added you in a group"
+  end
+
+  def send_additional_seller_accept_deal_to_owner(invited_additional_seller, product)
+    @product = product
+    @owner = @product.owner
+    @invited_additional_seller = invited_additional_seller
+
+    mail to: @owner.email, subject: "#{@invited_additional_seller.name.titleize} has accepted the deal"
+  end
+
+  def send_additional_seller_accept_deal_notification(invited_additional_seller, product)
+    @product = product
+    @owner = @product.owner
+    @invited_additional_seller = invited_additional_seller
+
+    mail to: @invited_additional_seller.email, subject: "Additional Seller role accepted"
+  end
+
+  def send_additional_seller_reject_deal_to_owner(invited_additional_seller, product)
+    @product = product
+    @owner = @product.owner
+    @invited_additional_seller = invited_additional_seller
+
+    mail to: @owner.email, subject: "#{@invited_additional_seller.name.titleize} has rejected the deal"
+  end
+
+  def send_additional_seller_reject_deal_notification(invited_additional_seller, product)
+    @product = product
+    @owner = @product.owner
+    @invited_additional_seller = invited_additional_seller
+
+    mail to: @invited_additional_seller.email, subject: "Additional Seller role rejected"
+  end
+
+  def send_group_created_notification_to_admin(product)
+    @product = product
+    if Rails.env.development?
+      admin_email = Rails.application.secrets['ADMIN_EMAIL_GROUP_VERIFICATION']
+    else
+      admin_email = ENV['ADMIN_EMAIL_GROUP_VERIFICATION']
+    end
+
+    mail to: admin_email, subject: "A new group has been created"
+  end
+
+  def send_group_marked_unverified_notification(product, user)
+    @product = product
+    @user = user
+
+    mail to: @user.email, subject: "Group marked unverified"
+  end
+
+  def send_group_marked_verified_notification(product, user)
+    @product = product
+    @user = user
+
+    mail to: @user.email, subject: "Group marked verified"
+  end
+
+  def release_payment_not_possible_notification_to_additional_seller(fly_buy_order, add_seller)
+    @fly_buy_order = fly_buy_order
+    @product = @fly_buy_order.product
+    @group = @fly_buy_order.seller_group
+    @add_seller = add_seller
+    @fly_buy_profile = @add_seller.fly_buy_profile
+
+    mail to: @add_seller.email, subject: "Release Payment not possible"
+  end
+
+  def send_payment_release_to_additional_seller(order, additional_seller)
+    @order = order
+    @additional_seller = additional_seller
+
+    mail to: @additional_seller.email, subject: "Payment released by #{@order.seller.name} for order #{@order.id}"
   end
 end

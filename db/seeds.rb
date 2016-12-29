@@ -6,8 +6,9 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-unless Role.any?
-  %w{superadmin admin user}.each do |role|
-    Role.create(name: role)
-  end
+
+["superadmin", "admin", "user", "seller", "group admin"].each do |role|
+	unless Role.find_by_name(role)
+	  Role.create(name: role)
+	end
 end

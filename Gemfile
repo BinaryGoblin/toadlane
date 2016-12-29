@@ -69,6 +69,10 @@ gem 'roo', '~> 2.4.0'
 
 gem 'countdown', '~> 0.1.0'
 
+gem 'chosen-rails', '~> 1.5.2'
+
+gem 'devise_invitable', '~> 1.6.1'
+
 # Dev - debugging group
 group :development do
   gem 'pry-rails'
@@ -108,7 +112,7 @@ gem 'will_paginate', '~> 3.0.7'
 gem 'mailboxer', github: 'lacco/mailboxer'
 
 gem 'paper_trail', '~> 3.0.7'
-gem 'puma', '~> 2.11.1'
+gem 'puma', '~> 3.6.2'
 
 gem 'httparty', '~> 0.13.7'
 gem 'carmen-rails', '~> 1.0.0'

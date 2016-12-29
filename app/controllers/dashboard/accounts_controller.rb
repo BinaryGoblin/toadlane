@@ -162,6 +162,9 @@ class Dashboard::AccountsController < DashboardController
       elsif params["account"]["extra"]["note"] == "Released Payment" && params["account"]["extra"]["supp_id"].present?
         fly_buy_order_id = params["account"]["extra"]["supp_id"].split("_").last
         fly_buy_order = FlyBuyOrder.find_by_id(fly_buy_order_id)
+      elsif params["account"]["extra"]["note"] == "Released Payment To Additional Seller" && params["account"]["extra"]["supp_id"].present?
+        fly_buy_order_id = params["account"]["extra"]["supp_id"].split("_").last
+        fly_buy_order = FlyBuyOrder.find_by_id(fly_buy_order_id)
       end
 
       if fly_buy_order.present? && params["recent_status"]["status"] == "SETTLED" && params["recent_status"]["status_id"] == "4"
@@ -178,6 +181,14 @@ class Dashboard::AccountsController < DashboardController
             status: 'completed'
            })
           UserMailer.send_payment_released_notification_to_seller(fly_buy_order).deliver_later
+        elsif params["account"]["extra"]["note"] == "Released Payment To Additional Seller" && fly_buy_order.payment_released_to_group == false
+          fly_buy_order.update_attributes({
+            payment_released_to_group: true,
+            status: 'payment_released_to_group'
+           })
+          fly_buy_order.product.additional_sellers.each do |additional_seller|
+            UserMailer.send_payment_release_to_additional_seller(fly_buy_order, additional_seller).deliver_later
+          end
         end
       elsif fly_buy_order.present? && params["recent_status"]["status"] == "QUEUED-BY-SYNAPSE"
         fly_buy_order.update_attribute(:status, 'queued')
