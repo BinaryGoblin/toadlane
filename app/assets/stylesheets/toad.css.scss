@@ -173,7 +173,7 @@ form .wrap-sm
   float: left;
   margin-left: 20px;
   position: relative;
-  top: 15px;
+  top: 10px;
 }
 .headerIcons:hover{
   cursor:pointer;
@@ -242,10 +242,11 @@ text-decoration: none !important;
   padding:10px 10px !important;
   border-bottom:0px !important;
   position:absolute;
-  top: 0px;
-  margin-top: 15%;
+  top: 56px;
+  right:40px;
+  margin-top: 0px;
   z-index: 99999999;
-  margin-left: 49%;
+  margin-left:0px;
   float: right;
 }
 .createGroupBtn
@@ -296,7 +297,7 @@ text-decoration: none !important;
   float:left;
   width:7% !important;
   position:relative;
-  top:17px;
+  top:13px;
   margin-left:25px;
   cursor:pointer;
   z-index: 999999999999999;
@@ -314,7 +315,7 @@ margin-left: 20px;
 cursor: pointer;
 border-left: 1px #787b7e solid;
 position: relative;
-top: 18px;
+top: 13px;
 }
 .logoutIcon img
 {
@@ -336,9 +337,10 @@ top: 18px;
 .InvitePpl .topArrowIcon
 {
   position: absolute;
-  margin-left: -32.7%;
-  margin-top: 6.6%;
+  margin-left:39px;
+  margin-top:22px;
   height:0px;
+  left:50%;
 }
 .topArrowIcon .fa-caret-up
 {
@@ -431,8 +433,8 @@ box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
 .logOutOptions .topArrowIcon
 {
   position: absolute;
-  margin-left: -18.3%;
-  margin-top: 6.6%;
+  top:22px;
+  right:63px;
   height:0px;
 }
 .logOutOptions .topArrowIcon .fa-caret-up
@@ -446,14 +448,15 @@ box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
 {
   position: absolute;
   width: 180px;
-  height: 140px;
+  margin:0px;
+  height: auto;
   overflow-x: hidden;
   background: #f2f2f2;
   border-radius: 5px;
   z-index: 99999999;
   padding: 10px;
-  margin-left: 45%;
-  margin-top: 15%;
+  right:60px;
+  top:50px;
   -webkit-box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
 -moz-box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
 box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
@@ -672,6 +675,7 @@ box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
 .find-and-explore:after, .find-and-explore:before{ clear:both; display:table; line-height:1px; content:"";}
  .logoSideNav{ margin-left:0px;}
  .buy-sell{ width:100%; display:inline-block;}
+ .tabs, .admin-tabs{ top:0 !important;}
  .tabs ul, .admin-tabs ul{ margin-top:110px;}
  .product-carousel{ width:100%; display:inline-block;}
  .wrap-sm{ float:none;  padding-bottom:15px; width:100%;}
@@ -680,6 +684,19 @@ box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
 .tabs.wrap-sm{ width:15%;  padding-bottom:0px;}
 .edit_user > .wrap-sm{ padding-top:85px;}
 .footer-actions .fa-container, .footer{ z-index:1;}
+body > .tabs.wrap-sm{  margin-left:0px; padding-top:0px; }
+body > .wrap-sm{ max-width:inherit; margin-left:15%; padding-top:70px;  width:auto;}
+#invitePplList li .userDetails .userdetails{ white-space:normal;}
+.tabs ul, .admin-tabs ul, .admin-tabs ul{ margin-top:73px;}
+form > .wrap-sm{ float:none !important; max-width:inherit; width:auto; left:0px !important; margin-left:15%; padding-bottom:0px !important; padding-top:75px; }
+.footer-actions .wrap-sm{ padding:0px !important; max-width:100%; width:100%; left:0px !important; display:inline-block; }
+.footer-actions .fa-container{ }
+.footer-actions .fa-container .show-all{ position:inherit; padding-left:15%;}
+.footer-actions .fa-container .show-all div{ margin-left:15px;}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+.fe-btn{ padding-bottom:9px !important; } 
+}
 
 @media only screen and (max-width:1180px) {
   .find-and-explore{ padding:10px 15px;}
@@ -694,15 +711,25 @@ box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
   .few img{ margin:0px auto; max-width:100%;}
   .internalWrapper{ float:none; width:auto; left:0px; margin-left:180px !important;}
   .tabs, .admin-tabs, .tabs.wrap-sm{ width:180px;}
-  .tabs ul, .admin-tabs ul, .admin-tabs ul{ margin-top:121px;}
+  body > .wrap-sm{ margin-left:180px; }
+  .footer-actions .fa-container{ padding-left:180px !important;}
+  .footer-actions .fa-container .show-all{ padding-left:0px;}
   .subSectionCount{font-size:30px;}
   .subsectionDetail{ top:-5px;}
   .subSection{ padding:0px 5px;}
-  form .wrap-sm{ float:none !important; max-width:inherit; width:auto; left:0px !important; margin-left:183px; padding-bottom:0px !important;}
   .profile-table h4{ padding-bottom:10px;}
+  #logOutOptionsList{ right:35px;}
+  .logOutOptions .topArrowIcon{ right:48px;}
+  .createGroupWrapper{ right:15px;}
+  .InvitePpl .topArrowIcon{ margin-left:47px;}
+  form > .wrap-sm{  margin-left:183px;}
   } 
 @media only screen and (max-width:990px) {
   .profile-table hr{ display:none;}
+  #logOutOptionsList{ right:15px;}
+  .logOutOptions .topArrowIcon .fa-caret-up{ display:none;}
+  .account-table h4{ padding-bottom:20px;}
+  .radio label, .checkbox label{ padding-left:15px; padding-right:15px;}
   }
 @media only screen and (max-width:854px) {
   .logoSideNav{ padding-right:0px;}
@@ -712,8 +739,11 @@ box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
   .subSection{ width:50%; margin:5px 0px;}
   .headerIcons{ margin-left:10px;}
   .otherNotification{ margin-left:15px !important; }
-  .peopleInviteIcon, .logoutIcon{  margin-left:15px; top:20px;}
+  .peopleInviteIcon, .logoutIcon{  margin-left:15px; top:14px;}
   .logoutIcon{ padding:5px 0 5px 7px;}
+  .InvitePpl .topArrowIcon{ margin-left:52px;}
+  .createGroupWrapper{ top:51px; right:-7px;}
+  #invitePplList{ margin-top:49px;margin-left:0px; right:0px;}
   }
 @media only screen and (max-width:767px) {
   .header .pull-right{ width:48%; margin-left:2%;} 
@@ -731,13 +761,25 @@ box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
   .buy-sell .main-sell{ padding-top:55px; }
   .buy-sell .wrap div, .buy-sell .wrap-sm div, .buy-sell .wrap-sm div{ width:100%; margin:0px !important;}
   .header{ position:inherit;}
-  .tabs ul, .admin-tabs ul, .admin-tabs ul{ margin-top:216px;}
+  .tabs ul, .admin-tabs ul, .admin-tabs ul{ margin-top:165px;}
   .tabs, .admin-tabs, .tabs.wrap-sm{ position:absolute;}
   .devise{ top:20px;}
   .infos-title{  width:100%; display:inline-block; padding-top:0px;}
   .headerIcons, .peopleInviteIcon, .logoutIcon{ float:none; top:0px;  float:none; display:inline-block;}
   .peopleInviteIcon, .logoutIcon{ width:21px !important;}
   .headerIcons{ margin-left:20px;}
+  .footer-actions .fa-container{ margin-top:15px; position:inherit !important;}
+  #logOutOptionsList{ right:50%; margin-right:-115px; top:11px;}
+  .tabs, .admin-tabs, .admin-tabs, .tabs.wrap-sm, .wrap-sm.admin-tabs{ top:0px !important;}
+  .edit_user > .wrap-sm{ padding-top:175px;}
+  .profile-image-container{ margin-bottom:20px;}
+  body > .wrap-sm{ min-height:550px;}
+  body > .wrap-sm{ padding-top:170px;}
+  form > .wrap-sm{  min-height:550px; padding-top:170px;}
+  body > .tabs.wrap-sm, body > .wrap-sm.admin-tabs{ min-height:inherit;  padding-top:0px;} 
+  .InvitePpl{ position:absolute; right:50%; margin-top:103px; margin-right:-200px;}
+  .InvitePpl .topArrowIcon{ margin-left:-158px;}
+  .table-options .selected-labels{ width:100%; display:inline-block;}
   }
   @media only screen and (max-width:668px) {
   .few img{ height:36px;}
@@ -764,8 +806,19 @@ box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
    #profilePicRow .userDetails .userName{ font-size:14px; top:0px; text-align:center;}
    #profilePicRow .userDetails .editProfile{ left:0px;text-align:center; }
    #profilePicRow .userPic img{ max-width:60px; margin:0 auto; display:block; float:none;}
+   form .wrap-sm{ display:inline-block; width:100%;  margin-left:0px;}
+   .edit_user > .wrap-sm, form > .wrap-sm{ padding-top:35px;}
+   body > .wrap-sm{ width:100%; display:inline-block; margin-left:0px; padding-top:20px;}
+   .InvitePpl{ margin-top:132px;}
+  .footer-actions .fa-container{ padding-left:0px !important;}
    }
   @media only screen and (max-width:400px) {
    .subSection{ width:100%;}  
    .subSection + .subSection{ border-top:1px solid #334248;} 
+   #invitePplList{ width:300px;}
+   #invitePplList li .userAction{ width:39%;} 
+   .InvitePpl{ margin-right:-150px;}
+   #invitePplList li .userDetails{ width:47%;}
+   .InvitePpl .topArrowIcon{ margin-left:-108px;}
+
    }  

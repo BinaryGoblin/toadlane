@@ -1,6 +1,6 @@
 .infos-title: .wrap-sm: h2 Terms of Service
   
-.wrap-sm
+.infos-content: .wrap-sm
   = render '/shared/terms'
 
   - if (current_user.present? and current_user.has_role?(:user)) 
