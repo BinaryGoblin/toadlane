@@ -693,6 +693,8 @@ form > .wrap-sm{ float:none !important; max-width:inherit; width:auto; left:0px 
 .footer-actions .fa-container{ }
 .footer-actions .fa-container .show-all{ position:inherit; padding-left:15%;}
 .footer-actions .fa-container .show-all div{ margin-left:15px;}
+.ui-selectmenu-menu{ z-index:1000; }
+.ui-menu.fe-categories{ margin-top:4px !important;}
 
 @media screen and (-webkit-min-device-pixel-ratio:0) {
 .fe-btn{ padding-bottom:9px !important; } 
@@ -712,6 +714,7 @@ form > .wrap-sm{ float:none !important; max-width:inherit; width:auto; left:0px 
   .internalWrapper{ float:none; width:auto; left:0px; margin-left:180px !important;}
   .tabs, .admin-tabs, .tabs.wrap-sm{ width:180px;}
   body > .wrap-sm{ margin-left:180px; }
+  .footer-actions .wrap-sm{ margin-left:0px; }
   .footer-actions .fa-container{ padding-left:180px !important;}
   .footer-actions .fa-container .show-all{ padding-left:0px;}
   .subSectionCount{font-size:30px;}
@@ -817,7 +820,9 @@ form > .wrap-sm{ float:none !important; max-width:inherit; width:auto; left:0px 
    body > .wrap-sm{ width:100%; display:inline-block; margin-left:0px; padding-top:20px;}
    .InvitePpl{ margin-top:132px;}
   .footer-actions .fa-container{ padding-left:0px !important;}
-   }
+  .ui-menu.fe-categories{ margin-left:0px !important; margin-top:0px !important;}
+  
+  }
   @media only screen and (max-width:400px) {
    .subSection{ width:100%;}  
    .subSection + .subSection{ border-top:1px solid #334248;} 
