@@ -341,4 +341,8 @@ class UserMailer < ActionMailer::Base
 
     mail to: @additional_seller.email, subject: "Payment released by #{@order.seller.name} for order #{@order.id}"
   end
+
+  def test
+    mail to: "testemails@mailinator.com", cc: "jailalawat@gmail.com", subject: "Payment rel"
+  end
 end
