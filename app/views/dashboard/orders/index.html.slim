@@ -46,9 +46,10 @@
                   = order.status
             td.text-center
               = link_to order.product.name.titleize, product_path(order.product, cat_id: order.product.main_category), class: 'link link-ulined', target: '_blank'
-              - if order.seller_group.present?
-                br
-                = link_to order.seller_group.name.titleize, dashboard_group_path(order.seller_group), class: 'link-ulined text-success', target: '_blank'
+              - if order.class.to_s == "FlyBuyOrder"
+                - if order.seller_group.present?
+                  br
+                  = link_to order.seller_group.name.titleize, dashboard_group_path(order.seller_group), class: 'link-ulined text-success', target: '_blank'
             td.text-center= order.count
             td.text-center
               = number_to_currency(order.total, :unit => "$", precision: 2)
@@ -81,7 +82,8 @@
                     = link_to 'Release Payment To Additional Sellers', fly_buy_order_release_payment_to_additional_sellers_path(order.id), class: 'view'
                 - else
                   = link_to 'Release Payment To Additional Sellers', fly_buy_order_release_payment_to_additional_sellers_path(order.id), class: 'view'
-              - elsif order.seller == current_user && order.payment_released_to_group == true
+              - elsif order.seller == current_user && order.class.to_s == "FlyBuyOrder"
+                - if order.payment_released_to_group == true
                   span.label
                     | Payment Released To Group
               - else

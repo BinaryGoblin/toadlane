@@ -93,7 +93,7 @@ class User < ActiveRecord::Base
   before_destroy { roles.clear }
 
   serialize :benefits, Array
-  validates :benefits, presence: true, :on=>:update
+  # validates :benefits, presence: true, :on=>:update
 
   validate :validate_phone_number
 

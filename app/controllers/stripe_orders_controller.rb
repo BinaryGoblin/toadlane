@@ -8,20 +8,22 @@ class StripeOrdersController < ApplicationController
 
   def create
     if stripe_order_params[:address_id] == "-1"
-      address = Address.new
-      address.name = stripe_params["stripeShippingName"]
-      address.line1 = stripe_params["stripeShippingAddressLine1"]
-      address.line2 = stripe_params["stripeShippingAddressLine2"]
-      address.zip = stripe_params["stripeShippingAddressZip"]
-      address.state = stripe_params["stripeShippingAddressState"]
-      address.city = stripe_params["stripeShippingAddressCity"]
-      address.country = stripe_params["stripeShippingAddressCountry"]
-      address.user = current_user
-      address.save(validate: false)
+      @address = Address.new
+      @address.name = stripe_params["stripeShippingName"]
+      @address.line1 = stripe_params["stripeShippingAddressLine1"]
+      @address.line2 = stripe_params["stripeShippingAddressLine2"]
+      @address.zip = stripe_params["stripeShippingAddressZip"]
+      @address.state = stripe_params["stripeShippingAddressState"]
+      @address.city = stripe_params["stripeShippingAddressCity"]
+      @address.country = stripe_params["stripeShippingAddressCountry"]
+      @address.user = current_user
+      @address.save(validate: false)
+    else
+      @address = Address.find stripe_order_params[:address_id]
     end
 
     @stripe_order = StripeOrder.new(stripe_order_params)
-    @stripe_order.address_id = address.id
+    @stripe_order.address_id = @address.id
 
     if @stripe_order.save(validate: false)
       @stripe_order.start_stripe_order(stripe_params["stripeToken"])
