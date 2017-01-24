@@ -5,6 +5,7 @@
 @import "font-awesome";
 
 @import "jquery.bxslider";
+@import "chosen";
 
 @import "common/variables";
 @import "common/mixins";
@@ -32,6 +33,7 @@
 @import "common/intl_tel_input";
 @import "common/related_searches";
 @import "common/spacers";
+@import "common/chosen_select";
 
 @import "toad/products";
 @import "toad/sellers";
@@ -670,7 +672,7 @@ box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
 .few{width:100%; padding-bottom:100px;}
 .footer .logo{ left:0px; }
 .copy{ left:0px;}
-.footer .wrap, .footer .wrap-sm, .wrap, .wrap-sm{  margin:0px auto;} 
+.footer .wrap, .footer .wrap-sm, .wrap, .wrap-sm{  margin:0px auto;}
 .find-and-explore{ max-width:1180px; margin:0px auto; float:none;}
 .find-and-explore:after, .find-and-explore:before{ clear:both; display:table; line-height:1px; content:"";}
  .logoSideNav{ margin-left:0px;}
@@ -697,7 +699,7 @@ form > .wrap-sm{ float:none !important; max-width:inherit; width:auto; left:0px 
 .ui-menu.fe-categories{ margin-top:4px !important;}
 
 @media screen and (-webkit-min-device-pixel-ratio:0) {
-.fe-btn{ padding-bottom:9px !important; } 
+.fe-btn{ padding-bottom:9px !important; }
 }
 
 @media only screen and (max-width:1180px) {
@@ -726,7 +728,7 @@ form > .wrap-sm{ float:none !important; max-width:inherit; width:auto; left:0px 
   .createGroupWrapper{ right:15px;}
   .InvitePpl .topArrowIcon{ margin-left:47px;}
   form > .wrap-sm{  margin-left:183px;}
-  } 
+  }
 @media only screen and (max-width:990px) {
   .profile-table hr{ display:none;}
   #logOutOptionsList{ right:15px;}
@@ -739,7 +741,7 @@ form > .wrap-sm{ float:none !important; max-width:inherit; width:auto; left:0px 
   .subSection{ padding:0px 5px;}
   form .wrap-sm{ float:none !important; max-width:inherit; width:auto; left:0px !important; margin-left:183px; padding-bottom:0px !important;}
   .profile-table h4{ padding-bottom:10px;}
-  } 
+  }
 @media only screen and (max-width:854px) {
   .logoSideNav{ padding-right:0px;}
   .few img{ height:50px;}
@@ -755,7 +757,7 @@ form > .wrap-sm{ float:none !important; max-width:inherit; width:auto; left:0px 
   .peopleInviteIcon, .logoutIcon{  margin-left:15px; top:20px;}
   }
 @media only screen and (max-width:767px) {
-  .header .pull-right{ width:48%; margin-left:2%;} 
+  .header .pull-right{ width:48%; margin-left:2%;}
   .logoSideNav{ width:130px; margin:0px auto 14px auto; display:table; float:none;}
   .navbar-default .navbar-toggle{ margin-top:-29px;}
   .fe-search{ width:100% !important; margin-bottom:10px;}
@@ -785,7 +787,7 @@ form > .wrap-sm{ float:none !important; max-width:inherit; width:auto; left:0px 
   body > .wrap-sm{ min-height:550px;}
   body > .wrap-sm{ padding-top:170px;}
   form > .wrap-sm{  min-height:550px; padding-top:170px;}
-  body > .tabs.wrap-sm, body > .wrap-sm.admin-tabs{ min-height:inherit;  padding-top:0px;} 
+  body > .tabs.wrap-sm, body > .wrap-sm.admin-tabs{ min-height:inherit;  padding-top:0px;}
   .InvitePpl{ position:absolute; right:50%; margin-top:103px; margin-right:-200px;}
   .InvitePpl .topArrowIcon{ margin-left:-158px;}
   .table-options .selected-labels{ width:100%; display:inline-block;}
@@ -797,7 +799,7 @@ form > .wrap-sm{ float:none !important; max-width:inherit; width:auto; left:0px 
   }
 @media only screen and (max-width:480px) {
    .header .fe-search [type="text"]{ left:0px; top:29px; width:100%;}
-   .fe-search{ border-bottom:none;}  
+   .fe-search{ border-bottom:none;}
    .fe-search .fe-btn.btn-warning{ background:#14ba62 url("/assets/search-icon.png") no-repeat center center !important; background-size:25px !important;border-color:#14ba62; top:0px;}
    .brands-logo > a{ width:100%;}
    .brands-logo > a + a{ margin-top:15px;}
@@ -808,9 +810,9 @@ form > .wrap-sm{ float:none !important; max-width:inherit; width:auto; left:0px 
    .tabs li a, .admin-tabs li a{ padding:3px 5px;}
    .miniDashboard{ padding:0px;}
    .subSection{ text-align:left; padding:5px 15px; margin:0px; }
-   .internalWrapper{ margin-left:0px !important; display:inline-block; padding-top:20px;} 
+   .internalWrapper{ margin-left:0px !important; display:inline-block; padding-top:20px;}
    #profilePicRow{ position:absolute; width:120px; padding:0px; margin:0px;}
-   #profilePicRow .userPic{ width:100%; margin-left:0px;}   
+   #profilePicRow .userPic{ width:100%; margin-left:0px;}
    #profilePicRow .userDetails{ width:100%;}
    #profilePicRow .userDetails .userName{ font-size:14px; top:0px; text-align:center;}
    #profilePicRow .userDetails .editProfile{ left:0px;text-align:center; }
@@ -821,16 +823,16 @@ form > .wrap-sm{ float:none !important; max-width:inherit; width:auto; left:0px 
    .InvitePpl{ margin-top:132px;}
   .footer-actions .fa-container{ padding-left:0px !important;}
   .ui-menu.fe-categories{ margin-left:0px !important; margin-top:0px !important;}
-  
+
   }
   @media only screen and (max-width:400px) {
-   .subSection{ width:100%;}  
-   .subSection + .subSection{ border-top:1px solid #334248;} 
+   .subSection{ width:100%;}
+   .subSection + .subSection{ border-top:1px solid #334248;}
 
    #invitePplList{ width:300px;}
-   #invitePplList li .userAction{ width:39%;} 
+   #invitePplList li .userAction{ width:39%;}
    .InvitePpl{ margin-right:-150px;}
    #invitePplList li .userDetails{ width:47%;}
    .InvitePpl .topArrowIcon{ margin-left:-108px;}
 
-   }  
+   }

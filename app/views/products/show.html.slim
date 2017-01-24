@@ -145,7 +145,6 @@
           .white-panel.wp-table
             - if current_user.present?
               -if @product.status_characteristic == 'sell'
-                -byebug
                 - if strip_tags(time_left(@product.end_date)) == 'Time ended'
                   .wrong.text-center
                     | The Time allocated by seller has ended for this product.

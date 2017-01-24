@@ -1,36 +1,37 @@
- 
+
 .tabs.wrap-sm
 
-  
+
   ul
-    / li= 
-    / .profile-user-image 
+    / li=
+    / .profile-user-image
     /       - if @user.asset?
-    /       .image-tag style='background-image:url(#{@user.asset(:small)})' 
+    /       .image-tag style='background-image:url(#{@user.asset(:small)})'
     /       = f.text_field :name, class: 'tab_form-control'
-          
-    li#profilePicRow 
+
+    li#profilePicRow
       .userPic
             =link_to image_tag('avatar/small/missing.png'), '', class: ''
-                
+
       .userDetails
-        .userName John Ballantine
+        .userName
+          = current_user.name
         .userdetails
           = link_to 'Edit Profile', dashboard_profile_path, class: 'editProfile'
-      
-         
+
+
     li
-      = link_to fa_icon('briefcase', text: 'Accounts'), dashboard_profile_path, is: 'accounts' 
-    
+      = link_to fa_icon('briefcase', text: 'Accounts'), dashboard_profile_path, is: 'accounts'
+
     li= link_to fa_icon('cubes', text: 'My products'), dashboard_products_path, is: 'products'
     li= link_to fa_icon('truck', text: 'Orders'), dashboard_orders_path, is: 'orders'
-    
+
     li= link_to fa_icon('money', text: 'Financing'), dashboard_finances_path, is: 'forms'
     li= link_to fa_icon('th-large', text: 'Categories'), '', is: 'categories'
     / ul#categoriesSection
     /   li   = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
 
-  
+
   //  link_to fa_icon('newspaper-o', text: 'My Profile'), dashboard_profile_path, is: 'profiles'
   //  li= tab_link_to 'My profile', dashboard_profile_path, is: 'profiles'
     //li= tab_link_to 'Accounts', dashboard_accounts_path, is: 'accounts'
@@ -41,4 +42,3 @@
   //  li= tab_link_to 'Financing', dashboard_finances_path, is: 'finances'
     //li= tab_link_to "Messages (#{get_user_unread_message_notifications})", dashboard_messages_path(box: 'inbox'), is: 'messages'
     //xli= tab_link_to "Notifications (#{get_user_unread_notifications})", dashboard_notifications_path, is: 'notifications'
-    
