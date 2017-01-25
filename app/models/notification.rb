@@ -15,9 +15,11 @@
 #  green_order_id   :integer
 #  deleted          :boolean          default(FALSE)
 #  promise_order_id :integer
-#
+#  notinotifiable_id :integer
+#  notifiable_type :text
 
 class Notification < ActiveRecord::Base
+  belongs_to :notifiable, :polymorphic => true
   belongs_to :user
   belongs_to :armor_order
   belongs_to :amg_order
