@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  before_filter :authenticate
   protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json' }
 
   rescue_from CanCan::AccessDenied do |exception|
@@ -98,6 +99,12 @@ class ApplicationController < ActionController::Base
       end
     else
       account_deactivated_path
+    end
+  end
+
+  def authenticate
+    authenticate_or_request_with_http_basic do |username, password|
+      username == "toadlane" && password == "mantoad007"
     end
   end
 end
