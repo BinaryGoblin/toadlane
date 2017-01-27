@@ -80,6 +80,7 @@
 @media (max-width:767px) {
   body{
     padding-bottom: 0;
+    overflow-x: hidden;
   }
   .navbar-toggle{
     margin: 0;
@@ -242,6 +243,280 @@
     ul.list-container{
       margin: 0 0 20px;
     }
+  }
+  header
+  {
+    margin-bottom:0px !important;
+  }
+  .find-and-explore
+  {
+    padding:10px 0px 0px;
+  }
+  .internalWrapper
+  {
+    float:none;
+    margin-top:12%;
+  }
+  .logoSideNav
+  {
+    display: block;
+  width: 50%;
+  margin-left: 27%;
+  margin-bottom:5%;
+  }
+  .fe-search,.header-user
+  {
+    width:95% !important;
+    margin-left:2.5%;
+    text-align: center !important;
+  }
+  .header-user .sellBtn
+  {
+    margin-left:14%;
+  }
+  .header
+  {
+    width:100%;
+    position:inherit;
+  }
+  .header
+  {
+    margin-bottom:10px !important;
+  }
+  .footer
+  {
+    float:left;
+    width:100%;
+  }
+  .wrap-sm
+  {
+    width:100%;
+    margin-top:0px !important;
+    position:inherit;
+    top:0% !important;
+    margin-bottom:0px !important;
+    padding:0 8px;
+  }
+  .tabs ul, .admin-tabs ul
+  {
+    margin-top: 0%;
+  }
+  .tabs ul li, .admin-tabs ul li
+  {
+    width:46%;
+    min-height:58px;
+  }
+  #profilePicRow
+  {
+    margin-bottom:0px !important;
+  }
+  #profilePicRow .userPic
+  {
+    width:25% !important;
+    margin-left:7% !important;
+  }
+  .internalWrapper
+  {
+    width:100% !important;
+    left:0% !important;
+    margin-top: 0%;
+    padding-top:4%;
+  }
+  .miniDashboard .subSection
+  {
+    width:50%;
+  }
+  .header .pull-right
+  {
+    margin: 0px -18% 30px 20% !important;
+  }
+  .fe-search .btn-warning
+  {
+      background: #2987D8 url(/assets/search-icon.png) no-repeat center center !important;
+      border-left:none !important;
+      top:1px !important;
+  }
+  .product-carousel
+  {
+    float:left;
+    width:100%;
+  }
+  .subSectionCount
+  {
+    font-size:32px !important;
+  }
+  .carousel-product-title h3
+  {
+    width:100%;
+    text-align: center;
+    font-size:24px;
+    border-bottom:1px solid #ccc;
+  }
+  .carousel-product-title .actions
+  {
+    float:right;
+    width:100%;
+  }
+  .copy
+  {
+    left:0% !important;
+  }
+  .footer-actions .fa-container
+  {
+    display:none;
+  }
+  .profile-table .col-md-3
+  {
+    margin-bottom:15px;
+  }
+  .profile-table .col-md-9 h4
+  {
+    margin-bottom:15px;
+  }
+  .label
+  {
+    font-size:11px !important;
+    padding: 5px 7px 5px !important;
+  }
+  .selected-labels
+  {
+    margin-top:7px;
+  }
+  .table-options,.finances-table,.profile-table
+  {
+    margin-top:10px !important;
+  }
+  .ui-selectmenu-open
+  {
+    z-index:9999;
+  }
+  .logOutOptions .topArrowIcon
+  {
+    margin-top: 7.6% !important;
+    margin-left:-11.1% !important;
+  }
+  .few,.main-buy,.main-sell
+  {
+    width:100% !important;
+    float:left !important;
+    margin: 0px;
+  }
+  .buy-sell
+  {
+    padding-top:0px !important;
+  }
+  .buy-sell .wrap div, .buy-sell .wrap-sm div, .buy-sell .wrap-sm div
+  {
+    margin-left:0px !important;
+    margin-right:0px !important;
+  }
+  .main-buy
+  {
+    margin-bottom: 25px !important;
+    margin-top:5px !important;
+  }
+  .main-sell
+  {
+    margin-top: 35% !important;
+  }
+  .registrationArea
+  {
+    min-width: 0px !important;
+    top:-5px !important;
+    width:100% !important;
+    float:left !important;
+    border-radius: 0px !important;
+    margin: 0px !important;
+  }
+  .registrationArea form label
+  {
+    width:68% !important;
+    top:0px !important;
+  }
+  .registrationArea form input[type="text"]
+  {
+    width:100% !important;
+    height:45px !important;
+  }
+  .registrationArea form input[type="email"]
+  {
+    width:100% !important;
+    height:45px !important;
+  }
+  .registrationArea form input[type="password"]
+  {
+    width:100% !important;
+    height:45px !important;
+  }
+  .registrationArea .icheckbox
+  {
+    margin-left:0% !important;
+    width:5.9% !important;
+  }
+  .signUpBtnRegister
+  {
+    margin-left:20% !important;
+  }
+  .forgotPasswordLink
+  {
+    margin-left: 28% !important;
+  }
+  .carousel-content h1
+  {
+    margin-top: 40px !important;
+  }
+  .carousel-inner,.carousel
+  {
+    height: 410px !important;
+  }
+  .carousel-product-title .actions .ui-selectmenu-button
+  {
+    margin-top: -8px !important;
+  }
+  #invitePplList
+  {
+    width:auto !important;
+    margin-left:0px !important;
+    height:250px !important;
+  }
+  #invitePplList li .userAction
+  {
+    width:35% !important;
+  }
+  #invitePplList li .userDetails
+  {
+    width:51% !important;
+  }
+  .InvitePpl .topArrowIcon
+  {
+    margin-left: -18.7% !important;
+    margin-top: 7.6% !important;
+  }
+  .createGroupWrapper
+  {
+    margin-left: 57% !important;
+  }
+  .bx-wrapper
+  {
+    width:80% !important;
+    margin:0px auto !important;
+  }
+  .bx-viewport
+  {
+    height:auto !important;
+  }
+  .bxslider
+  {
+    width:100% !important;
+    float:left !important;
+    transform:none !important;
+    padding-left:0px !important;
+  }
+  .bxslider li
+  {
+    display: block !important;
+    width: 100% !important;
+
   }
 }
 
