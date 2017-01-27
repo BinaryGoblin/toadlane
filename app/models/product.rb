@@ -44,6 +44,8 @@ class Product < ActiveRecord::Base
     fly_buy: 'Fly And Buy'
   }
 
+  has_many :notifications, :as => :notifiable, dependent: :destroy
+
   belongs_to :owner, class_name: 'User', foreign_key: 'user_id'
 
   self.inheritance_column = nil # So that the :type enum doesn't complain about Single Table Inheritance
@@ -92,6 +94,8 @@ class Product < ActiveRecord::Base
   self.per_page = 16
 
   alias :user :owner
+
+  after_create :product_create_notification
 
   def available_payments
     ap = []
@@ -204,5 +208,15 @@ class Product < ActiveRecord::Base
 
   def is_group_verified_by_admin?
     group.verified_by_admin
+  end
+
+  def product_create_notification
+    users = User.product_associated_users(self.category)
+    users.each do |user|
+      if user != self.owner
+        NotificationMailer.product_create_notification_email(self, user).deliver_later
+        ProductNotification.new(self, user).product_created
+      end
+    end
   end
 end

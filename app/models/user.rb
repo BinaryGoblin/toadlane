@@ -97,6 +97,8 @@ class User < ActiveRecord::Base
 
   validate :validate_phone_number
 
+  scope :product_associated_users, -> (catagory) { where("benefits LIKE ?", "%#{catagory.name}%" ) }
+
   # after_create :associate_api_user
   # after_update :create_armor_api_account,
   #  if: -> { self.name && self.phone },

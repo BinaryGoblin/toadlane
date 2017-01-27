@@ -37,8 +37,8 @@ Toad::Application.configure do
     port: 587,
     authentication: "plain",
     enable_starttls_auto: true,
-    user_name: "jyaasaruby@gmail.com",
-    password: "p@ssword123"
+    # user_name: "jyaasaruby@gmail.com",
+    # password: "p@ssword123"
   }
   #-----------------------
   config.action_mailer.default_url_options = { :host => "localhost:3000" }
