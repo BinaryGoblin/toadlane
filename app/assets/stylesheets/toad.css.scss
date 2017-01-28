@@ -1,4 +1,5 @@
 // *= require commontator/application
+// *= require chosen
 
 @import "compass/css3";
 @import "bootstrap";
@@ -71,11 +72,11 @@
 }
 
 .ui-menu {
-  opacity: 1.0;
-  background-color: white;
-  border: 2px solid black;
-  list-style: none;
-  cursor: pointer;
+	opacity: 1.0;
+	background-color: white;
+	border: 2px solid black;
+	list-style: none;
+	cursor: pointer;
   padding: 0;
   margin: 0;
   position: absolute;
@@ -86,9 +87,9 @@ body
   background:#fff !important;
 }
 .ui-state-focus {
-  outline: 1px solid #999999;
-  background: #dadada url("images/ui-bg_glass_75_dadada_1x400.png") 50% 50% repeat-x;
-  font-weight: normal;
+	outline: 1px solid #999999;
+	background: #dadada url("images/ui-bg_glass_75_dadada_1x400.png") 50% 50% repeat-x;
+	font-weight: normal;
 }
 .wrap-sm
 {
@@ -106,7 +107,7 @@ form .wrap-sm
   width: 85%;
   float: left;
   left: 15%;
-  padding-top:68px;
+  padding-top: 6%;
 }
 .fa
 {
@@ -129,7 +130,7 @@ form .wrap-sm
   width:100% !important;
   float:left !important;
   padding:0px !important;
-  max-width:100% !important;
+  max-width:1540px !important;
 }
 .footer .wrap
 {
@@ -144,11 +145,12 @@ form .wrap-sm
 }
 .header .pull-right {
     float: left !important;
-    width: 30%;
+    width: 25%;
+
 }
 .fe-search
 {
-  width:60% !important;
+  width:47% ;
   float:left;
 }
 .footer-actions .fa-container
@@ -175,7 +177,7 @@ form .wrap-sm
   float: left;
   margin-left: 20px;
   position: relative;
-  top: 10px;
+  top: 15px;
 }
 .headerIcons:hover{
   cursor:pointer;
@@ -214,7 +216,7 @@ form .wrap-sm
 border: 1px;
 border-radius: 5px;
 color: #fff !important;
-background: #15B1D2;
+background: #2987D8;
 padding: 8px 20px;
 text-transform: uppercase;
 font-weight: 700;
@@ -228,10 +230,11 @@ text-decoration: none !important;
 .loginBtn
 {
   color: #fff !important;
-  background: #15B1D2 !important;
-  border:2px #15B1D2 solid !important;
+  background: #2987D8 !important;
+  border:2px #2987D8 solid !important;
   position:relative;
   top:3px;
+  font-size:16px;
 }
 .registerBtn
 {
@@ -244,11 +247,10 @@ text-decoration: none !important;
   padding:10px 10px !important;
   border-bottom:0px !important;
   position:absolute;
-  top: 56px;
-  right:40px;
-  margin-top: 0px;
+  top: 0px;
+  margin-top: 15%;
   z-index: 99999999;
-  margin-left:0px;
+  margin-left: 49%;
   float: right;
 }
 .createGroupBtn
@@ -290,7 +292,8 @@ text-decoration: none !important;
   left: 1px;
   border-bottom-left-radius: 0px !important;
   border-top-left-radius: 0px !important;
-  background: #14ba62 !important;
+  background: #2987D8;
+  background-size: 22px 22px !important;
   border-bottom: none !important;
   text-shadow: none !important;
 }
@@ -299,7 +302,7 @@ text-decoration: none !important;
   float:left;
   width:7% !important;
   position:relative;
-  top:13px;
+  top:17px;
   margin-left:25px;
   cursor:pointer;
   z-index: 999999999999999;
@@ -317,7 +320,7 @@ margin-left: 20px;
 cursor: pointer;
 border-left: 1px #787b7e solid;
 position: relative;
-top: 13px;
+top: 18px;
 }
 .logoutIcon img
 {
@@ -339,10 +342,9 @@ top: 13px;
 .InvitePpl .topArrowIcon
 {
   position: absolute;
-  margin-left:39px;
-  margin-top:22px;
+  margin-left: -32.7%;
+  margin-top: 6.6%;
   height:0px;
-  left:50%;
 }
 .topArrowIcon .fa-caret-up
 {
@@ -435,8 +437,8 @@ box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
 .logOutOptions .topArrowIcon
 {
   position: absolute;
-  top:22px;
-  right:63px;
+  margin-left: -18.3%;
+  margin-top: 6.6%;
   height:0px;
 }
 .logOutOptions .topArrowIcon .fa-caret-up
@@ -450,15 +452,14 @@ box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
 {
   position: absolute;
   width: 180px;
-  margin:0px;
-  height: auto;
+  height: 140px;
   overflow-x: hidden;
   background: #f2f2f2;
   border-radius: 5px;
   z-index: 99999999;
   padding: 10px;
-  right:60px;
-  top:50px;
+  margin-left: 45%;
+  margin-top: 15%;
   -webkit-box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
 -moz-box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
 box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
@@ -510,10 +511,10 @@ box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
 }
 .btn-success,.btn-default
 {
-  border-bottom-color: #14ba62 !important;
-  border-top-color: #14ba62 !important;
+  border-bottom-color: #2987D8 !important;
+  border-top-color: #2987D8 !important;
   padding: 7px 13px 5px !important;
-  background: #14ba62 !important;
+  background: #2987D8 !important;
   text-shadow:none !important;
   border:none !important;
   color:#fff !important;
@@ -637,6 +638,10 @@ box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
   color:#fff;
   font-weight:bold;
 }
+.subsectionDetail
+{
+  font-size: 11px !important;
+}
 .productViewCount
 {
   color:#FF8401 !important;
@@ -666,173 +671,172 @@ box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
 {
   background: #f07d0c;
 }
-.header{ background:#333;}
-.header .fe-search [type="text"]{ position:absolute; left:129px; width:70%; top:-2px;}
-.fe-search .btn-warning{ z-index:1;}
-.few{width:100%; padding-bottom:100px;}
-.footer .logo{ left:0px; }
-.copy{ left:0px;}
-.footer .wrap, .footer .wrap-sm, .wrap, .wrap-sm{  margin:0px auto;}
-.find-and-explore{ max-width:1180px; margin:0px auto; float:none;}
-.find-and-explore:after, .find-and-explore:before{ clear:both; display:table; line-height:1px; content:"";}
- .logoSideNav{ margin-left:0px;}
- .buy-sell{ width:100%; display:inline-block;}
- .tabs, .admin-tabs{ top:0 !important;}
- .tabs ul, .admin-tabs ul{ margin-top:110px;}
- .product-carousel{ width:100%; display:inline-block;}
- .wrap-sm{ float:none;  padding-bottom:15px; width:100%;}
- .infos-title{ height:auto; padding-top:52px;}
- .infos-title .wrap-sm{ padding-bottom:0px; }
-.tabs.wrap-sm{ width:15%;  padding-bottom:0px;}
-.edit_user > .wrap-sm{ padding-top:85px;}
-.footer-actions .fa-container, .footer{ z-index:1;}
-body > .tabs.wrap-sm{  margin-left:0px; padding-top:0px; }
-body > .wrap-sm{ max-width:inherit; margin-left:15%; padding-top:70px;  width:auto;}
-#invitePplList li .userDetails .userdetails{ white-space:normal;}
-.tabs ul, .admin-tabs ul, .admin-tabs ul{ margin-top:73px;}
-form > .wrap-sm{ float:none !important; max-width:inherit; width:auto; left:0px !important; margin-left:15%; padding-bottom:0px !important; padding-top:75px; }
-.footer-actions .wrap-sm{ padding:0px !important; max-width:100%; width:100%; left:0px !important; display:inline-block; }
-.footer-actions .fa-container{ }
-.footer-actions .fa-container .show-all{ position:inherit; padding-left:15%;}
-.footer-actions .fa-container .show-all div{ margin-left:15px;}
-.ui-selectmenu-menu{ z-index:1000; }
-.ui-menu.fe-categories{ margin-top:4px !important;}
-
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-.fe-btn{ padding-bottom:9px !important; }
+.registrationArea
+{
+  background: rgba(255,255,255,0.9);
+  padding:15px 30px;
+  border-radius:5px;
+  -webkit-box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
+-moz-box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
+box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
+top:105px;
+min-width:550px;
 }
+.registrationArea form label
+{
+  float:left;
+   width:35%;
+   position:relative;
+   top:25px;
+}
+.registrationArea form input[type="text"]
+{
+   padding:7px 15px;
+   height:55px;
+   float:left;
+   width:65%;
+}
+.registrationArea form input[type="password"]
+{
+  padding:7px 15px;
+  height:55px;
+   float:left;
+   width:65%;
+}
+.registrationArea form input[type="email"]
+{
+  padding:7px 15px;
+  height:55px;
+   float:left;
+   width:65%;
+}
+.registrationArea .icheckbox
+{
+  width:4%;
+  float:left;
+  margin-left:35%;
+}
+.forgotPasswordLink
+{
+  margin-left:35%;
+  position:relative;
+  top:10px;
+}
+.signUpBtnRegister
+{
+  margin-left:35%;
+  border-radius: 5px;
+  color: #fff !important;
+  background: #2987D8;
+  padding: 8px 20px;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 16px;
+  border:none !important;
 
-@media only screen and (max-width:1180px) {
-  .find-and-explore{ padding:10px 15px;}
-  .logoSideNav{ padding-right:15px; width:15%; margin:0px;}
-  .header .pull-right{ width:34%;}
-  .fe-search{ width:51% !important;}
-  .few{ width:100%;}
-  .brands-logo{ width:100%; display:inline-block;}
-  .brands-logo > a{ width:33.33%; float:left; padding:0px 15px;}
-  .copy{ left:0px;}
-  .footer .logo{ left:0px;}
-  .few img{ margin:0px auto; max-width:100%;}
-  .internalWrapper{ float:none; width:auto; left:0px; margin-left:180px !important;}
-  .tabs, .admin-tabs, .tabs.wrap-sm{ width:180px;}
-  body > .wrap-sm{ margin-left:180px; }
-  .footer-actions .wrap-sm{ margin-left:0px; }
-  .footer-actions .fa-container{ padding-left:180px !important;}
-  .footer-actions .fa-container .show-all{ padding-left:0px;}
-  .subSectionCount{font-size:30px;}
-  .subsectionDetail{ top:-5px;}
-  .subSection{ padding:0px 5px;}
-  .profile-table h4{ padding-bottom:10px;}
-  #logOutOptionsList{ right:35px;}
-  .logOutOptions .topArrowIcon{ right:48px;}
-  .createGroupWrapper{ right:15px;}
-  .InvitePpl .topArrowIcon{ margin-left:47px;}
-  form > .wrap-sm{  margin-left:183px;}
-  }
-@media only screen and (max-width:990px) {
-  .profile-table hr{ display:none;}
-  #logOutOptionsList{ right:15px;}
-  .logOutOptions .topArrowIcon .fa-caret-up{ display:none;}
-  .account-table h4{ padding-bottom:20px;}
-  .radio label, .checkbox label{ padding-left:15px; padding-right:15px;}
-  .tabs ul, .admin-tabs ul, .admin-tabs ul{ margin-top:121px;}
-  .subSectionCount{font-size:30px;}
-  .subsectionDetail{ top:-5px;}
-  .subSection{ padding:0px 5px;}
-  form .wrap-sm{ float:none !important; max-width:inherit; width:auto; left:0px !important; margin-left:183px; padding-bottom:0px !important;}
-  .profile-table h4{ padding-bottom:10px;}
-  }
-@media only screen and (max-width:854px) {
-  .logoSideNav{ padding-right:0px;}
-  .few img{ height:50px;}
-  .subSectionCount{ font-size:23px;}
-  .subsectionDetail{ top:-3px;}
-  .subSection{ width:50%; margin:5px 0px;}
-  .headerIcons{ margin-left:10px;}
-  .otherNotification{ margin-left:15px !important; }
-  .logoutIcon{ padding:5px 0 5px 7px;}
-  .InvitePpl .topArrowIcon{ margin-left:52px;}
-  .createGroupWrapper{ top:51px; right:-7px;}
-  #invitePplList{ margin-top:49px;margin-left:0px; right:0px;}
-  .peopleInviteIcon, .logoutIcon{  margin-left:15px; top:20px;}
-  }
-@media only screen and (max-width:767px) {
-  .header .pull-right{ width:48%; margin-left:2%;}
-  .logoSideNav{ width:130px; margin:0px auto 14px auto; display:table; float:none;}
-  .navbar-default .navbar-toggle{ margin-top:-29px;}
-  .fe-search{ width:100% !important; margin-bottom:10px;}
-  .header .pull-right{ width:100%; margin:0px; text-align:center;}
-  .header .pull-right .sellBtn{ margin:0px; float:none; display:inline-block; padding:7px 13px 6px !important; font-size:14px; position:relative; left:4px;}
-  .header-user a.btn{ width:auto; margin:-8px 0px 0px 15px;}
-  .footer{ width:100%; display:inline-block;}
-  .footer .logo{ height:28px;margin:16px auto 10px;}
-  .few{ padding-bottom:30px;}
-  .buy-sell{ background-position:50% 50%; padding-bottom:0px;}
-  .buy-sell .main-buy{ padding-bottom:55px; }
-  .buy-sell .main-sell{ padding-top:55px; }
-  .buy-sell .wrap div, .buy-sell .wrap-sm div, .buy-sell .wrap-sm div{ width:100%; margin:0px !important;}
-  .header{ position:inherit;}
-  .tabs ul, .admin-tabs ul, .admin-tabs ul{ margin-top:165px;}
-  .tabs, .admin-tabs, .tabs.wrap-sm{ position:absolute;}
-  .devise{ top:20px;}
-  .infos-title{  width:100%; display:inline-block; padding-top:0px;}
-  .headerIcons, .peopleInviteIcon, .logoutIcon{ float:none; top:0px;  float:none; display:inline-block;}
-  .peopleInviteIcon, .logoutIcon{ width:21px !important;}
-  .headerIcons{ margin-left:20px;}
-  .footer-actions .fa-container{ margin-top:15px; position:inherit !important;}
-  #logOutOptionsList{ right:50%; margin-right:-115px; top:11px;}
-  .tabs, .admin-tabs, .admin-tabs, .tabs.wrap-sm, .wrap-sm.admin-tabs{ top:0px !important;}
-  .edit_user > .wrap-sm{ padding-top:175px;}
-  .profile-image-container{ margin-bottom:20px;}
-  body > .wrap-sm{ min-height:550px;}
-  body > .wrap-sm{ padding-top:170px;}
-  form > .wrap-sm{  min-height:550px; padding-top:170px;}
-  body > .tabs.wrap-sm, body > .wrap-sm.admin-tabs{ min-height:inherit;  padding-top:0px;}
-  .InvitePpl{ position:absolute; right:50%; margin-top:103px; margin-right:-200px;}
-  .InvitePpl .topArrowIcon{ margin-left:-158px;}
-  .table-options .selected-labels{ width:100%; display:inline-block;}
-  }
-  @media only screen and (max-width:668px) {
-  .few img{ height:36px;}
-  .buy-sell { background-position: 50% 50%; background-size: 150px auto;}
- .carousel-product-title h3{ font-size:23px;}
-  }
-@media only screen and (max-width:480px) {
-   .header .fe-search [type="text"]{ left:0px; top:29px; width:100%;}
-   .fe-search{ border-bottom:none;}
-   .fe-search .fe-btn.btn-warning{ background:#14ba62 url("/assets/search-icon.png") no-repeat center center !important; background-size:25px !important;border-color:#14ba62; top:0px;}
-   .brands-logo > a{ width:100%;}
-   .brands-logo > a + a{ margin-top:15px;}
-   .carousel-content h1{ font-size:40px;}
-   .tabs, .admin-tabs, .tabs.wrap-sm{ position:inherit; width:100%; float:left;}
-   .tabs ul, .admin-tabs ul, .admin-tabs ul, .admin-tabs ul{ margin:10px 0px; padding:0px 15px; position:relative;}
-   .tabs ul li, .admin-tabs ul li{ padding-left:126px;}
-   .tabs li a, .admin-tabs li a{ padding:3px 5px;}
-   .miniDashboard{ padding:0px;}
-   .subSection{ text-align:left; padding:5px 15px; margin:0px; }
-   .internalWrapper{ margin-left:0px !important; display:inline-block; padding-top:20px;}
-   #profilePicRow{ position:absolute; width:120px; padding:0px; margin:0px;}
-   #profilePicRow .userPic{ width:100%; margin-left:0px;}
-   #profilePicRow .userDetails{ width:100%;}
-   #profilePicRow .userDetails .userName{ font-size:14px; top:0px; text-align:center;}
-   #profilePicRow .userDetails .editProfile{ left:0px;text-align:center; }
-   #profilePicRow .userPic img{ max-width:60px; margin:0 auto; display:block; float:none;}
-   form .wrap-sm{ display:inline-block; width:100%;  margin-left:0px;}
-   .edit_user > .wrap-sm, form > .wrap-sm{ padding-top:35px;}
-   body > .wrap-sm{ width:100%; display:inline-block; margin-left:0px; padding-top:20px;}
-   .InvitePpl{ margin-top:132px;}
-  .footer-actions .fa-container{ padding-left:0px !important;}
-  .ui-menu.fe-categories{ margin-left:0px !important; margin-top:0px !important;}
-
-  }
-  @media only screen and (max-width:400px) {
-   .subSection{ width:100%;}
-   .subSection + .subSection{ border-top:1px solid #334248;}
-
-   #invitePplList{ width:300px;}
-   #invitePplList li .userAction{ width:39%;}
-   .InvitePpl{ margin-right:-150px;}
-   #invitePplList li .userDetails{ width:47%;}
-   .InvitePpl .topArrowIcon{ margin-left:-108px;}
-
-   }
+}
+.signInBtn
+{
+  margin-left:3%;
+  border:none !important;
+  border-radius: 5px;
+  color: #fff !important;
+  background: #2987D8;
+  padding: 8px 20px;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 16px;
+}
+.signInBtn:hover
+{
+  background: #2987D8;
+  border:none !important;
+}
+.signUpBtnRegister:hover
+{
+  background: #2987D8;
+  border:none !important;
+}
+.registrationArea form div
+{
+  float:left;
+  width:100%;
+  margin-bottom:15px;
+}
+.registrationArea h2
+{
+  text-align:center;
+  font-size:32px;
+  border-bottom:1px #ddd solid;
+  padding-bottom:7px;
+}
+.registrationArea .rememberMeLabelWrapper label
+{
+  top:0px;
+}
+.errorMessageWrapper
+{
+  width:100%;
+  float:left;
+}
+.errorMessage
+{
+  padding:5px 5px;
+  text-align:center;
+  background:#e15b5b;
+  color:#fff !important;
+  border-radius:5px;
+}
+#error_explanation
+{
+  padding:5px 5px;
+  text-align:center;
+  background:#e15b5b;
+  color:#fff !important;
+  border-radius:5px;
+}
+#error_explanation h2
+{
+  color:#fff !important;
+  border-bottom:none !important;
+  padding-top:7px !important;
+}
+#error_explanation ul li
+{
+  color:#fff !important;
+}
+.copy span
+{
+  color:#2987D8 !important;
+}
+.ui-selectmenu-button span.ui-selectmenu-text
+{
+  width: 110px !important;
+  position:relative;
+  top:-20px;
+}
+#cat_id-button .ui-icon-triangle-1-s
+{
+  position:relative;
+  top:-3px;
+}
+.actions .ui-selectmenu-button
+{
+  margin-top: -10px !important;
+}
+.actions span.ui-selectmenu-text
+{
+  top:-5px;
+}
+.carousel-product-title .actions .ui-icon
+{
+  top:14px !important;
+}
+.green_border
+{
+  border:3px solid #2987D8 !important;
+}
+.product .cost span
+{
+  color:#2987D8 !important;
+}
