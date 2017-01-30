@@ -272,7 +272,9 @@
   }
   .header-user .sellBtn
   {
-    margin-left:14%;
+    margin-left: 10%;
+    position: relative;
+    top: 10px;
   }
   .header
   {
@@ -328,7 +330,16 @@
   }
   .header .pull-right
   {
-    margin: 0px -18% 30px 20% !important;
+    margin: 0px -18% 20px 3% !important;
+  }
+  .navbar-toggle
+  {
+    display:none;
+  }
+  .ui-selectmenu-button span.ui-selectmenu-text
+  {
+    top:0px !important;
+    font-size:14px;
   }
   .fe-search .btn-warning
   {
