@@ -4,6 +4,7 @@ class Dashboard::ProfilesController < DashboardController
   def show
     session[:previous_url] = request.referrer
     @user = current_user
+    @subcategory = Category.all.where.not(parent_id: nil)
 
     if params["req_company"] == "true"
       @user.errors.add(:company, 'is required')

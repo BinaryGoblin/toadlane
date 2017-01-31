@@ -53,7 +53,7 @@
 
             .form-group
               label I buy and sell:
-              = f.select :benefits, @user.benefits, {}, multiple: true, data: { behavior: 'Select', options: '{"plugins":["remove_button"],"create":"true"}' }
+              = f.select :benefits,options_from_collection_for_select(@subcategory, :name, :name, f.object.benefits), {}, multiple: true, data: { behavior: 'Select', options: '{"plugins":["remove_button"],"create":"true"}' }
 
     hr
 

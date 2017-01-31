@@ -101,6 +101,7 @@ end
 group :development, :test do
   gem 'faker', '~> 1.4.3'
   gem 'railroady'
+  gem 'mailcatcher'
 end
 
 gem 'rails_12factor', group: [:production, :staging]

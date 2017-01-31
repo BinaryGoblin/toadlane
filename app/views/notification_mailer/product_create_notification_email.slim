@@ -9,18 +9,27 @@ html[style="margin: 0;padding: 0;"]
     .email-head[style="margin: 0;padding: 0;font-size: 16px;font-weight: 100;"]
       img.logo[src="https://www.toadlane.com/assets/logo-header-09ff685e51c99351a07e5332f0996ef2.png" alt="Toadlane Logo" style="margin: 0;padding: 0;height: 100px;"]
       .pull-right[style="margin: 0;padding: 0;float: right;margin-top: 25px;"]
+        strong
+          = get_email_or_name(@user)
+        = image_tag get_image(@user.asset(:small)), height: '50', :class => "pro-img", :style => "margin: 0;padding: 5px;height: 30px;vertical-align: middle;margin-right: 15px;border-radius: 5px;border: 1px solid #eaebec;background-color: #fff;margin-left: 10px;"
 
     .container style=("margin: 15px;padding: 15px;background: #fff;border: 1px solid #eaebec;border-radius: 3px;")
       .message-each style=("margin: 0;padding: 0;")
-        .message-section style=("margin: 0;padding: 15px;background: #eee;border-radius: 3px;margin-bottom: 20px;")
-          | #{@product.owner.name.titleize} has added product
-          b   #{@product.name.titleize}.
-          br>/
-          | Click below to view this product.
+        .message-section style=("margin: 0;padding: 15px;background: #eee;border-radius: 3px;margin-bottom: 20px; height: 120px;" )
+          div
+            - if @product.images.present? && @product.images.first.image(:small).present?
+              = image_tag get_image(@product.images.first.image(:small)), :class => "pro-img", :style => "background: #fff; border-color: #ccc; float: left; margin: 8px 15px 0px 0px; padding: 5px; height: 90px; vertical-align: middle; border-radius: 5px; border: 1px solid #eaebec;"
+            - else
+              img[src="https://www.toadlane.com/assets/product-missing-09ff685e51c99351a07e5332f0996ef2.png" alt="Toadlane Logo" style="background: #fff; border-color: #ccc; float: left; margin: 8px 15px 0px 0px; padding: 5px; height: 90px; vertical-align: middle; border-radius: 5px; border: 1px solid #eaebec;"]
+          p style=("padding: 24px 0px 24px 0px; margin: 0;")
+            | #{@product.owner.name.titleize} has added product
+            b   #{@product.name.titleize}.
+            br>/
+            | Click below to view this product.
         .message-footer style=("margin: 0;padding: 0;")
           - if @product.present?
             = link_to @product.name, product_url(@product, cat_id: @product.main_category),
-                  {:style => "margin: 0;padding: 7px 13px;color: white;border: 1px solid transparent;border-bottom-color: #3d6411;border-top-color: #59af0c;text-shadow: 0 1px 0 #3d6411;text-decoration: none;background-image: linear-gradient(to bottom, #59af0c 0%, #5c8f10 100%);background-repeat: repeat-x;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF59AF0C', endColorstr='#FF5C8F10', GradientType=0);border-radius: 3px;display: inline-block;"}
+              {:style => "margin: 0;padding: 7px 13px;color: white;border: 1px solid transparent;border-bottom-color: #3d6411;border-top-color: #59af0c;text-shadow: 0 1px 0 #3d6411;text-decoration: none;background-image: linear-gradient(to bottom, #59af0c 0%, #5c8f10 100%);background-repeat: repeat-x;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF59AF0C', endColorstr='#FF5C8F10', GradientType=0);border-radius: 3px;display: inline-block;"}
 
     .text-center[style="margin: 0;padding: 0;text-align: center;"]
       a[href="#{faq_url}" style="margin: 0;padding: 0;color: #5c8f10;"]

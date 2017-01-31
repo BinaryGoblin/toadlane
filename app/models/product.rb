@@ -59,7 +59,7 @@ class Product < ActiveRecord::Base
   has_many :amg_orders, dependent: :destroy
   has_many :emb_orders, dependent: :destroy
   has_many :fly_buy_orders, dependent: :destroy
-  has_many :product_categories
+  has_many :product_categories, autosave: true, dependent: :destroy
   has_many :categories, through: :product_categories, dependent: :destroy
   has_many :images, dependent: :destroy
   has_many :videos, dependent: :destroy
@@ -211,8 +211,11 @@ class Product < ActiveRecord::Base
   end
 
   def product_create_notification
-    users = User.product_associated_users(self.category)
-    users.each do |user|
+    users
+    self.categories.each do |category|
+      users << User.product_associated_users(category)
+    end
+    users.uniq.each do |user|
       if user != self.owner
         NotificationMailer.product_create_notification_email(self, user).deliver_later
         ProductNotification.new(self, user).product_created
