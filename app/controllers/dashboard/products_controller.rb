@@ -124,7 +124,7 @@ class Dashboard::ProductsController < DashboardController
             @product.inspection_dates.create({date: inspection_date, creator_type: "seller", product_id: @product.id})
           end
         end
-        
+
         if images
           images[:images_attributes].each do |image|
             data = { image: image }
@@ -439,6 +439,7 @@ class Dashboard::ProductsController < DashboardController
       :end_date, :amount, :sold_out, :dimension_width,
       :dimension_height, :dimension_depth,
       :dimension_weight, :main_category,
+      :product_categories_attributes,
       :pricebreaks_attributes, :default_payment,
       :shipping_estimates_attributes, :fee_percent,
       :shipping_estimates_delete, :sku,
@@ -447,7 +448,8 @@ class Dashboard::ProductsController < DashboardController
       :videos_attributes => [], :videos_attributes_delete => [],
       :shipping_estimates_attributes => [ :id, :cost, :description, :product_id, :_destroy, :type ],
       :pricebreaks_attributes => [ :id, :quantity, :price, :product_id, :_destroy ],
-      :pricebreaks_delete => [], :inspection_date_attributes => []
+      :pricebreaks_delete => [], :inspection_date_attributes => [],
+      :product_categories_attributes => [:id, :product_id, :category_id]
     )
   end
 

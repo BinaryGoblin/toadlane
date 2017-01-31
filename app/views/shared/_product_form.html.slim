@@ -58,7 +58,7 @@
 
         .form-group
           label Additional categories:
-          select#sub_categories name="product[product_categories_attributes][]" placeholder="Select the sub category..." style="display:none" multiple="true"
+          select#sub_categories name="product[product_categories_attributes][][category_id]" placeholder="Select the sub category..." style="display:none" multiple="true"
             - @product.categories.each do |category|
               option value="#{category.id}" selected=""= category.name
 
@@ -333,7 +333,7 @@
               = f.collection_select :additional_seller_ids,
                 get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
                 { include_blank: true, selected: seller.user_id }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
-              
+
             .form-group.set-commision
               label set per unit commission:
               = f.number_field :value, class: 'form-control set-commission-text-box', value: seller.additional_seller_fee.try(:value), :name =>"product[additional_seller_attributes][][value]", :id => "product[additional_seller_attributes][][value]"
@@ -356,7 +356,7 @@
             = f.collection_select :additional_seller_ids,
                   get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
                     { include_blank: true}, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
-              
+
 
           .form-group.set-commision
             label set per unit commission:
@@ -378,7 +378,7 @@
           = f.collection_select :additional_seller_ids,
             get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
             { include_blank: true}, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
-          
+
         .form-group.set-commision
           label set per unit commission:
           = f.number_field :value, class: 'form-control set-commission-text-box', :name =>"product[additional_seller_attributes][][value]", :id => "product[additional_seller_attributes][][value]"
