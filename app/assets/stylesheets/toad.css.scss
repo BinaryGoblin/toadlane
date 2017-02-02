@@ -493,6 +493,10 @@ box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
 {
   color:#ed7692 !important;
 }
+.tabs ul li a .fa-users
+{
+  color:#a09476 !important;
+}
 .tabs ul li a .fa-truck
 {
   color:#ee7c1f !important;
@@ -840,4 +844,15 @@ min-width:550px;
 .product .cost span
 {
   color:#2987D8 !important;
+}
+
+.go-to-groups-page
+{
+  background: #dddd;
+  margin: 25% 0 0 -10px !important;
+  padding: 0 !important;
+  position: fixed;
+  text-align: center !important;
+  width: 400px !important;
+  z-index: 999999999;
 }

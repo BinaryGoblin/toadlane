@@ -67,9 +67,13 @@ header.header.navbar.navbar-default.wrap.navbar-fixed-top
                 = link_to 'Accept', '', class: 'acceptBtn'
                 = link_to 'Decline', '', class: 'DeclineBtn'
 
+            li
+
+            li.go-to-groups-page= link_to fa_icon('users', text: 'Go to group page'),  dashboard_groups_path, is: 'groups'
+
           .createGroupWrapper
 
-            = link_to 'Create Group', '', class: 'createGroupBtn'
+            = link_to 'Create Group', new_dashboard_group_path, class: 'createGroupBtn'
 
         img.logoutIcon  alt="Logout" src="/assets/logout.png"/
 
