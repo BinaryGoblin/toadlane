@@ -1,22 +1,9 @@
 header.header.navbar.navbar-default.wrap.navbar-fixed-top
-
   .find-and-explore
-
-
     =link_to image_tag('newLogo.png'), '/', class: 'logoSideNav'
     button.navbar-toggle.collapsed aria-expanded="false" data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button"
-
-
-
-
-
-
     //.collapse.navbar-collapse#bs-example-navbar-collapse-1
     //get_user_unread_message_notifications
-
-
-
-
 
     - if current_user
 
@@ -35,12 +22,10 @@ header.header.navbar.navbar-default.wrap.navbar-fixed-top
 
       .header-user.pull-right
 
-        = link_to 'Sell', dashboard_profile_path, class: 'sellBtn'
+        = link_to 'Sell', new_dashboard_product_path, class: 'sellBtn'
 
         - message_notifications = get_user_unread_message_notifications
         - other_notifications = get_user_unread_notifications
-
-
 
         - if message_notifications > 0 || other_notifications > 0
           / = link_to fa_icon('comment', text: "Messages #{@strStart.html_safe} #{message_notifications} #{@strEnd.html_safe}"), dashboard_messages_path, class: 'headerIcons'
@@ -51,10 +36,7 @@ header.header.navbar.navbar-default.wrap.navbar-fixed-top
             = link_to fa_icon('comment', text: ""), dashboard_messages_path, class: 'headerIcons messageNotification'
             = link_to fa_icon('bell', text: ""), dashboard_notifications_path, class: 'headerIcons otherNotification'
 
-
-
         img.peopleInviteIcon  alt="Invite people" src="/assets/peopleInvite.png"/
-
 
         .InvitePpl
           =link_to fa_icon('caret-up', text: ""),'' , class: 'topArrowIcon'
@@ -62,7 +44,6 @@ header.header.navbar.navbar-default.wrap.navbar-fixed-top
           ul#invitePplList
             li.headingList
               span Pending Invitations
-
 
             li
               .userPic
@@ -92,7 +73,6 @@ header.header.navbar.navbar-default.wrap.navbar-fixed-top
 
         img.logoutIcon  alt="Logout" src="/assets/logout.png"/
 
-
         .logOutOptions
           =link_to fa_icon('caret-up', text: ""), '', class: 'topArrowIcon'
 
@@ -101,7 +81,6 @@ header.header.navbar.navbar-default.wrap.navbar-fixed-top
             li= link_to fa_icon('caret-square-o-left', text: 'Refunds'),  dashboard_refund_requests_path(bought_or_sold: 'bought'), is: 'refund_requests'
             li= link_to fa_icon('check-square-o', text: 'Verify'), dashboard_forms_path, is: 'forms'
             li= link_to fa_icon('power-off', text: 'Logout'), destroy_user_session_path, class: 'logout'
-
 
     - else
       .header-user.pull-right
