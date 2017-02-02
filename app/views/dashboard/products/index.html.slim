@@ -2,10 +2,7 @@
 
 .wrap-sm
   .table-options
-    - if current_user.profile_complete?
-      = link_to fa_icon('plus', text: 'New product'), new_dashboard_product_path, class: 'btn btn-default pull-right', disabled: false
-    - else
-      = link_to fa_icon('plus', text: 'New product'), new_dashboard_product_path, class: 'btn btn-default pull-right', disabled: true
+    = link_to fa_icon('plus', text: 'New product'), new_dashboard_product_path, class: 'btn btn-default pull-right', disabled: false
 
     .selected-labels
       span Selected:
