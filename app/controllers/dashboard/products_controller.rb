@@ -20,10 +20,10 @@ class Dashboard::ProductsController < DashboardController
       @product = Product.new
       @group  = Group.new
     else
-      if !current_user.has_payment_account?
-        redirect_to dashboard_accounts_path, :flash => { :error => "You must create or link a payment method in order to accept payments."}
-      else
+      if !current_user.profile_complete?
         redirect_to dashboard_profile_path, :flash => { :error => "You must complete your profile before you can create product listings." }
+      elsif !current_user.has_payment_account?
+        redirect_to dashboard_accounts_path, :flash => { :error => "You must create or link a payment method in order to accept payments."}
       end
     end
   end
