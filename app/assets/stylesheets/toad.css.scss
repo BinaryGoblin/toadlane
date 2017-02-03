@@ -846,13 +846,68 @@ min-width:550px;
   color:#2987D8 !important;
 }
 
+.few .brands-logo
+{
+  margin-bottom:100px;
+}
+.few .brands-logo a
+{
+  margin-bottom:20px;
+  display:block;
+}
+.table-responsive
+{
+  margin-bottom:150px;
+}
+.pagination
+{
+  margin:0px;
+}
+.show-all
+{
+  float:right !important;
+  position:relative !important;
+}
 .go-to-groups-page
 {
-  background: #dddd;
-  margin: 25% 0 0 -10px !important;
-  padding: 0 !important;
-  position: fixed;
-  text-align: center !important;
-  width: 400px !important;
-  z-index: 999999999;
+  padding: 9px 0px !important;
+border-bottom: none !important;
+margin-top: 300px !important;
+background: #f2f2f2;
+border-top: 1px #ccc dashed;
+text-align:center;
+}
+#new_group .wrap-sm
+{
+  margin-top:0px !important;
+  padding-top:0px !important;
+}
+#new_product .wrap-sm
+{
+  margin-top:0px !important;
+  padding-top:0px !important;
+}
+.product-form .pricebreaks li .offer-date, .product-form .inspectiondates li .offer-date, .product-form .sellergroups li .offer-date, .group-form .pricebreaks li .offer-date, .group-form .inspectiondates li .offer-date, .group-form .sellergroups li .offer-date
+{
+  width:221px !important;
+}
+.product-form .inspectiondate .offer-item .remove, .group-form .inspectiondate .offer-item .remove
+{
+  margin-left:3px !important;
+}
+.product-form .estimates li, .group-form .estimates li
+{
+  width:97% !important;
+}
+.offer-item .offer-date
+{
+  width:250px !important;
+}
+.product-form .estimate .estimate-cost, .group-form .estimate .estimate-cost
+{
+  width:8% !important;
+}
+.product-form .estimate .estimate-description, .group-form .estimate .estimate-description
+{
+  width:67% !important;
 }
