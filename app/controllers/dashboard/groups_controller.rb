@@ -37,17 +37,22 @@ class Dashboard::GroupsController < ApplicationController
   end
 
   def edit
-    @group = current_user.groups.where(id: params[:id]).first
-    redirect_to :back if @group.blank?
+    if authorized_user?
+      @group = find_group
+    else
+      redirect_to :back if @group.blank?
+    end
   end
 
   def update
-    @group = Group.where(id: params[:id]).first
-    product = Product.where(id: group_params["product_id"]).first
-    if @group.present? && product.present?
-      @group.update_attributes(group_params.merge!(product_id: product.id))
+    if authorized_user?
+      @group = find_group
+      product = Product.where(id: group_params["product_id"]).first
+      if @group.present? && product.present?
+        @group.update_attributes(group_params.merge!(product_id: product.id))
 
-      redirect_to edit_dashboard_product_path(product)
+        redirect_to edit_dashboard_product_path(product)
+      end
     end
   end
 
@@ -64,7 +69,7 @@ class Dashboard::GroupsController < ApplicationController
 		else
 			flash[:sign_up_error] = "You must first sign up in order to accept the role as an additional_seller. Please click on the invitation link sent via email."
 		end
-		redirect_to product_path(product)
+		redirect_to dashboard_group_path(product.group)
 	end
 
 	def reject_deal
@@ -74,13 +79,13 @@ class Dashboard::GroupsController < ApplicationController
 		invited_additional_seller = group_seller.user
 
 		if group_seller.user.terms_of_service.present?
-			group_seller.update_attributes({accept_deal: false})
+			group_seller.delete
 			UserMailer.send_additional_seller_reject_deal_to_owner(invited_additional_seller, product).deliver_later
 			UserMailer.send_additional_seller_reject_deal_notification(invited_additional_seller, product).deliver_later
 		else
 			flash[:sign_up_error] = "You must first sign up in order to reject the role as an additional_seller. Please click on the invitation link sent via email."
 		end
-		redirect_to product_path(product)
+		redirect_to dashboard_groups_path
 	end
 
 	def show
@@ -92,17 +97,8 @@ class Dashboard::GroupsController < ApplicationController
 
 	def assign_role
 		product = Product.find_by_id(params[:product_id])
-		user = User.find_by_id(params["user_id"])
-		group_seller = GroupSeller.find_by_id(params["group_seller_id"])
-		selected_role = Role.find_by_id(params["role_id"])
-		if user.has_role?'group admin'
-			role = Role.find_by_name('group admin')
-			role.users.delete(user)
-		elsif user.has_role?'seller'
-			role = Role.find_by_name('seller')
-			role.users.delete(user)
-		end
-		user.add_role selected_role.name
+		group_seller = product.group.group_sellers.find_by_id(params["group_seller_id"])
+    group_seller.update_attribute(:role_id, params["role_id"])
 		redirect_to dashboard_group_path(group_seller.group.id)
 	end
 
@@ -151,6 +147,15 @@ class Dashboard::GroupsController < ApplicationController
 
 	private
 	def group_params
-    params.require(:group).permit(:name, :product_id, group_sellers_attributes: [:id, :group_id, :user_id, :fee, :_destroy])
+    params.require(:group).permit(:name, :product_id, group_sellers_attributes: [:id, :group_id, :user_id, :fee, :role_id, :_destroy])
+  end
+
+  def find_group
+    group = Group.where(id: params[:id]).first
+  end
+
+  def authorized_user?
+    group_seller = find_group.group_sellers.where(user_id: current_user.id).first
+    (group_seller.present? && group_seller.is_group_admin?) || find_group.owner == current_user
   end
 end

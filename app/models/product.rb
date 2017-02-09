@@ -204,7 +204,7 @@ class Product < ActiveRecord::Base
   end
 
   def is_buyer_additional_seller?(buyer)
-    additional_sellers.include?(buyer)
+    group.present? ? group.additional_sellers.include?(buyer) : false
   end
 
   def promise_fee_for_buyer

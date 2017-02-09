@@ -9,7 +9,7 @@ class FlyBuyOrdersController < ApplicationController
 
     if current_user.fly_buy_profile_account_added?
       CreateTransactionForFlyBuyJobJob.perform_later(current_user.id, fly_buy_profile.id, fly_buy_order.id)
-      
+
       redirect_to dashboard_order_path(
         fly_buy_order,
         type: 'fly_buy'
@@ -345,7 +345,7 @@ class FlyBuyOrdersController < ApplicationController
         })
       end
       flash[:cancel_trans_error] = cancel_transaction["error"]["en"].split("Error: ").last
-    end 
+    end
     redirect_to dashboard_orders_path(
       type: 'fly_buy'
     )
@@ -357,7 +357,13 @@ class FlyBuyOrdersController < ApplicationController
   end
 
   def send_email_notification(fly_buy_order)
-    UserMailer.sales_order_notification_to_seller(fly_buy_order).deliver_later
+    if fly_buy_order.seller_group.present?
+      fly_buy_order.product.group.group_sellers.each do |group_seller|
+        UserMailer.sales_order_notification_to_seller(fly_buy_order, group_seller).deliver_later if !group_seller.private_member?
+      end
+    else
+      UserMailer.sales_order_notification_to_seller(fly_buy_order, nil).deliver_later
+    end
     UserMailer.sales_order_notification_to_buyer(fly_buy_order).deliver_later
   end
 

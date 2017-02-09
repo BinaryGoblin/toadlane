@@ -3,7 +3,7 @@ module FormHelper
     1.times { user.addresses.build }
     user
   end
-  
+
   def setup_product(product)
     1.times { product.shipping_estimates.build }
     product
@@ -127,17 +127,37 @@ module FormHelper
 
   def get_selected_role(user)
     existed_role = user.roles.all.map &:name
-    if existed_role.include?'seller'
-      selected_role = user.roles.find_by_name('seller')
-      selected_role_id = selected_role.id
-    elsif existed_role.include?'group admin'
+    if existed_role.include?'group admin'
       selected_role = user.roles.find_by_name('group admin')
+      selected_role_id = selected_role.id
+    elsif existed_role.include?'public seller'
+      selected_role = user.roles.find_by_name('public seller')
+      selected_role_id = selected_role.id
+    elsif existed_role.include?'private seller'
+      selected_role = user.roles.find_by_name('private seller')
+      selected_role_id = selected_role.id
+    elsif existed_role.include?'public supplier'
+      selected_role = user.roles.find_by_name('public supplier')
+      selected_role_id = selected_role.id
+    elsif existed_role.include?'private supplier'
+      selected_role = user.roles.find_by_name('private supplier')
       selected_role_id = selected_role.id
     else
       selected_role_id = nil
     end
 
     selected_role_id
+  end
+
+  def get_additional_seller_roles
+    role = []
+    role << Role.find_by_name('group admin')
+    role << Role.find_by_name('public seller')
+    role << Role.find_by_name('private seller')
+    role << Role.find_by_name('public supplier')
+    role << Role.find_by_name('private supplier')
+
+    role
   end
 
   def get_current_user_product(user, product_id=nil)
@@ -156,7 +176,7 @@ module FormHelper
       group_seller = GroupSeller.find(group_seller_id)
 
       if group_seller.present?
-        group_seller.additional_seller_fee.value
+        group_seller.fee
       end
     end
   end

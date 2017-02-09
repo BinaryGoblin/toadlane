@@ -3,10 +3,7 @@
 .wrap-sm
   h4 My Groups:
   .table-options
-    - if current_user.profile_complete? && current_user.products.present?
-      = link_to fa_icon('plus', text: 'Seller Gruop'), new_dashboard_group_path, class: 'btn btn-default pull-right', disabled: false
-    - else
-      = link_to fa_icon('plus', text: 'Seller Group'), new_dashboard_group_path, class: 'btn btn-default pull-right', disabled: true
+    = link_to fa_icon('plus', text: 'Seller Group'), new_dashboard_group_path, class: 'btn btn-default pull-right'
   .table-responsive
     table.table.products-table data-behavior="TableCheckbox"
       thead
@@ -26,7 +23,7 @@
               - else
                 | -
             td
-              - if current_user.roles.include?(group_admin)
+              - if is_current_user_authorized? group
                 |  |
                 = link_to 'Edit', edit_dashboard_group_path(group), class: 'view'
                 |  |

@@ -52,9 +52,10 @@ class Behavior.AddSeller
     field_name = $('.add-seller').data 'fieldname'
     group_sellers_name = field_name + @count + '][user_id]'
     additional_seller_fee_name = field_name + @count + '][fee]'
-
+    additional_seller_fee_role = field_name + @count + '][role_id]'
     tmpl.find('.select-seller-group > select').attr('name', group_sellers_name)
     tmpl.find('.set-commision > input').attr('name', additional_seller_fee_name)
+    tmpl.find('.select-additional-seller-role > select').attr('name', additional_seller_fee_role)
 
     tmpl.find('.index').text @count++
 

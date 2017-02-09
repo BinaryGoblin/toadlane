@@ -11,6 +11,7 @@
 #  group_id       :integer
 #  fee            :decimal(, )
 #  private_seller :boolean          default(FALSE)
+#  role_id				:integer
 #
 
 class GroupSeller < ActiveRecord::Base
@@ -20,6 +21,7 @@ class GroupSeller < ActiveRecord::Base
 	belongs_to :user
 	belongs_to :product
 	belongs_to :group
+	belongs_to :role
 
 	scope :deal_accepted, -> { where(accept_deal: true) }
 
@@ -33,5 +35,13 @@ class GroupSeller < ActiveRecord::Base
 
 	def fly_buy_profile_account_added?
 		user.fly_buy_profile_account_added?
+	end
+
+	def private_member?
+		self.role.name == Role::PRIVATE_SELLER || self.role.name == Role::PRIVATE_SUPPLIER
+	end
+
+	def is_group_admin?
+		self.role.name == Role::GROUP_ADMIN
 	end
 end

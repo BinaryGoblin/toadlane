@@ -12,7 +12,7 @@ html[style="margin: 0;padding: 0;"]
         strong
           = get_email_or_name(@additional_seller)
         = image_tag get_image(@additional_seller.asset(:small)), height: '50', :class => "pro-img", :style => "margin: 0;padding: 5px;height: 30px;vertical-align: middle;margin-right: 15px;border-radius: 5px;border: 1px solid #eaebec;background-color: #fff;margin-left: 10px;"
-    
+
 
     .container style=("margin: 15px;padding: 15px;background: #fff;border: 1px solid #eaebec;border-radius: 3px;")
       .message-each style=("margin: 0;padding: 0;")
@@ -21,7 +21,9 @@ html[style="margin: 0;padding: 0;"]
           = get_email_or_name(@owner)
         .message-section style=("margin: 0;padding: 15px;background: #eee;border-radius: 3px;margin-bottom: 20px;")
           = get_email_or_name(@owner)
-          | &nbsp;has added you as an additional seller for product &nbsp;
+          | &nbsp;has added you as an additional seller with commission of '
+          b = "$ #{@group_seller.fee}"
+          | &nbsp;' for product &nbsp;
           .table-responsive[style="margin: 10px 0px;padding: 0;"]
             table.table-checkout[style="margin-bottom: 0;margin: auto;padding: 5px;background: white;border-radius: 3px;border-collapse: collapse;height: 100px;width: 100%;box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);animation: float 5s infinite;"]
               tbody[style="margin: 0;padding: 0;"]
@@ -31,7 +33,7 @@ html[style="margin: 0;padding: 0;"]
                       = image_tag get_image(@product.images.first.image(:small)), :class => "pro-img", :style => "background: #fff;border-color: #ccc;float: left;margin: 0;padding: 5px;height: 75px;vertical-align: middle;margin-right: 10px;border-radius: 5px;border: 1px solid #eaebec;"
                     h4.text-uppercase[style="margin: 0;padding: 0;"]
                       = @product.name.titleize
-                      
+
                     div[style="margin: 0;padding: 0;"]
                       = @product.description
 
@@ -39,10 +41,10 @@ html[style="margin: 0;padding: 0;"]
           = link_to "View Product", product_url(id: @product.id),
                 {:style => "margin: 0;padding: 7px 13px;color: white;border: 1px solid transparent;border-bottom-color: #3d6411;border-top-color: #59af0c;text-shadow: 0 1px 0 #3d6411;text-decoration: none;background-image: linear-gradient(to bottom, #59af0c 0%, #5c8f10 100%);background-repeat: repeat-x;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF59AF0C', endColorstr='#FF5C8F10', GradientType=0);border-radius: 3px;display: inline-block;"}
 
-          = link_to "Accept Deal", accept_deal_dashboard_groups_url(product_id: @product.id, group_seller_id: @group_seller_id),
+          = link_to "Accept Deal", accept_deal_dashboard_groups_url(product_id: @product.id, group_seller_id: @group_seller.id),
                 {:style => "margin: 0;padding: 7px 13px;color: white;border: 1px solid transparent;border-bottom-color: #3d6411;border-top-color: #59af0c;text-shadow: 0 1px 0 #3d6411;text-decoration: none;background-image: linear-gradient(to bottom, #59af0c 0%, #5c8f10 100%);background-repeat: repeat-x;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF59AF0C', endColorstr='#FF5C8F10', GradientType=0);border-radius: 3px;display: inline-block;"}
 
-          = link_to "Reject Deal", reject_deal_dashboard_groups_url(product_id: @product.id, group_seller_id: @group_seller_id),
+          = link_to "Reject Deal", reject_deal_dashboard_groups_url(product_id: @product.id, group_seller_id: @group_seller.id),
                 {:style => "margin: 0;padding: 7px 13px;color: white;border: 1px solid transparent;border-bottom-color: #3d6411;border-top-color: #59af0c;text-shadow: 0 1px 0 #3d6411;text-decoration: none;background-image: linear-gradient(to bottom, #59af0c 0%, #5c8f10 100%);background-repeat: repeat-x;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF59AF0C', endColorstr='#FF5C8F10', GradientType=0);border-radius: 3px;display: inline-block;"}
     .text-center[style="margin: 0;padding: 0;text-align: center;"]
       a[href="#{faq_url}" style="margin: 0;padding: 0;color: #5c8f10;"]

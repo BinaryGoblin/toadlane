@@ -15,7 +15,13 @@ class Role < ActiveRecord::Base
   belongs_to :resource, :polymorphic => true
 
   validates_presence_of :name
-  validates_uniqueness_of :name  
+  validates_uniqueness_of :name
 
   scopify
+
+  GROUP_ADMIN = 'group admin'
+  PRIVATE_SELLER = 'private seller'
+  PUBLIC_SELLER = 'public seller'
+  PRIVATE_SUPPLIER = 'private supplier'
+  PUBLIC_SELLER = 'public supplier'
 end
