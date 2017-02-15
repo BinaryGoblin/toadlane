@@ -1,20 +1,5 @@
-class UserMailer < ActionMailer::Base
+class UserMailer < ApplicationMailer
   add_template_helper(EmailHelper)
-  default from: 'Toadlane Notifications hello@toadlane.com'
-
-  def event_notification_user(user, token)
-    email = user.email
-    @token = token
-    @user = user
-    mail to: email, subject: 'New event - Add User Account'
-  end
-
-  def event_notification_admin(user, token)
-    email = user.email
-    @token = token
-    @user = user
-    mail to: email, subject: 'New event - Add Admin Account'
-  end
 
   def sales_order_notification_to_seller(order)
     @order = order

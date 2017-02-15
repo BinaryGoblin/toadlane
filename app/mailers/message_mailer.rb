@@ -1,6 +1,5 @@
-class MessageMailer < ActionMailer::Base
+class MessageMailer < ApplicationMailer
   add_template_helper(EmailHelper)
-  default :from     => 'Toadlane Notifications hello@toadlane.com'
 
   def new_message(receiver, message, subject, sender, conversation_id)
     @receiver = receiver

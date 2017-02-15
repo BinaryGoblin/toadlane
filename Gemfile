@@ -124,3 +124,4 @@ gem 'blogo', '~> 0.1.4'
 
 gem 'imgkit', '~> 1.6.1'
 gem 'wkhtmltoimage-binary', '~> 0.12.2'
+gem 'sendgrid'

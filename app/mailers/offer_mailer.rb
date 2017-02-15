@@ -1,4 +1,4 @@
-class OfferMailer < ActionMailer::Base
+class OfferMailer < ApplicationMailer
   default from: "aphtekas.storage@gmail.com"
 
   def send_new_offer(user, token)
