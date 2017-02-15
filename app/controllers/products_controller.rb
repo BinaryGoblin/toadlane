@@ -8,20 +8,9 @@ class ProductsController < ApplicationController
   before_action :check_terms_of_service
 
   def index
-    # TODO Disabling this during Stripe integration by calling for 'buy' only
-
-    # fly_buy_inspection_date_not_passed => if the product's default payment is
-    # #   'Fly And buy', then only select those product whose all the inspection dates
-    # #    has not passed
-    products_recommended = Product.unexpired.where(status_characteristic: 'sell', status_action: 'recommended').order(created_at: :desc).limit(16)
-    products_for_sale = Product.unexpired.where(status_characteristic: 'sell').order(created_at: :desc).limit(16)
-    products_ending_soon = Product.unexpired.where(status_characteristic: 'sell').order(end_date: :asc).limit(16)
-    @products_recommended = products_recommended.select { |p| p.if_fly_buy_check_valid_inspection_date }
-    @products_for_sale = products_for_sale.select { |p| p.if_fly_buy_check_valid_inspection_date }
-    @products_ending_soon = products_ending_soon.select { |p| p.if_fly_buy_check_valid_inspection_date }
-    # TODO Disabling this during Stripe integration by calling for 'buy' instead of 'sell'
-    # @products_requested = Product.unexpired.where(status_characteristic: 'sell').order(created_at: :desc).limit(16)
-    @featured_sellers = User.limit(16)
+    @most_viewed_product = Product.unexpired.where(status_characteristic: 'sell').order(views_count: :desc).limit(7)
+    @newest_product = Product.unexpired.where(status_characteristic: 'sell').order(created_at: :desc).select {
+                      |p| p.if_fly_buy_check_valid_inspection_date }.first(7)
   end
 
   def show
@@ -227,14 +216,14 @@ class ProductsController < ApplicationController
     session[:fly_buy_order_id] = fly_buy_order.id
 
     fly_buy_profile = current_user.fly_buy_profile_account_added? ? current_user.fly_buy_profile : FlyBuyProfile.new
-    
+
     if product.group.present?
       fly_buy_order.update_attributes({
         group_seller_id: product.group.id,
         group_seller: true
       })
     end
-    
+
     [fly_buy_order, fly_buy_profile]
   end
 

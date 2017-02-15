@@ -44,7 +44,7 @@ class ApplicationController < ActionController::Base
       if current_user.has_role?(:superadmin) || current_user.has_role?(:admin)
         admin_root_path
       else
-        redirect_path_for_user
+        redirect_path_for_user(resource)
       end
     else
       super
@@ -73,6 +73,8 @@ class ApplicationController < ActionController::Base
   def redirect_to_concerned_path
     if current_user.terms_of_service != true
       terms_of_service_path
+    elsif !current_user.profile_complete?
+      dashboard_profile_path
     else
       if get_user_notifications > 0
         if get_user_unread_message_notifications > 0
@@ -88,8 +90,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def redirect_path_for_user
-    if current_user.has_role? :user
+  def redirect_path_for_user(resource)
+    if resource.has_role? :user
       if session[:previous_url].present?
         previous_visited_url = session[:previous_url]
         session.delete(:previous_url)
