@@ -1,6 +1,5 @@
-class NotificationMailer < ActionMailer::Base
+class NotificationMailer < ApplicationMailer
   add_template_helper(EmailHelper)
-  default from: 'Toadlane Notifications hello@toadlane.com'
 
   def product_create_notification_email(product, user)
     @user = user

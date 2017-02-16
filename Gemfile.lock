@@ -426,6 +426,8 @@ GEM
       activemodel
       elasticsearch (>= 1)
       hashie
+    sendgrid (1.2.4)
+      json
     shellany (0.0.1)
     shoulda (3.5.0)
       shoulda-context (~> 1.0, >= 1.0.1)
@@ -558,6 +560,7 @@ DEPENDENCIES
   sdoc (~> 0.4.1)
   searchjoy (~> 0.0.10)
   searchkick (~> 0.8.7)
+  sendgrid
   shoulda (~> 3.5.0)
   shoulda-matchers (~> 2.8.0)
   slim-rails (~> 3.0.1)
