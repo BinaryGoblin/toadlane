@@ -40,7 +40,7 @@ $(document).ready ->
   $('.bxslider').bxSlider
     slideWidth: 240
     minSlides: 1
-    maxSlides: 4
+    maxSlides: 3
     slideMargin: 38
     moveSlides: 1
     pager: false
@@ -627,7 +627,7 @@ $(document).ready ->
       this.parentElement.firstChild.value=0
     else
       this.parentElement.firstChild.value=1
-      
+
     $('form#'+ this.parentNode.parentElement.id).submit()
     return
 

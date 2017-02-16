@@ -39,6 +39,7 @@ logfile
 /config/puma.rb
 /db/schema.rb
 /vendor/postgresql
+/vendor/bundle/
 .metadata
 .project
 .idea/

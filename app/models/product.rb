@@ -90,12 +90,23 @@ class Product < ActiveRecord::Base
 
   scope :unexpired, -> { where("end_date > ?", DateTime.now).where(status: true) }
   scope :fly_buy_default_payment, -> { where(default_payment: "Fly And Buy") }
+  scope :for_sell, -> { where(status_characteristic: 'sell') }
+  scope :most_recent, -> { order(created_at: :desc) }
+  scope :most_viewed, -> { order(views_count: :desc) }
 
   self.per_page = 16
 
   alias :user :owner
 
   after_create :product_create_notification
+
+  def self.newest_products
+    unexpired.for_sell.most_recent.select {|p| p.if_fly_buy_check_valid_inspection_date }
+  end
+
+  def self.most_viewed_products
+    unexpired.for_sell.most_viewed
+  end
 
   def available_payments
     ap = []
@@ -198,9 +209,7 @@ class Product < ActiveRecord::Base
   # #    has not passed
   def if_fly_buy_check_valid_inspection_date
     if default_payment_flybuy?
-      unless inspection_dates.passed_inspection_date.count == inspection_dates.count
-        return self
-      end
+      return self unless inspection_dates.passed_inspection_date.count == inspection_dates.count
     else
       return self
     end
