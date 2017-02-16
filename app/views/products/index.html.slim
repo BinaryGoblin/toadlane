@@ -29,7 +29,7 @@
 
   #products_first.product-carousel.slide
     ul.bxslider
-      - @most_viewed_product.each do |product|
+      - @most_viewed_products.each do |product|
         li
           = render partial: '/shared/product', locals: { product: product }
 
@@ -41,7 +41,7 @@
 
   #products_second.product-carousel.slide
     ul.bxslider
-      - @newest_product.each do |product|
+      - @newest_products.each do |product|
         li
           = render partial: '/shared/product', locals: { product: product }
 

@@ -8,9 +8,8 @@ class ProductsController < ApplicationController
   before_action :check_terms_of_service
 
   def index
-    @most_viewed_product = Product.unexpired.where(status_characteristic: 'sell').order(views_count: :desc).limit(7)
-    @newest_product = Product.unexpired.where(status_characteristic: 'sell').order(created_at: :desc).select {
-                      |p| p.if_fly_buy_check_valid_inspection_date }.first(7)
+    @most_viewed_products = Product.most_viewed_products.limit(7)
+    @newest_products = Product.newest_products.first(7)
   end
 
   def show
