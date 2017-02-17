@@ -91,10 +91,7 @@ body
 	background: #dadada url("images/ui-bg_glass_75_dadada_1x400.png") 50% 50% repeat-x;
 	font-weight: normal;
 }
-.wrap-sm
-{
-  margin-top: 4%;
-}
+
 form .wrap-sm
 {
   float:left !important;
@@ -107,7 +104,7 @@ form .wrap-sm
   width: 85%;
   float: left;
   left: 15%;
-  padding-top: 6%;
+  padding-top: 1%;
 }
 .fa
 {
@@ -797,8 +794,8 @@ min-width:550px;
   padding:5px 5px;
   text-align:center;
   background:#e15b5b;
-  color:#fff !important;
   border-radius:5px;
+  margin-bottom: 10px
 }
 #error_explanation h2
 {

@@ -1,14 +1,13 @@
 .tabs {
   padding: 0px 0;
   margin-bottom: 30px;
-  position: fixed;
   left: 0;
   height: 100%;
   width: 15%;
   float: left;
   background:#f2f2f2;
   border-right:1px #ddd solid;
-  top: -7% !important;
+  position: fixed;
 
   ul {
     list-style: none;

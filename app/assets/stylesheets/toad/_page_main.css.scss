@@ -82,10 +82,10 @@
 }
 
 .main-notice {
-  position: fixed;
+  position: sticky;
   left: 0;
   right: 0;
-  top: 0;
+  top: 57px;
   z-index: 1002;
   background: $brand-success;
   color: white;
@@ -99,10 +99,10 @@
 }
 
 .main-alert {
-  position: fixed;
+  position: sticky;
   left: 0;
   right: 0;
-  top: 0;
+  top: 57px;
   background: orange;
   color: white;
   font-size: 20px;
