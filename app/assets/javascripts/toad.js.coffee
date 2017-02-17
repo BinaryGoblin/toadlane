@@ -311,7 +311,8 @@ $(document).ready ->
         required: true
       "product[group_attributes][name]":
         required: (element) ->
-          return $("#product_group_attributes_group_sellers_attributes_0_user_id").val()!=""
+          id = '#product_group_attributes_group_sellers_attributes_0_user_id'
+          return ($(id).length > 0) && ($(id).val() != "")
       "product[group_attributes][group_sellers_attributes][0][user_id]":
         required: (element) ->
           return $("#product_group_attributes_name").val()!=""
