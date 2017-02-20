@@ -12,6 +12,15 @@
 .table-options .pull-right .btn.btn-success{
   margin-top: 10px;
 }
+.footer-actions .fa-container
+{
+  position:fixed;
+  background:#f2f2f2;
+  border-top:1px #ddd solid;
+}
+.ui-selectmenu-button span.ui-selectmenu-text{
+  color: #000;
+}
 @media (min-width: 992px){
   .modal-lg {
     width: auto;
@@ -221,13 +230,6 @@
       margin-bottom: 10px;
     }
   }
-  .footer-actions{
-    padding-bottom: 0;
-    .fa-container{
-      position: static;
-      height: auto;
-    }
-  }
   .mailers {
     > .fa {
       top: 48%;
@@ -279,7 +281,6 @@
   .header
   {
     width:100%;
-    position:inherit;
   }
   .header
   {
@@ -372,10 +373,7 @@
   {
     left:0% !important;
   }
-  .footer-actions .fa-container
-  {
-    display:none;
-  }
+
   .profile-table .col-md-3
   {
     margin-bottom:15px;
@@ -528,9 +526,24 @@
     width: 100% !important;
 
   }
+  .footer-actions .fa-container{
+    position: unset;
+    .wrap-sm{
+      button{
+        float: none !important;
+        margin: 10px 10px 0 0;
+      }
+    }
+  }
 }
 
 @media (max-width:480px) {
+  .mobile-main-container{
+    margin-top: 210px;
+  }
+  .main-alert {
+    top: 148px;
+  }
   .buy-sell h2{
     font-size: 46px;
   }
@@ -722,6 +735,15 @@
       float: none;
       width: 100%;
       margin: 0;
+    }
+  }
+  .footer-actions .fa-container{
+    position: unset;
+    .wrap-sm{
+      button{
+        float: none !important;
+        margin: 10px 10px 0 0;
+      }
     }
   }
 }

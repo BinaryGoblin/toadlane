@@ -38,7 +38,7 @@ html
             - if @related_searches.present?
                 - unless @related_searches.count == 1 && @related_searches.last["normalized_query"] == params[:query]
                     = render partial: "/shared/related_searches", locals: { related_searches: @related_searches, query: params[:query] }
-    .main-container
+    .main-container.mobile-main-container
       == yield
 
     = render '/shared/footer'

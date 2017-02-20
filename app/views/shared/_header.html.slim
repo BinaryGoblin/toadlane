@@ -1,6 +1,6 @@
 header.header.navbar.navbar-default.wrap.navbar-fixed-top
   .find-and-explore
-    =link_to image_tag('newLogo.png'), '/', class: 'logoSideNav'
+    =link_to image_tag('newLogo.png'), products_path, class: 'logoSideNav'
     button.navbar-toggle.collapsed aria-expanded="false" data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button"
     //.collapse.navbar-collapse#bs-example-navbar-collapse-1
     //get_user_unread_message_notifications
@@ -85,7 +85,7 @@ header.header.navbar.navbar-default.wrap.navbar-fixed-top
             li= link_to fa_icon('check-square-o', text: 'Verify'), dashboard_forms_path, is: 'forms'
             li= link_to fa_icon('power-off', text: 'Logout'), destroy_user_session_path, class: 'logout'
 
-    - else
+    - unless devise_controller? || signed_in?
       .header-user.pull-right
         = link_to 'Login', new_user_session_path, class: 'loginBtn btn btn-default'
         = link_to 'Sign Up', new_user_registration_path, class: 'registerBtn btn btn-success'

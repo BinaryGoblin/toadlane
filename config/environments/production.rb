@@ -80,17 +80,17 @@ Toad::Application.configure do
 
   #-----------------------
   config.action_mailer.default_url_options = { :host => 'toadlane.com' }
-  ActionMailer::Base.perform_deliveries = true
-  ActionMailer::Base.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.delivery_method = :smtp
   routes.default_url_options = { host: 'toadlane.com' }
 
-  ActionMailer::Base.smtp_settings = {
-    address: "smtp.gmail.com",
-    port: 587,
-    authentication: "plain",
-    enable_starttls_auto: true,
-    user_name: ENV['WELCOME_EMAIL'],
-    password: ENV['WELCOME_EMAIL_PASSWORD']
+  config.action_mailer.smtp_settings = {
+    :address => "smtp.sendgrid.net",
+    :port => 25,
+    :domain => "toadlane.com",
+    :authentication => :plain,
+    :user_name => ENV['SENDGRID_USERNAME'],
+    :password => ENV['SENDGRID_PASSWORD']
   }
   #-----------------------
 #  config.action_mailer.default_url_options = { :host => "toad.demo.xmarka.net" }

@@ -86,7 +86,6 @@
   left: 0;
   right: 0;
   top: 57px;
-  z-index: 1002;
   background: $brand-success;
   color: white;
   font-size: 20px;
@@ -109,7 +108,6 @@
   padding: 15px 25px;
   text-align: center;
   box-shadow: 0 0 15px orange;
-  z-index: 1002;
   @include animation-name(alert);
   @include animation-duration(5s);
   @include animation-delay(5s);

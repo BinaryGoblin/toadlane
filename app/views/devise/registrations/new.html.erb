@@ -1,6 +1,5 @@
 <div class="wrap devise">
-  <h2>Join Toadlane Now. It's Free!</h2>
-  <br>
+  <h2>Build Your Market[s] Now. It's Free!</h2>
 
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
     <%= devise_error_messages! %>
@@ -26,7 +25,7 @@
     <%= f.password_field :password_confirmation, autocomplete: "off", class: 'form-control' %></div>
     <br>
 
-    <div><%= f.submit "Sign up", class: 'btn btn-primary' %></div>
+    <div class="signup"><%= f.submit "Sign up", class: 'btn btn-primary' %></div><div class="signin">Already have an account? <%=link_to 'Sign in' , new_user_session_path %></div>
   <% end %>
 
   <br>
