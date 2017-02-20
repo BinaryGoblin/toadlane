@@ -3,13 +3,6 @@
   <br>
 
   <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-    <%- flash.each do |name, msg| -%>
-      <div id="error_explanation">
-        <!-- <h2>Error:</h2> -->
-        <ul><li><%= msg if msg.is_a?(String) %></li></ul>
-      </div>
-    <%- end -%>
-
     <div><%= f.label :email %>
     <%= f.email_field :email, autofocus: true, class: 'form-control' %></div>
     <br>

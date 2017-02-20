@@ -5,6 +5,10 @@
   margin:0px auto 20px;
   top:45px;
 
+  h2{
+    margin-bottom: 20px;
+  }
+
   .icheckbox {
     margin-top: 0;
     margin-right: 5px;
@@ -30,5 +34,13 @@
     &:before {
       content: '- ';
     }
+  }
+
+  .signup{
+    float: left;
+  }
+  .signin{
+    float: left;
+    margin: 6px 0 0 21px
   }
 }
