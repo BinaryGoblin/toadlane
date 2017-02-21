@@ -535,6 +535,14 @@
       }
     }
   }
+  .devise{
+    .btn-signup{
+      width: 100%;
+    }
+    .btn-signin{
+      margin: 13px 0 0;
+    }
+  }
 }
 
 @media (max-width:480px) {
@@ -747,7 +755,10 @@
     }
   }
   .devise{
-    .signin{
+    .btn-signup{
+      width: 100%;
+    }
+    .btn-signin{
       margin: 13px 0 0;
     }
   }
