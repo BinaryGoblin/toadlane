@@ -162,6 +162,11 @@ select[data-behavior=Select] {
     padding-top: 3px;
     display: block;
   }
+  .date{
+    input{
+      width: 135px;
+    }
+  }
 }
 
 .checkbox {

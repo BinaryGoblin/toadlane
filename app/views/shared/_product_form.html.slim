@@ -66,6 +66,37 @@
           = f.label :description, 'Description:'
           = f.text_area :description, class: 'form-control', placeholder: 'Write something about your product...', maxlength: '1000'
 
+        .row
+          .col-md-6
+            .form-group
+                label.lg.required OFFER valid from:
+                .input-group.date#start-date
+                  = f.text_field :start_date, class: "form-control"
+                  span.input-group-addon
+                    span.glyphicon.glyphicon-calendar
+                  p.product-start-date-error
+          .col-md-6
+            .form-group
+              label.lg.required OFFER valid until:
+              .input-group.date#end-date
+                = f.text_field :end_date, class: "form-control"
+                span.input-group-addon
+                  span.glyphicon.glyphicon-calendar
+                p.product-end-date-error
+        .row
+          .col-md-3
+            .form-group
+              = f.label :unit_price, 'Retail price (USD):', class: 'required lg'
+              = f.number_field :unit_price, in: 0...1000000, step: "any", class: 'form-control'
+          .col-md-3
+            .form-group
+              = f.label :amount, 'Amount in Stock:', class: 'lg required'
+              = f.text_field :amount, class: 'form-control'
+          .col-md-3
+            .form-group
+              = f.label :sold_out, 'Number Purchased:', class: 'lg'
+              = f.text_field :sold_out, class: 'form-control'
+
       .col-md-6
         .clearfix
           .status
@@ -197,45 +228,6 @@
                 span Select video
                 input type="file" name="product[videos_attributes][]" accept="video/*, video/3gpp, .mkv, video/x-flv, video/3gpp2, video/mpeg, .m2v"
     hr
-    .row
-      .col-md-12
-        .offer-from-until
-          .offer-item
-            label.lg.required OFFER valid from:
-
-            .offer-date
-              label Date:
-              = date_select :product, :start_date, {  order: [:month, :day, :year] }, { class: "form-control" , data: {current_date: Date.today}}
-              p.product-start-date-error
-
-            .offer-time
-              label Time:
-              = time_select :product, :start_date, { :ampm => true, ignore_date: true, minute_step: 10 }, { class: "form-control" }
-
-          .offer-item
-            label.lg.required OFFER valid until:
-
-            .offer-date
-              label Date:
-              = date_select :product, :end_date, { order: [:month, :day, :year] }, { class: "form-control" }
-
-            .offer-time
-              label Time:
-              = time_select :product, :end_date, { :ampm => true, ignore_date: true, minute_step: 10 }, { class: "form-control" }
-    hr
-    .price-stock.clearfix
-      .unit
-        = f.label :unit_price, 'Retail price (USD):', class: 'required lg'
-        = f.number_field :unit_price, in: 0...1000000, step: "any", class: 'form-control'
-
-      .amount-stock
-        = f.label :amount, 'Amount in Stock:', class: 'lg required'
-        = f.text_field :amount, class: 'form-control'
-
-      .amount-soldout
-        = f.label :sold_out, 'Number Purchased:', class: 'lg'
-        = f.text_field :sold_out, class: 'form-control'
-
     label.lg Pricebreaks:
     ul.pricebreaks
       - if @product.pricebreaks.any?

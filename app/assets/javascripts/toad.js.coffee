@@ -13,13 +13,15 @@
 #= require_tree ./plugins
 
 #= require bootstrap
+#= require moment
+#= require bootstrap-datetimepicker
 
 #= require elemental
 
 #= require_tree ./initializers/
 #= require_tree ./helpers/
 #= require_tree ./behaviors/
-
+#= require_tree ./dashboard/
 
 $(document).ready ->
   # $('html,body').animate { scrollTop: 0 }, 100
@@ -175,15 +177,18 @@ $(document).ready ->
   ), 'Please enter date greater than today.'
 
   jQuery.validator.addMethod 'check_fee_exceeds_product_price', ((value, element) ->
-    product_retail_price = parseFloat($('#product_unit_price').val())
-    added_additional_sellers = $('ul.sellergroups').find('li.sellergroup .set-commission-text-box')
-    added_fee = 0
+    if $('#product_unit_price').val() != ''
+      product_retail_price = parseFloat($('#product_unit_price').val())
+      added_additional_sellers = $('ul.sellergroups').find('li.sellergroup .set-commission-text-box')
+      added_fee = 0
 
-    jQuery.each added_additional_sellers, (i, val) ->
-      added_fee = added_fee + parseFloat(val.value)
-      return
+      jQuery.each added_additional_sellers, (i, val) ->
+        added_fee = added_fee + parseFloat(val.value)
+        return
 
-    return added_fee < product_retail_price
+      return added_fee < product_retail_price
+    else
+      return true
   ), "The additional seller fee exceeds the product's price."
 
   $('select#green_order_address_country').change (event) ->
@@ -295,9 +300,14 @@ $(document).ready ->
       "product[videos_attributes][]":
         required: false
         filesize: 5
-      "product[start_date(2i)]":
+      "product[start_date]":
         required: true
-        check_product_start_date: true
+      "product[end_date]":
+        required: true
+      "product[unit_price]":
+        required: true
+      "product[amount]":
+        required: true
       "product[additional_seller_attributes][][value]":
         check_fee_exceeds_product_price: true
     messages:
@@ -306,10 +316,12 @@ $(document).ready ->
     errorPlacement: (error, element) ->
       # this is done for displaying the error message for Product Start Date
       # # below the start date select boxes
-      if element.attr('name') == "product[start_date(2i)]"
-        $('#product_start_date_3i').addClass('error')
-        $('#product_start_date_1i').addClass('error')
+      if element.attr('name') == "product[start_date]"
+        $('#product_start_date').addClass('error')
         error.appendTo('.product-start-date-error')
+      else if element.attr('name') == "product[end_date]"
+        $('#product_end_date').addClass('error')
+        error.appendTo('.product-end-date-error')
       else if element.attr('name') == "product[additional_seller_attributes][][value]"
         added_additional_sellers = $('ul.sellergroups').find('li.sellergroup .set-commission-text-box')
         error = error

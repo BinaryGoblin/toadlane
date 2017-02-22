@@ -22,6 +22,9 @@ gem 'slim-rails', '~> 3.0.1'
 gem 'compass-rails', '~> 2.0.4'
 gem 'bootstrap-sass', '~> 3.3.3'
 
+gem 'momentjs-rails', '>= 2.9.0'
+gem 'bootstrap3-datetimepicker-rails', '~> 4.17.43'
+
 # Icons FontAwesome
 gem 'font-awesome-rails', '~> 4.3.0.0'
 

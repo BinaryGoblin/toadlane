@@ -546,10 +546,6 @@ $sell-color: #FF8724;
       margin-left: 3%;
       height: 96px;
       float: left;
-
-      .offer-date {
-        width: 215px;
-      }
     }
   }
 
@@ -771,40 +767,6 @@ $sell-color: #FF8724;
     }
   }
 
-  .price-stock {
-    width: 100%;
-
-    .unit {
-      float: left;
-      width: 30.333%;
-      margin: 0 20px 22px 0;
-
-      input {
-        width: 100px;
-      }
-    }
-
-    .amount-soldout {
-      float: left;
-      width: 30.333%;
-      margin: 0 20px 22px 0;
-
-      input {
-        width: 100px;
-      }
-    }
-
-    .amount-stock {
-      float: left;
-      width: 30.333%;
-      margin: 0 20px 22px 0;
-
-      input {
-        width: 100px;
-      }
-    }
-  }
-
   .dimensions {
     margin-bottom: 20px;
     clear: both;
@@ -958,10 +920,6 @@ $sell-color: #FF8724;
   }
 }
 
-.offer-from-until {
-  width: 100%;
-}
-
 .offer-item {
   @include clearfix;
 
@@ -985,44 +943,6 @@ $sell-color: #FF8724;
 
   .selectize-input {
     padding-right: 20px;
-  }
-
-  .offer-date {
-    margin-right: 20px;
-    width: 240px;
-
-    .selectize-control {
-      float: left;
-
-      &:nth-child(3) {
-        width: 96px;
-        margin-right: 5px;
-      }
-
-      &:nth-child(5) {
-        width: 50px;
-        margin-right: 5px;
-      }
-
-      &:nth-child(7) {
-        width: 64px;
-      }
-    }
-  }
-
-  .offer-time {
-    .selectize-control {
-      display: inline-block;
-      vertical-align: middle;
-
-      &:nth-child(3) {
-        width: 50px;
-      }
-
-      &:nth-child(5) {
-        width: 50px;
-      }
-    }
   }
 
   .field {
@@ -1094,12 +1014,6 @@ $sell-color: #FF8724;
 }
 
 .set_inspection_date{
-  .offer-from-until{
-    margin-top: 15px;
-    .offer-time{
-      margin-top: 10px;
-    }
-  }
   .modal-footer{
     padding: 0 15px 5px;
 
@@ -1138,6 +1052,15 @@ $sell-color: #FF8724;
 }
 
 .product-form {
+  .input-group-addon:not(:first-child):not(:last-child){
+    border-radius: 0 4px 4px 0;
+  }
+  .form-group{
+    .input-group-addon{
+      padding: 5px 20px 6px 6px;
+      border-left: 0 none;
+    }
+  }
   .sellergroups{
     li {
       width: 65%;
