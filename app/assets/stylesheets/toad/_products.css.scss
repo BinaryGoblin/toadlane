@@ -419,10 +419,17 @@ $sell-color: #FF8724;
 }
 
 .product-form, .group-form {
+  .row{
+    &.row-top-padding-10{
+      padding-top: 10px;
+    }
+    &.row-top-padding-10{
+      padding-bottom: 10px;
+    }
+  }
   h4 {
     line-height: 1;
     font-size: 20px;
-    color: #cccfd3;
     text-transform: uppercase;
     margin-bottom: 30px;
     padding-top: 5px;
@@ -538,14 +545,16 @@ $sell-color: #FF8724;
     @include clearfix;
     width: 100%;
 
-    li {
-      border-width: 1px;
-      border-style: dashed;
-      border-radius: 5px;
-      margin-bottom: 29px;
-      margin-left: 3%;
-      height: 96px;
-      float: left;
+    li{
+      &.item {
+        border-width: 1px;
+        border-style: dashed;
+        border-radius: 5px;
+        margin-bottom: 29px;
+        margin-left: 3%;
+        height: 96px;
+        float: left;
+      }
     }
   }
 
@@ -557,7 +566,9 @@ $sell-color: #FF8724;
 
   .inspectiondates{
     li{
-      width: 46.3333%;
+      &.item {
+        width: 46.3333%;
+      }
     }
   }
 
@@ -593,13 +604,18 @@ $sell-color: #FF8724;
       label {
         margin: 0;
       }
+      &.width-auto{
+        width: auto;
+      }
     }
 
     .btn {
-      float: left;
-      padding-left: 10px;
-      padding-right: 10px;
-      margin-top: 17px;
+      &.remove{
+        float: left;
+        padding-left: 10px;
+        padding-right: 10px;
+        margin-top: 17px;
+      }
     }
 
     .fa {
@@ -1052,13 +1068,32 @@ $sell-color: #FF8724;
 }
 
 .product-form {
-  .input-group-addon:not(:first-child):not(:last-child){
-    border-radius: 0 4px 4px 0;
-  }
   .form-group{
-    .input-group-addon{
+    .group-addon-date{
       padding: 5px 20px 6px 6px;
       border-left: 0 none;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .width-60{
+      width: 60%;
+    }
+
+    .width-70{
+      width: 68%;
+    }
+
+    .width-33{
+      width: 33%;
+    }
+    .group-addon-price{
+      padding: 8px 13px 8px 7px;
+      border-right: 0px none;
+      border-radius: 4px 0px 0px 4px;
+      float: left;
+    }
+    .right-rounded-corner{
+      border-radius: 0 4px 4px 0;
     }
   }
   .sellergroups{

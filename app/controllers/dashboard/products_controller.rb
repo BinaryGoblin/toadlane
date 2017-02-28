@@ -29,10 +29,14 @@ class Dashboard::ProductsController < DashboardController
   end
 
   def create
+
+  end
+
+  def create
     return if !current_user.profile_complete? || !current_user.has_payment_account?
 
-    start_date = DateTime.new(product_params["start_date(1i)"].to_i, product_params["start_date(2i)"].to_i, product_params["start_date(3i)"].to_i, product_params["start_date(4i)"].to_i, product_params["start_date(5i)"].to_i)
-    end_date = DateTime.new(product_params["end_date(1i)"].to_i, product_params["end_date(2i)"].to_i, product_params["end_date(3i)"].to_i, product_params["end_date(4i)"].to_i, product_params["end_date(5i)"].to_i)
+    start_date = parse_date_time(product_params[:start_date])
+    end_date = parse_date_time(product_params[:end_date])
 
     if product_params[:pricebreaks_attributes].present?
       product_params[:pricebreaks_attributes] =  parse_pricebrakes product_params[:pricebreaks_attributes]
@@ -66,7 +70,8 @@ class Dashboard::ProductsController < DashboardController
       .except(
         :images_attributes,
         :certificates_attributes,
-        :videos_attributes
+        :videos_attributes,
+        :inspection_date_attributes
       )
     )
 
@@ -95,8 +100,11 @@ class Dashboard::ProductsController < DashboardController
                 group = existing_group
               end
 
-              group_seller.update_attributes({group_id: group.id, user_id: additional_seller["user_id"]})
-              AdditionalSellerFee.create!(group_id: group.id, value: additional_seller["value"].to_f, group_seller_id: group_seller.id)
+              if group.present?
+                group_seller.update_attributes({group_id: group.id, user_id: additional_seller["user_id"]})
+                additional_seller_fee = AdditionalSellerFee.new(group_id: group.id, value: additional_seller["value"].to_f, group_seller_id: group_seller.id)
+                additional_seller_fee.save! if additional_seller_fee.valid?
+              end
 
               selected_role = Role.find(additional_seller["role_id"])
 
@@ -117,10 +125,10 @@ class Dashboard::ProductsController < DashboardController
           end
         end
 
-        if params["product"]["inspection_date_attributes"].present? && params["product"]["default_payment"] == "Fly And Buy"
+        if params["product"]["inspection_date_attributes"].first.present? && params["product"]["default_payment"] == "Fly And Buy"
           inspection_attributes = params["product"]["inspection_date_attributes"]
           inspection_attributes.each do |inspection_attribute|
-            inspection_date = DateTime.new(inspection_attribute["date(1i)"].to_i, inspection_attribute["date(2i)"].to_i, inspection_attribute["date(3i)"].to_i, inspection_attribute["date(4i)"].to_i, inspection_attribute["date(5i)"].to_i)
+            inspection_date = parse_date_time(inspection_attribute)
             @product.inspection_dates.create({date: inspection_date, creator_type: "seller", product_id: @product.id})
           end
         end
@@ -167,8 +175,8 @@ class Dashboard::ProductsController < DashboardController
   def update
     set_product
 
-    start_date = DateTime.new(product_params["start_date(1i)"].to_i, product_params["start_date(2i)"].to_i, product_params["start_date(3i)"].to_i, product_params["start_date(4i)"].to_i, product_params["start_date(5i)"].to_i)
-    end_date = DateTime.new(product_params["end_date(1i)"].to_i, product_params["end_date(2i)"].to_i, product_params["end_date(3i)"].to_i, product_params["end_date(4i)"].to_i, product_params["end_date(5i)"].to_i)
+    start_date = parse_date_time(product_params[:start_date])
+    end_date = parse_date_time(product_params[:end_date])
 
     if product_params[:pricebreaks_attributes].present?
       product_params[:pricebreaks_attributes] = parse_pricebrakes product_params[:pricebreaks_attributes]
@@ -225,14 +233,15 @@ class Dashboard::ProductsController < DashboardController
         :certificates_attributes_delete,
         :videos_attributes,
         :videos_attributes_delete,
-        :pricebreaks_delete
+        :pricebreaks_delete,
+        :inspection_date_attributes
       )
     )
 
     if params["product"]["inspection_date_attributes"].present? && params["product"]["default_payment"] == "Fly And Buy"
       inspection_attributes = params["product"]["inspection_date_attributes"]
       inspection_attributes.each do |inspection_attribute|
-        inspection_date = DateTime.new(inspection_attribute["date(1i)"].to_i, inspection_attribute["date(2i)"].to_i, inspection_attribute["date(3i)"].to_i, inspection_attribute["date(4i)"].to_i, inspection_attribute["date(5i)"].to_i)
+        inspection_date = parse_date_time(inspection_attribute)
         if inspection_attribute["id"].present?
           existing_inspection_date = @product.inspection_dates.find_by_id(inspection_attribute["id"])
           if params["product"]["default_payment"] == "Fly And Buy"
@@ -471,5 +480,9 @@ class Dashboard::ProductsController < DashboardController
     end
 
     sub_pricebreaks
+  end
+
+  def parse_date_time(date)
+    DateTime.strptime(date, '%Y-%m-%d %I:%M %p')
   end
 end

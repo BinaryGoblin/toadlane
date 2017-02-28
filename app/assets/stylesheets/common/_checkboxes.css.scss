@@ -21,7 +21,7 @@ $checkbox-bd-color: #aeb5c1;
 }
 .icheckbox {
   border-radius: 3px;
-
+  top: -1px;
   &.hover {
     border-color: $checkbox-bd-color / 1.5;
   }
