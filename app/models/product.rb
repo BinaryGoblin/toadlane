@@ -70,6 +70,9 @@ class Product < ActiveRecord::Base
   has_many :inspection_dates, dependent: :destroy
   has_one :group
 
+  accepts_nested_attributes_for :images, allow_destroy: true
+  accepts_nested_attributes_for :certificates, allow_destroy: true
+  accepts_nested_attributes_for :videos, allow_destroy: true
   accepts_nested_attributes_for :shipping_estimates,
   :allow_destroy => true,
   :reject_if => lambda { |a| (a[:cost].blank? && a[:description].blank?) }

@@ -14,7 +14,7 @@
 class Video < ActiveRecord::Base
   belongs_to :product
 
-  validates_presence_of :product_id, :video_file_name, :video_file_size, :video_content_type
+  validates_presence_of :video_file_name, :video_file_size, :video_content_type
 
   has_attached_file :video, styles: {
     medium: {

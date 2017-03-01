@@ -125,7 +125,7 @@
                     a.delete-image= fa_icon 'trash-o', text: 'Delete'
                   .select
                     span Select photo
-                    input type="file" name="product[images_attributes][]" accept="image/*"
+                    input type="file" name="product[images_attributes][][image]" accept="image/*"
 
           - else
             - (1..4).each do
@@ -134,7 +134,7 @@
                   a.delete-image= fa_icon 'trash-o', text: 'Delete'
                 .select
                   span Select photo
-                  input type="file" name="product[images_attributes][]" accept="image/*"
+                  input type="file" name="product[images_attributes][][image]" accept="image/*"
 
         .clearfix
           #add_photo.btn.btn-primary Add photo item
@@ -165,7 +165,7 @@
                     a.delete-certificate= fa_icon 'trash-o', text: 'Delete'
                   .select
                     span Select document
-                    input type="file" name="product[certificates_attributes][]" accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif"
+                    input type="file" name="product[certificates_attributes][][uploaded_file]" accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif"
 
           - else
             - (1..4).each do
@@ -174,7 +174,7 @@
                   a.delete-certificate= fa_icon 'trash-o', text: 'Delete'
                 .select
                   span Select document
-                  input type="file" name="product[certificates_attributes][]" accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif"
+                  input type="file" name="product[certificates_attributes][][uploaded_file]" accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif"
 
         .clearfix
           #add_certificate.btn.btn-primary Add information
@@ -186,7 +186,7 @@
               a.delete-certificate= fa_icon 'trash-o', text: 'Delete'
             .select
               span Select photo
-              input type="file" name="product[certificates_attributes][]" accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif"
+              input type="file" name="product[certificates_attributes][][uploaded_file]" accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif"
 
       .form-group.product-videos
         label Upload Videos:
@@ -205,7 +205,7 @@
                     a.delete-video= fa_icon 'trash-o', text: 'Delete'
                   .select
                     span Select video
-                    input type="file" name="product[videos_attributes][]" accept="video/*, video/3gpp, video/x-flv, video/mpeg, .m2v"
+                    input type="file" name="product[videos_attributes][][video]" accept="video/*, video/3gpp, video/x-flv, video/mpeg, .m2v"
 
           - else
             - (1..4).each do
@@ -214,7 +214,7 @@
                   a.delete-video= fa_icon 'trash-o', text: 'Delete'
                 .select
                   span Select video
-                  input type="file" name="product[videos_attributes][]" accept="video/*, video/3gpp, .mkv, video/x-flv, video/3gpp2, video/mpeg, .m2v"
+                  input type="file" name="product[videos_attributes][][video]" accept="video/*, video/3gpp, .mkv, video/x-flv, video/3gpp2, video/mpeg, .m2v"
 
         .clearfix
           #add_video.btn.btn-primary Add video
@@ -226,7 +226,7 @@
               a.delete-video= fa_icon 'trash-o', text: 'Delete'
             .select
               span Select video
-              input type="file" name="product[videos_attributes][]" accept="video/*, video/3gpp, .mkv, video/x-flv, video/3gpp2, video/mpeg, .m2v"
+              input type="file" name="product[videos_attributes][][video]" accept="video/*, video/3gpp, .mkv, video/x-flv, video/3gpp2, video/mpeg, .m2v"
   hr
   label Pricebreaks:
   ul.pricebreaks
@@ -464,7 +464,7 @@
             .form-group.width-auto
               .input-group.date.inspection-date
                 label &nbsp;
-                = text_field :inspection_date, :date, value: inspection_date.date , class: "form-control inspection-date", name: "product[inspection_date_attributes][]"
+                = text_field :inspection_date, :date, value: inspection_date.date , class: "form-control inspection-date", name: "product[inspection_dates_attributes][][date]"
                 span.input-group-addon.group-addon-date
                   span.glyphicon.glyphicon-calendar
             span.btn.btn-default.remove= fa_icon 'trash-o'
@@ -477,7 +477,7 @@
           .form-group.width-auto
             .input-group.date.inspection-date
               label &nbsp;
-              = text_field :inspection_date, :date, class: "form-control inspection-date", name: "product[inspection_date_attributes][]"
+              = text_field :inspection_date, :date, class: "form-control inspection-date", name: "product[inspection_dates_attributes][][date]"
               span.input-group-addon.group-addon-date
                 span.glyphicon.glyphicon-calendar
           span.btn.btn-default.remove= fa_icon 'trash-o'
