@@ -177,6 +177,13 @@
   .devise{
     margin-top: 30px;
     margin-bottom: 20px;
+
+    h2{
+      text-align: center;
+    }
+    h4{
+      text-align: center;
+    }
   }
   .header-user .want-sell-buy{
     float: none;
@@ -755,6 +762,7 @@
     }
   }
   .devise{
+    padding-top: 30px;
     .btn-signup{
       width: 100%;
     }

@@ -1,12 +1,21 @@
 .devise {
-  max-width: 400px;
-  padding: 30px 30px 25px;
+  max-width: 506px;
+  padding: 20px 30px 25px;
   border-radius: 5px;
   margin:0px auto 20px;
   top:45px;
 
+  #new_user{
+    max-width: 400px;
+  }
+
   h2{
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+  }
+
+  h4{
+    margin-bottom: 35px;
+    text-align: center;
   }
 
   .icheckbox {
