@@ -4,20 +4,23 @@
 
   .miniDashboard
     .subSection
-      span.subSectionCount $1,234
+      span.subSectionCount $#{total_earning}
       span.subsectionDetail Earned
 
-    .subSection
-      span.subSectionCount 0
-      span.subsectionDetail Available Products
+    = link_to dashboard_products_path
+      .subSection
+        span.subSectionCount #{available_products_for_user}
+        span.subsectionDetail Available Products
 
-    .subSection
-      span.subSectionCount 12
-      span.subsectionDetail Orders Pending
+    = link_to dashboard_orders_path
+      .subSection
+        span.subSectionCount #{current_user.pending_orders.count}
+        span.subsectionDetail Orders pending_orders
 
-    .subSection
-      span.subSectionCount.productViewCount 44
-      span.subsectionDetail Product Views
+    = link_to dashboard_products_path
+      .subSection
+        span.subSectionCount.productViewCount #{total_viewers}
+        span.subsectionDetail Product Views
 
 
   .carousel-product-title

@@ -109,4 +109,16 @@ module ProductHelper
       "display:none;"
     end
   end
+
+  def total_viewers
+    current_user.products.collect{|p| p.views_count}.sum
+  end
+
+  def available_products_for_user
+    current_user.products.available_products
+  end
+
+  def total_earning
+    current_user.total_earning
+  end
 end

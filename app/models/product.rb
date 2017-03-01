@@ -93,6 +93,7 @@ class Product < ActiveRecord::Base
   scope :for_sell, -> { where(status_characteristic: 'sell') }
   scope :most_recent, -> { order(created_at: :desc) }
   scope :most_viewed, -> { order(views_count: :desc) }
+  scope :not_sold_out, -> { where("amount > sold_out") }
 
   self.per_page = 16
 
@@ -106,6 +107,10 @@ class Product < ActiveRecord::Base
 
   def self.most_viewed_products
     unexpired.for_sell.most_viewed
+  end
+
+  def self.available_products()
+    unexpired.for_sell.not_sold_out.count
   end
 
   def available_payments

@@ -118,4 +118,16 @@ class AmgOrder < ActiveRecord::Base
     api_ready_params["order_description"] = "p:#{product_id}u:#{buyer_id}t:#{Time.now.to_i}"
     api_ready_params
   end
+
+  def self.pending_orders
+    all - completed - refunded
+  end
+
+  def get_toadlane_fee
+    Fee.find_by(:module_name => "Amg").value
+  end
+
+  def total_earning
+    get_toadlane_fee.present? ? total - get_toadlane_fee - fee : total - fee
+  end
 end
