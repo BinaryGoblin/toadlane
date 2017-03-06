@@ -43,7 +43,7 @@ class Dashboard::ProductsController < DashboardController
   def create
     return if !current_user.profile_complete? || !current_user.has_payment_account?
 
-    product_service = Services::CreateProduct.new(product_params, current_user)
+    product_service = Services::Crud::Product.new(product_params, current_user)
     @product = product_service.product
     respond_to do |format|
       if @product.valid?
@@ -57,7 +57,7 @@ class Dashboard::ProductsController < DashboardController
   end
 
   def update
-    product_service = Services::CreateProduct.new(product_params, current_user, params[:id])
+    product_service = Services::Crud::Product.new(product_params, current_user, params[:id])
     @product = product_service.product
     respond_to do |format|
       if @product.valid?
