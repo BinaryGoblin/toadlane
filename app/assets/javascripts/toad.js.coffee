@@ -13,13 +13,15 @@
 #= require_tree ./plugins
 
 #= require bootstrap
+#= require moment
+#= require bootstrap-datetimepicker
 
 #= require elemental
 
 #= require_tree ./initializers/
 #= require_tree ./helpers/
 #= require_tree ./behaviors/
-
+#= require_tree ./dashboard/
 
 $(document).ready ->
   # $('html,body').animate { scrollTop: 0 }, 100
@@ -175,15 +177,18 @@ $(document).ready ->
   ), 'Please enter date greater than today.'
 
   jQuery.validator.addMethod 'check_fee_exceeds_product_price', ((value, element) ->
-    product_retail_price = parseFloat($('#product_unit_price').val())
-    added_additional_sellers = $('ul.sellergroups').find('li.sellergroup .set-commission-text-box')
-    added_fee = 0
+    if $('li.sellergroup .set-commission-text-box').val() != '' && $('#product_unit_price').val() != ''
+      product_retail_price = parseFloat($('#product_unit_price').val())
+      added_additional_sellers = $('ul.sellergroups').find('li.sellergroup .set-commission-text-box')
+      added_fee = 0
 
-    jQuery.each added_additional_sellers, (i, val) ->
-      added_fee = added_fee + parseFloat(val.value)
-      return
+      jQuery.each added_additional_sellers, (i, val) ->
+        added_fee = added_fee + parseFloat(val.value)
+        return
 
-    return added_fee < product_retail_price
+      return added_fee < product_retail_price
+    else
+      return true
   ), "The additional seller fee exceeds the product's price."
 
   $('select#green_order_address_country').change (event) ->
@@ -288,6 +293,7 @@ $(document).ready ->
       form.submit()
       return
 
+  $.validator.setDefaults({ ignore: ":hidden:not(.chosen-select)" })
   $('form.product_form_partial').validate
     rules:
       "product[name]":
@@ -295,22 +301,40 @@ $(document).ready ->
       "product[videos_attributes][]":
         required: false
         filesize: 5
-      "product[start_date(2i)]":
+      "product[start_date]":
         required: true
-        check_product_start_date: true
-      "product[additional_seller_attributes][][value]":
+      "product[end_date]":
+        required: true
+      "product[unit_price]":
+        required: true
+      "product[amount]":
+        required: true
+      "product[group_attributes][name]":
+        required: (element) ->
+          return $("#product_group_attributes_group_sellers_attributes_0_user_id").val()!=""
+      "product[group_attributes][group_sellers_attributes][0][user_id]":
+        required: (element) ->
+          return $("#product_group_attributes_name").val()!=""
+      "product[group_attributes][group_sellers_attributes][0][fee]":
+        required: (element) ->
+          return $("#product_group_attributes_name").val()!=""
         check_fee_exceeds_product_price: true
-    messages:
-      "product[start_date(2i)]":
-        remote: "The start date cannot be past date."
     errorPlacement: (error, element) ->
       # this is done for displaying the error message for Product Start Date
       # # below the start date select boxes
-      if element.attr('name') == "product[start_date(2i)]"
-        $('#product_start_date_3i').addClass('error')
-        $('#product_start_date_1i').addClass('error')
+      if element.attr('name') == "product[start_date]"
+        $('#product_start_date').addClass('error')
         error.appendTo('.product-start-date-error')
-      else if element.attr('name') == "product[additional_seller_attributes][][value]"
+      else if element.attr('name') == "product[end_date]"
+        $('#product_end_date').addClass('error')
+        error.appendTo('.product-end-date-error')
+      else if element.attr('name') == "product[group_sellers_attributes][][user_id]"
+        added_additional_sellers_ids = $('ul.sellergroups').find('li.sellergroup .chosen-container')
+        error = error
+        jQuery.each added_additional_sellers_ids, (i, val) ->
+          error.insertAfter val
+          return
+      else if element.attr('name') == "product[group_sellers_attributes][][fee]"
         added_additional_sellers = $('ul.sellergroups').find('li.sellergroup .set-commission-text-box')
         error = error
         jQuery.each added_additional_sellers, (i, val) ->
@@ -368,205 +392,6 @@ $(document).ready ->
     else
       $('.error-message').html('You can either select a product or create new product.')
       $(this).prop 'disabled', true
-
-  $('.product_new').ready ->
-    $('#product_inspection_date_attributes__date_1i').change ->
-      month_select_block = $(this)[0].id
-      month_select_box = $('#'+month_select_block)
-
-      $(month_select_box).each ->
-        endMonthSelected = $('#product_end_date_2i').val()
-        endYearSelected = $('#product_end_date_1i').val()
-        startYearSelected = $('#product_start_date_1i').val()
-        yearSelectBlock = $(this)[0].id
-        yearSelectBox = $('#'+yearSelectBlock)
-
-        monthSelectBox = yearSelectBox.siblings('select#product_inspection_date_attributes__date_2i')
-
-        monthSelectBox.html ''
-        monthNames = [
-          'January'
-          'February'
-          'March'
-          'April'
-          'May'
-          'June'
-          'July'
-          'August'
-          'September'
-          'October'
-          'November'
-          'December'
-        ]
-
-        j = 0
-
-
-        if yearSelectBox.val() == endYearSelected
-          while j < parseInt(endMonthSelected) - 1
-            month_count = j + 1
-            monthSelectBox.append '<option value="' + month_count + '">' + monthNames[j] + '</option>'
-            j++
-          monthSelectBox.val(0)
-          return
-        else
-          while j < 12
-            month_count = j + 1
-            monthSelectBox.append '<option value="' + month_count + '">' + monthNames[j] + '</option>'
-            j++
-          monthSelectBox.val(0)
-          return
-      return
-
-  $('.product_edit').ready ->
-    $('#product_inspection_date_attributes__date_1i').change ->
-      month_select_block = $(this)[0].id
-      month_select_box = $('#'+month_select_block)
-
-      $(month_select_box).each ->
-        inspection_date_value = $('#product_hidden_field_name').val()
-        inspection_date_array = inspection_date_value.split("-")
-        selectedYear = inspection_date_array[0]
-        selectedMonth = inspection_date_array[1]
-        selectedDay = inspection_date_array[2]
-
-        endMonthSelected = $('#product_end_date_2i').val()
-        endYearSelected = $('#product_end_date_1i').val()
-
-        yearSelectBlock = $(this)[0].id
-        yearSelectBox = $('#'+yearSelectBlock)
-
-        monthSelectBox = yearSelectBox.siblings('select#product_inspection_date_attributes__date_2i')
-
-        monthSelectBox.html ''
-        monthNames = [
-          'January'
-          'February'
-          'March'
-          'April'
-          'May'
-          'June'
-          'July'
-          'August'
-          'September'
-          'October'
-          'November'
-          'December'
-        ]
-
-        j = 0
-        if yearSelectBox.val() == endYearSelected
-          while j < parseInt(endMonthSelected) - 1
-            month_count = j + 1
-            monthSelectBox.append '<option value="' + month_count + '">' + monthNames[j] + '</option>'
-            j++
-          monthSelectBox.val(parseInt(selectedMonth) - 1)
-          if monthSelectBox.val() == null
-            monthSelectBox.val(0)
-          return
-        else
-          while j < 12
-            month_count = j + 1
-            monthSelectBox.append '<option value="' + month_count + '">' + monthNames[j] + '</option>'
-            j++
-          monthSelectBox.val(parseInt(selectedMonth))
-          if monthSelectBox.val() == null
-            monthSelectBox.val(0)
-          return
-      return
-
-  evaluateInspectionDates = ->
-    $('#product_end_date_2i').each ->
-      selectedMonth = $('#product_inspection_date_attributes__date_2i').val()
-      selectedYear = $('#product_inspection_date_attributes__date_1i').val()
-      selectedDay = $('#product_inspection_date_attributes__date_3i').val()
-      endMonthSelected = $('#product_end_date_2i').val()
-      endYearSelected = $('#product_end_date_1i').val()
-      monthSelect = $('#product_inspection_date_attributes__date_2i')
-      daySelect = $('#product_inspection_date_attributes__date_3i')
-      yearSelect = $('#product_inspection_date_attributes__date_1i')
-      # year = parseInt(yearSelect.val())
-      # month = parseInt(monthSelect.val())
-      # days = new Date(year, month, 0).getDate()
-      # selectedDay = daySelect.val()
-      # selectedMonth = monthSelect.val()
-      # daySelect.html ''
-      # today = new Date
-      # todayMonth = today.getMonth() + 1 #january is 0
-      monthSelect.html ''
-      monthNames = [
-        'January'
-        'February'
-        'March'
-        'April'
-        'May'
-        'June'
-        'July'
-        'August'
-        'September'
-        'October'
-        'November'
-        'December'
-      ]
-      j = 0
-      if yearSelect.val() == endYearSelected
-        while j < endMonthSelected - 1
-          monthSelect.append '<option value="' + j + '">' + monthNames[j] + '</option>'
-          j++
-        daySelect.val(selectedDay)
-        monthSelect.val(selectedMonth - 1)
-        yearSelect.val(selectedYear)
-        return
-      else
-        while j < 12
-          month_count = j + 1
-          monthSelect.append '<option value="' + month_count + '">' + monthNames[j] + '</option>'
-          j++
-        daySelect.val(selectedDay)
-        monthSelect.val(selectedMonth)
-        yearSelect.val(selectedYear)
-        return
-    return
-
-  evaluateMonthDates = ->
-    $('select[id*=_2i]').each ->
-      monthSelect = $(this)
-      daySelect = $(this).siblings('select[id*=_3i]')
-      yearSelect = $(this).siblings('select[id*=_1i]')
-      year = parseInt(yearSelect.val())
-      month = parseInt(monthSelect.val())
-      days = new Date(year, month, 0).getDate()
-      selectedDay = daySelect.val()
-      selectedMonth = monthSelect.val()
-      daySelect.html ''
-      today = new Date
-      todayMonth = today.getMonth() + 1 #january is 0
-      monthSelect.html ''
-      monthNames = [
-        'January'
-        'February'
-        'March'
-        'April'
-        'May'
-        'June'
-        'July'
-        'August'
-        'September'
-        'October'
-        'November'
-        'December'
-      ]
-      i = 1
-      while i <= days
-        daySelect.append '<option value="' + i + '">' + i + '</option>'
-        i++
-      j = 1
-      while j <= todayMonth
-        monthSelect.append '<option value="' + j + '">' + monthNames[j - 1] + '</option>'
-        j++
-      daySelect.val selectedDay
-      return
-    return
 
 
   $('.peopleInviteIcon').click ->
@@ -639,7 +464,7 @@ $(document).ready ->
       else if $('#product_default_payment').val() == "Fly And Buy"
         $('form.product_form_partial').submit()
 
-  $('#product_group_name').change ->
+  $('#product_group_attributes_name').change ->
     $('#product_default_payment').val("Fly And Buy")
     $('.insert_inspection_dates').show()
 

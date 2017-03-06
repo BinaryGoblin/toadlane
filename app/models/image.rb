@@ -14,8 +14,7 @@
 class Image < ActiveRecord::Base
   belongs_to :product
 
-  validates_presence_of :product_id, :image_file_name, :image_file_size, :image_content_type
-  validates_numericality_of :product_id, only_integer: true
+  validates_presence_of :image_file_name, :image_file_size, :image_content_type
 
   has_attached_file :image, styles: {
                                 small: '110x95#',

@@ -162,6 +162,11 @@ select[data-behavior=Select] {
     padding-top: 3px;
     display: block;
   }
+  .date{
+    input{
+      width: 151px;
+    }
+  }
 }
 
 .checkbox {
@@ -169,6 +174,9 @@ select[data-behavior=Select] {
     vertical-align: top;
     margin-top: 2px;
     margin-right: 7px;
+  }
+  span{
+    margin: 0px 0px 0px 5px;
   }
 }
 
