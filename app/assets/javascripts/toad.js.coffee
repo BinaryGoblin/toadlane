@@ -309,15 +309,15 @@ $(document).ready ->
         required: true
       "product[amount]":
         required: true
-      "product[group_name]":
+      "product[group_attributes][name]":
         required: (element) ->
-          return $("#product_additional_seller_user_ids").val()!=""
-      "product[additional_seller_attributes][][user_id]":
+          return $("#product_group_attributes_group_sellers_attributes_0_user_id").val()!=""
+      "product[group_attributes][group_sellers_attributes][0][user_id]":
         required: (element) ->
-          return $("#product_group_name").val()!=""
-      "product[additional_seller_attributes][][value]":
+          return $("#product_group_attributes_name").val()!=""
+      "product[group_attributes][group_sellers_attributes][0][fee]":
         required: (element) ->
-          return $("#product_group_name").val()!=""
+          return $("#product_group_attributes_name").val()!=""
         check_fee_exceeds_product_price: true
     errorPlacement: (error, element) ->
       # this is done for displaying the error message for Product Start Date
@@ -328,13 +328,13 @@ $(document).ready ->
       else if element.attr('name') == "product[end_date]"
         $('#product_end_date').addClass('error')
         error.appendTo('.product-end-date-error')
-      else if element.attr('name') == "product[additional_seller_attributes][][user_id]"
+      else if element.attr('name') == "product[group_sellers_attributes][][user_id]"
         added_additional_sellers_ids = $('ul.sellergroups').find('li.sellergroup .chosen-container')
         error = error
         jQuery.each added_additional_sellers_ids, (i, val) ->
           error.insertAfter val
           return
-      else if element.attr('name') == "product[additional_seller_attributes][][value]"
+      else if element.attr('name') == "product[group_sellers_attributes][][fee]"
         added_additional_sellers = $('ul.sellergroups').find('li.sellergroup .set-commission-text-box')
         error = error
         jQuery.each added_additional_sellers, (i, val) ->
@@ -464,7 +464,7 @@ $(document).ready ->
       else if $('#product_default_payment').val() == "Fly And Buy"
         $('form.product_form_partial').submit()
 
-  $('#product_group_name').change ->
+  $('#product_group_attributes_name').change ->
     $('#product_default_payment').val("Fly And Buy")
     $('.insert_inspection_dates').show()
 

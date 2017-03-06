@@ -112,29 +112,30 @@
         label Photos:
         .product-form-photos data-behavior="UploadImages" data-options='{"template":"#template-select-image","btnAdd":"#add_photo","deleteImage":".delete-image"}'
           - if @product.images.present?
-            - @product.images.each do |item|
+            - @product.images.each_with_index do |item, index|
               .item: .photo
                 .image-tag style="background:url(#{item.image(:small)})"
                 a.delete-image= fa_icon 'trash-o', text: 'Delete'
-                input name="product[images_attributes_delete][]" type="checkbox" value="#{item.id}"
+                = hidden_field_tag "product[images_attributes][#{index}][id]", "#{item.id}"
+                = hidden_field_tag "product[images_attributes][#{index}][_destroy]", false, class: 'item_ds'
 
             - if 4 - @product.images.count > 0
-              - (1..4-@product.images.count).each do
+              - (1..4-@product.images.count).each_with_index do |value, index|
                 .item.new
                   .photo
                     a.delete-image= fa_icon 'trash-o', text: 'Delete'
                   .select
                     span Select photo
-                    input type="file" name="product[images_attributes][][image]" accept="image/*"
+                    = file_field_tag "product[images_attributes][#{index + @product.images.count}][image]", accept: 'image/*'
 
           - else
-            - (1..4).each do
+            - (1..4).each_with_index do |value, index|
               .item.new
                 .photo
                   a.delete-image= fa_icon 'trash-o', text: 'Delete'
                 .select
                   span Select photo
-                  input type="file" name="product[images_attributes][][image]" accept="image/*"
+                  = file_field_tag "product[images_attributes][#{index}][image]", accept: 'image/*'
 
         .clearfix
           #add_photo.btn.btn-primary Add photo item
@@ -146,35 +147,36 @@
               a.delete-image= fa_icon 'trash-o', text: 'Delete'
             .select
               span Select photo
-              input type="file" name="product[images_attributes][]" accept="image/*"
+              input type="file" name="product[images_attributes][][image]" accept="image/*"
       .product-certificates.margin-top-20
         label Upload product information:
         .product-form-photos data-behavior="UploadImages" data-options='{"template":"#template-select-certificate","btnAdd":"#add_certificate","deleteImage":".delete-certificate"}'
           - if @product.certificates.present?
-            - @product.certificates.each do |item|
+            - @product.certificates.each_with_index do |item, index|
               .item: .photo
                 .image-tag
                   = item.filename
                 a.delete-certificate= fa_icon 'trash-o', text: 'Delete'
-                input name="product[certificates_attributes_delete][]" type="checkbox" value="#{item.id}"
+                = hidden_field_tag "product[certificates_attributes][#{index}][id]", "#{item.id}"
+                = hidden_field_tag "product[certificates_attributes][#{index}][_destroy]", false, class: 'item_ds'
 
             - if 4 - @product.certificates.count > 0
-              - (1..4-@product.certificates.count).each do
+              - (1..4-@product.certificates.count).each_with_index do |value, index|
                 .item.new
                   .photo
                     a.delete-certificate= fa_icon 'trash-o', text: 'Delete'
                   .select
                     span Select document
-                    input type="file" name="product[certificates_attributes][][uploaded_file]" accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif"
+                    = file_field_tag "product[certificates_attributes][#{index + @product.certificates.count}][uploaded_file]", accept: '.pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif'
 
           - else
-            - (1..4).each do
+            - (1..4).each_with_index do |value, index|
               .item.new
                 .photo
                   a.delete-certificate= fa_icon 'trash-o', text: 'Delete'
                 .select
                   span Select document
-                  input type="file" name="product[certificates_attributes][][uploaded_file]" accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif"
+                  = file_field_tag "product[certificates_attributes][#{index}][uploaded_file]", accept: '.pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif'
 
         .clearfix
           #add_certificate.btn.btn-primary Add information
@@ -185,36 +187,37 @@
             .photo
               a.delete-certificate= fa_icon 'trash-o', text: 'Delete'
             .select
-              span Select photo
+              span Select document
               input type="file" name="product[certificates_attributes][][uploaded_file]" accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, image/jpg, image/jpeg, image/png, image/gif"
 
       .form-group.product-videos
         label Upload Videos:
         .product-form-photos data-behavior="UploadImages" data-options='{"template":"#template-select-video","btnAdd":"#add_video","deleteImage":".delete-video"}'
           - if @product.videos.present?
-            - @product.videos.each do |item|
+            - @product.videos.each_with_index do |item, index|
               .item: .photo
                 .image-tag style="background:url(#{item.video(:small)})"
                 a.delete-video= fa_icon 'trash-o', text: 'Delete'
-                input name="product[videos_attributes_delete][]" type="checkbox" value="#{item.id}"
+                = hidden_field_tag "product[videos_attributes][#{index}][id]", "#{item.id}"
+                = hidden_field_tag "product[videos_attributes][#{index}][_destroy]", false, class: 'item_ds'
 
             - if 4 - @product.videos.count > 0
-              - (1..4-@product.videos.count).each do
+              - (1..4-@product.videos.count).each_with_index do |value, index|
                 .item.new
                   .photo
                     a.delete-video= fa_icon 'trash-o', text: 'Delete'
                   .select
                     span Select video
-                    input type="file" name="product[videos_attributes][][video]" accept="video/*, video/3gpp, video/x-flv, video/mpeg, .m2v"
+                    = file_field_tag "product[videos_attributes][#{index + @product.videos.count}][video]", accept: 'video/*, video/3gpp, video/x-flv, video/mpeg, .m2v'
 
           - else
-            - (1..4).each do
+            - (1..4).each_with_index do |value, index|
               .item.new
                 .photo
                   a.delete-video= fa_icon 'trash-o', text: 'Delete'
                 .select
                   span Select video
-                  input type="file" name="product[videos_attributes][][video]" accept="video/*, video/3gpp, .mkv, video/x-flv, video/3gpp2, video/mpeg, .m2v"
+                  = file_field_tag "product[videos_attributes][#{index}][video]", accept: 'video/*, video/3gpp, video/x-flv, video/mpeg, .m2v'
 
         .clearfix
           #add_video.btn.btn-primary Add video
@@ -230,35 +233,20 @@
   hr
   label Pricebreaks:
   ul.pricebreaks
-    - if @product.pricebreaks.any?
-      - @product.pricebreaks.each_with_index do |pb, index|
-        li.pricebreak.item
-          .index= index+1
-          .form-group
-            label Price:
-            input.form-control type="text" name="product[pricebreaks_attributes][][price]" value="#{number_with_precision(pb.price, precision: 2, delimiter: '')}"
-
-          .form-group
-            label Quantity:
-            input.form-control type="number" name="product[pricebreaks_attributes][][quantity]" value="#{pb.quantity}"
-
-          input type="hidden" name="product[pricebreaks_attributes][][id]" value="#{pb.id}"
-
-          span.btn.btn-default.remove= fa_icon 'trash-o'
-          .hide: input type="checkbox" name="product[pricebreaks_delete][]" value="#{pb.id}"
-
-    - else
+    = f.fields_for :pricebreaks do |builder|
       li.pricebreak.item
-        .index 1
+        .index
+          = builder.index + 1
         .form-group
-          label Price:
-          input.form-control type="text" name="product[pricebreaks_attributes][][price]"
+          = builder.label :price
+          = builder.number_field :price, class: 'form-control'
 
         .form-group
-          label Quantity:
-          input.form-control type="number" name="product[pricebreaks_attributes][][quantity]"
+          = builder.label :quantity
+          = builder.number_field :quantity, class: 'form-control'
 
-        span.btn.btn-default.remove= fa_icon 'trash-o'
+        span.btn.btn-default.remove data-index=builder.index = fa_icon 'trash-o'
+        = builder.hidden_field :_destroy
 
     li.add-pricebreak.item data-behavior="PriceBreaks"= fa_icon 'plus', text: 'Add another Product Price'
 
@@ -266,12 +254,12 @@
     li.pricebreak.item
       .index 2
       .form-group
-        label Price:
-        input.form-control type="text" name="product[pricebreaks_attributes][][price]"
+        = label_tag :price
+        = number_field_tag :price, nil, class: 'form-control'
 
       .form-group
-        label Quantity:
-        input.form-control type="number" name="product[pricebreaks_attributes][][quantity]"
+        = label_tag :quantity
+        = number_field_tag :quantity, nil, class: 'form-control'
 
       span.btn.btn-default.remove= fa_icon 'trash-o'
 
@@ -282,8 +270,10 @@
   .row
     .col-md-6
       .form-group
-        = f.label :group_name, 'Group Name:'
-        = f.text_field :group_name, class: 'form-control', value: @product.group.present? ? @product.group.name : @group.try(:name)
+        = f.fields_for :group do |group_form|
+          = group_form.label :name, 'Group Name:'
+          = group_form.text_field :name, class: 'form-control'
+          = group_form.hidden_field :_destroy
 
   label Add Additional Seller:
   p.warning.additional-seller-fee-exceeded-error
@@ -316,49 +306,52 @@
 
             span.btn.btn-default.remove= fa_icon 'trash-o'
             .hide: input type="checkbox" name="product[additional_seller_delete][]" value="#{seller['user_id']}"
-    - elsif @product.group.present? && @product.group_sellers.present?
-      - @product.group_sellers.each_with_index do |seller, index|
-        li.sellergroup.item
-          .index= index+1
-          .form-group.add-seller-block.select-seller-group
-            label Add Additional Seller:
-            = f.collection_select :additional_seller_ids,
-              get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
-              { include_blank: true, selected: seller.user_id }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
+    / - elsif @product.group.present? && @product.group_sellers.present?
+    /   - @product.group_sellers.each_with_index do |seller, index|
+    /     li.sellergroup.item
+    /       .index= index+1
+    /       .form-group.add-seller-block.select-seller-group
+    /         label Add Additional Seller:
+    /         = f.collection_select :additional_seller_ids,
+    /           get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
+    /           { include_blank: true, selected: seller.user_id }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
 
-          .form-group.set-commision
-            label set per unit commission:
-            = f.number_field :value, class: 'form-control set-commission-text-box', value: seller.additional_seller_fee.try(:value), :name =>"product[additional_seller_attributes][][value]", :id => "product[additional_seller_attributes][][value]"
+    /       .form-group.set-commision
+    /         label set per unit commission:
+    /         = f.number_field :value, class: 'form-control set-commission-text-box', value: seller.additional_seller_fee.try(:value), :name =>"product[additional_seller_attributes][][value]", :id => "product[additional_seller_attributes][][value]"
 
-          .form-group.select-additional-seller-role
-            = f.label :role, 'Role:'
-            = f.select :role, options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |role| [role.name, role.id] }, :selected => get_selected_role(seller.user)), {}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]", :id => "product[additional_seller_attributes][][role_id]"
+          / .form-group.select-additional-seller-role
+          /   = f.label :role, 'Role:'
+          /   = f.select :role, options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |role| [role.name, role.id] }, :selected => get_selected_role(seller.user)), {}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]", :id => "product[additional_seller_attributes][][role_id]"
 
-          input type="hidden" name="product[additional_seller_attributes][][id]" value="#{seller.id}"
+          / input type="hidden" name="product[additional_seller_attributes][][id]" value="#{seller.id}"
 
-          span.btn.btn-default.remove= fa_icon 'trash-o'
-          .hide: input type="checkbox" name="product[additional_seller_delete][]" value="#{seller.id}"
+          / span.btn.btn-default.remove= fa_icon 'trash-o'
+          / .hide: input type="checkbox" name="product[additional_seller_delete][]" value="#{seller.id}"
 
 
     - else
-      li.sellergroup.item
-        .index 1
-        .form-group.add-seller-block.select-seller-group
-          label Add Additional Seller:
-          = f.collection_select :additional_seller_ids,
-                get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
-                  { include_blank: true}, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product_additional_seller_user_ids"}
+      = f.fields_for :group do |group_form|
+        = group_form.fields_for :group_sellers do |group_sellers_form|
+          li.sellergroup.item
+            .index
+              = group_sellers_form.index + 1
+            .form-group.add-seller-block.select-seller-group
+              label Add Additional Seller:
+              = group_sellers_form.collection_select :user_id, get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select, { include_blank: true}, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }}
+              = group_sellers_form.hidden_field :_destroy
 
 
-        .form-group.set-commision
-          label set per unit commission:
-          = f.number_field :value, class: 'form-control set-commission-text-box', :name =>"product[additional_seller_attributes][][value]", :id => "product[additional_seller_attributes][][value]"
+            .form-group.set-commision
+              label set per unit commission:
+              = group_sellers_form.number_field :fee, class: 'form-control set-commission-text-box'
 
-        .form-group.select-additional-seller-role
-          = f.label :role, 'Role:'
-          = f.select :role, options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |role| [role.name, role.id] }, :selected => Role.find_by_name('seller').name), {}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]", :id => "product[additional_seller_attributes][][role_id]"
+            .form-group.select-additional-seller-role
+              = f.label :role, 'Role:'
+              = f.select :role, options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |role| [role.name, role.id] }, :selected => Role.find_by_name('seller').name), {}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]"
 
-        span.btn.btn-default.remove= fa_icon 'trash-o'
+            span.btn.btn-default.remove data-index=group_sellers_form.index = fa_icon 'trash-o'
+            = group_sellers_form.hidden_field :_destroy
 
     li.add-seller.item data-behavior="AddSeller"= fa_icon 'plus', text: 'Add another Additional Seller'
 
@@ -367,13 +360,12 @@
       .index 1
       .form-group.add-seller-block.select-seller-group
         label Add Additional Seller:
-        = f.collection_select :additional_seller_ids,
-          get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
-          { include_blank: true}, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
+        = select_tag 'product[group_attributes][group_sellers_attributes][0][user_id]',
+            options_from_collection_for_select(get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select), { include_blank: true,class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }}
 
       .form-group.set-commision
         label set per unit commission:
-        = f.number_field :value, class: 'form-control set-commission-text-box', :name =>"product[additional_seller_attributes][][value]", :id => "product[additional_seller_attributes][][value]"
+        = number_field_tag 'product[group_attributes][group_sellers_attributes][0][fee]', '', class: 'form-control set-commission-text-box'
 
       .form-group.select-additional-seller-role
         = f.label :role, 'Role:'
@@ -400,23 +392,24 @@
 
   label Shipping Estimates:
   ul.estimates
-    = f.fields_for :shipping_estimates do |ff|
-      li.estimate
-        .index = ff.index+1
-        .estimate-type
-          = ff.label :type, 'Shipping Type:'
-          = ff.select :type, ShippingEstimate.select_options, {}, class: 'form-control'
+    = f.fields_for :shipping_estimates do |builder|
+      - if params[:action] == 'new' || builder.object.persisted?
+        li.estimate
+          .index = builder.index + 1
+          .estimate-type
+            = builder.label :type, 'Shipping Type:'
+            = builder.select :type, ShippingEstimate.select_options, {}, class: 'form-control'
 
-        .estimate-cost
-          = ff.label :cost, 'Cost (USD):'
-          = ff.text_field :cost, class: 'form-control'
+          .estimate-cost
+            = builder.label :cost, 'Cost (USD):'
+            = builder.text_field :cost, class: 'form-control'
 
-        .estimate-description
-          = ff.label :description, 'Description:'
-          = ff.text_field :description, class: 'form-control'
+          .estimate-description
+            = builder.label :description, 'Description:'
+            = builder.text_field :description, class: 'form-control'
 
-        span.btn.btn-default.remove= fa_icon 'trash-o'
-        = ff.hidden_field :_destroy, class: 'delete'
+          span.btn.btn-default.remove data-index=builder.index = fa_icon 'trash-o'
+          = builder.hidden_field :_destroy
 
     li.add-estimate data-behavior="ShippingEstimates"= fa_icon 'plus', text: 'Add another shipping estimate'
 
@@ -435,7 +428,6 @@
         input.form-control.description type="text" name="product[shipping_estimates_attributes][][description]"
 
       span.btn.btn-default.remove= fa_icon 'trash-o'
-      input.form-control.delete type="hidden" name="product[shipping_estimates_attributes][][_destroy]" id="shipping_estimates_attributes__destroy" value="0"
 
   hr
   .form-group
@@ -455,32 +447,18 @@
           Allow buyer to suggest alternative inspection date
     label Inspection Dates:
     ul.inspectiondates
-      - if @product.seller_set_inspection_dates.any?
-        - @product.seller_set_inspection_dates.each_with_index do |inspection_date, index|
-          - hidden_field_name = "inspection_date" + "_" + inspection_date.id.to_s
-          = f.hidden_field :hidden_field_name, :value => inspection_date.date.to_date
-          li.inspectiondate.item
-            .index= index+1
-            .form-group.width-auto
-              .input-group.date.inspection-date
-                label &nbsp;
-                = text_field :inspection_date, :date, value: inspection_date.date , class: "form-control inspection-date", name: "product[inspection_dates_attributes][][date]"
-                span.input-group-addon.group-addon-date
-                  span.glyphicon.glyphicon-calendar
-            span.btn.btn-default.remove= fa_icon 'trash-o'
-              .hide: input type="checkbox" name="product[inspection_date_delete][]" value="#{inspection_date.id}"
-
-              input type="hidden" name="product[inspection_date_attributes][][id]" value="#{inspection_date.id}"
-      - else
+      = f.fields_for :inspection_dates do |builder|
         li.inspectiondate.item
-          .index 1
+          .index
+            = builder.options[:child_index] + 1
           .form-group.width-auto
             .input-group.date.inspection-date
               label &nbsp;
-              = text_field :inspection_date, :date, class: "form-control inspection-date", name: "product[inspection_dates_attributes][][date]"
+              = builder.text_field :date, class: "form-control inspection-date"
               span.input-group-addon.group-addon-date
                 span.glyphicon.glyphicon-calendar
           span.btn.btn-default.remove= fa_icon 'trash-o'
+          = builder.hidden_field :_destroy
 
       li.add-inspectiondate.item data-behavior="InspectionDate"= fa_icon 'plus', text: 'Add another Inspection Date'
 
@@ -490,7 +468,7 @@
         .form-group.width-auto
           .input-group.date.inspection-date
             label &nbsp;
-            = text_field :inspection_date, :date, class: "form-control inspection-date", name: "product[inspection_date_attributes][]"
+            = text_field_tag 'product[inspection_dates_attributes][0][date]', nil, class: "form-control inspection-date"
             span.input-group-addon.group-addon-date
               span.glyphicon.glyphicon-calendar
         span.btn.btn-default.remove= fa_icon 'trash-o'

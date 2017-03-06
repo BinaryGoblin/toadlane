@@ -596,6 +596,10 @@ $sell-color: #FF8724;
       }
     }
 
+    .icheckbox {
+      display: none;
+    }
+
     .form-group {
       float: left;
       width: 90px;
@@ -663,6 +667,10 @@ $sell-color: #FF8724;
       width: 100%;
       height: 96px;
       float: left;
+
+      .icheckbox {
+        display: none;
+      }
     }
   }
 

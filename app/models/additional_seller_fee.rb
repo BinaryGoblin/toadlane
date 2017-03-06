@@ -11,7 +11,7 @@
 #
 
 class AdditionalSellerFee < ActiveRecord::Base
-	validate :check_fee
+	# validate :check_fee
 
 	def check_fee
 		group = Group.find(self.group_id)

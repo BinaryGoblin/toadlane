@@ -63,7 +63,6 @@ class Product < ActiveRecord::Base
   has_many :categories, through: :product_categories, dependent: :destroy
   has_many :images, dependent: :destroy
   has_many :videos, dependent: :destroy
-  accepts_nested_attributes_for :images, :videos
   has_many :pricebreaks, -> { order(quantity: :asc) }, autosave: true, dependent: :destroy
   has_many :shipping_estimates, dependent: :destroy
   has_many :certificates, dependent: :destroy
@@ -73,9 +72,8 @@ class Product < ActiveRecord::Base
   accepts_nested_attributes_for :images, allow_destroy: true
   accepts_nested_attributes_for :certificates, allow_destroy: true
   accepts_nested_attributes_for :videos, allow_destroy: true
-  accepts_nested_attributes_for :shipping_estimates,
-  :allow_destroy => true,
-  :reject_if => lambda { |a| (a[:cost].blank? && a[:description].blank?) }
+  accepts_nested_attributes_for :group, allow_destroy: true, reject_if: ->(group) { group[:name].blank? }
+  accepts_nested_attributes_for :shipping_estimates, :allow_destroy => true, reject_if: -> (estimate) { (estimate[:cost].blank? && estimate[:description].blank?) }
 
   accepts_nested_attributes_for :inspection_dates,
   :allow_destroy => true,
@@ -83,7 +81,7 @@ class Product < ActiveRecord::Base
   belongs_to :category, class_name: "Category", foreign_key: :main_category
 
   accepts_nested_attributes_for :product_categories
-  accepts_nested_attributes_for :pricebreaks, :reject_if => :all_blank
+  accepts_nested_attributes_for :pricebreaks, allow_destroy: true, :reject_if => :all_blank
 
   validates_numericality_of :unit_price, :amount, only_integer: false, greater_than: 0, less_than: 1000000
   validates_presence_of :end_date, :status_characteristic, :name
