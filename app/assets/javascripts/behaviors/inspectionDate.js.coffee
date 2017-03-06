@@ -22,9 +22,9 @@ class Behavior.InspectionDate
 
   removeInspectionDate: ->
     li = $(@).closest 'li'
+    id = '#product_inspection_dates_attributes_' + $(@).data('index') + '_id'
 
-    if li.find('[type=checkbox]').length > 0
-      li.find('[type=checkbox]').attr 'checked', true
+    if $(id).length > 0
       li.find('[type=hidden]').attr 'value', true
       li.wrap '<div class="hide"></div>'
     else

@@ -61,7 +61,7 @@ class Dashboard::ProductsController < DashboardController
     @product = product_service.product
     respond_to do |format|
       if @product.valid?
-        product_service.update!
+        product_service.save!
         @product = product_service.product
         format.html { redirect_to after_create_and_update_path }
       else

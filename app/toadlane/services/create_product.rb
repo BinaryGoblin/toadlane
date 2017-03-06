@@ -9,6 +9,7 @@ module Services
         product = current_user.products.new(params)
       else
         product = Product.where(id: id).first
+        product.assign_attributes(product_params)
         product
       end
     end

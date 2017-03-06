@@ -67,12 +67,12 @@
       .row.row-top-padding-10
         .col-md-6
           .form-group
-              label.required OFFER valid from:
-              .input-group.date#start-date
-                = f.text_field :start_date, class: "form-control"
-                span.input-group-addon.group-addon-date
-                  span.glyphicon.glyphicon-calendar
-                p.product-start-date-error
+            label.required OFFER valid from:
+            .input-group.date#start-date
+              = f.text_field :start_date, class: "form-control"
+              span.input-group-addon.group-addon-date
+                span.glyphicon.glyphicon-calendar
+              p.product-start-date-error
         .col-md-6
           .form-group
             label.required OFFER valid until:
@@ -450,14 +450,14 @@
       = f.fields_for :inspection_dates do |builder|
         li.inspectiondate.item
           .index
-            = builder.options[:child_index] + 1
+            = builder.index + 1
           .form-group.width-auto
             .input-group.date.inspection-date
               label &nbsp;
               = builder.text_field :date, class: "form-control inspection-date"
               span.input-group-addon.group-addon-date
                 span.glyphicon.glyphicon-calendar
-          span.btn.btn-default.remove= fa_icon 'trash-o'
+          span.btn.btn-default.remove data-index=builder.index = fa_icon 'trash-o'
           = builder.hidden_field :_destroy
 
       li.add-inspectiondate.item data-behavior="InspectionDate"= fa_icon 'plus', text: 'Add another Inspection Date'

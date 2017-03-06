@@ -6,6 +6,7 @@ $(document).ready ->
 
   $('#product_start_date, #start-date').datetimepicker
     minDate: sell_starting_date
+    useCurrent: false
     format: date_format
   $('#product_end_date, #end-date').datetimepicker
     useCurrent: false
@@ -20,7 +21,8 @@ $(document).ready ->
 
   $('body').on 'click', '.inspection-date', ->
     $(this).datetimepicker({
-      format: date_format
       minDate: sell_starting_date
+      useCurrent: false
+      format: date_format
     }).focus();
     return
