@@ -33,7 +33,7 @@ class FlyBuyOrder < ActiveRecord::Base
   #
   ## group_seller => If the product has additional seller i.e group then this field is true else false
   ## group_id => If the product has additional seller i.e. group, then this filed represents the group id
-  ### if the group_seller is true, then then the `seller_id` field will be the id of the product owner 
+  ### if the group_seller is true, then then the `seller_id` field will be the id of the product owner
   ####  i.e the initial seller who creates group and adds the other additional sellers
 
   has_many :inspection_dates, dependent: :destroy
@@ -106,5 +106,13 @@ class FlyBuyOrder < ActiveRecord::Base
         true
       end
     end
+  end
+
+  def self.pending_orders
+    all - completed - refunded
+  end
+
+  def total_earning
+    get_toadlane_fee.present? ? total - get_toadlane_fee - fee : total - fee
   end
 end

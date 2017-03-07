@@ -274,6 +274,33 @@ class User < ActiveRecord::Base
     end
   end
 
+  def pending_orders
+    fly_buy_orders = self.fly_buy_orders.not_deleted.pending_orders
+    stripe_orders = self.stripe_orders.pending_orders
+    green_orders = self.green_orders.pending_orders
+    amg_orders = self.amg_orders.pending_orders
+    emb_orders = self.emb_orders.pending_orders
+    user_involved_groups = Group.joins(:group_sellers).where('group_sellers.user_id' => self.id)
+    user_involved_orders = FlyBuyOrder.where(group_seller_id: user_involved_groups.ids).where.not(count: nil, status: nil).pending_orders
+
+    return fly_buy_orders + stripe_orders + green_orders + amg_orders + emb_orders + user_involved_orders
+  end
+
+  def total_earning
+    sell_orders.present? ? sell_orders.collect{ |order| order.total_earning }.reduce(:+) : 0
+  end
+
+  def sell_orders
+    slord = []
+    slord << stripe_orders('sold').completed
+    slord << green_orders('sold').completed
+    slord << amg_orders('sold').completed
+    slord << emb_orders('sold').completed
+    slord << fly_buy_orders('sold').completed
+
+    slord.flatten
+  end
+
   private
   def associate_api_user
     if armor_api_account_exists?
