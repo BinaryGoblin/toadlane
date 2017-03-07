@@ -1,28 +1,20 @@
 class Dashboard::ProductsController < DashboardController
   def index
-    @products = Product.where(user_id: current_user.id).paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    @products = current_user.products.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
     @products_count = @products.count
     @products.each do |product|
-      if product.default_payment_flybuy? && current_user.fly_buy_profile_account_added? == false
+      if inactive_product? product
         product.update_attribute(:status, false)
       end
     end
   end
 
   def new
-    if current_user.profile_complete? && current_user.has_payment_account?
-      @product = Product.new
-      group_builder = @product.build_group
-      group_builder.group_sellers.build
-      @product.inspection_dates.build
-      @product.pricebreaks.build
-    else
-      if !current_user.profile_complete?
-        redirect_to dashboard_profile_path, :flash => { :error => "You must complete your profile before you can create product listings." }
-      elsif !current_user.has_payment_account?
-        redirect_to dashboard_accounts_path, :flash => { :error => "You must create or link a payment method in order to accept payments."}
-      end
-    end
+    @product = Product.new
+    group_builder = @product.build_group
+    group_builder.group_sellers.build
+    @product.inspection_dates.build
+    @product.pricebreaks.build
   end
 
   def edit
@@ -41,8 +33,6 @@ class Dashboard::ProductsController < DashboardController
   end
 
   def create
-    return if !current_user.profile_complete? || !current_user.has_payment_account?
-
     product_service = Services::Crud::Product.new(product_params, current_user)
     @product = product_service.product
     respond_to do |format|
@@ -91,7 +81,10 @@ class Dashboard::ProductsController < DashboardController
   def active_cascade
     if params[:products_ids].present?
       params[:products_ids].each do |id|
-        Product.find(id).update(status: true)
+        product = Product.find(id)
+        if active_product? product
+          product.update(status: true)
+        end
       end
     end
 
@@ -152,5 +145,13 @@ class Dashboard::ProductsController < DashboardController
     else
       path = dashboard_products_path
     end
+  end
+
+  def inactive_product? product
+    !product.default_payment_flybuy? || !current_user.fly_buy_profile_account_added? || product.expired?
+  end
+
+  def active_product? product
+    current_user.has_payment_account? && current_user.fly_buy_profile_account_added? && !product.expired?
   end
 end
