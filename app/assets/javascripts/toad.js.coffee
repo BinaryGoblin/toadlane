@@ -24,6 +24,10 @@
 #= require_tree ./dashboard/
 
 $(document).ready ->
+  mq = window.matchMedia('(min-width: 480px)')
+  if mq.matches == false
+    $('.tabs').find('ul').addClass 'collapse'
+
   # $('html,body').animate { scrollTop: 0 }, 100
   #
   # $(window).scroll ->

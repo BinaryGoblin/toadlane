@@ -531,11 +531,9 @@
   }
   .footer-actions .fa-container{
     position: unset;
-    .wrap-sm{
-      button{
-        float: none !important;
-        margin: 10px 10px 0 0;
-      }
+    button{
+      float: none !important;
+      margin: 10px 10px 0 0;
     }
   }
   .devise{
@@ -550,7 +548,7 @@
 
 @media (max-width:480px) {
   .mobile-main-container{
-    margin-top: 210px;
+    margin-top: 228px;
   }
   .main-alert {
     top: 148px;
@@ -665,6 +663,12 @@
     margin-top: 0;
   }
 
+  .product-form{
+    .mhide{
+      display: none;
+    }
+  }
+
   .product-form .pricebreaks, .product-form .sellergroups, .group-form .sellergroups,
   .product-form .inspectiondates{
     margin: 0;
@@ -684,6 +688,10 @@
       .add-seller-block{
         padding-left: 0;
         padding-right: 0;
+      }
+      &.item{
+        width: 98%;
+        height: auto;
       }
     }
     .pricebreak,
@@ -707,12 +715,13 @@
     .form-group{
       float: none;
       width: auto;
-      margin: 0;
+      margin: 0 0 10px 0;
     }
   }
   .product-form .dimensions-fields > div{
     width: 100%;
     padding: 0;
+    margin: 0 0 10px 0;
   }
   .product-form .estimates{
     margin: 0;
@@ -736,17 +745,15 @@
     }
     .estimate-type, .estimate-cost, .estimate-description{
       float: none;
-      width: 100%;
-      margin: 0;
+      width: 100% !important;
+      margin: 0 0 10px 0;
     }
   }
-  .footer-actions .fa-container{
-    position: unset;
-    .wrap-sm{
-      button{
-        float: none !important;
-        margin: 10px 10px 0 0;
-      }
+  .footer-actions{
+    position: none;
+    .btn{
+      float: none !important;
+      margin: 10px 10px 0 0 !important;
     }
   }
   .devise{
@@ -757,5 +764,12 @@
     .btn-signin{
       margin: 13px 0 0;
     }
+  }
+
+  a#collapse-link1{
+    display: block !important;
+    text-decoration: none;
+    text-align: center;
+    background: $background-color;
   }
 }
