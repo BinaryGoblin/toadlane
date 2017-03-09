@@ -24,7 +24,7 @@ class Dashboard::GroupsController < ApplicationController
 
         redirect_to new_dashboard_product_path(product_params)
       elsif params["group"]["create_new_product"].nil? && params["group"]["product_id"].present?
-        product = Product.where(product_id: group_params["product_id"]).first
+        product = Product.where(id: group_params["product_id"]).first
 
         @group.product_id = product.id
         @group.save!
@@ -37,7 +37,7 @@ class Dashboard::GroupsController < ApplicationController
   end
 
   def edit
-    @group = Group.find_by_id(params["id"])
+    @group = current_user.groups.where(id: params["id"]).first
   end
 
   def update
