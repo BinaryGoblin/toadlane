@@ -72,7 +72,7 @@ class Product < ActiveRecord::Base
   accepts_nested_attributes_for :images, allow_destroy: true
   accepts_nested_attributes_for :certificates, allow_destroy: true
   accepts_nested_attributes_for :videos, allow_destroy: true
-  accepts_nested_attributes_for :group, allow_destroy: true, reject_if: ->(group) { group[:name].blank? }
+  accepts_nested_attributes_for :group, allow_destroy: true, reject_if: ->(attributes) { attributes[:name].blank? }
   accepts_nested_attributes_for :shipping_estimates, :allow_destroy => true, reject_if: -> (estimate) { (estimate[:cost].blank? && estimate[:description].blank?) }
 
   accepts_nested_attributes_for :inspection_dates,

@@ -278,82 +278,29 @@
   label Add Additional Seller:
   p.warning.additional-seller-fee-exceeded-error
   ul.sellergroups
-    - if params["group"].present? && params["group"]["additional_seller_attributes"].present?
-      - params["group"]["additional_seller_attributes"].each_with_index do |seller, index|
-        - if seller.present?
-          li.sellergroup.item
-            .index= index+1
-            .form-group.add-seller-block.select-seller-group
-              label Add Additional Seller:
-              - if seller["user_id"].include? '@'
-                = f.collection_select :additional_seller_ids,
-                get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
-                { include_blank: true, selected: User.find_by_email(seller["user_id"]).id }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
-              - else
-                = f.collection_select :additional_seller_ids,
-                  get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
-                  { include_blank: true, selected: seller['user_id'] }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
-
-            .form-group.set-commision
-              label set per unit commission:
-              = f.number_field :value, class: 'form-control set-commission-text-box', value: get_seller_fee_value(seller["id"]), :name =>"product[additional_seller_attributes][][value]", :id => "product[additional_seller_attributes][][value]"
-
-            .form-group.select-additional-seller-role
-              = f.label :role, 'Role:'
-              = f.select :role, options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |role| [role.name, role.id] }, :selected => seller["role_id"]), {prompt: 'Select a role type'}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]", :id => "product[additional_seller_attributes][][role_id]"
-
-            input type="hidden" name="product[additional_seller_attributes][][id]" value="#{seller['user_id']}"
-
-            span.btn.btn-default.remove= fa_icon 'trash-o'
-            .hide: input type="checkbox" name="product[additional_seller_delete][]" value="#{seller['user_id']}"
-    / - elsif @product.group.present? && @product.group_sellers.present?
-    /   - @product.group_sellers.each_with_index do |seller, index|
-    /     li.sellergroup.item
-    /       .index= index+1
-    /       .form-group.add-seller-block.select-seller-group
-    /         label Add Additional Seller:
-    /         = f.collection_select :additional_seller_ids,
-    /           get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select,
-    /           { include_blank: true, selected: seller.user_id }, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }, :name =>"product[additional_seller_attributes][][user_id]", :id => "product[additional_seller_attributes][][user_id]"}
-
-    /       .form-group.set-commision
-    /         label set per unit commission:
-    /         = f.number_field :value, class: 'form-control set-commission-text-box', value: seller.additional_seller_fee.try(:value), :name =>"product[additional_seller_attributes][][value]", :id => "product[additional_seller_attributes][][value]"
-
-          / .form-group.select-additional-seller-role
-          /   = f.label :role, 'Role:'
-          /   = f.select :role, options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |role| [role.name, role.id] }, :selected => get_selected_role(seller.user)), {}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]", :id => "product[additional_seller_attributes][][role_id]"
-
-          / input type="hidden" name="product[additional_seller_attributes][][id]" value="#{seller.id}"
-
-          / span.btn.btn-default.remove= fa_icon 'trash-o'
-          / .hide: input type="checkbox" name="product[additional_seller_delete][]" value="#{seller.id}"
-
-
-    - else
-      = f.fields_for :group do |group_form|
-        = group_form.fields_for :group_sellers do |group_sellers_form|
-          li.sellergroup.item
-            .index
-              = group_sellers_form.index + 1
-            .form-group.add-seller-block.select-seller-group
-              label Add Additional Seller:
-              = group_sellers_form.collection_select :user_id, get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select, { include_blank: true}, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }}
-              = group_sellers_form.hidden_field :_destroy
-
-
-            .form-group.set-commision
-              label set per unit commission:
-              = group_sellers_form.number_field :fee, class: 'form-control set-commission-text-box'
-
-            .form-group.select-additional-seller-role
-              = f.label :role, 'Role:'
-              = f.select :role, options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |role| [role.name, role.id] }, :selected => Role.find_by_name('seller').name), {}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]"
-
-            span.btn.btn-default.remove data-index=group_sellers_form.index = fa_icon 'trash-o'
+    = f.fields_for :group do |group_form|
+      = group_form.fields_for :group_sellers do |group_sellers_form|
+        li.sellergroup.item
+          .index
+            = group_sellers_form.index + 1
+          .form-group.add-seller-block.select-seller-group
+            label Add Additional Seller:
+            = group_sellers_form.collection_select :user_id, get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select, { include_blank: true}, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }}
             = group_sellers_form.hidden_field :_destroy
 
-    li.add-seller.item data-behavior="AddSeller"= fa_icon 'plus', text: 'Add another Additional Seller'
+
+          .form-group.set-commision
+            label set per unit commission:
+            = group_sellers_form.number_field :fee, class: 'form-control set-commission-text-box'
+
+          .form-group.select-additional-seller-role
+            = f.label :role, 'Role:'
+            = f.select :role, options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |role| [role.name, role.id] }, :selected => Role.find_by_name('seller').name), {}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]"
+
+          span.btn.btn-default.remove data-index=group_sellers_form.index = fa_icon 'trash-o'
+          = group_sellers_form.hidden_field :_destroy
+
+    li.add-seller.item data-fieldname="product[group_attributes][group_sellers_attributes][" data-behavior="AddSeller"= fa_icon 'plus', text: 'Add another Additional Seller'
 
   script#template-addseller type="text/template"
     li.sellergroup.item

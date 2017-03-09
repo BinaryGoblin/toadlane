@@ -10,9 +10,18 @@ class Dashboard::ProductsController < DashboardController
   end
 
   def new
-    @product = Product.new
-    group_builder = @product.build_group
-    group_builder.group_sellers.build
+    if params[:product].present?
+      @product = Product.new(product_params)
+    elsif params[:group_id].present?
+      group = current_user.groups.where(id: params[:group_id]).first
+      @product = Product.new
+      @product.group = group
+      group.group_sellers.build unless group.group_sellers.present?
+    else
+      @product = Product.new
+      group_builder = @product.build_group
+      group_builder.group_sellers.build
+    end
     @product.inspection_dates.build
     @product.pricebreaks.build
   end

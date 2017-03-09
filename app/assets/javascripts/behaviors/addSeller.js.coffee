@@ -49,12 +49,14 @@ class Behavior.AddSeller
 
   addBlock: ->
     tmpl = @$template.clone()
-    tmpl.find('.index').text @count++
-    common_string = 'product[group_attributes][group_sellers_attributes]['
-    group_sellers_name = common_string + @count + '][user_id]'
-    additional_seller_fee_name = common_string + @count + '][fee]'
+    field_name = $('.add-seller').data 'fieldname'
+    group_sellers_name = field_name + @count + '][user_id]'
+    additional_seller_fee_name = field_name + @count + '][fee]'
+
     tmpl.find('.select-seller-group > select').attr('name', group_sellers_name)
     tmpl.find('.set-commision > input').attr('name', additional_seller_fee_name)
+
+    tmpl.find('.index').text @count++
 
     @$el.before tmpl
     $('.chosen-select').chosen

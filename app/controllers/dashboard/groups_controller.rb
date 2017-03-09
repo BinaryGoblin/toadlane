@@ -8,6 +8,48 @@ class Dashboard::GroupsController < ApplicationController
 		@groups = groups + current_user_listed_as_additional_seller
 	end
 
+  def new
+    @group = Group.new
+    @group.group_sellers.build
+  end
+
+  def create
+    @group  = Group.new(group_params.merge!(group_owner_id: current_user.id))
+
+    if @group.valid?
+      if params["group"]["create_new_product"] == "true"
+        product_params = {
+          product: { group_attributes: { name: params[:group][:name], group_sellers_attributes: params[:group][:group_sellers_attributes] } }
+        }
+
+        redirect_to new_dashboard_product_path(product_params)
+      elsif params["group"]["create_new_product"].nil? && params["group"]["product_id"].present?
+        product = Product.where(product_id: group_params["product_id"]).first
+
+        @group.product_id = product.id
+        @group.save!
+
+        redirect_to edit_dashboard_product_path(product)
+      end
+    else
+      render action: 'new'
+    end
+  end
+
+  def edit
+    @group = Group.find_by_id(params["id"])
+  end
+
+  def update
+    @group = Group.where(id: params[:id]).first
+    product = Product.where(id: group_params["product_id"]).first
+    if @group.present? && product.present?
+      @group.update_attributes(group_params.merge!(product_id: product.id))
+
+      redirect_to edit_dashboard_product_path(product)
+    end
+  end
+
 	def accept_deal
 		product = Product.find_by_id(params["product_id"])
 		group_seller = GroupSeller.find_by_id(params["group_seller_id"])
@@ -63,87 +105,6 @@ class Dashboard::GroupsController < ApplicationController
 		redirect_to dashboard_group_path(group_seller.group.id)
 	end
 
-	def new
-		@group = Group.new
-	end
-
-	def create
-    @group  = Group.new(name: params["group"]["name"].downcase, group_owner_id: current_user.id)
-
-    if @group.valid?
-    	params["group"]["additional_seller_attributes"].each do |additional_seller|
-        if additional_seller["user_id"].present?
-          user = User.find_by_id(additional_seller["user_id"])
-          if user.nil? && additional_seller["user_id"].include?('@')
-            user = User.invite!({:email => additional_seller["user_id"], :invited_by_id => current_user.id, :name => additional_seller["user_id"].split("@").first}, current_user )
-          end
-        end
-      end
-			if params["group"]["create_new_product"] == "true" || params["group"]["create_new_product"] == "0"
-				# render new product page with the details of group submitted
-				@product = Product.new
-
-				render "dashboard/products/new", layout: true
-			elsif params["group"]["create_new_product"].nil? && params["group"]["product_id"].present?
-				# a product should be selected => validation
-				# # and redirect to product edit page
-				@product = Product.find_by_id(group_params["product_id"])
-
-				render "dashboard/products/edit", layout: true
-			end
-		else
-			render action: 'new'
-		end
-	end
-
-	def edit
-		@group = Group.find_by_id(params["id"])
-	end
-
-	def update
-		@group = Group.find(params["id"])
-		if params["group"]["additional_seller_delete"].present?
-    	params["group"]["additional_seller_delete"].each do |group_seller_id|
-    		group_seller = GroupSeller.find_by_id(group_seller_id)
-
-    		group_seller.destroy if group_seller.present?
-    		if params["group"]["additional_seller_attributes"].present?
-    			params["group"]["additional_seller_attributes"].each do |additional_seller|
-    				if additional_seller["id"] == group_seller_id
-	    				additional_seller.delete("user_id")
-	    				additional_seller.delete("id")
-	    			end
-    			end
-    		end
-    		params["group"]["additional_seller_attributes"].first["id"]== params["group"]["additional_seller_delete"].first
-    	end
-    end
-
-    params["group"]["additional_seller_attributes"].each do |additional_seller|
-      if additional_seller["user_id"].present?
-        user = User.find_by_id(additional_seller["user_id"])
-        if user.nil? && additional_seller["user_id"].include?('@')
-          user = User.invite!({:email => additional_seller["user_id"], :invited_by_id => current_user.id, :name => additional_seller["user_id"].split("@").first}, current_user )
-        end
-      end
-    end
-
-		if params["group"]["create_new_product"] == "true" || params["group"]["create_new_product"] == "0"
-			# render new product page with the details of group submitted
-			@product = Product.new
-      @group  = @group.update_attributes({name: params["group"]["name"].downcase, group_owner_id: current_user.id})
-
-			render "dashboard/products/new", layout: true
-		elsif params["group"]["create_new_product"].nil? && params["group"]["product_id"].present?
-			# a product should be selected => validation
-			# # and redirect to product edit page
-			@product = Product.find_by_id(group_params["product_id"])
-      @group  = @group.update_attributes({name: params["group"]["name"].downcase, group_owner_id: current_user.id})
-			
-			render "dashboard/products/edit", layout: true
-		end
-	end
-
 	def destroy
     group = Group.find_by_id(params["id"])
     group.destroy if group.present?
@@ -189,6 +150,6 @@ class Dashboard::GroupsController < ApplicationController
 
 	private
 	def group_params
-    params.require(:group).permit(:name, :product_id)
+    params.require(:group).permit(:name, :product_id, group_sellers_attributes: [:id, :group_id, :user_id, :fee, :_destroy])
   end
 end

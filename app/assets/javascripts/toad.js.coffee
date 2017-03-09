@@ -166,20 +166,6 @@ $(document).ready ->
     @optional(element) or (element.files[0].size <= mult_param)
   ), 'File size must be less than {0} MB'
 
-  jQuery.validator.addMethod 'check_product_start_date', ((value, element) ->
-    if $('form.product_new').length >= 1
-      selected_month = parseInt($('#product_start_date_2i').val())
-      selected_date = parseInt($('#product_start_date_3i').val())
-      selected_year = parseInt($('#product_start_date_1i').val())
-      current_date = new Date()
-
-      user_selected_date = new Date(selected_year, selected_month - 1, selected_date, 0, 0, 0, 0)
-
-      return user_selected_date > current_date
-    else
-      return true
-  ), 'Please enter date greater than today.'
-
   jQuery.validator.addMethod 'check_fee_exceeds_product_price', ((value, element) ->
     if $('li.sellergroup .set-commission-text-box').val() != '' && $('#product_unit_price').val() != ''
       product_retail_price = parseFloat($('#product_unit_price').val())
@@ -187,7 +173,8 @@ $(document).ready ->
       added_fee = 0
 
       jQuery.each added_additional_sellers, (i, val) ->
-        added_fee = added_fee + parseFloat(val.value)
+        if val.value != ''
+          added_fee = added_fee + parseFloat(val.value)
         return
 
       return added_fee < product_retail_price
@@ -352,6 +339,11 @@ $(document).ready ->
       $('form.product_form_partial').find('input[type=submit]').prop 'disabled', true
       form.submit()
       return
+
+  $.validator.addClassRules('set-commission-text-box', {
+    required: true,
+    check_fee_exceeds_product_price: true
+  });
 
   (new Fingerprint2).get (result) ->
     $('#fly_buy_profile_fingerprint').val(result)
