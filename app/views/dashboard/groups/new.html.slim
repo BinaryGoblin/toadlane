@@ -1,16 +1,17 @@
 = render '/shared/tabs'
 
-.wrap-sm: .product-form: h4 New Group:
+.wrap-sm
+  .product-form
+    h4 New Group:
 
-= form_for @group, url: dashboard_groups_path, method: "post" do |f|
-  .wrap-sm: .group-form
-    - if @group.errors.any?
-      .error-explanation
-        h5= "Error:"
-        ul
-          - @group.errors.full_messages.each do |message|
-            li = message
-    = render partial: 'dashboard/groups/group_form', locals: { group: @group, f: f}
-  
-  .footer-actions: .fa-container: .wrap-sm
-	  = f.submit 'Save', class: "btn btn-success pull-right group-submit-btn"
+    = form_for @group, url: dashboard_groups_path, method: "post" do |f|
+      - if @group.errors.any?
+        .error-explanation
+          h5= "Error:"
+          ul
+            - @group.errors.full_messages.each do |message|
+              li = message
+      = render partial: 'dashboard/groups/group_form', locals: { group: @group, f: f}
+
+      .footer-actions
+    	  = f.submit 'Save', class: "btn btn-success group-submit-btn"

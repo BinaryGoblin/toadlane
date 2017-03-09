@@ -75,6 +75,7 @@ class User < ActiveRecord::Base
   has_many :notifications, dependent: :destroy
   # user.products -> those products which the user is the owner
   has_many :products
+  has_many :groups, foreign_key: 'group_owner_id', class_name: 'Group'
 
   has_one :certificate, dependent: :destroy
 
