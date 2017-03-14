@@ -47,7 +47,7 @@ br
           { include_blank: 'Select one Product', selected: group.product_id },
           { :multiple=>false, class: 'form-control'}
       p.warning.error-message
-- if @group.blank?
+- if @group.new_record?
   strong
     p OR
 
