@@ -12,11 +12,6 @@ class Dashboard::ProductsController < DashboardController
   def new
     if params[:product].present?
       @product = Product.new(product_params)
-    elsif params[:group_id].present?
-      group = current_user.groups.where(id: params[:group_id]).first
-      @product = Product.new
-      @product.group = group
-      group.group_sellers.build unless group.group_sellers.present?
     else
       @product = Product.new
       group_builder = @product.build_group
@@ -48,6 +43,8 @@ class Dashboard::ProductsController < DashboardController
       if @product.valid?
         product_service.save!
         @product = product_service.product
+        send_email_to_additional_sellers @product
+        # Services::Notifications::AdditionalSellerNotification.new(product_params, @product, current_user).send
         format.html { redirect_to after_create_and_update_path }
       else
         format.html { render action: 'new' }
@@ -62,6 +59,8 @@ class Dashboard::ProductsController < DashboardController
       if @product.valid?
         product_service.save!
         @product = product_service.product
+        send_email_to_additional_sellers @product
+        # Services::Notifications::AdditionalSellerNotification.new(product_params, @product, current_user).send
         format.html { redirect_to after_create_and_update_path }
       else
         format.html { render action: 'edit' }
@@ -120,6 +119,7 @@ class Dashboard::ProductsController < DashboardController
   end
 
   private
+
   def set_product
     @product = Product.find(params[:id])
   end
@@ -138,7 +138,7 @@ class Dashboard::ProductsController < DashboardController
       :shipping_estimates_attributes => [ :id, :cost, :description, :product_id, :_destroy, :type ],
       :pricebreaks_attributes => [ :id, :quantity, :price, :product_id, :_destroy ], :inspection_dates_attributes => [:id, :date, :product_id, :_destroy],
       :product_categories_attributes => [:id, :product_id, :category_id],
-      group_attributes: [:id, :name, :product_id, :_destroy, group_sellers_attributes: [:id, :group_id, :user_id, :fee, :_destroy]]
+      group_attributes: [:id, :name, :product_id, :_destroy, group_sellers_attributes: [:id, :group_id, :user_id, :fee, :_destroy, :role_id]]
     )
   end
 
@@ -162,5 +162,27 @@ class Dashboard::ProductsController < DashboardController
 
   def active_product? product
     current_user.has_payment_account? && current_user.fly_buy_profile_account_added? && !product.expired?
+  end
+
+  def send_email_to_additional_sellers product
+    group_sellers = product.group.group_sellers.where(notified: false)
+    Services::Notifications::AdditionalSellerNotification.new(group_sellers, product, current_user).send
+  end
+
+  def add_seller_role(user, selected_role)
+    if user.has_role?'group admin'
+      role = Role.find_by_name('group admin')
+      role.users.delete(user)
+    elsif user.has_role? 'public seller'
+      role = Role.find_by_name('public seller')
+      role.users.delete(user)
+    elsif user.has_role? 'private seller'
+      role = Role.find_by_name('private seller')
+    elsif user.has_role? 'public supplier'
+      role = Role.find_by_name('public supplier')
+    elsif user.has_role? 'private supplier'
+      role = Role.find_by_name('private supplier')
+    end
+    user.add_role selected_role.name
   end
 end

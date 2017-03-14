@@ -5,13 +5,28 @@ class MessagesController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :inbound
 
   def create
-    receiver = User.find message_params[:user_id]
-    receipt = current_user.send_message receiver, message_params[:body], message_params[:subject]
-    MessageMailer.new_message(receiver,
-      message_params[:body],
-      message_params[:subject],
-      current_user,
-    receipt.notification.conversation.id).deliver
+    product = Product.find message_params[:product_id]
+    if product.group.present?
+      product.group.group_sellers.each do |seller|
+        unless seller.role.name == Role::PRIVATE_SELLER || seller.role.name == Role::PRIVATE_SUPPLIER
+          receiver = seller.user
+          receipt = current_user.send_message receiver, message_params[:body], message_params[:subject]
+          MessageMailer.new_message(receiver,
+            message_params[:body],
+            message_params[:subject],
+            current_user,
+          receipt.notification.conversation.id).deliver
+        end
+      end
+    else
+      receiver = product.user
+      receipt = current_user.send_message receiver, message_params[:body], message_params[:subject]
+      MessageMailer.new_message(receiver,
+        message_params[:body],
+        message_params[:subject],
+        current_user,
+      receipt.notification.conversation.id).deliver
+    end
     redirect_to :back
   end
 
@@ -38,6 +53,6 @@ class MessagesController < ApplicationController
 
   private
   def message_params
-    params.require(:message).permit(:user_id, :subject, :body)
+    params.require(:message).permit(:product_id, :subject, :body)
   end
 end

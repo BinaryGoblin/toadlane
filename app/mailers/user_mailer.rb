@@ -10,6 +10,16 @@ class UserMailer < ApplicationMailer
     mail to: @seller.email, subject: 'You have a sales order!!!'
   end
 
+  def sales_order_notification_to_additional_seller(order, group, group_seller)
+    @order = order
+    @group = group
+    @additional_seller = group_seller
+    @buyer = User.find_by_id(@order.buyer_id)
+    @product = Product.find_by_id(@order.product_id)
+
+    mail to: @additional_seller.user.email, subject: 'You have a sales order!!!'
+  end
+
   def sales_order_notification_to_buyer(order)
     @order = order
     @seller = User.find_by_id(@order.seller_id)
@@ -244,11 +254,11 @@ class UserMailer < ApplicationMailer
     mail to: @user.email, subject: "Fly Buy account marked verified"
   end
 
-  def send_added_as_additional_seller_notification(owner, additional_seller, product, group_seller_id)
+  def send_added_as_additional_seller_notification(owner, additional_seller, product, group_seller)
     @owner = owner
     @additional_seller = additional_seller
     @product = product
-    @group_seller_id = group_seller_id
+    @group_seller = group_seller
 
     mail to: @additional_seller.email, subject: "#{@owner.name.titleize} added you in a group"
   end

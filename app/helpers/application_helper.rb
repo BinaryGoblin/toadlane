@@ -335,6 +335,10 @@ module ApplicationHelper
     User.find_by_id(invited_user.invited_by_id)
   end
 
+  def get_user_group_invitation
+    GroupSeller.where(user_id: current_user.id).where(accept_deal: nil)
+  end
+
 
 
   # def get_image(image_path)

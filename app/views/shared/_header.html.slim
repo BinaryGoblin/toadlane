@@ -44,29 +44,23 @@ header.header.navbar.navbar-default.wrap.navbar-fixed-top
           ul#invitePplList
             li.headingList
               span Pending Invitations
+            - get_user_group_invitation.each do |gsinv|
+              - if gsinv.group.present?
+                li
+                  .userPic
+                    - product = gsinv.group.product
+                    - if product.images.present? && product.images.first.image(:small).present?
+                      = image_tag get_image(product.images.first.image(:small)), :class => "notification-image"
+                    - else
+                      img[src="https://www.toadlane.com/assets/product-missing-09ff685e51c99351a07e5332f0996ef2.png"]
 
-            li
-              .userPic
-                    =link_to image_tag('avatar/small/missing.png'), '', class: ''
-
-              .userDetails
-                .userName Arshad Ameer
-                .userdetails Interested to be a part of the deal
-              .userAction
-                = link_to 'Accept', '', class: 'acceptBtn'
-                = link_to 'Decline', '', class: 'DeclineBtn'
-
-            li
-              .userPic
-                    =link_to image_tag('avatar/small/missing.png'), '', class: ''
-
-              .userDetails
-                .userName John Ballantine
-                .userdetails I would like to partner up
-              .userAction
-                = link_to 'Accept', '', class: 'acceptBtn'
-                = link_to 'Decline', '', class: 'DeclineBtn'
-
+                  .userDetails
+                    .userName
+                      = link_to  gsinv.group.name, dashboard_group_path(gsinv.group)
+                    .userdetails Interested to be a part of the deal
+                  .userAction
+                    = link_to 'Accept', accept_deal_dashboard_groups_url(product_id: product.id, group_seller_id: gsinv.id), class: 'acceptBtn'
+                    = link_to 'Decline', reject_deal_dashboard_groups_url(product_id: product.id, group_seller_id: gsinv.id), class: 'DeclineBtn'
 
             .go-to-groups-page= link_to fa_icon('users', text: 'Go to group page'),  dashboard_groups_path, is: 'groups'
 

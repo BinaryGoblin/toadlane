@@ -10,7 +10,8 @@ module Services
         @product = if id.nil?
           product = current_user.products.new(params)
         else
-          product = ::Product.where(id: id).first
+          product = current_user.products.where(id: id).first
+          raise 'Unauthorized user access!' if product.blank?
           product.assign_attributes(product_params)
           product
         end

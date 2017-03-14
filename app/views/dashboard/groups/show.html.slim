@@ -6,6 +6,10 @@
       = flash[:error]
 .wrap-sm
   .table-options
+    - if is_accepted_deal?(current_user, @group)
+      - group_seller_id = group_seller_id(current_user, @group)
+      = link_to 'Accept', accept_deal_dashboard_groups_url(product_id: @product.id, group_seller_id: group_seller_id), class: 'acceptBtn'
+      = link_to 'Decline', reject_deal_dashboard_groups_url(product_id: @product.id, group_seller_id: group_seller_id), class: 'DeclineBtn'
     = link_to "Close", dashboard_groups_path, class: "btn btn-success pull-right"
   .table-responsive
     table.table.group-table data-behavior="TableCheckbox"
@@ -22,7 +26,7 @@
 
       tbody
         - @group.group_sellers.each do |group_member|
-          - if group_member.private_seller == false || group_member.product.owner == current_user || group_member.user == current_user
+          - if group_member.private_seller == false || @group.product.owner == current_user || group_member.user == current_user
             tr
               td = group_member.user.name
               td
@@ -35,11 +39,11 @@
               td = group_member.fly_buy_profile_verified?
               td
                 .form-group
-                  = form_tag assign_role_dashboard_groups_path(product_id: @product.id, user_id: group_member.user.id, group_seller_id: group_member.id ), method: :post, :class => "assign_role_to_additional_seller", :id => "assign_role_to_#{group_member.user.id}"
-                    - if group_member.product.owner == current_user || current_user.roles.include?(@group_admin)
-                      = select_tag 'role_id', options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |u| [u.name, u.id] }, :selected => get_selected_role(group_member.user) ), class: 'form-control'
+                  = form_tag assign_role_dashboard_groups_path(product_id: @product.id, group_seller_id: group_member.id ), method: :post, :class => "assign_role_to_additional_seller", :id => "assign_role_to_#{group_member.user.id}"
+                    - if @group.product.owner == current_user || group_member.role == @group_admin
+                      = select_tag 'role_id', options_for_select(Role.where(name: ['group admin', 'public seller', 'private seller', 'public supplier', 'private supplier']).collect{ |u| [u.name, u.id] }, :selected => group_member.role.id ), class: 'form-control'
                     - else
-                      = select_tag 'role_id', options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |u| [u.name, u.id] }, :selected => get_selected_role(group_member.user) ), class: 'form-control', :disabled => true
+                      = select_tag 'role_id', options_for_select(Role.where(name: ['group admin', 'public seller', 'private seller', 'public supplier', 'private supplier']).collect{ |u| [u.name, u.id] }, :selected => group_member.role.id ), class: 'form-control', :disabled => true
               td
                 - if current_user == group_member.user
                   - if group_member.accept_deal == nil || group_member.accept_deal == false

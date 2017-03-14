@@ -5,6 +5,7 @@ class ProductsController < ApplicationController
 
   layout 'user_dashboard'
 
+  before_filter :authenticate_user!
   before_action :check_terms_of_service
 
   def index

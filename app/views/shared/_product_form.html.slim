@@ -275,7 +275,8 @@
           = group_form.text_field :name, class: 'form-control'
           = group_form.hidden_field :_destroy
 
-  label Add Additional Seller:
+  label Add Additional Member:
+  .warning Note: The creator of this group is by default assigned as a group admin
   p.warning.additional-seller-fee-exceeded-error
   ul.sellergroups
     = f.fields_for :group do |group_form|
@@ -284,7 +285,7 @@
           .index
             = group_sellers_form.index + 1
           .form-group.add-seller-block.select-seller-group
-            label Add Additional Seller:
+            label Name:
             = group_sellers_form.collection_select :user_id, get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select, { include_blank: true}, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }}
             = group_sellers_form.hidden_field :_destroy
 
@@ -294,8 +295,8 @@
             = group_sellers_form.number_field :fee, class: 'form-control set-commission-text-box'
 
           .form-group.select-additional-seller-role
-            = f.label :role, 'Role:'
-            = f.select :role, options_for_select(Role.where(name: ['group admin', 'seller']).collect{ |role| [role.name, role.id] }, :selected => Role.find_by_name('seller').name), {}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]"
+            label Role:
+            = group_sellers_form.collection_select :role_id, get_additional_seller_roles, :id, :name, { include_blank: true}, { class: 'form-control', :multiple=>false, :data => { :placeholder => ' ' }}
 
           span.btn.btn-default.remove data-index=group_sellers_form.index = fa_icon 'trash-o'
           = group_sellers_form.hidden_field :_destroy
@@ -306,7 +307,7 @@
     li.sellergroup.item
       .index 1
       .form-group.add-seller-block.select-seller-group
-        label Add Additional Seller:
+        label Name:
         = select_tag 'product[group_attributes][group_sellers_attributes][0][user_id]',
             options_from_collection_for_select(get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select), { include_blank: true,class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }}
 
@@ -315,8 +316,9 @@
         = number_field_tag 'product[group_attributes][group_sellers_attributes][0][fee]', '', class: 'form-control set-commission-text-box'
 
       .form-group.select-additional-seller-role
-        = f.label :role, 'Role:'
-        = f.select :role, Role.where(name: ['group admin', 'seller']).collect{ |role| [role.name, role.id] }, {prompt: 'Select a role type'}, class: 'form-control', :name =>"product[additional_seller_attributes][][role_id]", :id => "product[additional_seller_attributes][][role_id]"
+        label Role:
+        = select_tag 'product[group_attributes][group_sellers_attributes][0][role_id]',
+            options_from_collection_for_select(get_additional_seller_roles, :id, :name), { include_blank: true, class: 'form-control', :multiple=>false, :data => { :placeholder => ' ' }}
 
       span.btn.btn-default.remove= fa_icon 'trash-o'
   hr

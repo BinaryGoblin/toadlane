@@ -1,6 +1,6 @@
 #form_message.modal.fade tabindex="-1" role="dialog"
   = form_tag messages_path
-    = hidden_field_tag 'message[user_id]', product.user.id
+    = hidden_field_tag 'message[product_id]', product.id
     - subject = "RE: " + product.name
     = hidden_field_tag 'message[subject]', subject
 
@@ -31,7 +31,7 @@
 /               th qty
 /               th price
 /               th amount
-            
+
 /           tbody
 /             tr
 /               td= product.name
@@ -55,7 +55,7 @@
 /               td.no-border colspan="2"
 /               td.text-center: b.text-uppercase Total:
 /               td: b $ <span class="armor-total">#{number_with_precision(product.unit_price, precision: 2, delimiter: '')}</span>
-        
+
 /     .modal-footer.text-right
 /       = form_tag armor_orders_path
 /         = hidden_field_tag 'armor_order[product_id]', product.id
@@ -78,8 +78,8 @@
       .pull-right data-dismiss="modal"= fa_icon 'close'
       h4.modal-title Checkout
 
-    = form_for @stripe_order do |f|  
-      .modal-body 
+    = form_for @stripe_order do |f|
+      .modal-body
         -if current_user && !current_user.addresses.nil?
           table.table-shipping-address data-behavior="assignShippingAddress"
             thead
@@ -94,8 +94,8 @@
                 td
                   = radio_button 'stripe_order', :address_id, "-1", default: true, 'data-behavior' => "AssignShipping", id: 'stripe_order_address_id__1'
                   = label :address_id, " Enter new address", for: 'stripe_order_address_id__1'
-    
-        table.table-shipping-estimate 
+
+        table.table-shipping-estimate
           - if !product.shipping_estimates.nil?
             thead
               tr
@@ -113,7 +113,7 @@
               th qty
               th price
               th amount
-        
+
           tbody
             tr
               td= product.name
@@ -217,7 +217,7 @@
         = f.hidden_field :rebate, :value => '0'
         = f.hidden_field :rebate_percent, :value => '0'
         = f.hidden_field :shipping_cost, :value => '0'
-        
+
         - if current_user
           - if product.status_characteristic == 'sell'
             = f.hidden_field :seller_id, :value => product.user.id
@@ -239,7 +239,7 @@
 
             a#greenSubmit.btn.btn-primary href="#" style="display: none;" class=('show_green' if @product.green_only_present?)
               | Place Order
-	        
+
           - else
             = f.hidden_field :seller_id, value: current_user.id
             = f.hidden_field :buyer_id, value: product.user.id
