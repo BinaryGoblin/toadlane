@@ -37,7 +37,8 @@ class Dashboard::GroupsController < ApplicationController
   end
 
   def edit
-    @group = current_user.groups.where(id: params["id"]).first
+    @group = current_user.groups.where(id: params[:id]).first
+    redirect_to :back if @group.blank?
   end
 
   def update
