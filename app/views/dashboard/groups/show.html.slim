@@ -25,7 +25,7 @@
           - if group_member.private_seller == false || group_member.product.owner == current_user || group_member.user == current_user
             tr
               td = group_member.user.name
-              td 
+              td
                 - if group_member.accept_deal == nil
                   .warning Invited
                 - else
@@ -50,5 +50,4 @@
                         = check_box_tag 'private_seller', true, group_member.private_seller
                 - else
                   = group_member.private_seller
-              td = group_member.additional_seller_fee.value
-            
+              td = group_member.fee

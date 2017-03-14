@@ -10,34 +10,27 @@
     table.table.products-table data-behavior="TableCheckbox"
       thead
         tr
-          th Group Name:
-          th Product name:
-          th Sellers Involved:
+          th Group
+          th Product
           th
 
       tbody
         - @groups.each do |group|
           tr
             td
-              = group.name.titleize
+              = link_to group.name.titleize, dashboard_group_path(group), class: 'link link-ulined', target: '_blank'
             td
               - if group.product.present?
                 = link_to group.product.name.titleize, product_path(group.product, cat_id: group.product.main_category), class: 'link link-ulined', target: '_blank'
               - else
                 | -
-            td 
-              - if group.additional_sellers.present?
-                = group.additional_sellers.count
-              - else
-                | -
             td
-              = link_to 'Show Details', dashboard_group_path(group), class: 'view'
-              - if current_user == group.owner || current_user.roles.include?(@group_admin)
+              - if current_user.roles.include?(group_admin)
                 |  |
                 = link_to 'Edit', edit_dashboard_group_path(group), class: 'view'
                 |  |
                 = link_to 'Delete', dashboard_group_path(group), method: :delete, data: { confirm: 'Are you sure?' }, class: 'view view-red'
-            
+
 
 
 / .footer-actions: .fa-container: .wrap-sm
