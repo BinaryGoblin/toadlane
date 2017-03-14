@@ -8,7 +8,7 @@ class MessagesController < ApplicationController
     product = Product.find message_params[:product_id]
     if product.group.present?
       product.group.group_sellers.each do |seller|
-        unless seller.role.name == 'private seller' || seller.role.name == 'private supplier'
+        unless seller.role.name == Role::PRIVATE_SELLER || seller.role.name == Role::PRIVATE_SUPPLIER
           receiver = seller.user
           receipt = current_user.send_message receiver, message_params[:body], message_params[:subject]
           MessageMailer.new_message(receiver,
@@ -27,13 +27,6 @@ class MessagesController < ApplicationController
         current_user,
       receipt.notification.conversation.id).deliver
     end
-    # receiver = User.find message_params[:user_id]
-    # receipt = current_user.send_message receiver, message_params[:body], message_params[:subject]
-    # MessageMailer.new_message(receiver,
-    #   message_params[:body],
-    #   message_params[:subject],
-    #   current_user,
-    # receipt.notification.conversation.id).deliver
     redirect_to :back
   end
 
