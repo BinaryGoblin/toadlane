@@ -1,6 +1,7 @@
 = render '/shared/tabs'
 
 .wrap-sm
+  h4 My Orders:
   - if !flash[:error].nil?
     .error-explanation
       - if flash[:error].kind_of?(Array)
