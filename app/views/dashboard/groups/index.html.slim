@@ -1,6 +1,7 @@
 = render '/shared/tabs'
 
 .wrap-sm
+  h4 My Groups:
   .table-options
     - if current_user.profile_complete? && current_user.products.present?
       = link_to fa_icon('plus', text: 'Seller Gruop'), new_dashboard_group_path, class: 'btn btn-default pull-right', disabled: false
