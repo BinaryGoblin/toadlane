@@ -1,7 +1,7 @@
 $(document).ready ->
   sell_starting_date = new Date
   sell_starting_date.setHours(0,0,0,0)
-  sell_starting_date.setDate sell_starting_date.getDate() + 1
+  sell_starting_date.setDate sell_starting_date.getDate()
   date_format = 'YYYY-MM-DD hh:mm a'
 
   $('#product_start_date, #start-date').datetimepicker

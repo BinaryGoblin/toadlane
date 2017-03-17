@@ -19,6 +19,7 @@ class Dashboard::ProductsController < DashboardController
     end
     @product.inspection_dates.build
     @product.pricebreaks.build
+    expected_group_members(current_user)
   end
 
   def edit
@@ -26,9 +27,11 @@ class Dashboard::ProductsController < DashboardController
     if @product.group.blank?
       group_builder = @product.build_group
       group_builder.group_sellers.build
+      expected_group_members(current_user)
     elsif
       group = @product.group
       group.group_sellers.build unless group.group_sellers.present?
+      expected_group_members(group.owner)
     end
 
     @product.inspection_dates.build if @product.inspection_dates.blank?
@@ -44,7 +47,6 @@ class Dashboard::ProductsController < DashboardController
         product_service.save!
         @product = product_service.product
         send_email_to_additional_sellers @product
-        # Services::Notifications::AdditionalSellerNotification.new(product_params, @product, current_user).send
         format.html { redirect_to after_create_and_update_path }
       else
         format.html { render action: 'new' }
@@ -60,7 +62,6 @@ class Dashboard::ProductsController < DashboardController
         product_service.save!
         @product = product_service.product
         send_email_to_additional_sellers @product
-        # Services::Notifications::AdditionalSellerNotification.new(product_params, @product, current_user).send
         format.html { redirect_to after_create_and_update_path }
       else
         format.html { render action: 'edit' }
@@ -165,6 +166,8 @@ class Dashboard::ProductsController < DashboardController
   end
 
   def send_email_to_additional_sellers product
+    return unless product.group.present?
+    return unless product.group.group_sellers.present?
     group_sellers = product.group.group_sellers.where(notified: false)
     Services::Notifications::AdditionalSellerNotification.new(group_sellers, product, current_user).send
   end

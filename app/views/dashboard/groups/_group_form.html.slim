@@ -14,7 +14,7 @@
             = group_sellers_form.index + 1
           .form-group.add-additional-seller.select-seller-group
             label Name:
-            = group_sellers_form.collection_select :user_id, get_all_user_except_current_added_user(current_user, group.product), :id, :label_for_select, { include_blank: true}, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }}
+            = group_sellers_form.collection_select :user_id, @expected_group_members, :id, :label_for_select, { include_blank: true}, { class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }}
 
           .form-group.select-additional-seller-role
             label Role:
@@ -22,7 +22,7 @@
 
           span.btn.btn-default.remove= fa_icon 'trash-o'
 
-      li.add-seller.item data-fieldname="group[group_sellers_attributes][" data-behavior="AddSeller"= fa_icon 'plus', text: 'Add another Additional Seller'
+      li.add-seller.item data-fieldname="group[group_sellers_attributes][" data-behavior="AddSeller"= fa_icon 'plus', text: 'Add another Additional Member'
 
     script#template-addseller type="text/template"
       li.sellergroup.item
@@ -30,7 +30,7 @@
         .form-group.add-additional-seller.select-seller-group
           label Name:
           = select_tag 'product[group_attributes][group_sellers_attributes][0][user_id]',
-            options_from_collection_for_select(get_all_user_except_current_added_user(current_user, @product), :id, :label_for_select), { include_blank: true,class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }}
+            options_from_collection_for_select(@expected_group_members, :id, :label_for_select), { include_blank: true,class: 'chosen-select form-control', :multiple=>false, :data => { :placeholder => ' ' }}
 
         .form-group.select-additional-seller-role
           label Role:
