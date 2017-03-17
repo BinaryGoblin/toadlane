@@ -89,6 +89,8 @@ Toad::Application.routes.draw do
         post :assign_role
         post :change_visibility_of_member
         get :validate_group_name, as: :validate_group_name
+        get :resend_invitation
+        get :remove_group_member
       end
     end
 
@@ -128,7 +130,11 @@ Toad::Application.routes.draw do
     root 'profiles#show'
   end
 
-  resources :messages, only: [:create]
+  resources :messages, only: [:create] do
+    collection do
+      post :group_member_message
+    end
+  end
 
   resources :categories do
     member do

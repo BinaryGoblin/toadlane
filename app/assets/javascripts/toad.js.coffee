@@ -515,3 +515,7 @@ $(document).ready ->
                   form.submit()
                   return
               )
+  $('a.group_member_message.fa.fa-envelope').click ->
+    id = @id.split('_')
+    $('#form_message input[id=message_group_member_id]').val id[1]
+    return

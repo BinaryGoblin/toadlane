@@ -16,4 +16,8 @@ module GroupsHelper
   def group_seller_id(user, group)
     group.group_sellers.find_by_user_id(user.id).id
   end
+
+  def is_current_user_group_member? group, group_member
+     group.product.owner == current_user || group_member.user == current_user
+  end
 end
