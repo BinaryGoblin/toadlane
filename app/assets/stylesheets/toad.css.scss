@@ -203,28 +203,28 @@ form .wrap-sm
   left: 10px;
   top: -10px;
 }
-.sellBtn,.createGroupBtn,.acceptBtn,.DeclineBtn
+.sellBtn,.createGroupBtn,.acceptBtn,.DeclineBtn,.invitedBtn
 {
   margin-left: 15px;
-border: 1px;
-border-radius: 5px;
-color: #fff !important;
-background: #2987D8;
-padding: 8px 20px;
-text-transform: uppercase;
-font-weight: 700;
-font-size: 16px;
-margin-right: 10px;
-float: left;
-position: relative;
-top: 1px;
-text-decoration: none !important;
+  border: 1px;
+  border-radius: 5px;
+  color: #fff !important;
+  background: $color-curious-blue;
+  padding: 8px 20px;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 16px;
+  margin-right: 10px;
+  float: left;
+  position: relative;
+  top: 1px;
+  text-decoration: none !important;
 }
 .loginBtn
 {
   color: #fff !important;
-  background: #2987D8 !important;
-  border:2px #2987D8 solid !important;
+  background: $color-curious-blue !important;
+  border:2px $color-curious-blue solid !important;
   position:relative;
   top:3px;
   font-size:16px;
@@ -254,6 +254,14 @@ text-decoration: none !important;
   font-size:14px;
   width: 100%;
 
+}
+.invitedBtn
+{
+  background: $color-chestnut-rose;
+  padding: 4px 7px;
+  font-size: 10px;
+  margin-left: 0px;
+  margin-right: 0px;
 }
 .acceptBtn
 {
@@ -286,7 +294,7 @@ text-decoration: none !important;
   left: 1px;
   border-bottom-left-radius: 0px !important;
   border-top-left-radius: 0px !important;
-  background: #2987D8;
+  background: $color-curious-blue;
   background-size: 22px 22px !important;
   border-bottom: none !important;
   text-shadow: none !important;
@@ -509,10 +517,10 @@ box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
 }
 .btn-success,.btn-default
 {
-  border-bottom-color: #2987D8 !important;
-  border-top-color: #2987D8 !important;
+  border-bottom-color: $color-curious-blue !important;
+  border-top-color: $color-curious-blue !important;
   padding: 7px 13px 5px !important;
-  background: #2987D8 !important;
+  background: $color-curious-blue !important;
   text-shadow:none !important;
   border:none !important;
   color:#fff !important;
@@ -725,7 +733,7 @@ min-width:550px;
   margin-left:35%;
   border-radius: 5px;
   color: #fff !important;
-  background: #2987D8;
+  background: $color-curious-blue;
   padding: 8px 20px;
   text-transform: uppercase;
   font-weight: 700;
@@ -739,7 +747,7 @@ min-width:550px;
   border:none !important;
   border-radius: 5px;
   color: #fff !important;
-  background: #2987D8;
+  background: $color-curious-blue;
   padding: 8px 20px;
   text-transform: uppercase;
   font-weight: 700;
@@ -747,12 +755,12 @@ min-width:550px;
 }
 .signInBtn:hover
 {
-  background: #2987D8;
+  background: $color-curious-blue;
   border:none !important;
 }
 .signUpBtnRegister:hover
 {
-  background: #2987D8;
+  background: $color-curious-blue;
   border:none !important;
 }
 .registrationArea form div
@@ -807,7 +815,7 @@ min-width:550px;
 }
 .copy span
 {
-  color:#2987D8 !important;
+  color:$color-curious-blue !important;
 }
 .ui-selectmenu-button span.ui-selectmenu-text
 {
@@ -834,11 +842,11 @@ min-width:550px;
 }
 .green_border
 {
-  border:3px solid #2987D8 !important;
+  border:3px solid $color-curious-blue !important;
 }
 .product .cost span
 {
-  color:#2987D8 !important;
+  color:$color-curious-blue !important;
 }
 
 .few .brands-logo

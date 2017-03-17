@@ -119,6 +119,10 @@ class Product < ActiveRecord::Base
     end_date < DateTime.now
   end
 
+  def available_amount_for_sale
+    amount - sold_out
+  end
+
   def available_payments
     ap = []
     ap << PaymentOptions[:stripe] if stripe_present?

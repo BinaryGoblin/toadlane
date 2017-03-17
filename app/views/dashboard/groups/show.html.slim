@@ -1,10 +1,10 @@
 = render '/shared/tabs'
 
-.group-error.wrap-sm
-  - if flash[:error]
-    .error-explanation.text-center
-      = flash[:error]
 .wrap-sm
+  .h4 Group: #{@group.name}
+  .h4
+    span Product:
+    = link_to @product.name.titleize, product_path(@product, cat_id: @product.main_category)
   .table-options
     - if is_accepted_deal?(current_user, @group)
       - group_seller_id = group_seller_id(current_user, @group)
@@ -15,43 +15,69 @@
     table.table.group-table data-behavior="TableCheckbox"
       thead
         tr
-          th User Name:
-          th Deal Accepted:
-          th Profile Completed:
-          th FlyBuy Account Added:
-          th FlyBuy Account Verified:
+          th Name:
+          th Group Status:
+          th Fly & Buy Account Status:
           th.member-role Role:
-          th Private Member:
-          th Fee($)
-
+          th Per Unit Commission:
+          th
       tbody
         - @group.group_sellers.each do |group_member|
-          - if group_member.private_seller == false || @group.product.owner == current_user || group_member.user == current_user
+          - if (!group_member.private_member?) || (group_member.private_member? && is_current_user_authorized?(@group)) || (group_member.private_member? && is_current_user_group_member?(@group, group_member))
             tr
-              td = group_member.user.name
+              td
+                = group_member.user.name.titleize
+                br
+                = group_member.user.company.titleize if group_member.user.company.present?
               td
                 - if group_member.accept_deal == nil
-                  .warning Invited
+                  .text-orange Invited
+                - elsif group_member.accept_deal == true
+                  .text-green Accepted
                 - else
-                  = group_member.accept_deal
-              td = group_member.profile_complete?
-              td = group_member.user.fly_buy_profile_account_added?
-              td = group_member.fly_buy_profile_verified?
+                  | Declined
+                  br
+                  - if is_current_user_authorized? @group
+                    = link_to "Resend Invitation", resend_invitation_dashboard_groups_path(product_id: @product.id, group_seller_id: group_member.id)
+              td
+                - if group_member.user.fly_buy_profile_active?
+                  .text-green Active
+                - elsif group_member.user.fly_buy_profile_processing?
+                  |Pending
+                - else
+                  .text-orange Inactive
+                  |User must have an active
+                  br account to receive funds
               td
                 .form-group
                   = form_tag assign_role_dashboard_groups_path(product_id: @product.id, group_seller_id: group_member.id ), method: :post, :class => "assign_role_to_additional_seller", :id => "assign_role_to_#{group_member.user.id}"
-                    - if @group.product.owner == current_user || group_member.role == @group_admin
+                    - if is_current_user_authorized? @group
                       = select_tag 'role_id', options_for_select(Role.where(name: ['group admin', 'public seller', 'private seller', 'public supplier', 'private supplier']).collect{ |u| [u.name, u.id] }, :selected => group_member.role.id ), class: 'form-control'
                     - else
                       = select_tag 'role_id', options_for_select(Role.where(name: ['group admin', 'public seller', 'private seller', 'public supplier', 'private supplier']).collect{ |u| [u.name, u.id] }, :selected => group_member.role.id ), class: 'form-control', :disabled => true
+              td = number_to_currency(group_member.fee, :unit => "$")
               td
-                - if current_user == group_member.user
-                  - if group_member.accept_deal == nil || group_member.accept_deal == false
-                    .warning You need to first accept the deal.
-                  - else
-                    .form-group
-                      = form_tag change_visibility_of_member_dashboard_groups_path(product_id: @product.id, user_id: group_member.user.id, group_seller_id: group_member.id ), method: :post, :class => "form_change_user_visibility", :id => "change_user_visibility_role_#{group_member.user.id}"
-                        = check_box_tag 'private_seller', true, group_member.private_seller
-                - else
-                  = group_member.private_seller
-              td = group_member.fee
+                = link_to '', '#', class: 'group_member_message fa fa-envelope', data: {toggle: "modal", target: "#form_message"}, title: 'Send Message', id: "message_#{group_member.id}"
+
+                - if is_current_user_authorized? @group
+                  = link_to '', remove_group_member_dashboard_groups_path(group_id: @group.id, group_seller_id: group_member.id), class: 'fa fa-trash-o', data: { confirm: "This will remove this member from the group"}, title: 'remove member'
+
+= render partial: 'modals'
+
+/ #form_message.modal.fade tabindex="-1" role="dialog"
+/   = form_tag messages_path
+/     = hidden_field_tag 'message[user_id]', @group.product.id
+/     - subject = "RE: " + @group.product.name
+/     = hidden_field_tag 'message[subject]', subject
+
+/     .modal-dialog: .modal-content
+/       .modal-header
+/         .pull-right data-dismiss="modal"= fa_icon 'close'
+/         h4.modal-title Send a message
+
+/       .modal-body
+/         .form-group
+/           = label_tag 'message_body', 'Your message:'
+/           = text_area_tag 'message[body]', nil, class: 'form-control'
+
+/       .modal-footer= button_tag 'Send', class: 'btn btn-warning', data: { disable_with: 'Please wait...' }

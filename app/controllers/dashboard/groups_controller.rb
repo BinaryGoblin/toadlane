@@ -62,12 +62,10 @@ class Dashboard::GroupsController < DashboardController
 		product = Product.find_by_id(params["product_id"])
 		group_seller = GroupSeller.find_by_id(params["group_seller_id"])
 
-		invited_additional_seller = group_seller.user
-
 		if group_seller.user.terms_of_service.present?
 			group_seller.update_attributes({accept_deal: true})
-			UserMailer.send_additional_seller_accept_deal_to_owner(invited_additional_seller, product).deliver_later
-			UserMailer.send_additional_seller_accept_deal_notification(invited_additional_seller, product).deliver_later
+			UserMailer.send_additional_seller_accept_deal_to_owner(group_seller, product).deliver_later
+			UserMailer.send_additional_seller_accept_deal_notification(group_seller, product).deliver_later
 		else
 			flash[:sign_up_error] = "You must first sign up in order to accept the role as an additional_seller. Please click on the invitation link sent via email."
 		end
@@ -78,16 +76,14 @@ class Dashboard::GroupsController < DashboardController
 		product = Product.find_by_id(params["product_id"])
 		group_seller = GroupSeller.find_by_id(params["group_seller_id"])
 
-		invited_additional_seller = group_seller.user
-
 		if group_seller.user.terms_of_service.present?
-			group_seller.delete
-			UserMailer.send_additional_seller_reject_deal_to_owner(invited_additional_seller, product).deliver_later
-			UserMailer.send_additional_seller_reject_deal_notification(invited_additional_seller, product).deliver_later
+			group_seller.update_attributes({accept_deal: false})
+			UserMailer.send_additional_seller_reject_deal_to_owner(group_seller, product).deliver_later
+			UserMailer.send_additional_seller_reject_deal_notification(group_seller, product).deliver_later
 		else
 			flash[:sign_up_error] = "You must first sign up in order to reject the role as an additional_seller. Please click on the invitation link sent via email."
 		end
-		redirect_to dashboard_groups_path
+		redirect_to dashboard_group_path(product.group)
 	end
 
 	def show
@@ -145,6 +141,26 @@ class Dashboard::GroupsController < DashboardController
 		respond_to do |format|
 			format.json { render :json => group }
 		end
+  end
+
+  def resend_invitation
+    product = Product.where(id: params[:product_id]).first
+    group_seller = GroupSeller.where(id: params[:group_seller_id]).first
+    UserMailer.send_added_as_additional_seller_notification(current_user, group_seller.user, product, group_seller).deliver_later
+    group_seller.update_attributes({accept_deal: nil})
+    redirect_to dashboard_group_path(product.group)
+  end
+
+  def remove_group_member
+    group = Group.where(id: params[:group_id]).first
+    group_seller = group.group_sellers.where(id: params[:group_seller_id]).first
+    if group_seller.present?
+      current_user_group_seller = group.group_sellers.where(user_id: current_user.id).first
+      if group.owner == current_user || (current_user_group_seller.present? && current_user_group_seller.is_group_admin?)
+        group_seller.destroy
+      end
+    end
+    redirect_to dashboard_group_path(group)
   end
 
 	private

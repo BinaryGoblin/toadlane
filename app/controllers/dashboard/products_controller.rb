@@ -24,6 +24,7 @@ class Dashboard::ProductsController < DashboardController
 
   def edit
     set_product
+    raise 'Unauthorized user access!' unless authorized_user?
     if @product.group.blank?
       group_builder = @product.build_group
       group_builder.group_sellers.build
@@ -40,6 +41,7 @@ class Dashboard::ProductsController < DashboardController
   end
 
   def create
+    raise 'Unauthorized user access!' unless authorized_user?
     product_service = Services::Crud::Product.new(product_params, current_user)
     @product = product_service.product
     respond_to do |format|
@@ -170,6 +172,12 @@ class Dashboard::ProductsController < DashboardController
     return unless product.group.group_sellers.present?
     group_sellers = product.group.group_sellers.where(notified: false)
     Services::Notifications::AdditionalSellerNotification.new(group_sellers, product, current_user).send
+  end
+
+  def authorized_user?
+    product = Product.find(params[:id])
+    group_seller = product.group.group_sellers.find_by_user_id(current_user.id) if product.group.present?
+    (group_seller.present? && group_seller.is_group_admin?) || product.owner == current_user
   end
 
   def add_seller_role(user, selected_role)

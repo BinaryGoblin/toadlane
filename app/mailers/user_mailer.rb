@@ -263,36 +263,40 @@ class UserMailer < ApplicationMailer
     mail to: @additional_seller.email, subject: "#{@owner.name.titleize} added you in a group"
   end
 
-  def send_additional_seller_accept_deal_to_owner(invited_additional_seller, product)
+  def send_additional_seller_accept_deal_to_owner(group_seller, product)
     @product = product
     @owner = @product.owner
-    @invited_additional_seller = invited_additional_seller
+    @group_seller = group_seller
+    @invited_additional_seller = @group_seller.user
 
-    mail to: @owner.email, subject: "#{@invited_additional_seller.name.titleize} has accepted the deal"
+    mail to: @owner.email, subject: "#{@invited_additional_seller.name.titleize} has accepted #{@group_seller.role.name} role"
   end
 
-  def send_additional_seller_accept_deal_notification(invited_additional_seller, product)
+  def send_additional_seller_accept_deal_notification(group_seller, product)
     @product = product
     @owner = @product.owner
-    @invited_additional_seller = invited_additional_seller
+    @group_seller = group_seller
+    @invited_additional_seller = @group_seller.user
 
-    mail to: @invited_additional_seller.email, subject: "Additional Seller role accepted"
+    mail to: @invited_additional_seller.email, subject: "#{@group_seller.role.name.titleize} role accepted"
   end
 
-  def send_additional_seller_reject_deal_to_owner(invited_additional_seller, product)
+  def send_additional_seller_reject_deal_to_owner(group_seller, product)
     @product = product
     @owner = @product.owner
-    @invited_additional_seller = invited_additional_seller
+    @group_seller = group_seller
+    @invited_additional_seller = @group_seller.user
 
-    mail to: @owner.email, subject: "#{@invited_additional_seller.name.titleize} has rejected the deal"
+    mail to: @owner.email, subject: "#{@invited_additional_seller.name.titleize} has rejected #{@group_seller.role.name} role"
   end
 
-  def send_additional_seller_reject_deal_notification(invited_additional_seller, product)
+  def send_additional_seller_reject_deal_notification(group_seller, product)
     @product = product
     @owner = @product.owner
-    @invited_additional_seller = invited_additional_seller
+    @group_seller = group_seller
+    @invited_additional_seller = @group_seller.user
 
-    mail to: @invited_additional_seller.email, subject: "Additional Seller role rejected"
+    mail to: @invited_additional_seller.email, subject: "#{@group_seller.role.name.titleize} role rejected"
   end
 
   def send_group_created_notification_to_admin(product)

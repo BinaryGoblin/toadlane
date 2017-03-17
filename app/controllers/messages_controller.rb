@@ -9,24 +9,18 @@ class MessagesController < ApplicationController
     if product.group.present?
       product.group.group_sellers.each do |seller|
         unless seller.role.name == Role::PRIVATE_SELLER || seller.role.name == Role::PRIVATE_SUPPLIER
-          receiver = seller.user
-          receipt = current_user.send_message receiver, message_params[:body], message_params[:subject]
-          MessageMailer.new_message(receiver,
-            message_params[:body],
-            message_params[:subject],
-            current_user,
-          receipt.notification.conversation.id).deliver
+          send_message_to_user seller.user
         end
       end
     else
-      receiver = product.user
-      receipt = current_user.send_message receiver, message_params[:body], message_params[:subject]
-      MessageMailer.new_message(receiver,
-        message_params[:body],
-        message_params[:subject],
-        current_user,
-      receipt.notification.conversation.id).deliver
+      send_message_to_user product.user
     end
+    redirect_to :back
+  end
+
+  def group_member_message
+    group_member = GroupSeller.find(message_params[:group_member_id])
+    send_message_to_user group_member.user
     redirect_to :back
   end
 
@@ -53,6 +47,16 @@ class MessagesController < ApplicationController
 
   private
   def message_params
-    params.require(:message).permit(:product_id, :subject, :body)
+    params.require(:message).permit(:group_member_id, :product_id, :subject, :body)
+  end
+
+  def send_message_to_user user
+    receiver = user
+    receipt = current_user.send_message receiver, message_params[:body], message_params[:subject]
+    MessageMailer.new_message(receiver,
+      message_params[:body],
+      message_params[:subject],
+      current_user,
+    receipt.notification.conversation.id).deliver_now
   end
 end

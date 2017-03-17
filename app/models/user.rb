@@ -269,6 +269,14 @@ class User < ActiveRecord::Base
     fly_buy_profile.unverify_by_admin
   end
 
+  def fly_buy_profile_processing?
+    fly_buy_profile.present? && fly_buy_profile.synapse_node_id.nil? && fly_buy_profile.permission_scope_verified == false
+  end
+
+  def fly_buy_profile_active?
+    fly_buy_profile.present? && fly_buy_profile.permission_scope_verified && fly_buy_profile.unverify_by_admin == false
+  end
+
   def label_for_select
     if name && company.present?
       name + ", " + company
