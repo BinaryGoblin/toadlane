@@ -312,15 +312,6 @@ module ApplicationHelper
     end
   end
 
-  def get_all_user_except_current_added_user(user, product=nil)
-    all_user_except_current_user = User.where.not(id: user.id)
-    if product.present?
-      additional_sellers_ids = product.additional_sellers.map(&:id)
-      all_user_except_current_user.where.not(id: additional_sellers_ids)
-    end
-    all_user_except_current_user
-  end
-
   def get_product_and_owner(invited_user)
     # i.e additional_seller obj is the join table
     additional_seller = AdditionalSeller.find_by_user_id(invited_user.id)

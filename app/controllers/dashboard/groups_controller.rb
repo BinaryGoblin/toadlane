@@ -1,4 +1,4 @@
-class Dashboard::GroupsController < ApplicationController
+class Dashboard::GroupsController < DashboardController
 	layout 'user_dashboard'
 
 	def index
@@ -11,6 +11,7 @@ class Dashboard::GroupsController < ApplicationController
   def new
     @group = Group.new
     @group.group_sellers.build
+    expected_group_members(current_user)
   end
 
   def create
@@ -39,6 +40,7 @@ class Dashboard::GroupsController < ApplicationController
   def edit
     if authorized_user?
       @group = find_group
+      expected_group_members(@group.owner)
     else
       redirect_to :back if @group.blank?
     end

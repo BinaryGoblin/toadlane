@@ -311,6 +311,9 @@ $(document).ready ->
         required: (element) ->
           return $("#product_group_attributes_name").val()!=""
         check_fee_exceeds_product_price: true
+      "product[group_attributes][group_sellers_attributes][0][role_id]":
+        required: (element) ->
+          return $("#product_group_attributes_name").val()!=""
     errorPlacement: (error, element) ->
       # this is done for displaying the error message for Product Start Date
       # # below the start date select boxes
@@ -320,16 +323,10 @@ $(document).ready ->
       else if element.attr('name') == "product[end_date]"
         $('#product_end_date').addClass('error')
         error.appendTo('.product-end-date-error')
-      else if element.attr('name') == "product[group_sellers_attributes][][user_id]"
+      else if element.attr('name').match(/user_id/)
         added_additional_sellers_ids = $('ul.sellergroups').find('li.sellergroup .chosen-container')
         error = error
         jQuery.each added_additional_sellers_ids, (i, val) ->
-          error.insertAfter val
-          return
-      else if element.attr('name') == "product[group_sellers_attributes][][fee]"
-        added_additional_sellers = $('ul.sellergroups').find('li.sellergroup .set-commission-text-box')
-        error = error
-        jQuery.each added_additional_sellers, (i, val) ->
           error.insertAfter val
           return
       else
@@ -343,6 +340,14 @@ $(document).ready ->
   $.validator.addClassRules('set-commission-text-box', {
     required: true,
     check_fee_exceeds_product_price: true
+  });
+
+  $.validator.addClassRules('role-dropdown', {
+    required: true
+  });
+
+  $.validator.addClassRules('gr-members', {
+    required: true
   });
 
   (new Fingerprint2).get (result) ->
@@ -391,24 +396,17 @@ $(document).ready ->
       $(this).prop 'disabled', true
 
 
-  $('.peopleInviteIcon').click ->
-    if $('.InvitePpl').is(':visible')
-      $('.InvitePpl').hide()
-    else
-      $('.InvitePpl').show()
-    return
-
-  $('.logoutIcon').click ->
+  $('.peopleInviteIcon').on 'click', ->
+    $('.InvitePpl').toggle()
     if $('.logOutOptions').is(':visible')
       $('.logOutOptions').hide()
-    else
-      $('.logOutOptions').show()
     return
 
-
-
-
-
+  $('.logoutIcon').on 'click', ->
+    $('.logOutOptions').toggle()
+    if $('.InvitePpl').is(':visible')
+      $('.InvitePpl').hide()
+    return
 
   $('#product_default_payment').change ->
     if $('#product_default_payment').find(":selected").text() == "Fly And Buy"
@@ -517,13 +515,3 @@ $(document).ready ->
                   form.submit()
                   return
               )
-
-$(document).mouseup (e) ->
-
-  container = $('.InvitePpl')
-  containerLogout = $('.logOutOptions')
-
-  if !container.is(e.target) and container.has(e.target).length == 0
-    container.hide()
-    containerLogout.hide()
-  return
