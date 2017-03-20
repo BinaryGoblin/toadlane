@@ -6,11 +6,13 @@
     span Product:
     = link_to @product.name.titleize, product_path(@product, cat_id: @product.main_category)
   .table-options
-    - if is_accepted_deal?(current_user, @group)
-      - group_seller_id = group_seller_id(current_user, @group)
-      = link_to 'Accept', accept_deal_dashboard_groups_url(product_id: @product.id, group_seller_id: group_seller_id), class: 'acceptBtn'
-      = link_to 'Decline', reject_deal_dashboard_groups_url(product_id: @product.id, group_seller_id: group_seller_id), class: 'DeclineBtn'
-    = link_to "Close", dashboard_groups_path, class: "btn btn-success pull-right"
+    - if is_user_a_member?(current_user, @group)
+      - group_member = find_group_member(current_user, @group)
+      - if group_member.accept_deal == nil
+        = link_to 'Accept', accept_deal_dashboard_groups_url(product_id: @product.id, group_seller_id: group_member.id), class: 'label label-green'
+        = link_to 'Decline', reject_deal_dashboard_groups_url(product_id: @product.id, group_seller_id: group_member.id), class: 'label label-red'
+      - if group_member.accept_deal == true
+        = link_to 'Leave group', reject_deal_dashboard_groups_url(product_id: @product.id, group_seller_id: group_member.id), class: 'label label-orange'
   .table-responsive
     table.table.group-table data-behavior="TableCheckbox"
       thead
@@ -35,7 +37,7 @@
                 - elsif group_member.accept_deal == true
                   .text-green Accepted
                 - else
-                  | Declined
+                  .text-red Declined
                   br
                   - if is_current_user_authorized? @group
                     = link_to "Resend Invitation", resend_invitation_dashboard_groups_path(product_id: @product.id, group_seller_id: group_member.id)
