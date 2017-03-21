@@ -35,6 +35,7 @@ class Product < ActiveRecord::Base
   acts_as_commontable
   acts_as_paranoid
   is_impressionable :counter_cache => true, :column_name => :views_count, :unique => :session_hash
+  acts_as_taggable
 
   PaymentOptions = {
     green: 'Echeck',
@@ -235,10 +236,8 @@ class Product < ActiveRecord::Base
   end
 
   def product_create_notification
-    users
-    self.categories.each do |category|
-      users << User.product_associated_users(category)
-    end
+    users = User.tagged_with(self.tag_list, any: true)
+
     users.uniq.each do |user|
       if user != self.owner
         NotificationMailer.product_create_notification_email(self, user).deliver_later

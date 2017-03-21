@@ -133,7 +133,7 @@ class Dashboard::ProductsController < DashboardController
       :status, :status_characteristic, :start_date,
       :end_date, :amount, :sold_out, :dimension_width,
       :dimension_height, :dimension_depth,
-      :dimension_weight, :main_category, :default_payment, :fee_percent, :sku,
+      :dimension_weight, :main_category, { tag_list: []}, :default_payment, :fee_percent, :sku,
       :slug, images_attributes: [:id, :image, :product_id, :_destroy],
       :certificates_attributes => [:id, :uploaded_file, :_destroy],
       :videos_attributes => [:id, :video, :product_id, :_destroy], :videos_attributes_delete => [],
