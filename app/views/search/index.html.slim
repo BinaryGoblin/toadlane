@@ -1,31 +1,16 @@
-.result-action: .wrap-sm
-  .act.cat
-    b Products category:
-    = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect', select_query: 'cat_id' }
+= render '/shared/tabs'
+.my-profile-open-link Profile
+.wrap-full
+  - if @related_searches.present?
+    - unless @related_searches.count == 1 && @related_searches.last["normalized_query"] == params[:query]
+      = render partial: "/shared/related_searches", locals: { related_searches: @related_searches, query: params[:query] }
+  = render 'search_actions'
+  .search-result: .products
+    - if cookies[:view] == 'list'
+      = render partial: '/shared/product_list', collection: @products
+    - else
+      = render partial: '/shared/product', collection: @products
 
-  .act.view
-    b View:
-    = link_to fa_icon('th', text: 'Grid'), '#', class: ('active' if cookies[:view] == 'grid' || cookies[:view] != 'list'), data: { behavior: 'SetView', options: '{"view":"grid"}' }
-    = link_to fa_icon('list', text: 'List'), '#', class: ('active' if cookies[:view] == 'list'), data: { behavior: 'SetView', options: '{"view":"list"}' }
-
-  .act.sort
-    b Sort by:
-    = select_tag :count, options_for_select([['new deals first', 1], ['low to high price', 2], ['high to low price', 3], ['feature products', 4]], params[:sort_by]), class: 'dd-small-list', data: { behavior: 'CustomSelect', select_query: 'sort_by' }
-
-  .act.type
-    b Type:
-    = select_tag :type, options_for_select(["all", "sell", "buy"], params[:type]), class: 'dd-small-list', data: { behavior: 'CustomSelect', select_query: 'type' }
-
-  .act.count-item
-    b Show items:
-    = select_tag :count, options_for_select([['16', 16], ['24', 24], ['48', 48], ['96', 96]], params[:count]), class: 'dd-small-list', data: { behavior: 'CustomSelect', select_query: 'count' }
-
-.wrap-sm.search-result: .products
-  - if cookies[:view] == 'list'
-    = render partial: '/shared/product_list', collection: @products
-  - else
-    = render partial: '/shared/product', collection: @products
-
-.footer-actions: .fa-container: .wrap-sm
-  - if @products
-    = will_paginate @products
+  .footer-actions: .wrap-sm
+    - if @products
+      = will_paginate @products

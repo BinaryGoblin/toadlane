@@ -169,12 +169,12 @@ GEM
     diff-lcs (1.2.5)
     domain_name (0.5.20161129)
       unf (>= 0.0.5, < 1.0.0)
-    elasticsearch (5.0.0)
-      elasticsearch-api (= 5.0.0)
-      elasticsearch-transport (= 5.0.0)
-    elasticsearch-api (5.0.0)
+    elasticsearch (1.0.15)
+      elasticsearch-api (= 1.0.15)
+      elasticsearch-transport (= 1.0.15)
+    elasticsearch-api (1.0.15)
       multi_json
-    elasticsearch-transport (5.0.0)
+    elasticsearch-transport (1.0.15)
       faraday
       multi_json
     elementaljs-rails (0.0.13)
@@ -528,6 +528,7 @@ DEPENDENCIES
   delayed_job_active_record (~> 4.0.3)
   devise (~> 3.4.1)
   devise_invitable (~> 1.6.1)
+  elasticsearch (= 1.0.15)
   elementaljs-rails (~> 0.0.11)
   factory_girl_rails (~> 4.5.0)
   faker (~> 1.4.3)
