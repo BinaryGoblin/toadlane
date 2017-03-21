@@ -45,7 +45,7 @@ br
       = f.label :product_id, 'select a product to sell'
       = f.collection_select :product_id,
           get_current_user_product(current_user, group.try(:product).try(:id)), :id, :name,
-          { include_blank: 'Select one Product', selected: group.product_id },
+          { include_blank: 'Select a Product', selected: group.product_id },
           { :multiple=>false, class: 'form-control'}
       p.warning.error-message
 - if @group.new_record?

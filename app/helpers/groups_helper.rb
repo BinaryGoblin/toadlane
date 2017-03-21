@@ -5,7 +5,7 @@ module GroupsHelper
     current_user == group.owner || user_role == true
   end
 
-  def is_accepted_deal?(user, group)
+  def is_user_a_member?(user, group)
     if group.owner != user
       group.group_sellers.find_by_user_id(user.id).present?
     else
@@ -13,11 +13,11 @@ module GroupsHelper
     end
   end
 
-  def group_seller_id(user, group)
-    group.group_sellers.find_by_user_id(user.id).id
+  def find_group_member(user, group)
+    group.group_sellers.where(user_id: user.id).first
   end
 
   def is_current_user_group_member? group, group_member
-     group.product.owner == current_user || group_member.user == current_user
+    group.product.owner == current_user || group_member.user == current_user
   end
 end

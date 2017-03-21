@@ -545,6 +545,10 @@
       margin: 13px 0 0;
     }
   }
+
+  #products_first{
+    margin-top: 0;
+  }
 }
 
 @media (max-width:480px) {
@@ -778,5 +782,9 @@
     .createGroupBtn{
       font-size: 11px !important;
     }
+  }
+
+  #products_first{
+    margin-top: 0;
   }
 }

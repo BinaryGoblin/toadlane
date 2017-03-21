@@ -1,7 +1,7 @@
 #form_message.modal.fade tabindex="-1" role="dialog"
   = form_tag group_member_message_messages_path
     = hidden_field_tag 'message[group_member_id]'
-    = hidden_field_tag 'message[subject]', "Group: #{@group.name}"
+    = hidden_field_tag 'message[subject]', "#{@group.name} #{current_user.name} messaged you!"
     .modal-dialog: .modal-content
       .modal-header
         .pull-right data-dismiss="modal"= fa_icon 'close'
