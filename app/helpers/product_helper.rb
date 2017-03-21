@@ -121,4 +121,8 @@ module ProductHelper
   def total_earning
     current_user.total_earning
   end
+
+  def get_all_tags
+    ActsAsTaggableOn::Tag.all
+  end
 end

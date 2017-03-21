@@ -61,6 +61,10 @@
             option value="#{category.id}" selected=""= category.name
 
       .form-group
+        label Product Tags:
+        = f.select :tag_list, options_from_collection_for_select(get_all_tags, :name, :name, f.object.tag_list), {}, multiple: true, data: { behavior: 'Select', options: '{"plugins":["remove_button"],"create":"true"}' }
+
+      .form-group
         = f.label :description, 'Description:'
         = f.text_area :description, class: 'form-control', placeholder: 'Write something about your product...', maxlength: '1000'
 

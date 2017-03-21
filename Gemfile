@@ -76,6 +76,8 @@ gem 'chosen-rails', '~> 1.5.2'
 
 gem 'devise_invitable', '~> 1.6.1'
 
+gem 'acts-as-taggable-on', '~> 4.0'
+
 # Dev - debugging group
 group :development do
   gem 'pry-rails'
