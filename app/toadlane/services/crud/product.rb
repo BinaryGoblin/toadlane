@@ -8,6 +8,7 @@ module Services
       def initialize(product_params, current_user, id = nil)
         @product_params = product_params
         @product = if id.nil?
+          product_params[:group_attributes].merge!(group_owner_id: current_user.id)
           product = current_user.products.new(params)
         else
           product = ::Product.where(id: id).first
