@@ -816,12 +816,6 @@ min-width:550px;
 {
   color:$color-curious-blue !important;
 }
-.ui-selectmenu-button span.ui-selectmenu-text
-{
-  width: 110px !important;
-  position:relative;
-  top:-20px;
-}
 #cat_id-button .ui-icon-triangle-1-s
 {
   position:relative;
@@ -912,4 +906,31 @@ text-align:center;
 .product-form .estimate .estimate-description, .group-form .estimate .estimate-description
 {
   width:67%;
+}
+
+.wrap-full{
+  margin: 0px auto;
+  width: 85%;
+}
+
+.my-profile-search-page{
+  top: 60px;
+  z-index: 10;
+}
+.my-profile-open-link{
+  left: 0px;
+  width: 15px;
+  position: fixed;
+  top: 201px;
+  word-wrap: break-word;
+  font-family: monospace;
+  cursor: pointer;
+  color: white;
+  padding-left: 2px;
+  background-color: $color-curious-blue;
+}
+.close-collapse{
+  float: right;
+  display: none;
+  cursor: pointer;
 }

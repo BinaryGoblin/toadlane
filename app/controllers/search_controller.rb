@@ -22,7 +22,7 @@ class SearchController < ApplicationController
 
     unless query == '*'
       query_arr_with_percentage = query.split(" ").map {|val| "%#{val}%" }
-      @related_searches = Searchjoy::Search.connection.select_all(Searchjoy::Search.select("normalized_query, COUNT(*) as searches_count, AVG(results_count) as avg_results_count").where("normalized_query ILIKE ANY ( array[?] )", query_arr_with_percentage).group("normalized_query").order("searches_count desc, normalized_query asc").limit(5).to_sql).to_a  
+      @related_searches = Searchjoy::Search.connection.select_all(Searchjoy::Search.select("normalized_query, COUNT(*) as searches_count, AVG(results_count) as avg_results_count").where("normalized_query ILIKE ANY ( array[?] )", query_arr_with_percentage).group("normalized_query").order("searches_count desc, normalized_query asc").limit(5).to_sql).to_a
     end
   end
 

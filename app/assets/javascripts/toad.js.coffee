@@ -519,3 +519,12 @@ $(document).ready ->
     id = @id.split('_')
     $('#form_message input[id=message_group_member_id]').val id[1]
     return
+
+  if($('.wrap-full').length > 0) && (mq.matches == true)
+    $('.tabs').hide()
+    $('.tabs').addClass('my-profile-search-page')
+    $('.close-collapse').show()
+    $('.my-profile-open-link').click ->
+      $('.tabs').fadeIn()
+    $('.close-collapse').click ->
+      $('.tabs').fadeOut()

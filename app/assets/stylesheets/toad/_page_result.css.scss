@@ -1,6 +1,6 @@
 .result-action {
   background: white;
-  padding: 25px 15px;
+  padding: 15px 15px;
   font-family: 'PT Sans Narrow', sans-serif;
 
   select {
@@ -16,11 +16,10 @@
     min-width: 42px;
     padding: 0;
     float: left;
-    border-bottom: 3px solid #ff8724;
   }
 
   .ui-selectmenu-text {
-    color: #cccfd3;
+    color: $color-soft-black;
     line-height: 1.2 !important;
   }
 
@@ -56,7 +55,7 @@
 
     a {
       margin-right: 15px;
-      color: #cccfd3;
+      color: $color-soft-black;
       @include transition(color .2s);
 
       &:hover,
