@@ -1,39 +1,39 @@
-.complete-profile-error.wrap-sm
-  - if !flash[:error].nil?
-    .error-explanation.text-center
-      | You must complete your&nbsp;
-      = link_to 'profile', dashboard_profile_path, class: 'view'
-      | &nbsp;to create order.
-  - elsif !flash[:account_error].nil?
-    .error-explanation.text-center
-      - if flash[:account_error] == "You must complete your profile before you can create a bank account."
-        | You must complete your&nbsp;
-        = link_to 'profile', dashboard_profile_path, class: 'view'
-        | &nbsp;to add bank account.
-      - else
-        = flash[:account_error]
-        | &nbsp;
-        - if flash[:account_error].include? "company name"
-          = link_to 'Click Here To Edit', dashboard_profile_path(req_company: true), class: 'view'
-        - elsif flash[:account_error].include? "first and"
-          = link_to 'Click Here To Edit', dashboard_profile_path(req_name: true), class: 'view'
-  - if flash[:sign_up_error].present?
-    .error-explanation.text-center
-      = flash[:sign_up_error]
-
-.actions-panel-product: .wrap-sm
-  / = link_to 'Next product', '#', class: 'btn btn-default pull-right'
-  / = link_to 'Previous', '#', class: 'btn btn-default pull-right'
-  / = link_to 'Back to explore', '#', class: 'btn btn-default pull-right'
-
-  - if all_categories_of_product(@product.id).present?
-    h4
-      span Categories:
-      = all_categories_of_product @product.id
-
-  h1= @product.name
+= render '/shared/tabs'
 
 .view-product
+
+  .complete-profile-error.wrap-sm
+    - if !flash[:error].nil?
+      .error-explanation.text-center
+        | You must complete your&nbsp;
+        = link_to 'profile', dashboard_profile_path, class: 'view'
+        | &nbsp;to create order.
+    - elsif !flash[:account_error].nil?
+      .error-explanation.text-center
+        - if flash[:account_error] == "You must complete your profile before you can create a bank account."
+          | You must complete your&nbsp;
+          = link_to 'profile', dashboard_profile_path, class: 'view'
+          | &nbsp;to add bank account.
+        - else
+          = flash[:account_error]
+          | &nbsp;
+          - if flash[:account_error].include? "company name"
+            = link_to 'Click Here To Edit', dashboard_profile_path(req_company: true), class: 'view'
+          - elsif flash[:account_error].include? "first and"
+            = link_to 'Click Here To Edit', dashboard_profile_path(req_name: true), class: 'view'
+    - if flash[:sign_up_error].present?
+      .error-explanation.text-center
+        = flash[:sign_up_error]
+  .clearfix
+
+  .actions-panel-product.wrap-sm
+    h1= @product.name
+    - if all_categories_of_product(@product.id).present?
+      h4
+        span Categories:
+        = all_categories_of_product @product.id
+  .clearfix
+
   .wrap-sm.product-show-block
     .row
       .col-md-7
@@ -238,8 +238,8 @@
               a.vp-title href="#" data-toggle="modal" data-target="#form_message" Send a message <i class="fa fa-plus-square pull-right"></i>
 
           .white-panel.vp-share
-            b.text-uppercase.pull-left Share:
-            .addthis_sharing_toolbox.pull-right
+            b.text-uppercase Share:
+            .addthis_sharing_toolbox
             = javascript_include_tag '//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51a8787656fab455'
 
           - if @product.certificates.present?
@@ -256,20 +256,23 @@
                 | Product Video
             - @product.videos.each do |video|
               = video_tag video.video.url(:medium), controls: true, type: "video/mp4", width: "100%"
+      .clearfix
+  .clearfix
   - if @related_products.any?
-    .wrap
+    .wrap.wrap-sm
       -if @product.status_characteristic == 'sell'
         .carousel-product-title: h3 Related products
       -else
         .carousel-product-title-sell: h3 Related products
 
       #related_products.product-carousel.slide
-        ul.bxslider
+        ul.bxslider[style='transform: translate3d(-41px, 0px, 0px);']
           - @related_products.each do |product|
             li
               = render partial: '/shared/product', locals: { product: product }
-
-      .text-center= link_to 'See all related products', '#', class: 'btn btn-success'
+    .clearfix
+    .wrap-sm.text-center= link_to 'See all related products', '#', class: 'btn btn-success'
+    .clearfix
 
 = render partial: 'modals', locals: { product: @product }
 
