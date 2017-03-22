@@ -62,7 +62,7 @@ gem 'promisepay', '~> 1.1.0'
 
 gem 'iso_country_codes', '~> 0.7.5'
 
-gem 'whenever', :require => false
+gem 'whenever', require: false
 
 gem 'synapse_pay_rest', '~> 0.0.13'
 
@@ -81,8 +81,8 @@ gem 'acts-as-taggable-on', '~> 4.0'
 # Dev - debugging group
 group :development do
   gem 'pry-rails'
-  gem "better_errors", '~> 2.1.1'
-  gem "binding_of_caller", '~> 0.7.2'
+  gem 'better_errors', '~> 2.1.1'
+  gem 'binding_of_caller', '~> 0.7.2'
   gem 'guard-rails'
   gem 'guard-rspec'
 end

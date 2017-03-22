@@ -21,7 +21,7 @@
       .subSection
         span.subSectionCount.productViewCount #{total_viewers}
         span.subsectionDetail Product Views
-
+    .clearfix
 
   .carousel-product-title
     h3 Most Viewed
@@ -30,10 +30,11 @@
       / = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
 
   #products_first.product-carousel.slide
-    ul.bxslider
-      - @most_viewed_products.each do |product|
-        li
-          = render partial: '/shared/product', locals: { product: product }
+    - if @most_viewed_products.present?
+      ul.bxslider
+        - @most_viewed_products.each do |product|
+          li
+            = render partial: '/shared/product', locals: { product: product }
 
   .carousel-product-title
     h3 Newest
@@ -42,32 +43,10 @@
       / = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
 
   #products_second.product-carousel.slide
-    ul.bxslider
-      - @newest_products.each do |product|
-        li
-          = render partial: '/shared/product', locals: { product: product }
-
-/  .carousel-product-title-sell
-/    h3 Requested products
-/    .actions
-/      = link_to 'See all requests', requested_products_path, class: 'btn btn-success-sell pull-right'
-/      = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
-/
-/  #products_third.carousel.product-carousel.slide data-ride="carousel"
-/    = products_carousel_items @products_requested
-/
-/    a.left.carousel-control href="#products_third" role="button" data-slide="prev"
-/    a.right.carousel-control href="#products_third" role="button" data-slide="next"
-/
-/ .featured-sellers: .wrap
-/   .carousel-product-title
-/     h3 Featured sellers
-/     .actions= link_to 'see all sellers', '#', class: 'btn btn-default pull-right'
-
-/   #sellers.carousel.featured-seller-carousel.slide data-ride="carousel"
-/     = sellers_carousel_items @featured_sellers
-
-/     a.left.carousel-control href="#sellers" role="button" data-slide="prev"
-/     a.right.carousel-control href="#sellers" role="button" data-slide="next"
+    - if @newest_products.present?
+      ul.bxslider
+        - @newest_products.each do |product|
+          li
+            = render partial: '/shared/product', locals: { product: product }
 
 .few: .wrap

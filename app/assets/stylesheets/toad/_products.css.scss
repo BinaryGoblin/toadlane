@@ -234,7 +234,6 @@ $sell-color: #FF8724;
   text-transform: uppercase;
   vertical-align: middle;
   font-family: 'PT Sans Narrow', sans-serif;
-  padding-top: 20px;
   position: relative;
   margin-top: 20px;
   margin-bottom: 20px;
@@ -1057,8 +1056,8 @@ $sell-color: #FF8724;
 
 .complete-profile-error,
 .group-error{
-  margin-top: 20px;
   font-size: 16px;
+  padding: 0;
 }
 
 .warning{
