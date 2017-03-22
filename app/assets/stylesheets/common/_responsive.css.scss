@@ -582,8 +582,9 @@
     margin-left: 0;
   }
   .products{
-    margin: 10px -15px -12px;
     padding-left: 15px;
+    padding-bottom: 10px;
+    width: 100%;
     &.all_products{
       display: block;
       float: none;

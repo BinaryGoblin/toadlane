@@ -6,10 +6,9 @@ $buy-color: #5c8f10;
 $sell-color: #FF8724;
 
 .products {
-  margin: 20px -35px -12px;
+  margin: 20px -35px 10px -25px;
   float: left;
   padding-left: 20px;
-  margin-bottom: 10px;
 }
 
 .orange_border{
@@ -236,6 +235,7 @@ $sell-color: #FF8724;
   text-transform: uppercase;
   vertical-align: middle;
   font-family: 'PT Sans Narrow', sans-serif;
+  padding-top: 20px;
   position: relative;
   margin-top: 20px;
   margin-bottom: 20px;
@@ -1058,8 +1058,8 @@ $sell-color: #FF8724;
 
 .complete-profile-error,
 .group-error{
+  margin-top: 20px;
   font-size: 16px;
-  padding: 0;
 }
 
 .warning{
