@@ -48,5 +48,10 @@
                   |  |
                   = link_to  'Move to trash', trash_dashboard_message_path(conversation), method: :post, class: 'view view-red'
 
-.footer-actions: .fa-container: .wrap-sm
-  = will_paginate @conversations
+.clearfix
+
+.footer-actions
+  .fa-container
+    .wrap-sm
+      = will_paginate @conversations
+    .clearfix

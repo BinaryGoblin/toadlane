@@ -49,7 +49,9 @@ $(document).ready ->
     maxSlides: 3
     slideMargin: 38
     moveSlides: 1
-    pager: false
+    pager: false,
+    infiniteLoop: false,
+    hideControlOnEnd: true
   $("#user_state").autocomplete({
     source: ["Alabama",
     "Alaska",

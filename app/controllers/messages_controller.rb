@@ -6,15 +6,19 @@ class MessagesController < ApplicationController
 
   def create
     product = Product.find message_params[:product_id]
+    message = nil
     if product.group.present?
       product.group.group_sellers.each do |seller|
         unless seller.role.name == Role::PRIVATE_SELLER || seller.role.name == Role::PRIVATE_SUPPLIER
+          message = "Your message to (#{seller.user.name}) has been sent."
           send_message_to_user seller.user
         end
       end
     else
+      message = "Your message to (#{product.user.name}) has been sent."
       send_message_to_user product.user
     end
+    flash[:notice] = message
     redirect_to :back
   end
 
