@@ -3,12 +3,12 @@ module Services
     class Product
       attr_reader :product_params, :product
       ONE = '1'
-      GROUP_ADMIN = 'group admin'
 
       def initialize(product_params, current_user, id = nil)
         @product_params = product_params
+        product_params[:group_attributes].merge!(group_owner_id: current_user.id)
+        product_params[:inspection_dates_attributes].each {|key, value| value[:creator_type] = ::Product::SELLER}
         @product = if id.nil?
-          product_params[:group_attributes].merge!(group_owner_id: current_user.id)
           product = current_user.products.new(params)
         else
           product = ::Product.where(id: id).first
@@ -20,7 +20,6 @@ module Services
       def save!
         ::Product.transaction do
           product.save!
-          product.owner.add_role GROUP_ADMIN
         end
       end
 
