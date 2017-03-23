@@ -13,7 +13,7 @@
 
 class Group < ActiveRecord::Base
 	belongs_to :product
-	has_many :group_sellers
+	has_many :group_sellers, dependent: :destroy
 	belongs_to :owner, class_name: "User", foreign_key: 'group_owner_id'
 
 	accepts_nested_attributes_for :group_sellers, allow_destroy: true, reject_if: ->(attributes) { attributes[:user_id].blank? || attributes[:role_id].blank? }

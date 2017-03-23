@@ -24,6 +24,7 @@ class GroupSeller < ActiveRecord::Base
 	belongs_to :role
 
 	scope :deal_accepted, -> { where(accept_deal: true) }
+	scope :private_members, -> { joins(:role).where("roles.name = ? or roles.name = ?", Role::PRIVATE_SELLER, Role::PRIVATE_SUPPLIER) }
 
 	def profile_complete?
 		user.profile_complete?

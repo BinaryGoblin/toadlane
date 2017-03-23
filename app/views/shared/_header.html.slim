@@ -24,17 +24,8 @@ header.header.navbar.navbar-default.wrap.navbar-fixed-top
 
         = link_to 'Sell', new_dashboard_product_path, class: 'sellBtn'
 
-        - message_notifications = get_user_unread_message_notifications
-        - other_notifications = get_user_unread_notifications
-
-        - if message_notifications > 0 || other_notifications > 0
-          / = link_to fa_icon('comment', text: "Messages #{@strStart.html_safe} #{message_notifications} #{@strEnd.html_safe}"), dashboard_messages_path, class: 'headerIcons'
-          = link_to fa_icon('comment', text: "<span class='notificationCount'>#{message_notifications}</span>".html_safe), dashboard_messages_path, class: 'headerIcons messageNotification'
-
-          = link_to fa_icon('bell', text:"<span class='notificationCount'>#{other_notifications}</span>".html_safe), dashboard_notifications_path, class: 'headerIcons otherNotification'
-        - else
-            = link_to fa_icon('comment', text: ""), dashboard_messages_path, class: 'headerIcons messageNotification'
-            = link_to fa_icon('bell', text: ""), dashboard_notifications_path, class: 'headerIcons otherNotification'
+        = link_to fa_icon('comment', text: get_user_unread_message_count), dashboard_messages_path, class: 'headerIcons messageNotification'
+        = link_to fa_icon('bell', text: get_user_unread_notification_count), dashboard_notifications_path, class: 'headerIcons otherNotification'
 
         img.peopleInviteIcon  alt="Invite people" src="/assets/peopleInvite.png"/
 

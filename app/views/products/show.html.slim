@@ -199,9 +199,17 @@
                         Unverified
 
                 .name
-                  b= @product.user.name
-                  - if !@product.user.addresses[0].nil?
-                    span = @product.user.addresses[0].country
+                  - if is_a_group_product? @product
+                    b= @product.group.name
+                    span
+                      - @product.group.group_sellers.each do |gs|
+                        |  #{gs.user.name},
+                      br
+                      b Private Members: #{@product.group.group_sellers.private_members.count}
+                  - else
+                    b= @product.user.name
+                    - if !@product.user.addresses[0].nil?
+                      span = @product.user.addresses[0].country
 
                 .user_accounts
                   p
@@ -226,10 +234,10 @@
                         | Payment option has not been selected by the seller for this product.
                   - if current_user == @product.user
                     | You can now choose a payment method for a product
-                - if @product.user.benefits.reject{ |e| e.empty? }.present?
+                - unless is_a_group_product? @product
                   .sell
-                    b SELL:
-                    .sell-list= @product.user.benefits.reject{ |e| e.empty? }.join(', ')
+                    b I BUY AND SELL:
+                    .sell-list= @product.user.tag_list.reject{ |e| e.empty? }.join(', ')
 
                 - if @product.user.facebook.present?
                   .fb-link= link_to 'Facebook profile', @product.user.facebook, class: 'link link-ulined link-sm text-uppercase', target: '_blank'

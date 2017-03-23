@@ -68,7 +68,7 @@ class Product < ActiveRecord::Base
   has_many :shipping_estimates, dependent: :destroy
   has_many :certificates, dependent: :destroy
   has_many :inspection_dates, dependent: :destroy
-  has_one :group
+  has_one :group, dependent: :destroy
 
   accepts_nested_attributes_for :images, allow_destroy: true
   accepts_nested_attributes_for :certificates, allow_destroy: true

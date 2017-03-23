@@ -4,7 +4,7 @@
   .h4 Group: #{@group.name}
   .h4
     span Product:
-    = link_to @product.name.titleize, product_path(@product, cat_id: @product.main_category)
+      #{link_to @product.name.titleize, product_path(@product, cat_id: @product.main_category)}
   .table-options
     - if is_user_a_member?(current_user, @group)
       - group_member = find_group_member(current_user, @group)
