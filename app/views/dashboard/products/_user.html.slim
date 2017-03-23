@@ -1,8 +1,6 @@
 .modal.modal-lg.fade tabindex="-1" role="dialog" id="modal_message_#{user.id.to_s}"
   .modal-dialog: .modal-content
-    = form_tag messages_path
-      = hidden_field_tag 'message[product_id]', product.id
-      = hidden_field_tag 'message[user_id]', user.id
+    = form_tag individual_user_messages_path(user)
       .modal-header
         .pull-right data-dismiss="modal"= fa_icon 'close'
         h4.modal-title Send a message

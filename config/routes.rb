@@ -133,6 +133,7 @@ Toad::Application.routes.draw do
   resources :messages, only: [:create] do
     collection do
       post :group_member_message
+      post ':user_id/individual_user' => :individual_user, as: :individual_user
     end
   end
 
