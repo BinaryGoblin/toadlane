@@ -104,6 +104,9 @@ class Product < ActiveRecord::Base
 
   after_create :product_create_notification
 
+  SELLER = 'seller'
+  BUYER = 'buyer'
+
   def self.newest_products
     unexpired.for_sell.most_recent.select {|p| p.if_fly_buy_check_valid_inspection_date }
   end
