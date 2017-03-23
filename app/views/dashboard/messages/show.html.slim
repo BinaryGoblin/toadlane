@@ -13,18 +13,17 @@
       - else
         | #{other_user.try(:name)} hasn't viewed your latest message yet.
 
-  .row
-    - receipts = conversation.receipts_for(current_user)
-    - if receipts.present?
-      .col-md-8
-        ul.messages-list
-          - receipts.each do |receipt|
-            li
-              - message = receipt.message
-              b= get_user_by_id(message.sender_id).name
-              p= message.body
-              small= time_ago_in_words message.updated_at
+  - receipts = conversation.receipts_for(current_user).select('DISTINCT ON ("notification_id") *')
+  - if receipts.present?
+    .col-md-8
+      ul.messages-list
+        - receipts.each do |receipt|
+          li
+            - message = receipt.message
+            b= get_user_by_id(message.sender_id).name
+            p= message.body
+            small= time_ago_in_words message.updated_at
 
-    .col-md-4
-      = render partial: 'form', locals: { conversation: conversation,  other_user_id: other_user.id }
+      - if other_user.present?
+        = render partial: 'form', locals: { conversation: conversation,  other_user_id: other_user.id }
 .clearfix

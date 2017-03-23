@@ -28,6 +28,7 @@
     .actions
       = link_to 'See all listings', all_products_path, class: 'btn btn-success pull-right'
       / = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
+    .clearfix
 
   #products_first.product-carousel.slide
     - if @most_viewed_products.present?

@@ -45,7 +45,16 @@ class MessagesController < ApplicationController
     end
   end
 
+  def individual_user
+    user = User.find(params[:user_id])
+    send_message_to_user(user)
+
+    flash[:notice] = "Your message to (#{user.name}) has been sent."
+    redirect_to :back
+  end
+
   private
+
   def message_params
     params.require(:message).permit(:group_member_id, :product_id, :subject, :body)
   end

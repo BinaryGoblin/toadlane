@@ -14,16 +14,12 @@
 }
 .footer-actions .fa-container
 {
-  background:#f2f2f2;
-  border-top:1px #ddd solid;
+  background: #f2f2f2;
 }
 @media (min-width: 992px){
   .modal-lg {
     width: auto;
   }
-}
-@media (max-width:1200px) {
-  /* some think */
 }
 
 @media (max-width:1080px) {
@@ -792,7 +788,13 @@
   .related_searches{
     padding: 0 0 0 24px;
   }
+
   .bx-wrapper .bx-controls-direction a {
     display: none;
+  }
+
+  .main-notice {
+    top: 200px;
+    font-size: 15px;
   }
 }
