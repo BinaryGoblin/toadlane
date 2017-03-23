@@ -6,9 +6,10 @@ $buy-color: #5c8f10;
 $sell-color: #FF8724;
 
 .products {
-  margin: 20px -35px 10px -25px;
+  margin: 20px 0 10px;
   float: left;
   padding-left: 20px;
+  width: 100%;
 }
 
 .orange_border{
@@ -190,7 +191,6 @@ $sell-color: #FF8724;
 }
 
 .product-list {
-  float: left;
   width: 100%;
   padding: 5px 5px 5px;
   border-top: 1px solid #ddd;
