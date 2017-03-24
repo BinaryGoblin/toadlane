@@ -16,6 +16,7 @@
           = f.check_box :terms_of_service
           label  &nbsp;&nbsp;I agree to the Terms of Service
           = f.hidden_field :terms_accepted_at, :value=> Time.now
-        br
-        = f.submit 'Proceed', class: 'btn btn-primary'  
+
+        = f.submit 'Proceed', class: 'btn btn-primary'
   br
+.clearfix
