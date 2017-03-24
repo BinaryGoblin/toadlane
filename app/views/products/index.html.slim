@@ -1,7 +1,6 @@
 = render '/shared/tabs'
 
 .wrap-sm.view-product
-
   .miniDashboard
     .subSection
       span.subSectionCount $#{total_earning}
@@ -27,7 +26,6 @@
     h3 Most Viewed
     .actions
       = link_to 'See all listings', all_products_path, class: 'btn btn-success pull-right'
-      / = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
     .clearfix
 
   #products_first.product-carousel.slide
@@ -36,12 +34,13 @@
         - @most_viewed_products.each do |product|
           li
             = render partial: '/shared/product', locals: { product: product }
+  .clearfix
 
   .carousel-product-title
     h3 Newest
     .actions
       = link_to 'See all listings', all_products_path, class: 'btn btn-success pull-right'
-      / = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
+    .clearfix
 
   #products_second.product-carousel.slide
     - if @newest_products.present?
@@ -49,5 +48,7 @@
         - @newest_products.each do |product|
           li
             = render partial: '/shared/product', locals: { product: product }
-
+  .clearfix
+.clearfix
 .few: .wrap
+.clearfix

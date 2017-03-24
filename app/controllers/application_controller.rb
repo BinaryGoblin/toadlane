@@ -70,24 +70,9 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
   def redirect_to_concerned_path
-    if current_user.terms_of_service != true
-      terms_of_service_path
-    elsif !current_user.profile_complete?
-      dashboard_profile_path
-    else
-      if get_user_notifications > 0
-        if get_user_unread_message_notifications > 0
-          dashboard_messages_path
-        else
-          # TODO
-          # get_user_new_order_notifications
-          products_path
-        end
-      else
-        products_path
-      end
-    end
+    products_path
   end
 
   def redirect_path_for_user(resource)
