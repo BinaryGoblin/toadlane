@@ -278,6 +278,26 @@ module ApplicationHelper
     end
   end
 
+  def get_user_unread_message_count
+    unread_receipts ||= current_user.mailbox.receipts.where(is_read: 'false')
+
+    if unread_receipts.present?
+      content_tag(:span, "#{unread_receipts.count}", class: ["notificationCount"])
+    else
+      content_tag(:span, "")
+    end
+  end
+
+  def get_user_unread_notification_count
+    unread_notifications ||= current_user.notifications.not_marked_read
+
+    if unread_notifications.present?
+      content_tag(:span, "#{unread_notifications.count}", class: ["notificationCount"])
+    else
+      content_tag(:span, "")
+    end
+  end
+
   def get_user_unread_notifications
     unread_notifications ||= current_user.notifications.where(read: 'false')
 

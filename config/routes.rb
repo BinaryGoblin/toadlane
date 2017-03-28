@@ -134,6 +134,8 @@ Toad::Application.routes.draw do
     collection do
       post :group_member_message
       post ':user_id/individual_user' => :individual_user, as: :individual_user
+      get :group_admin_message
+      post :send_group_admin_message
     end
   end
 

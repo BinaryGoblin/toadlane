@@ -3,6 +3,7 @@ class MessagesController < ApplicationController
   before_action :check_if_user_active
   before_action :check_terms_of_service
   skip_before_action :verify_authenticity_token, only: :inbound
+  helper_method :mailbox, :conversation
 
   def create
     product = Product.find message_params[:product_id]
@@ -12,15 +13,33 @@ class MessagesController < ApplicationController
           send_message_to_user seller.user
         end
       end
-    else
-      send_message_to_user product.user
     end
+    send_message_to_user product.user
     redirect_to :back
   end
 
   def group_member_message
-    group_member = GroupSeller.find(message_params[:group_member_id])
+    group_member = GroupSeller.where(id: message_params[:group_member_id]).first
     send_message_to_user group_member.user
+    redirect_to :back
+  end
+
+  def group_admin_message
+    @product = Product.where(id: params[:product_id]).first
+    @admin = User.where(id: params[:admin_id]).first
+  end
+
+  def send_group_admin_message
+    product = Product.where(id: message_params[:product_id]).first
+    if product.group.present?
+      product.group.group_sellers.each do |seller|
+        if seller.role.name == Role::GROUP_ADMIN
+          send_message_to_user seller.user
+        end
+      end
+    end
+    send_message_to_user product.user
+    flash[:notice] = 'Your message send successfully.'
     redirect_to :back
   end
 
@@ -66,6 +85,14 @@ class MessagesController < ApplicationController
       message_params[:body],
       message_params[:subject],
       current_user,
-    receipt.notification.conversation.id).deliver_now
+    receipt.notification.conversation.id).deliver_later
+  end
+
+  def mailbox
+    @mailbox ||= current_user.mailbox
+  end
+
+  def conversation
+    @conversation ||= mailbox.conversations.find(60)
   end
 end

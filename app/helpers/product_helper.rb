@@ -125,4 +125,8 @@ module ProductHelper
   def get_all_tags
     ActsAsTaggableOn::Tag.all
   end
+
+  def is_a_group_product? product
+    product.group.present?
+  end
 end
