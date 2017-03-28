@@ -157,7 +157,7 @@ class Dashboard::GroupsController < DashboardController
     if group_seller.present?
       current_user_group_seller = group.group_sellers.where(user_id: current_user.id).first
       if group.owner == current_user || (current_user_group_seller.present? && current_user_group_seller.is_group_admin?)
-        NotificationMailer.additional_seller_removed_notification_email(group.product, group_seller.user, current_user).deliver_now
+        NotificationMailer.additional_seller_removed_notification_email(group.product, group_seller.user, current_user).deliver_later
         group_seller.destroy
       end
     end

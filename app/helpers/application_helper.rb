@@ -289,7 +289,7 @@ module ApplicationHelper
   end
 
   def get_user_unread_notification_count
-    unread_notifications ||= current_user.notifications.where(read: 'false')
+    unread_notifications ||= current_user.notifications.not_marked_read
 
     if unread_notifications.present?
       content_tag(:span, "#{unread_notifications.count}", class: ["notificationCount"])
