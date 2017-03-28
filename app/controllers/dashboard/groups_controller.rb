@@ -101,9 +101,12 @@ class Dashboard::GroupsController < DashboardController
 	end
 
 	def destroy
-    group = Group.find_by_id(params["id"])
-    group.destroy if group.present?
-		redirect_to dashboard_groups_path
+    group = Group.where(id: params[:id]).first
+    if group.present?
+      send_group_deleted_message(group)
+      group.destroy
+      redirect_to dashboard_groups_path
+    end
   end
 
   def change_visibility_of_member
@@ -157,7 +160,8 @@ class Dashboard::GroupsController < DashboardController
     if group_seller.present?
       current_user_group_seller = group.group_sellers.where(user_id: current_user.id).first
       if group.owner == current_user || (current_user_group_seller.present? && current_user_group_seller.is_group_admin?)
-        NotificationMailer.additional_seller_removed_notification_email(group.product, group_seller.user, current_user).deliver_later
+        admins = group.product.group_admins
+        NotificationMailer.additional_seller_removed_notification_email(group.product, group_seller.user, current_user, admins).deliver_later
         group_seller.destroy
       end
     end
@@ -176,5 +180,13 @@ class Dashboard::GroupsController < DashboardController
   def authorized_user?
     group_seller = find_group.group_sellers.where(user_id: current_user.id).first
     (group_seller.present? && group_seller.is_group_admin?) || find_group.owner == current_user
+  end
+
+  def send_group_deleted_message(group)
+    group.group_sellers.each do |group_seller|
+      product = group.product
+      param_hash = {group: group.name, product: product, group_seller: group_seller.user, current_user: current_user, admins: product.group_admins}
+      NotificationMailer.group_removed_notification_email(param_hash).deliver_later
+    end
   end
 end

@@ -308,8 +308,18 @@ module ApplicationHelper
     end
   end
 
+  def get_user_group_invitation_count
+    get_user_group_invitation
+
+    if get_user_group_invitation.present?
+      content_tag(:span, "#{get_user_group_invitation.count}", class: ['notificationCount'])
+    else
+      content_tag(:span, '')
+    end
+  end
+
   def is_cancellable?(order)
-    order.is_a?(GreenOrder) && order.status == "placed" && current_user.id == order.buyer_id && order.refund_request.nil?
+    order.is_a?(GreenOrder) && order.status == 'placed' && current_user.id == order.buyer_id && order.refund_request.balnk?
   end
 
   def refund_requested?(order)

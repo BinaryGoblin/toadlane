@@ -27,7 +27,9 @@ header.header.navbar.navbar-default.wrap.navbar-fixed-top
 
         = link_to fa_icon('bell', text: get_user_unread_notification_count), dashboard_notifications_path, class: 'headerIcons otherNotification'
 
-        img.peopleInviteIcon  alt="Invite people" src="/assets/peopleInvite.png"/
+        a href="#" class="peopleInviteIcon"
+          img  alt="Invite people" src="/assets/peopleInvite.png"/
+          = get_user_group_invitation_count
 
         .InvitePpl
           =link_to fa_icon('caret-up', text: ""),'' , class: 'topArrowIcon'

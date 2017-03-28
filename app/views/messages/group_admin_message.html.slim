@@ -1,14 +1,13 @@
 = render '/shared/tabs'
 
 .wrap-sm
-  h2 Group: #{@product.group.name}
-  br
-  h3 #{@admin.name.titleize} has removed you from this group!
-  br
   .group-admin-message
+    h2 #{@message}
+    br
+    h3 Send message to group admin
+    br
     = form_tag send_group_admin_message_messages_path
-      = hidden_field_tag 'message[product_id]', @product.id
-      h4 Send message to group admin
+      = hidden_field_tag 'message[admins]', @admins
       = label_tag 'subject', 'Subject:'
       = text_field_tag 'message[subject]', nil, class: 'form-control'
       = label_tag 'message_body', 'Message:'

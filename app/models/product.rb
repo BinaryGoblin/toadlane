@@ -88,7 +88,8 @@ class Product < ActiveRecord::Base
   # searchkick autocomplete: ['name'], fields: [:name, :main_category]
   searchkick word_start: ['name'], fields: [:name, :description]
 
-  scope :unexpired, -> { where("end_date > ?", DateTime.now).where(status: true) }
+  scope :unexpired, -> { where('end_date > ?', DateTime.now).where(status: true) }
+  scope :offer_expired, -> { where('end_date < ?', DateTime.now) }
   scope :fly_buy_default_payment, -> { where(default_payment: "Fly And Buy") }
   scope :for_sell, -> { where(status_characteristic: 'sell') }
   scope :most_recent, -> { order(created_at: :desc) }
@@ -235,6 +236,10 @@ class Product < ActiveRecord::Base
     group.verified_by_admin
   end
 
+  def is_group_product?
+    group.present?
+  end
+
   def product_create_notification
     users = User.tagged_with(self.tag_list, any: true)
 
@@ -244,5 +249,16 @@ class Product < ActiveRecord::Base
         ProductNotification.new(self, user).product_created
       end
     end
+  end
+
+  def group_admins
+    admins = []
+    if group.present?
+      group.group_sellers.each do |group_seller|
+        admins << group_seller.user if group_seller.role.name == Role::GROUP_ADMIN
+      end
+    end
+    admins << owner
+    return admins.uniq
   end
 end
