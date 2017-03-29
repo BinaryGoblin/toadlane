@@ -23,16 +23,29 @@ br
       .offer-item
         .offer-date
           label Company Formation Date:
-          = date_select :fly_buy_profile, :date_of_company, { :start_year => 20.years.ago.year, :end_year => Date.today.year, order: [:month, :day, :year]}, { class: "form-control" }
+          = date_select :fly_buy_profile, :date_of_company, { start_year: 20.years.ago.year, end_year: Date.today.year, order: [:month, :day, :year]}, { class: 'form-control' }
+  .col-md-6
+    .form-group
+      .offer-item
+        .offer-date
+          = label_tag 'outside_the_us', 'Outside the United States?:'
+          = check_box_tag :outside_the_us, nil, false, data: { behavior: 'CheckOutsideUS' }
+
+.row
   .col-md-6
     .form-group
         = f.label :tin_number, 'EIN Number:', class: 'required'
         = f.text_field :tin_number, class: 'form-control', required: true, placeholder: '77772222'
+  .col-md-6.hide
+    .form-group
+        = label_tag 'country_name', 'What country are you from?:', class: 'required'
+        = country_select 'country', 'name', ['US', 'GB'], { iso_codes: true, include_blank: 'Select a country' }, { class: 'form-control', id: 'fly_buy_profile_country', required: true }
+
 .row
   .col-md-6
     .form-group
       = f.label :entity_type, 'Entity Type:', class: 'required'
-      = f.select :entity_type, company_entity_types, {prompt: 'Please select an Entity Type'}, class: 'form-control', required: true
+      = f.select :entity_type, company_entity_types, { prompt: 'Please select an Entity Type' }, class: 'form-control', required: true
 
   .col-md-6
     .form-group
@@ -41,21 +54,22 @@ br
 
 hr
 .row.flybuy-address-block
-  - address = Address.where(:user => user).order('created_at')
+  - address = Address.where(user: user).order('created_at')
   .col-md-8
-    thead
-      tr
-        th
-          h4 Address::
-          br
-    tbody
-      = f.collection_radio_buttons(:address_id, address, :id, :get_inline_address) do |b, index|
+    table
+      thead
         tr
-          td
-            = b.label { b.radio_button(:"checked" => (b.object.id == address.first.id)) + b.text }
-      br
-      .text-left
-        button.btn.btn-success.show-address-block-button = fa_icon 'plus', text: 'ADD ANOTHER ADDRESS'
+          th
+            h4 Address:
+      tbody
+        = f.collection_radio_buttons(:address_id, address, :id, :get_inline_address) do |b, index|
+          tr
+            td
+              = b.label { b.radio_button(:"checked" => (b.object.id == address.first.id), class: 'fly-buy-profile-address') + b.text }
+    br
+    .text-left
+      button.btn.btn-success.show-address-block-button = fa_icon 'plus', text: 'ADD ANOTHER ADDRESS'
+  .clearfix
   br
   .insert-new-address-block style="display:none;"
     - address_count = (address.count + 1).to_s
@@ -85,7 +99,7 @@ hr
 
         .form-group
           = ff.label :country, 'Country:', class: 'required'
-          = ff.country_select 'country', [ 'US', 'GB' ], { iso_codes: true }, { class: 'form-control', :name => "fly_buy_profile[address_attributes][#{address_count}][country]", :name => "fly_buy_profile[address_attributes][#{address_count}][country]" }
+          = ff.country_select 'country', ['US', 'GB'], { iso_codes: true, include_blank: 'Select a country' }, { name: "fly_buy_profile[address_attributes][#{address_count}][country]", required: true, id: "fly_buy_profile_address_attributes_#{address_count}_country", class: 'form-control fly-buy-profile-address-country' }
 
 hr
 h4 Company Documents:
@@ -125,6 +139,12 @@ br
       = f.label :gov_id, 'GOVERNMENT ISSUED ID:', class: 'required'
       = f.file_field :gov_id, required: true
       p.warning Format must be png, jpg or pdf
+  .col-md-6.hide
+    .form-group
+      = f.label :business_documents, 'ADDITIONAL BUSINESS DOCUMENTS:', class: 'required'
+      = f.file_field :business_documents, required: true
+      p.warning Format must be png, jpg or pdf
+
 hr
 
 h4 Bank Account Verification:
