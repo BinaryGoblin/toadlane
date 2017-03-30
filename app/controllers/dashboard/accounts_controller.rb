@@ -66,8 +66,7 @@ class Dashboard::AccountsController < DashboardController
       CreateUserForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id) unless fly_buy_profile.synapse_user_id.present?
       AddBankDetailsForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id, bank_account_details)
 
-      country_name = params[:country][:name] rescue nil
-      UserMailer.send_notification_for_submitted_outside_the_us(fly_buy_profile, address_id).deliver_later if country_name.present? && country_name != 'US'
+      UserMailer.send_notification_for_fly_buy_profile(fly_buy_profile, address_id).deliver_later
 
       fly_buy_profile.update_attribute(:completed, true)
     end
