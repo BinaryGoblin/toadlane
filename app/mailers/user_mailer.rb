@@ -168,6 +168,14 @@ class UserMailer < ApplicationMailer
     mail to: @buyer.email, subject: "OrderId ##{@order.id} is queued"
   end
 
+  def send_notification_for_fly_buy_profile(fly_buy_profile, address_id)
+    @fly_buy_profile = fly_buy_profile
+    @user = @fly_buy_profile.user
+    @address = Address.find(address_id)
+
+    mail to: 'johnb@toadlane.com', to: 'calvinw@toadlane.com', subject: 'Fly & Buy profile submitted'
+  end
+
   def send_account_verified_notification_to_user(fly_buy_profile)
     @fly_buy_profile = fly_buy_profile
     @user = @fly_buy_profile.user

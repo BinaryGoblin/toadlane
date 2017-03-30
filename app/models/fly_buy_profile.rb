@@ -2,42 +2,46 @@
 #
 # Table name: fly_buy_profiles
 #
-#  id                          :integer          not null, primary key
-#  synapse_user_id             :string
-#  user_id                     :integer
-#  created_at                  :datetime         not null
-#  updated_at                  :datetime         not null
-#  encrypted_fingerprint       :string
-#  synapse_node_id             :string
-#  synapse_ip_address          :string
-#  eic_attachment_file_name    :string
-#  eic_attachment_content_type :string
-#  eic_attachment_file_size    :integer
-#  eic_attachment_updated_at   :datetime
-#  synapse_document_id         :string
-#  bank_statement_file_name    :string
-#  bank_statement_content_type :string
-#  bank_statement_file_size    :integer
-#  bank_statement_updated_at   :datetime
-#  gov_id_file_name            :string
-#  gov_id_content_type         :string
-#  gov_id_file_size            :integer
-#  gov_id_updated_at           :datetime
-#  permission_scope_verified   :boolean          default(FALSE)
-#  kba_questions               :json
-#  terms_of_service            :boolean          default(FALSE)
-#  name_on_account             :string
-#  ssn_number                  :string
-#  date_of_company             :datetime
-#  dob                         :datetime
-#  entity_type                 :string
-#  entity_scope                :string
-#  company_email               :string
-#  tin_number                  :string
-#  completed                   :boolean          default(FALSE)
-#  company_phone               :string
-#  error_details               :json
-#  unverify_by_admin           :boolean          default(FALSE)
+#  id                               :integer          not null, primary key
+#  synapse_user_id                  :string
+#  user_id                          :integer
+#  created_at                       :datetime         not null
+#  updated_at                       :datetime         not null
+#  encrypted_fingerprint            :string
+#  synapse_node_id                  :string
+#  synapse_ip_address               :string
+#  eic_attachment_file_name         :string
+#  eic_attachment_content_type      :string
+#  eic_attachment_file_size         :integer
+#  eic_attachment_updated_at        :datetime
+#  synapse_document_id              :string
+#  bank_statement_file_name         :string
+#  bank_statement_content_type      :string
+#  bank_statement_file_size         :integer
+#  bank_statement_updated_at        :datetime
+#  gov_id_file_name                 :string
+#  gov_id_content_type              :string
+#  gov_id_file_size                 :integer
+#  gov_id_updated_at                :datetime
+#  permission_scope_verified        :boolean          default(FALSE)
+#  kba_questions                    :json
+#  terms_of_service                 :boolean          default(FALSE)
+#  name_on_account                  :string
+#  ssn_number                       :string
+#  date_of_company                  :datetime
+#  dob                              :datetime
+#  entity_type                      :string
+#  entity_scope                     :string
+#  company_email                    :string
+#  tin_number                       :string
+#  completed                        :boolean          default(FALSE)
+#  company_phone                    :string
+#  error_details                    :json
+#  unverify_by_admin                :boolean          default(FALSE)
+#  business_documents_file_name     :string
+#  business_documents_content_type  :string
+#  business_documents_file_size     :integer
+#  business_documents_updated_at    :datetime
 #
 
 class FlyBuyProfile < ActiveRecord::Base
@@ -54,9 +58,12 @@ class FlyBuyProfile < ActiveRecord::Base
   has_attached_file :eic_attachment
   has_attached_file :bank_statement
   has_attached_file :gov_id
+  has_attached_file :business_documents
+
   do_not_validate_attachment_file_type :eic_attachment
   do_not_validate_attachment_file_type :bank_statement
   do_not_validate_attachment_file_type :gov_id
+  do_not_validate_attachment_file_type :business_documents
 
   scope :permission_verified, -> { where(permission_scope_verified: true) }
 

@@ -26,46 +26,54 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def create_fly_buy_profile
-    fly_buy_profile = create_update_flybuy_profile
+    address_id = fly_buy_params['address_id']
 
-    if current_user.present? && current_user.profile_complete? == false
-      remove_ssn_tin_data(fly_buy_profile)
-      return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must complete your profile before you can create a bank account." }
-    end
+    fly_buy_profile = create_update_fly_buy_profile
 
-    if current_user.present? && current_user.profile_complete? && current_user.name.present? && current_user.name.count(" ") == 0
-      remove_ssn_tin_data(fly_buy_profile)
-      return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must update your first and last name prior to submitting your company information" }
-    end
+    if current_user.profile_complete?
+      unless current_user.name.present?
+        remove_ssn_tin_data(fly_buy_profile)
 
-    if current_user.present? && current_user.profile_complete? && current_user.company.present? == false
-      remove_ssn_tin_data(fly_buy_profile)
-      return redirect_to dashboard_accounts_path, :flash => { :account_error => "You must add your company name prior to submitting your company information." }
-    end
-
-    if request.post? && fly_buy_params.present?
-      bank_account_details = {
-        bank_name: fly_buy_params["bank_name"],
-        address: fly_buy_params["address"],
-        name_on_account: fly_buy_params["name_on_account"],
-        account_num: fly_buy_params["account_num"],
-        routing_num: fly_buy_params["routing_num"],
-        address_id: fly_buy_params["address_id"]
-      }
-
-      if fly_buy_profile.synapse_user_id.present?
-        AddBankDetailsForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id, bank_account_details)
-      else 
-        CreateUserForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id)
-        AddBankDetailsForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id, bank_account_details)
+        return redirect_to dashboard_accounts_path, flash: { account_error: 'You must update your first and last name prior to submitting your company information.' }
       end
 
-      fly_buy_profile.update_attribute(:completed, true)
-      redirect_to dashboard_accounts_path
+      unless current_user.company.present?
+        remove_ssn_tin_data(fly_buy_profile)
+
+        return redirect_to dashboard_accounts_path, flash: { account_error: 'You must add your company name prior to submitting your company information.' }
+      end
+    else
+      remove_ssn_tin_data(fly_buy_profile)
+
+      return redirect_to dashboard_accounts_path, flash: { account_error: 'You must complete your profile before you can create a bank account.' }
     end
+
+    if fly_buy_params.present?
+      unless address_id.present?
+        address = current_user.addresses.last
+        address_id = address.id rescue nil
+      end
+
+      bank_account_details = {
+        bank_name: fly_buy_params['bank_name'],
+        address: fly_buy_params['address'],
+        name_on_account: fly_buy_params['name_on_account'],
+        account_num: fly_buy_params['account_num'],
+        routing_num: fly_buy_params['routing_num'],
+        address_id: address_id
+      }
+
+      CreateUserForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id) unless fly_buy_profile.synapse_user_id.present?
+      AddBankDetailsForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id, bank_account_details)
+
+      UserMailer.send_notification_for_fly_buy_profile(fly_buy_profile, address_id).deliver_later
+
+      fly_buy_profile.update_attribute(:completed, true)
+    end
+
+    redirect_to dashboard_accounts_path
   rescue SynapsePayRest::Error::Conflict => e
-    puts e
-    flash[:error] = e
+    flash[:error] = e.message
     redirect_to dashboard_accounts_path
   end
 
@@ -77,7 +85,6 @@ class Dashboard::AccountsController < DashboardController
       redirect_to dashboard_accounts_path
     end
   end
-
 
   def create_amg_profile
     if amg_params.present?
@@ -122,7 +129,6 @@ class Dashboard::AccountsController < DashboardController
       redirect_to dashboard_accounts_path, :flash => { :notice => "EMB Profile successfully updated." }
     end
   end
-
 
   # for valid phone number
   def check_valid_phone_number
@@ -357,64 +363,43 @@ class Dashboard::AccountsController < DashboardController
     params.require(:emb_profile).permit!
   end
 
-  def create_update_flybuy_profile
-    current_user.update_attributes({
-      phone: fly_buy_params["company_phone"],
-      company: fly_buy_params["company"]
-    })
+  def create_update_fly_buy_profile
+    current_user.update_attributes(phone: fly_buy_params['company_phone'], company: fly_buy_params['company'])
 
-    if fly_buy_params["address_attributes"].present?
-      address_attributes_param = fly_buy_params["address_attributes"][(current_user.addresses.count + 1).to_s]
+    if fly_buy_params['address_attributes'].present?
+      address_attributes_param = fly_buy_params['address_attributes'][(current_user.addresses.count + 1).to_s]
       empty_keys = address_attributes_param.select {|k, v| v.empty?}
+
       if empty_keys.count == 5
         fly_buy_params.except!(:address_attributes)
       else
         address = current_user.addresses.create(address_attributes_param)
         fly_buy_params.merge!(address_id: address.id).except!(:address_attributes)
       end
-      fly_buy_params["ssn_number"] = fly_buy_params["ssn_number"].split("*").last
-      fly_buy_params["tin_number"] = fly_buy_params["tin_number"].split("*").last
+
+      fly_buy_params['ssn_number'] = fly_buy_params['ssn_number'].split('*').last
+      fly_buy_params['tin_number'] = fly_buy_params['tin_number'].split('*').last
     end
+
+    necessary_fly_buy_params = fly_buy_params.except(:email, :address_id, :fingerprint, :bank_name, :name_on_account, :account_num, :company)
+    necessary_fly_buy_params.merge!(
+      synapse_ip_address: request.ip,
+      encrypted_fingerprint: "user_#{current_user.id}" + '_' + fly_buy_params['fingerprint'],
+      user_id: current_user.id,
+      company_email: fly_buy_params['email']
+    )
 
     if current_user.fly_buy_profile.present?
       fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
-      necessary_fly_buy_params = fly_buy_params.except(
-                                    :email, :address_id,
-                                    :fingerprint, :bank_name,
-                                    :name_on_account, :account_num, :company
-                                  )
-
-      necessary_fly_buy_params.merge!(
-        synapse_ip_address: request.ip,
-        encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"],
-        user_id: current_user.id, company_email: fly_buy_params["email"]
-      )
-
       fly_buy_profile.update(necessary_fly_buy_params)
     else
-
-      necessary_fly_buy_params = fly_buy_params.except(
-                                    :email, :address_id,
-                                    :fingerprint, :bank_name,
-                                    :name_on_account, :account_num, :company
-                                  )
-
-      necessary_fly_buy_params.merge!(
-        synapse_ip_address: request.ip,
-        encrypted_fingerprint: "user_#{current_user.id}" + "_" + fly_buy_params["fingerprint"],
-        user_id: current_user.id,
-        company_email: fly_buy_params["email"]
-      )
-
       fly_buy_profile = FlyBuyProfile.create(necessary_fly_buy_params)
     end
+
     fly_buy_profile
   end
 
   def remove_ssn_tin_data(fly_buy_profile)
-    fly_buy_profile.update_attributes({
-      ssn_number: nil,
-      tin_number: nil
-    })
+    fly_buy_profile.update_attributes(ssn_number: nil, tin_number: nil)
   end
 end

@@ -122,11 +122,15 @@ $(document).ready ->
       $(".set_inspection_date").show()
       $(".confirm-inspection-date-btn").hide()
 
-  $('.show-address-block-button').click (event)->
-    event.preventDefault()
-    $('.flybuy-address-block input:checked').prop('checked',false)
+  $('.show-address-block-button').click (e)->
+    e.preventDefault()
+    $('.flybuy-address-block input:checked').prop('checked', false)
     $(this).hide()
     $('.insert-new-address-block').show()
+
+  $('.fly-buy-profile-address').click (e)->
+    $('.insert-new-address-block').hide()
+    $('.show-address-block-button').show()
 
   $('.related_searches a').click (event) ->
     event.preventDefault()
@@ -183,6 +187,29 @@ $(document).ready ->
     else
       return true
   ), "The additional seller fee exceeds the product's price."
+
+  jQuery.validator.addMethod 'country_mismatch', ((value, element) ->
+    if value != ''
+      if $('.fly-buy-profile-address:checked').length > 0
+        text = $('.fly-buy-profile-address:checked').closest('td').find('label').text().split(', ')
+        country = text[text.length - 1]
+        return country == value
+
+      if $('.fly-buy-profile-address-country').length > 0
+        $('.fly-buy-profile-address-country').val()
+        return $('.fly-buy-profile-address-country').val() == value
+    else
+      return true
+
+  ), 'Country mismatch in address section.'
+
+  jQuery.validator.addMethod 'select_except_us', ((value, element) ->
+    if value != ''
+      return value != 'US'
+    else
+      return true
+
+  ), 'Please select country except United States.'
 
   $('select#green_order_address_country').change (event) ->
     select_wrapper = $('.order_state_code_wrapper')
@@ -496,6 +523,9 @@ $(document).ready ->
                     extension: "jpeg|jpg|png|pdf"
                   "fly_buy_profile[dob(1i)]":
                     check_date_of_birth: true
+                  "country[name]":
+                    country_mismatch: true,
+                    select_except_us: true
                 messages:
                   "fly_buy_profile[ssn_number]":
                     required: "Please enter no more than 10 digits."
