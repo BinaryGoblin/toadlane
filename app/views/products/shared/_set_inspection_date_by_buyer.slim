@@ -8,15 +8,17 @@
       .modal-body
         = form_for fly_buy_order, url: set_inspection_date_fly_buy_orders_path(product_id: product.id), method: :post  do |f|
           .request_inspection_date
+            label.lg.required Select Inspection Date
             .offer-item
-              label.lg.required Select Inspection Date
               .date-offer
                 label Date:
-                = date_select :inspection_date, :date, { :default => Date.today, order: [:month, :day, :year] }, { class: "form-control" }
+                = date_select :inspection_date, :date, { :default => Date.today, order: [:month, :day, :year] }, { class: 'form-control' }
 
               .offer-time
                 label Time:
-                = time_select :inspection_date, :date, { :ampm => true, :default => Time.now, ignore_date: true, minute_step: 10 }, { class: "form-control"}
+                = time_select :inspection_date, :date, { :ampm => true, :default => Time.now, ignore_date: true, minute_step: 10 }, { class: 'form-control'}
+
+            .clearfix
 
           button.btn.btn-secondary data-dismiss="modal" type="button"  Close
           = f.submit 'Save', class: "btn btn-primary"
