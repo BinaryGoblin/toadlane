@@ -176,6 +176,10 @@ br
       = f.label :routing_num, 'Routing Number:', class: 'required'
       = f.text_field :routing_num, class: 'form-control', required: true
 
+  .col-md-6
+    .form-group
+      = f.label :additional_information, 'Additional Information:', class: 'required'
+      = f.text_field :additional_information, class: 'form-control', required: true, placeholder: 'bank swift code etc'
 hr
 
 .row

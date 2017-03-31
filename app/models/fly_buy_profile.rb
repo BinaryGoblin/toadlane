@@ -42,6 +42,7 @@
 #  business_documents_content_type  :string
 #  business_documents_file_size     :integer
 #  business_documents_updated_at    :datetime
+#  additional_information           :string
 #
 
 class FlyBuyProfile < ActiveRecord::Base
