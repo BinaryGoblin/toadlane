@@ -25,6 +25,7 @@ class InspectionDate < ActiveRecord::Base
   scope :buyer_added, -> { where(creator_type: "buyer") }
   scope :with_order_id, -> { where.not(fly_buy_order_id: nil) }
   scope :passed_inspection_date, -> { where('date <= ?', DateTime.now) }
+  scope :active_inspection_date, -> { where('date >= ?', DateTime.now) }
 
   validate :check_inspection_date
 
