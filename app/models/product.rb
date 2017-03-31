@@ -172,7 +172,6 @@ class Product < ActiveRecord::Base
     self.amount - sold_out
   end
 
-
   def default_payment_flybuy?
     default_payment == PaymentOptions[:fly_buy]
   end

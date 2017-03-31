@@ -571,3 +571,13 @@
     margin-bottom: 0px;
   }
 }
+
+.request_inspection_date, .offer-from-until {
+  margin-bottom: 10px;
+
+  .offer-item {
+    .date-offer {
+      margin-right: 10px;
+    }
+  }
+}

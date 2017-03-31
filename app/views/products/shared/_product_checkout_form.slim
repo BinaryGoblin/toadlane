@@ -54,14 +54,13 @@
           input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
 
   / Set inspection date link
-  - unless product.inspection_dates.passed_inspection_date.count == product.inspection_dates.count
-    - if !product.is_buyer_product_owner?(user) && product.default_payment_flybuy? && product.negotiable?
-      - unless params[:fly_buy_order_id].present? && params[:inspection_date_by_seller] == "true"
-        - if user.profile_complete?
-          - if fly_buy_order.seller_not_mark_approved.nil?
-            a href="#" data-target="#setInpsectionDateModal" data-toggle="modal" Click Here
-        - else
-          = link_to 'Click Here', set_inspection_date_fly_buy_orders_path(product_id: product.id)
+  - if !product.is_buyer_product_owner?(user) && product.default_payment_flybuy?
+    - unless (params[:fly_buy_order_id].present? && params[:inspection_date_by_seller] == "true")
+      - if user.profile_complete?
         - if fly_buy_order.seller_not_mark_approved.nil?
-          span
-          | &nbsp;to set inspection date
+          a href="#" data-toggle="modal" data-target="#setInpsectionDateModal" Click Here
+      - else
+        = link_to 'Click Here', set_inspection_date_fly_buy_orders_path(product_id: product.id)
+      - if fly_buy_order.seller_not_mark_approved.nil?
+        span
+        | &nbsp;to set inspection date
