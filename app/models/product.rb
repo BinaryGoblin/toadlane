@@ -108,7 +108,7 @@ class Product < ActiveRecord::Base
   BUYER = 'buyer'
 
   def self.newest_products
-    unexpired.for_sell.most_recent.select {|p| p.if_fly_buy_check_valid_inspection_date }
+    unexpired.for_sell.most_recent
   end
 
   def self.most_viewed_products
