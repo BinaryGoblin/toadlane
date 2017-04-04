@@ -10,9 +10,11 @@
       - group_member = find_group_member(current_user, @group)
       - if group_member.accept_deal == nil
         = link_to 'Accept', accept_deal_dashboard_groups_url(product_id: @product.id, group_seller_id: group_member.id), class: 'label label-green'
+
         = link_to 'Decline', reject_deal_dashboard_groups_url(product_id: @product.id, group_seller_id: group_member.id), class: 'label label-red'
+
       - if group_member.accept_deal == true
-        = link_to 'Leave group', reject_deal_dashboard_groups_url(product_id: @product.id, group_seller_id: group_member.id), class: 'label label-orange'
+        = link_to 'Leave group', reject_deal_dashboard_groups_url(product_id: @product.id, group_seller_id: group_member.id), class: 'label label-orange leaveGroup', data: { confirm: 'Are you sure you want to leave this group?' }
   .table-responsive
     table.table.group-table data-behavior="TableCheckbox"
       thead
@@ -64,22 +66,6 @@
                 - if is_current_user_authorized? @group
                   = link_to '', remove_group_member_dashboard_groups_path(group_id: @group.id, group_seller_id: group_member.id), class: 'fa fa-trash-o', data: { confirm: "This will remove this member from the group"}, title: 'remove member'
 
+.clearfix
+
 = render partial: 'modals'
-
-/ #form_message.modal.fade tabindex="-1" role="dialog"
-/   = form_tag messages_path
-/     = hidden_field_tag 'message[user_id]', @group.product.id
-/     - subject = "RE: " + @group.product.name
-/     = hidden_field_tag 'message[subject]', subject
-
-/     .modal-dialog: .modal-content
-/       .modal-header
-/         .pull-right data-dismiss="modal"= fa_icon 'close'
-/         h4.modal-title Send a message
-
-/       .modal-body
-/         .form-group
-/           = label_tag 'message_body', 'Your message:'
-/           = text_area_tag 'message[body]', nil, class: 'form-control'
-
-/       .modal-footer= button_tag 'Send', class: 'btn btn-warning', data: { disable_with: 'Please wait...' }
