@@ -53,7 +53,7 @@ header.header.navbar.navbar-default.wrap.navbar-fixed-top
                   .userDetails
                     .userName
                       = link_to gsinv.group.name, dashboard_group_path(gsinv.group)
-                    .userdetails Interested to be a part of the deal Interested to be a part of the deal Interested to be a part of the deal.
+                    .userdetails Interested to be a part of the deal
                   .userAction
                     = link_to 'Accept', accept_deal_dashboard_groups_url(product_id: product.id, group_seller_id: gsinv.id), class: 'acceptBtn'
                     = link_to 'Decline', reject_deal_dashboard_groups_url(product_id: product.id, group_seller_id: gsinv.id), class: 'DeclineBtn'
