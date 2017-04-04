@@ -432,5 +432,6 @@
     = f.button fa_icon('save', text: 'Save & add new'), value: 'new', class: 'btn btn-default pull-right'
     = f.button fa_icon('plus', text: 'Save & stay edit'), value: 'edit', class: 'btn btn-default pull-right'
     = link_to fa_icon('trash-o', text: 'Delete this product'), dashboard_product_path(@product.id), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default pull-left' if @product.id?
+    .clearfix
 
 = render partial: '/dashboard/products/popup_to_verify_payment_as_fly_buy', locals: { product: @product}

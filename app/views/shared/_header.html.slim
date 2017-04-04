@@ -21,10 +21,10 @@ header.header.navbar.navbar-default.wrap.navbar-fixed-top
               = text_field_tag :query, params[:query], placeholder: 'What are you searching for?'
 
       .header-user.pull-right
-
         = link_to 'Sell', new_dashboard_product_path, class: 'sellBtn'
 
         = link_to fa_icon('comment', text: get_user_unread_message_count), dashboard_messages_path, class: 'headerIcons messageNotification'
+
         = link_to fa_icon('bell', text: get_user_unread_notification_count), dashboard_notifications_path, class: 'headerIcons otherNotification'
 
         img.peopleInviteIcon  alt="Invite people" src="/assets/peopleInvite.png"/
@@ -34,7 +34,12 @@ header.header.navbar.navbar-default.wrap.navbar-fixed-top
 
           ul#invitePplList
             li.headingList
-              span Pending Invitations
+              span.createGroupHeading Pending Invitations
+              .create-group-wrapper
+                = link_to 'Create Group', new_dashboard_group_path, class: 'createGroupBtn'
+              .clearfix
+            .clearfix
+
             - get_user_group_invitation.each do |gsinv|
               - if gsinv.group.present?
                 li
@@ -47,22 +52,19 @@ header.header.navbar.navbar-default.wrap.navbar-fixed-top
 
                   .userDetails
                     .userName
-                      = link_to  gsinv.group.name, dashboard_group_path(gsinv.group)
-                    .userdetails Interested to be a part of the deal
+                      = link_to gsinv.group.name, dashboard_group_path(gsinv.group)
+                    .userdetails Interested to be a part of the deal Interested to be a part of the deal Interested to be a part of the deal.
                   .userAction
                     = link_to 'Accept', accept_deal_dashboard_groups_url(product_id: product.id, group_seller_id: gsinv.id), class: 'acceptBtn'
                     = link_to 'Decline', reject_deal_dashboard_groups_url(product_id: product.id, group_seller_id: gsinv.id), class: 'DeclineBtn'
 
+            .clearfix
             .go-to-groups-page= link_to fa_icon('users', text: 'Go to group page'),  dashboard_groups_path, is: 'groups'
-
-          .createGroupWrapper
-
-            = link_to 'Create Group', new_dashboard_group_path, class: 'createGroupBtn'
 
         img.logoutIcon  alt="Logout" src="/assets/logout.png"/
 
         .logOutOptions
-          =link_to fa_icon('caret-up', text: ""), '', class: 'topArrowIcon'
+          =link_to fa_icon('caret-up', text: ""), '', class: 'logOutTopArrowIcon'
 
           ul#logOutOptionsList
             li.headingList YOUR OPTIONS
@@ -78,8 +80,3 @@ header.header.navbar.navbar-default.wrap.navbar-fixed-top
   - if signed_in?
     a href="#side-panel" data-toggle="collapse" id="collapse-link1" class="hide"
       .span.glyphicon.glyphicon-menu-down
-
-
-
-
-

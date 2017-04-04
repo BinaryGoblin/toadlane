@@ -16,9 +16,27 @@
 {
   background: #f2f2f2;
 }
-@media (min-width: 992px){
-  .modal-lg {
-    width: auto;
+
+@media (max-width: 1900px) and (min-width: 1281px) {
+  #invitePplList {
+    margin-top: 13.89% !important;
+  }
+
+  .InvitePpl {
+    .topArrowIcon {
+      margin-left: -43.7% !important;
+    }
+  }
+
+  #logOutOptionsList {
+    margin-left: 62% !important;
+    margin-top: 13.8% !important;
+  }
+
+  .logOutOptions {
+    .logOutTopArrowIcon {
+      margin-left: -30.3% !important;
+    }
   }
 }
 
@@ -35,6 +53,48 @@
         width: auto;
       }
     }
+  }
+}
+
+@media (max-width: 980px) and (min-width: 801px) {
+  #invitePplList, #logOutOptionsList {
+    margin-top: 17% !important;
+  }
+
+  #invitePplList {
+    margin-left: -55% !important;
+  }
+
+  .InvitePpl {
+    .topArrowIcon {
+      margin-left: -25.3% !important;
+    }
+  }
+
+  #logOutOptionsList {
+    margin-left: 35% !important;
+  }
+
+  .logOutOptions {
+    .logOutTopArrowIcon {
+      margin-left: -10.3% !important;
+    }
+  }
+
+  .header-user {
+    .messageNotification, .otherNotification, .peopleInviteIcon, .logoutIcon {
+      margin-left: 15px !important;
+    }
+
+    .logoutIcon {
+      width: 7% !important;
+    }
+  }
+}
+
+@media (min-width: 992px){
+  .modal-lg {
+    width: auto;
   }
 }
 
@@ -74,6 +134,44 @@
     }
     thead > tr > th{
       border-bottom: 0px
+    }
+  }
+}
+
+@media (max-width: 800px) and (min-width: 769px) {
+  #invitePplList, #logOutOptionsList {
+    margin-top: 21% !important;
+  }
+
+  #invitePplList {
+    margin-left: -95% !important;
+  }
+
+  .InvitePpl {
+    .topArrowIcon {
+      margin-left: -23.3% !important;
+      margin-top: 8.6% !important;
+    }
+  }
+
+  #logOutOptionsList {
+    margin-left: 18% !important;
+  }
+
+  .logOutOptions {
+    .logOutTopArrowIcon {
+      margin-left: -9.3% !important;
+      margin-top: 8.6% !important;
+    }
+  }
+
+  .header-user {
+    .messageNotification, .otherNotification, .peopleInviteIcon, .logoutIcon {
+      margin-left: 5px !important;
+    }
+
+    .peopleInviteIcon, .logoutIcon {
+      width: 18px !important;
     }
   }
 }
@@ -397,7 +495,7 @@
   .logOutOptions .topArrowIcon
   {
     margin-top: 7.6% !important;
-    margin-left:-11.1% !important;
+    margin-left: -11.1% !important;
   }
   .few,.main-buy,.main-sell
   {
@@ -477,25 +575,7 @@
   {
     margin-top: -8px !important;
   }
-  #invitePplList
-  {
-    width:auto !important;
-    min-width: 344px;
-    margin-left:0px !important;
-  }
-  #invitePplList li .userAction
-  {
-    width:35% !important;
-  }
-  #invitePplList li .userDetails
-  {
-    width:51% !important;
-  }
-  .InvitePpl .topArrowIcon
-  {
-    margin-left: -18.7% !important;
-    margin-top: 7.6% !important;
-  }
+  
   .createGroupWrapper
   {
     margin-left: 57% !important;
@@ -541,9 +621,27 @@
   #products_first, #products_second{
     margin-top: 0;
   }
+
+  #invitePplList {
+    width: auto !important;
+    margin-left: 0px !important;
+
+    li {
+      .userDetails {
+        width: 51% !important;
+      }
+    }
+  }
+
+  .InvitePpl {
+    .topArrowIcon {
+      margin-left: -18.7% !important;
+      margin-top: 7.6% !important;
+    }
+  }
 }
 
-@media (max-width:480px) {
+@media (max-width: 480px) {
   .mobile-main-container{
     margin-top: 228px;
   }
@@ -773,12 +871,6 @@
     background: $background-color;
   }
 
-  .InvitePpl{
-    .createGroupBtn{
-      font-size: 11px !important;
-    }
-  }
-
   #products_first, #products_second{
     margin-top: 0;
   }
@@ -796,5 +888,80 @@
   .main-notice {
     top: 200px;
     font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) and (min-width: 321px) {
+  #invitePplList {
+    width: auto !important;
+    margin-left: 0px !important;
+
+    li {
+      .userDetails {
+        width: 51.7% !important;
+      }
+    }
+  }
+
+  .InvitePpl {
+    .topArrowIcon {
+      margin-left: -19% !important;
+      margin-top: 7.6% !important;
+    }
+
+    .createGroupBtn {
+      font-size: 11px !important;
+    }
+  }
+
+  .go-to-groups-page {
+    margin-top: 150px !important;
+  }
+
+  .logOutOptions {
+    .logOutTopArrowIcon {
+      margin-left: -11.1% !important;
+      margin-top: 7.6% !important;
+    }
+  }
+}
+
+@media (max-width: 320px) {
+  #invitePplList {
+    width: auto !important;
+    margin-left: 0px !important;
+    height: 300px !important;
+
+    li {
+      .userDetails {
+        width: 46% !important;
+      }
+    }
+  }
+
+  .InvitePpl {
+    .topArrowIcon {
+      margin-left: -15.7% !important;
+      margin-top: 7.6% !important;
+    }
+
+    .createGroupBtn {
+      font-size: 11px !important;
+    }
+  }
+
+  .go-to-groups-page {
+    margin-top: 100px !important;
+  }
+
+  #logOutOptionsList {
+    margin-left: 41% !important;
+  }
+
+  .logOutOptions {
+    .logOutTopArrowIcon {
+      margin-left: -7% !important;
+      margin-top: 7.6% !important;
+    }
   }
 }
