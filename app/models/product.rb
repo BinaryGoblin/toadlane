@@ -76,9 +76,7 @@ class Product < ActiveRecord::Base
   accepts_nested_attributes_for :group, allow_destroy: true, reject_if: ->(attributes) { attributes[:name].blank? }
   accepts_nested_attributes_for :shipping_estimates, :allow_destroy => true, reject_if: -> (estimate) { (estimate[:cost].blank? && estimate[:description].blank?) }
 
-  accepts_nested_attributes_for :inspection_dates,
-  :allow_destroy => true,
-  :reject_if => lambda { |a| (a[:date].blank? && a[:creator_type].blank?) }
+  accepts_nested_attributes_for :inspection_dates, allow_destroy: true, reject_if: ->(attributes) { attributes[:date].blank? }
   belongs_to :category, class_name: "Category", foreign_key: :main_category
 
   accepts_nested_attributes_for :product_categories
