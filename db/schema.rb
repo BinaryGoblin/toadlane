@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170321080132) do
+ActiveRecord::Schema.define(version: 20170331104443) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -344,8 +344,8 @@ ActiveRecord::Schema.define(version: 20170321080132) do
   create_table "fly_buy_profiles", force: :cascade do |t|
     t.string   "synapse_user_id"
     t.integer  "user_id"
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
     t.string   "encrypted_fingerprint"
     t.string   "synapse_node_id"
     t.string   "synapse_ip_address"
@@ -362,9 +362,9 @@ ActiveRecord::Schema.define(version: 20170321080132) do
     t.string   "gov_id_content_type"
     t.integer  "gov_id_file_size"
     t.datetime "gov_id_updated_at"
-    t.boolean  "permission_scope_verified",   default: false
-    t.json     "kba_questions",               default: {}
-    t.boolean  "terms_of_service",            default: false
+    t.boolean  "permission_scope_verified",       default: false
+    t.json     "kba_questions",                   default: {}
+    t.boolean  "terms_of_service",                default: false
     t.string   "name_on_account"
     t.string   "ssn_number"
     t.datetime "date_of_company"
@@ -373,10 +373,15 @@ ActiveRecord::Schema.define(version: 20170321080132) do
     t.string   "entity_scope"
     t.string   "company_email"
     t.string   "tin_number"
-    t.boolean  "completed",                   default: false
+    t.boolean  "completed",                       default: false
     t.string   "company_phone"
-    t.json     "error_details",               default: {}
-    t.boolean  "unverify_by_admin",           default: false
+    t.json     "error_details",                   default: {}
+    t.boolean  "unverify_by_admin",               default: false
+    t.string   "business_documents_file_name"
+    t.string   "business_documents_content_type"
+    t.integer  "business_documents_file_size"
+    t.datetime "business_documents_updated_at"
+    t.string   "additional_information"
   end
 
   create_table "green_checks", force: :cascade do |t|
