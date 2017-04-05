@@ -14,6 +14,10 @@
     td  <span class="stripe-fees-price">#{number_to_currency(fly_buy_order.fee)}</span>
 
   tr
+    td colspan="3" Fly & Buy Fee (<span class="calc-fees-fly-buy-over-million">#{Fee::FLY_BUY[:over_million]}</span>% - <span class="calc-fees-fly-buy-under-million">#{Fee::FLY_BUY[:under_million]}</span>%):
+    td  <span class="calc-fees-fly-buy-price">#{number_to_currency(fly_buy_order.fly_buy_fee)}</span>
+
+  tr
     td Shipping Estimate
     td.stripe_quantity =fly_buy_order.count
     td  <span class="calc-shipping" data-type="PerUnit">#{number_to_currency(@data[:shipping_cost])}</span>

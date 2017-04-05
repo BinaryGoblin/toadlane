@@ -27,6 +27,7 @@
 #  group_seller_id           :integer
 #  group_seller              :boolean          default(FALSE)
 #  payment_released_to_group :boolean          default(FALSE)
+#  fly_buy_fee               :float
 #
 
 class FlyBuyOrder < ActiveRecord::Base

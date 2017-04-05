@@ -14,9 +14,13 @@ class Behavior.CalculationProduct
     @$rebPrice      = @$calculationPanel.find '.calc-rebate-price'
     @$feePrice      = @$calculationPanel.find '.calc-fees-price'
     @$shippingPrice = @$calculationPanel.find '.calc-shipping-price'
+    @$flyBuyPrice   = @$calculationPanel.find '.calc-fees-fly-buy-price'
 
     @fees       = parseFloat @$calculationPanel.find('.calc-fees').text(), 10
     @unitPrice  = @$calculationPanel.find('[data-unit-price]').data 'unit-price'
+
+    @feesFlyBuyOverMillion    = parseFloat @$calculationPanel.find('.calc-fees-fly-buy-over-million').text(), 10
+    @feesFlyBuyUnderMillion   = parseFloat @$calculationPanel.find('.calc-fees-fly-buy-under-million').text(), 10
 
     @$stripeQuantity      = $ '.stripe_quantity'
     @$stripeTotal         = $ '.stripe-total'
@@ -35,6 +39,7 @@ class Behavior.CalculationProduct
     @$stripeShippingCost  = $ '[name="shipping_cost"]'
     @$stripeRebatePrice   = $ '[name="rebate"]'
     @$stripeRebatePercent = $ '[name="rebate_percent"]'
+    @$flyBuyFeesPrice     = $ '[name="fly_buy_fee"]'
 
     @$footer = $ '.payment-button'
 
@@ -50,8 +55,9 @@ class Behavior.CalculationProduct
     amount.replace /(\d)(?=(\d{3})+(?!\d))/g, "$1,"
 
   calculation: =>
-    total  = 0
-    rebate = 0
+    total         = 0
+    rebate        = 0
+    fees_fly_buy  = 0
     quantity = parseInt @$quantity.val(), 10
     quantity = 1 unless quantity
 
@@ -93,8 +99,16 @@ class Behavior.CalculationProduct
         shipping_cost = parseFloat @$shippingEstimate.text(), 2
       else
         shipping_cost = 0
+
+    if total > 1000000
+      unless isNaN(@feesFlyBuyOverMillion)
+        fees_fly_buy = @feesFlyBuyOverMillion * total / 100
+    else
+      unless isNaN(@feesFlyBuyOverMillion)
+        fees_fly_buy = @feesFlyBuyUnderMillion * total / 100
+
     rebatep           = (rebate * 100) / (@unitPrice * quantity)
-    cart              = total + fees + shipping_cost - rebate
+    cart              = total + fees + shipping_cost - rebate + fees_fly_buy
 
     if total > 1
       @$checkout.removeClass 'disabled'
@@ -109,6 +123,7 @@ class Behavior.CalculationProduct
     @$rebate.text @fixed rebatep
     @$pcs.text quantity
     @$feePrice.text @number_to_currency(@fixed fees)
+    @$flyBuyPrice.text @number_to_currency(@fixed fees_fly_buy)
     @$shippingPrice.text @number_to_currency(@fixed shipping_cost)
     @$rebPrice.text @number_to_currency(@fixed rebate)
     @$cart.text @number_to_currency(@fixed cart)
@@ -129,5 +144,6 @@ class Behavior.CalculationProduct
     @$stripeShippingCost.val shipping_cost.toFixed 2
     @$stripeRebatePrice.val rebate.toFixed 2
     @$stripeRebatePercent.val rebatep.toFixed 2
+    @$flyBuyFeesPrice.val fees_fly_buy.toFixed 2
 
     @$stripeButtonScript.attr 'data-amount', cart.toFixed 2
