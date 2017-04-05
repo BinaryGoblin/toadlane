@@ -200,13 +200,7 @@ class ProductsController < ApplicationController
       })
 
       selected_inspection_date = InspectionDate.find_by_id(options[:inspection_date_id])
-
-      save_inspection_date({
-        fly_buy_order_id: fly_buy_order.id,
-        approved: true,
-        creator_type: selected_inspection_date.creator_type,
-        date: selected_inspection_date.date
-      })
+      save_inspection_date(selected_inspection_date, fly_buy_order)
     elsif request.get? && session[:fly_buy_order_id].present?
       fly_buy_order = FlyBuyOrder.find_by_id(session[:fly_buy_order_id])
     elsif options[:fly_buy_order_id].present?
