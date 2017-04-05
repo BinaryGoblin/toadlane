@@ -14,6 +14,7 @@
     = hidden_field_tag :shipping_cost
     = hidden_field_tag :rebate
     = hidden_field_tag :rebate_percent
+    = hidden_field_tag :fly_buy_fee
 
     - if product.default_payment_flybuy? && product.inspection_dates.seller_added.present?
       .inspection_date_select
@@ -50,7 +51,7 @@
                 = b.label { b.radio_button(:"checked" => (b.object.id == product.inspection_dates.first.id)) + b.text }
                 br
 
-      - if product.default_payment.present?
+      - if !product.expired? && product.status? && product.default_payment.present?
         - seller_inspection_dates = fly_buy_order.inspection_dates.seller_added.active_inspection_date
         - buyer_inspection_dates = fly_buy_order.inspection_dates.buyer_added.approved.active_inspection_date
 

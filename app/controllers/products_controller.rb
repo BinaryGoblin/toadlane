@@ -64,45 +64,57 @@ class ProductsController < ApplicationController
   # TODO Refactor 10018
   def checkout
     @product = Product.find(params[:product_id])
-    if current_user.present? && !current_user.profile_complete?
-      redirect_to product_path(@product), :flash => { :error => "You must complete your profile before you can view product details." }
+
+    if current_user.profile_complete?
+      return redirect_to product_path(@product), flash: { account_error: 'You must update your first and last name prior to submitting your company information.' } unless current_user.name.present?
+      return redirect_to product_path(@product), flash: { account_error: 'You must add your company name prior to submitting your company information.' } unless current_user.company.present?
+    else
+      return redirect_to product_path(@product), flash: { error: 'You must complete your profile before you can view product details.' }
     end
 
-    if current_user.present? && current_user.profile_complete? && current_user.name.present? && current_user.name.count(" ") == 0
-      return redirect_to product_path(@product), :flash => { :account_error => "You must update your first and last name prior to submitting your company information" }
-    end
+    return redirect_to product_path(@product), flash: { account_error: 'You cannot currently use Fly & Buy services. Please contact johnb@toadlane.com for more information.' } if current_user.fly_buy_profile_account_added? && current_user.fly_buy_unverified_by_admin == true
 
-    if current_user.present? && current_user.profile_complete? && current_user.company.present? == false
-      return redirect_to product_path(@product), :flash => { :account_error => "You must add your company name prior to submitting your company information." }
-    end
-
-    if current_user.present? && current_user.fly_buy_profile_account_added? && current_user.fly_buy_unverified_by_admin == true
-      redirect_to product_path(@product), :flash => { :account_error => "You cannot currently use Fly & Buy services. Please contact johnb@toadlane.com for more information." }
-    end
+    sum_unit_price = (@product.unit_price * params[:count].to_f)
 
     if @product.default_payment_flybuy?
-      fee = Fee.find_by(:module_name => "Fly & Buy").value
+      fee = Fee.find_by(module_name: 'Fly & Buy').value
+      without_reduction_fees = sum_unit_price * fee.to_f / 100
+      reduction_in_fees = without_reduction_fees * 75 / 100
+      fees = without_reduction_fees - reduction_in_fees
+      fly_buy_fee = over_million_dollars?(sum_unit_price) ? Fee::FLY_BUY[:over_million] : Fee::FLY_BUY[:under_million]
+      fly_buy_fees = sum_unit_price * fly_buy_fee / 100
     else
-      fee = Fee.find_by(:module_name => "Stripe").value
+      fee = Fee.find_by(module_name: 'Stripe').value
+      fees = sum_unit_price * fee.to_f / 100
+      fly_buy_fees = nil
     end
 
+    total = sum_unit_price + fees + fly_buy_fees.to_f + params[:shipping_cost].to_f - params[:rebate].to_f
 
-    @data = {
-      total: params[:total],
+    options = {
       quantity: params[:count],
-      fee_amount: params[:fee],
+      fee: fee,
+      fee_amount: fees,
       shipping_cost: params[:shipping_cost],
       rebate: params[:rebate],
       rebate_percent: params[:rebate_percent],
       available_product: @product.remaining_amount,
-      fee: fee
+      fly_buy_fee: fly_buy_fees,
+      total: total
     }
 
-    @fly_buy_order, @fly_buy_profile = fly_buy_order_process(@product)
+    @data = options
+
+    options.merge!({
+      unit_price: @product.unit_price,
+      fly_buy_order_id: params[:fly_buy_order_id],
+      inspection_date_id: (params[:inspection_date][:inspection_date_id] rescue nil)
+    })
+
+    @fly_buy_order, @fly_buy_profile = fly_buy_order_process(@product, options)
 
     @stripe_order = StripeOrder.new
     @green_order = GreenOrder.new
-
     @emb_order = EmbOrder.new
   end
 
@@ -116,6 +128,7 @@ class ProductsController < ApplicationController
   end
 
   private
+
   def set_product
     @product = Product.find(params[:id])
     if @product.default_payment.nil?
@@ -158,57 +171,46 @@ class ProductsController < ApplicationController
     })
   end
 
-  def fly_buy_order_process(product)
-    if params["fly_buy_order_id"].present? && params["inspection_date"].present? && params["inspection_date"]["inspection_date_id"].present?
-      fly_buy_order = FlyBuyOrder.find_by_id(params["fly_buy_order_id"])
+  def fly_buy_order_process(product, options={})
+    if options[:fly_buy_order_id].present? && options[:inspection_date_id].present?
+      fly_buy_order = FlyBuyOrder.find_by_id(options[:fly_buy_order_id])
       fly_buy_order.update_attributes({
-        unit_price: product.unit_price,
-        count: params[:count],
-        total: params[:total],
-        rebate_price: params[:rebate],
-        rebate: params[:rebate_percent],
-        fee: params[:fee] # this is fee amount for buyer
+        unit_price: options[:unit_price],
+        count: options[:quantity],
+        total: options[:total],
+        rebate_price: options[:rebate],
+        rebate: options[:rebate_percent],
+        fee: options[:fee_amount],
+        fly_buy_fee: options[:fly_buy_fee]
       })
 
-      selected_inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
-
-      inspection_date = InspectionDate.new({
-        fly_buy_order_id: fly_buy_order.id,
-        approved: true,
-        creator_type: selected_inspection_date.creator_type,
-        date: selected_inspection_date.date
-      })
-      inspection_date.save(validate: false)
-
-    elsif params["inspection_date"].present? && params["inspection_date"]["inspection_date_id"].present?
-      # this is for selecting one inspection date from seller added dates
+      selected_inspection_date = InspectionDate.find_by_id(options[:inspection_date_id])
+      save_inspection_date(selected_inspection_date, fly_buy_order)
+    elsif options[:inspection_date_id].present?
       fly_buy_order = FlyBuyOrder.create({
         buyer_id: current_user.id,
         seller_id: product.user.id,
         product_id: product.id,
-        unit_price: product.unit_price,
-        count: params[:count],
-        total: params[:total],
-        rebate_price: params[:rebate],
-        rebate: params[:rebate_percent],
-        fee: params[:fee], # this is fee amount for buyer i.e Toadlane Fee
-
+        unit_price: options[:unit_price],
+        count: options[:quantity],
+        total: options[:total],
+        rebate_price: options[:rebate],
+        rebate: options[:rebate_percent],
+        fee: options[:fee_amount]
       })
 
-      selected_inspection_date = InspectionDate.find_by_id(params["inspection_date"]["inspection_date_id"])
+      selected_inspection_date = InspectionDate.find_by_id(options[:inspection_date_id])
 
-      inspection_date = InspectionDate.new({
+      save_inspection_date({
         fly_buy_order_id: fly_buy_order.id,
         approved: true,
         creator_type: selected_inspection_date.creator_type,
         date: selected_inspection_date.date
       })
-      inspection_date.save(validate: false)
-
-    elsif params["fly_buy_order_id"].present?
-      fly_buy_order = FlyBuyOrder.find_by_id(params["fly_buy_order_id"])
     elsif request.get? && session[:fly_buy_order_id].present?
       fly_buy_order = FlyBuyOrder.find_by_id(session[:fly_buy_order_id])
+    elsif options[:fly_buy_order_id].present?
+      fly_buy_order = FlyBuyOrder.find_by_id(options[:fly_buy_order_id])
     else
       fly_buy_order = FlyBuyOrder.new
     end
@@ -218,10 +220,8 @@ class ProductsController < ApplicationController
     fly_buy_profile = current_user.fly_buy_profile_account_added? ? current_user.fly_buy_profile : FlyBuyProfile.new
 
     if product.group.present?
-      fly_buy_order.update_attributes({
-        group_seller_id: product.group.id,
-        group_seller: true
-      })
+      fly_buy_order.update_attributes(group_seller_id: product.group.id, group_seller: true)
+      fly_buy_order.reload
     end
 
     [fly_buy_order, fly_buy_profile]
@@ -249,5 +249,27 @@ class ProductsController < ApplicationController
       seller_charged_fee: seller_charged_fee,
       amount_after_fee_to_seller: amount_after_fee_to_seller
     })
+  end
+
+  def save_inspection_date(selected_inspection_date, fly_buy_order)
+    if selected_inspection_date.fly_buy_order_id == fly_buy_order.id
+      selected_inspection_date.update_attributes({
+        approved: true,
+        creator_type: selected_inspection_date.creator_type,
+        date: selected_inspection_date.date
+      })
+    else
+      inspection_date = InspectionDate.new({
+        fly_buy_order_id: fly_buy_order.id,
+        approved: true,
+        creator_type: selected_inspection_date.creator_type,
+        date: selected_inspection_date.date
+      })
+      inspection_date.save(validate: false)
+    end
+  end
+
+  def over_million_dollars?(amount)
+    amount > 1000000
   end
 end
