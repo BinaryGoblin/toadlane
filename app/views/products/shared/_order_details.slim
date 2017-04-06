@@ -1,56 +1,55 @@
 - if product.default_payment_flybuy?
   tr
     td= product.name
-    td.stripe-quantity =fly_buy_order.count
-    td data-unit-price="#{number_to_currency(fly_buy_order.unit_price)}"  #{number_to_currency(fly_buy_order.unit_price)}
-    td <span class="stripe-unit-total">#{number_to_currency(get_subtotal(fly_buy_order.unit_price, fly_buy_order.count))}</span>
+    td.stripe-quantity.rightAlign =fly_buy_order.count
+    td class="rightAlign" data-unit-price="#{number_to_currency(fly_buy_order.unit_price)}"  #{number_to_currency(fly_buy_order.unit_price)}
+    td class="rightAlign" <span class="stripe-unit-total">#{number_to_currency(get_subtotal(fly_buy_order.unit_price, fly_buy_order.count))}</span>
 
   tr
     td colspan="3" <span class="stripe-rebate">#{fly_buy_order.rebate}</span>% rebate for purchasing <span class="stripe-quantity">#{fly_buy_order.count}</span> pcs
-    td -<span class="stripe-rebate-price">#{number_to_currency(fly_buy_order.rebate_price)}</span>
+    td class="rightAlign" -<span class="stripe-rebate-price">#{number_to_currency(fly_buy_order.rebate_price)}</span>
 
   tr
     td colspan="3" Toadlane Fee (<span class="calc-fees">#{data[:fee]}</span>% - #{Fee::FlyBuyReductionFeeAmount}% reduced):
-    td  <span class="stripe-fees-price">#{number_to_currency(fly_buy_order.fee)}</span>
+    td class="rightAlign" <span class="stripe-fees-price">#{number_to_currency(fly_buy_order.fee)}</span>
 
   tr
     td colspan="3" Fly & Buy Fee (<span class="calc-fees-fly-buy-over-million">#{Fee::FLY_BUY[:over_million]}</span>% - <span class="calc-fees-fly-buy-under-million">#{Fee::FLY_BUY[:under_million]}</span>%):
-    td  <span class="calc-fees-fly-buy-price">#{number_to_currency(fly_buy_order.fly_buy_fee)}</span>
+    td class="rightAlign" <span class="calc-fees-fly-buy-price">#{number_to_currency(fly_buy_order.fly_buy_fee)}</span>
 
   tr
     td Shipping Estimate
-    td.stripe_quantity =fly_buy_order.count
-    td  <span class="calc-shipping" data-type="PerUnit">#{number_to_currency(@data[:shipping_cost])}</span>
-    td  <span class="stripe-shipping-price">#{number_to_currency(get_shipping_cost(fly_buy_order.count, @data[:shipping_cost]))}</span>
+    td.stripe_quantity.rightAlign =fly_buy_order.count
+    td class="rightAlign" <span class="calc-shipping" data-type="PerUnit">#{number_to_currency(data[:shipping_cost])}</span>
+    td class="rightAlign" <span class="stripe-shipping-price">#{number_to_currency(get_shipping_cost(fly_buy_order.count, data[:shipping_cost]))}</span>
 
   tr
     td.no-border colspan="2"
     td.text-center: b.text-uppercase Total:
-    td: b  <span class="stripe-total">#{number_to_currency(fly_buy_order.total)}</span>
+    td.rightAlign: b <span class="stripe-total">#{number_to_currency(fly_buy_order.total)}</span>
 
 - else
-
   tr
     td= product.name
-    td.stripe-quantity =data[:quantity]
-    td data-unit-price="#{number_with_precision(product.unit_price, precision: 0, delimiter: '')}" #{number_to_currency(product.unit_price)}
-    td $ <span class="stripe-unit-total">#{number_with_precision(get_subtotal(product.unit_price, data[:quantity]), precision: 2, delimiter: '')}</span>
+    td.stripe-quantity.rightAlign =data[:quantity]
+    td class="rightAlign" data-unit-price="#{number_with_precision(product.unit_price, precision: 0, delimiter: '')}" #{number_to_currency(product.unit_price)}
+    td class="rightAlign" <span class="stripe-unit-total">#{number_to_currency(get_subtotal(product.unit_price, data[:quantity]))}</span>
 
   tr
     td colspan="3" <span class="stripe-rebate">#{data[:rebate_percent]}</span>% rebate for purchasing <span class="stripe-quantity">#{data[:quantity]}</span> pcs
-    td -$ <span class="stripe-rebate-price">#{data[:rebate]}</span>
+    td class="rightAlign" -<span class="stripe-rebate-price">#{number_to_currency(data[:rebate])}</span>
 
   tr
     td colspan="3" Toadlane Fee (<span class="calc-fees">#{data[:fee]}</span>%)
-    td $ <span class="stripe-fees-price">#{data[:fee_amount]}</span>
+    td class="rightAlign" <span class="stripe-fees-price">#{number_to_currency(data[:fee_amount])}</span>
 
   tr
     td Shipping Estimate
-    td.stripe_quantity =data[:quantity]
-    td $ <span class="calc-shipping" data-type="PerUnit">#{data[:shipping_cost]}</span>
-    td $ <span class="stripe-shipping-price">#{number_with_precision(get_shipping_cost(data[:quantity],data[:shipping_cost]), precision: 2, delimiter: '')}</span>
+    td.stripe_quantity.rightAlign =data[:quantity]
+    td class="rightAlign" <span class="calc-shipping" data-type="PerUnit">#{number_to_currency(data[:shipping_cost])}</span>
+    td class="rightAlign" <span class="stripe-shipping-price">#{number_to_currency(get_shipping_cost(data[:quantity], data[:shipping_cost]))}</span>
 
   tr
     td.no-border colspan="2"
     td.text-center: b.text-uppercase Total:
-    td: b $ <span class="stripe-total">#{number_with_precision(data[:total], precision: 2, delimiter: '')}</span>
+    td.rightAlign: b <span class="stripe-total">#{number_to_currency(data[:total])}</span>

@@ -894,6 +894,7 @@
 @media (max-width: 480px) and (min-width: 321px) {
   #invitePplList {
     width: auto !important;
+    min-width: 330px;
     margin-left: 0px !important;
 
     li {
@@ -929,6 +930,7 @@
 @media (max-width: 320px) {
   #invitePplList {
     width: auto !important;
+    min-width: 300px;
     margin-left: 0px !important;
     height: 300px !important;
 

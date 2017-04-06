@@ -93,6 +93,12 @@ class EmbOrder < ActiveRecord::Base
     self.save
   end
 
+  def total_price
+    unit_prices = (count.to_f * unit_price.to_f)
+    
+    unit_prices + shipping_cost.to_f - (unit_prices * rebate.to_f / 100)
+  end
+
   private_class_method
   def self.emb_api_ready_params(emb_params, product_id, buyer_id, amount)
     api_ready_params = {}

@@ -179,6 +179,12 @@ class GreenOrder < ActiveRecord::Base
     })
   end
 
+  def total_price
+    unit_prices = (count.to_f * unit_price.to_f)
+    
+    unit_prices + shipping_cost.to_f - (unit_prices * rebate.to_f / 100)
+  end
+
   private_class_method
   def self.has_green_bank_info?(green_params)
     ![green_params[:routing_number], green_params[:account_number], green_params[:bank_name]].any? {|p| p.blank?}

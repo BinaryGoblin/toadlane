@@ -119,10 +119,16 @@ class StripeOrder < ActiveRecord::Base
   end
 
   def get_toadlane_fee
-    Fee.find_by(:module_name => "Amg").value
+    Fee.find_by(module_name: 'Amg').value
   end
 
   def total_earning
     get_toadlane_fee.present? ? total - get_toadlane_fee - fee : total - fee
+  end
+
+  def total_price
+    unit_prices = (count.to_f * unit_price.to_f)
+    
+    unit_prices + shipping_cost.to_f + get_toadlane_fee.to_f - (unit_prices * rebate.to_f / 100)
   end
 end

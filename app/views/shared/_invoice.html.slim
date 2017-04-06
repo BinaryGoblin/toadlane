@@ -1,7 +1,7 @@
 .text-center = image_tag 'logo-header.png'
 
 .table-responsive
-  table.table-checkout style="margin-bottom:0"
+  table.table-checkout.invoiceCheckout style="margin-bottom:0"
     tbody
       tr
         td colspan="4" valign="top" alrign="left"
@@ -13,7 +13,6 @@
                 = order.synapse_transaction_id
           div Date: #{order.created_at.strftime('%m-%d-%Y')}
 
-
       tr
         td colspan="2" valign="top"
           h4.text-uppercase Shipping Address:
@@ -24,7 +23,7 @@
 
             - if !order.buyer.addresses[0].nil?
               dt Address:
-              dd= order.buyer.addresses[0].line1 + (order.buyer.addresses[0].line2 || "")
+              dd= order.buyer.addresses[0].line1 + (order.buyer.addresses[0].line2 || '')
 
               dt City:
               dd= order.buyer.addresses[0].city
@@ -45,76 +44,100 @@
           h4.text-uppercase Seller Information
           br
           dl
-            dt Name:
-            dd= order.seller.name
 
-            - if !order.seller.addresses[0].nil?
-              dt Country:
-              dd= order.seller.addresses[0].country
+            - if is_a_group_product? order.product
+              dt Group Name:
+              dd.text-uppercase= order.product.group.name
 
-            dt Phone:
-            dd= order.seller.phone
+              - order.product.group.group_sellers.public_members.each do |group_seller|
+                .clearfix
+                br
 
-  table.table-checkout
+                dt Name:
+                dd= group_seller.user.name
+
+                - if group_seller.user.addresses[0].present?
+                  dt Country:
+                  dd= group_seller.user.addresses[0].country
+
+                dt Phone:
+                dd= group_seller.user.phone
+
+            - else
+              dt Name:
+              dd= order.seller.name
+
+              - if !order.seller.addresses[0].nil?
+                dt Country:
+                dd= order.seller.addresses[0].country
+
+              dt Phone:
+              dd= order.seller.phone
+
+            .clearfix
+
+  .clearfix
+
+  table.table-checkout.invoiceCheckout
     thead
       tr
-        th description
-        th qty
-        th price
-        th amount
+        th.leftAlign description
+        th.rightAlign qty
+        th.rightAlign price
+        th.rightAlign amount
     tbody
       tr
         td= order.product.name
-        td= order.count
-        td  #{number_to_currency(number_with_precision(order.unit_price, precision: 2, delimiter: ''))}
-        td  #{number_to_currency(number_with_precision(order.count * order.unit_price, precision: 2, delimiter: ''))}
+        td.rightAlign= order.count
+        td.rightAlign #{number_to_currency(order.unit_price)}
+        td.rightAlign #{number_to_currency(order.count * order.unit_price)}
 
       tr
         td colspan="3" #{number_with_precision(order.rebate, precision: 2, delimiter: '')}% rebate for purchasing #{order.count} pcs
         - if order.instance_of? FlyBuyOrder
-          td - #{number_to_currency(number_with_precision(order.rebate_price, precision: 2, delimiter: ''))}
+          td.rightAlign - #{number_to_currency(order.rebate_price)}
         - else
-          td - #{number_to_currency(number_with_precision(get_amount_for_rebate(order), precision: 2, delimiter: ''))}
+          td.rightAlign - #{number_to_currency(get_amount_for_rebate(order))}
 
-      tr
       - if order.instance_of?(FlyBuyOrder)
         - if user == order.seller
           tr
             td colspan="3" Toadlane Fee (#{order.get_toadlane_fee}% - #{Fee::FlyBuyReductionFeeAmount}% reduced)
-            td #{number_to_currency(number_with_precision(order.fee, precision: 2, delimiter: ''))}
+            td.rightAlign #{number_to_currency(order.fee)}
           tr
             td colspan="3" Seller Fees #{order.seller_fees_percent}%
-            td - #{number_to_currency(number_with_precision(order.seller_fees_amount, precision: 2, delimiter: ''))}
+            td.rightAlign - #{number_to_currency(order.seller_fees_amount)}
         - elsif user == order.buyer
           tr
             td colspan="3" Toadlane Fee (#{order.get_toadlane_fee}% - #{Fee::FlyBuyReductionFeeAmount}% reduced)
-            td #{number_to_currency(number_with_precision(order.fee, precision: 2, delimiter: ''))}
+            td.rightAlign #{number_to_currency(order.fee)}
         tr
           td colspan="3" Fly & Buy Fee (#{Fee::FLY_BUY[:over_million]}% - #{Fee::FLY_BUY[:under_million]}%)
-          td #{number_to_currency(number_with_precision(order.fly_buy_fee, precision: 2, delimiter: ''))}
+          td.rightAlign #{number_to_currency(order.fly_buy_fee)}
       - else
         tr
           td colspan="3" Shipping
-          td  #{number_to_currency(number_with_precision(order.shipping_cost, precision: 2, delimiter: ''))}
+          td.rightAlign #{number_to_currency(order.shipping_cost)}
 
       tr
         td.no-border colspan="2"
         td.text-center: b.text-uppercase Total:
-        td: b  
-          - if order.instance_of?(FlyBuyOrder)
-            - if user == order.seller
-              = number_to_currency(number_with_precision(order.total - order.seller_fees_amount, precision: 2, delimiter: '')) if order.seller_fees_amount.present?
-            - elsif user == order.buyer
-              = number_to_currency(number_with_precision(order.total, precision: 2, delimiter: ''))
-          - else
-            = number_to_currency(number_with_precision(order.total, precision: 2, delimiter: ''))
+        td.rightAlign: b
+          - total = order.total
+          - total = order.total - order.seller_fees_amount if order.instance_of?(FlyBuyOrder) && user == order.seller && order.seller_fees_amount.present?
+          - total = order.total_price unless total.present?
+
+          = number_to_currency(total)
+  
+  .clearfix
+
   .invoice-note
     h3 Note:
     p For help and support, email <a href="mailto:johnb@toadlane.com">johnb@toadlane.com</a>.
     p Payment instructions are sent via our payment partner, Synapse Financial Technologies, Inc. and are processed by Triumph Bank. To report complaints email <a href="mailto:issues@synapsepay.com">issues@synapsepay.com</a>.
           
   - if order.instance_of? GreenOrder
-    table.table-checkout style="margin-top: 20px;"
+    table.table-checkout.invoiceCheckout
       thead
         tr
           th Check Number
@@ -144,3 +167,5 @@
               = gc.result_description
             td
               = gc.amount
+
+    .clearfix
