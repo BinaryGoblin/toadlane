@@ -96,7 +96,7 @@ class FlyBuyOrder < ActiveRecord::Base
   end
 
   def get_toadlane_fee
-    Fee.find_by(:module_name => "Fly & Buy").value
+    Fee.find_by(module_name: 'Fly & Buy').value
   end
 
   def additional_sellers_account_created_verified?
@@ -115,5 +115,11 @@ class FlyBuyOrder < ActiveRecord::Base
 
   def total_earning
     get_toadlane_fee.present? ? total - get_toadlane_fee - fee : total - fee
+  end
+
+  def total_price
+    unit_prices = (count.to_f * unit_price.to_f)
+    
+    unit_prices + get_toadlane_fee.to_f + fly_buy_fee.to_f + shipping_cost.to_f - (unit_prices * rebate.to_f / 100)
   end
 end

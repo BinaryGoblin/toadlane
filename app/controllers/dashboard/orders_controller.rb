@@ -22,8 +22,6 @@ class Dashboard::OrdersController < DashboardController
 
   def show
     case params[:type]
-    when 'stripe'
-      @order = StripeOrder.find(params[:id])
     when 'armor'
       @order = ArmorOrder.find(params[:id])
     when 'green'

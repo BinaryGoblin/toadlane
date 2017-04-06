@@ -108,4 +108,10 @@ class ArmorOrder < ActiveRecord::Base
     inspection_complete == false
   end
 
+  def total_price
+    unit_prices = (count.to_f * unit_price.to_f)
+    
+    unit_prices + shipping_cost.to_f - (unit_prices * rebate.to_f / 100)
+  end
+
 end

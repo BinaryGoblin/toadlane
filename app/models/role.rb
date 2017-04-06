@@ -23,5 +23,5 @@ class Role < ActiveRecord::Base
   PRIVATE_SELLER = 'private seller'
   PUBLIC_SELLER = 'public seller'
   PRIVATE_SUPPLIER = 'private supplier'
-  PUBLIC_SELLER = 'public supplier'
+  PUBLIC_SUPPLIER = 'public supplier'
 end
