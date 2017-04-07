@@ -16,11 +16,8 @@ html[style="margin: 0;padding: 0;"]
 
     .container style=("margin: 15px;padding: 15px;background: #fff;border: 1px solid #eaebec;border-radius: 3px;")
       .message-each style=("margin: 0;padding: 0;")
-        .message-header style=("margin: 0;padding: 0;vertical-align: middle;font-size: 18px;font-weight: 100;margin-bottom: 20px;")
-          = image_tag get_image(@current_user.asset(:small)), height: '75', :class => "pro-img", :style => "margin: 0;padding: 5px;height: 30px;vertical-align: middle;margin-right: 15px;border-radius: 5px;border: 1px solid #eaebec;background-color: #fff;margin-left: 10px;"
-          = get_email_or_name(@current_user)
         .message-section style=("margin: 0;padding: 15px;background: #eee;border-radius: 3px;margin-bottom: 20px;")
-          | You are no longer able to receive commissions on the remaining quantity of '#{@product.name}' because #{get_email_or_name(@current_user)} has removed you from the group '#{@product.group.name}'
+          | You are no longer able to receive commissions on the remaining quantity of "#{@product.name}" because it has expired.
           .table-responsive[style="margin: 10px 0px;padding: 0;"]
             table.table-checkout[style="margin-bottom: 0;margin: auto;padding: 5px;background: white;border-radius: 3px;border-collapse: collapse;height: 100px;width: 100%;box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);animation: float 5s infinite;"]
               tbody[style="margin: 0;padding: 0;"]
@@ -47,7 +44,7 @@ html[style="margin: 0;padding: 0;"]
                           span[style="color: black; line-height: 21px;"]  #{@product.description}
 
         .message-footer style=("margin: 0;padding: 0;")
-          - message = "You are no longer able to receive commissions on the remaining quantity of '#{@product.name}' because #{get_email_or_name(@current_user)} has removed you from the group '#{@product.group.name}'"
+          - message = "You are no longer able to receive commissions on the remaining quantity of '#{@product.name}' because it has expired."
           = link_to "message admin", group_admin_message_messages_url(admins: @admins, message: message),
                 {:style => "margin: 0 5px;padding: 3px 15px;color: white;border: 1px solid transparent;border-bottom-color: #3d6411;border-top-color: #59af0c;text-shadow: 0 1px 0 #3d6411;text-decoration: none;background-image: linear-gradient(to bottom, #59af0c 0%, #5c8f10 100%);background-repeat: repeat-x;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF59AF0C', endColorstr='#FF5C8F10', GradientType=0);border-radius: 3px;display: inline-block;"}
     .text-center[style="margin: 0;padding: 0;text-align: center;"]

@@ -5,6 +5,39 @@ class NotificationMailerPreview < ActionMailer::Preview
     product = group.product
     user = product.owner
     current_user = User.first
-    NotificationMailer.additional_seller_removed_notification_email(product, user, current_user)
+    admins = product.group_admins
+
+    NotificationMailer.additional_seller_removed_notification_email(product, user, current_user, admins)
+  end
+
+  def group_product_removed_notification_email
+    group = Group.first
+    product = group.product
+    user = product.owner
+    current_user = User.first
+    admins = product.group_admins
+    param_hash = {group: group.name, product: product, group_seller: user, current_user: current_user, admins: admins}
+
+    NotificationMailer.group_product_removed_notification_email(param_hash)
+  end
+
+  def group_removed_notification_email
+    group = Group.first
+    product = group.product
+    user = product.owner
+    current_user = User.first
+    admins = product.group_admins
+    param_hash = {group: group.name, product: product, group_seller: user, current_user: current_user, admins: admins}
+
+    NotificationMailer.group_removed_notification_email(param_hash)
+  end
+
+  def group_product_expired_notification_email
+    group = Group.first
+    product = group.product
+    user = product.owner
+    admins = product.group_admins
+
+    NotificationMailer.group_product_expired_notification_email(product, user, admins)
   end
 end

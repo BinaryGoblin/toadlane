@@ -72,6 +72,7 @@ class Dashboard::ProductsController < DashboardController
 
   def destroy
     set_product
+    send_product_deleted_message(@product)
     @product.destroy
     respond_to do |format|
       format.html { redirect_to dashboard_products_path }
@@ -177,5 +178,15 @@ class Dashboard::ProductsController < DashboardController
     product = Product.find(params[:id])
     group_seller = product.group.group_sellers.find_by_user_id(current_user.id) if product.group.present?
     (group_seller.present? && group_seller.is_group_admin?) || product.owner == current_user
+  end
+
+  def send_product_deleted_message(product)
+    if product.group.present?
+      product.group.group_sellers.each do |group_seller|
+        admins = product.group_admins
+        param_hash = {group: product.group.name, product: product, group_seller: group_seller.user, current_user: current_user, admins: product.group_admins}
+        NotificationMailer.group_product_removed_notification_email(param_hash).deliver_later
+      end
+    end
   end
 end

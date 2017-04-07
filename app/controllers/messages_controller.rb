@@ -25,20 +25,16 @@ class MessagesController < ApplicationController
   end
 
   def group_admin_message
-    @product = Product.where(id: params[:product_id]).first
-    @admin = User.where(id: params[:admin_id]).first
+    @message = params[:message]
+    @admins = params[:admins].join(',')
   end
 
   def send_group_admin_message
-    product = Product.where(id: message_params[:product_id]).first
-    if product.group.present?
-      product.group.group_sellers.each do |seller|
-        if seller.role.name == Role::GROUP_ADMIN
-          send_message_to_user seller.user
-        end
-      end
+    admin_ids = message_params[:admins].split(',')
+    admin_ids.each do |admin_id|
+      user = User.where(id: admin_id).first
+      send_message_to_user(user)
     end
-    send_message_to_user product.user
     flash[:notice] = 'Your message send successfully.'
     redirect_to :back
   end
@@ -75,10 +71,10 @@ class MessagesController < ApplicationController
   private
 
   def message_params
-    params.require(:message).permit(:group_member_id, :product_id, :subject, :body)
+    params.require(:message).permit(:group_member_id, :product_id, :subject, :body, :admins)
   end
 
-  def send_message_to_user user
+  def send_message_to_user(user)
     receiver = user
     receipt = current_user.send_message receiver, message_params[:body], message_params[:subject]
     MessageMailer.new_message(receiver,
