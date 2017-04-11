@@ -54,15 +54,15 @@
         = f.label :main_category, 'Main category:', class: 'required'
         = f.select :main_category, options_from_collection_for_select(main_categories, :id, :name, f.object.main_category), {}, data: { behavior: 'Select', subcategory: '#sub_categories' }, placeholder: 'Select the main category...'
 
-      .form-group
-        label Additional categories:
-        select#sub_categories name="product[product_categories_attributes][][category_id]" placeholder="Select the sub category..." style="display:none" multiple="true"
-          - @product.categories.each do |category|
-            option value="#{category.id}" selected=""= category.name
+      / .form-group
+      /   label Additional categories:
+      /   select#sub_categories name="product[product_categories_attributes][][category_id]" placeholder="Select the sub category..." style="display:none" multiple="true"
+      /     - @product.categories.each do |category|
+      /       option value="#{category.id}" selected=""= category.name
 
       .form-group
         label Product Tags:
-        = f.select :tag_list, options_from_collection_for_select(get_all_tags, :name, :name, f.object.tag_list), {}, multiple: true, data: { behavior: 'Select', options: '{"plugins":["remove_button"],"create":"true"}' }
+        = f.select :tag_list, options_from_collection_for_select(get_all_tags, :id, :name, f.object.tag_list), {}, multiple: true, data: { behavior: 'Select', options: '{"plugins":["remove_button"],"create":"true"}' }
 
       .form-group
         = f.label :description, 'Description:'

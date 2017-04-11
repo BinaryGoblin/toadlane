@@ -6,10 +6,10 @@ class Behavior.Select
 
     @options = $.extend {}, defaultOptions, $el.data 'options'
 
-    if $el.data 'subcategory'
-      @subCategory = @initSubCategory $el.data 'subcategory'
-      @options.onInitialize = => @sync $el.find(':selected').val()
-      @options.onChange = (id) => @sync id, true
+    # if $el.data 'subcategory'
+      # @subCategory = @initSubCategory $el.data 'subcategory'
+      # @options.onInitialize = => @sync $el.find(':selected').val()
+      # @options.onChange = (id) => @sync id, true
 
     $el.selectize @options
 
