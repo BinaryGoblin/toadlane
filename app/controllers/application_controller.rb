@@ -70,6 +70,12 @@ class ApplicationController < ActionController::Base
     prepend_view_path Rails.root + 'app' + 'views_mobile'
   end
 
+  protected
+
+  def generate_encrypted_fingerprint(fingerprint)
+    "user_#{current_user.id}_#{fingerprint}"
+  end
+
   private
 
   def redirect_to_concerned_path

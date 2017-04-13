@@ -24,15 +24,15 @@
       thead
         tr
           th: input type="checkbox"
-          th Order ID:
-          th Status:
-          th.text-center Product name:
-          th Quantity:
-          th Order Total:
-          th.text-center Details:
-          th.text-center Action:
-          th.text-center Payment Type:
-          th.text-center Inspection Date:
+          th Order ID
+          th Status
+          th.text-center Product name
+          th Quantity
+          th Order Total
+          th.text-center Details
+          th.text-center Action
+          th.text-center Payment Type
+          th.text-center Inspection Date
 
       tbody
         - @orders.each do |order|
@@ -42,7 +42,7 @@
             td
               span.label
                 - if order.status == 'pending_confirmation'
-                  = link_to order.status, '#modal_pending_confirmation', class: 'link link-ulined pending_confirmation_status', data: { toggle: 'modal' }
+                  = link_to order.status, '#modal_pending_confirmation', class: 'link link-ex-sm link-ulined pending_confirmation_status', data: { toggle: 'modal' }
                 - else
                   = order.status
             td.text-center
@@ -64,27 +64,27 @@
                 = link_to 'Refund Requested', dashboard_refund_requests_path, class: 'view'
             td.text-center
               - if order.buyer == current_user && order.status != 'cancelled' && order.instance_of?(FlyBuyOrder)
-                - if order.status == 'pending_confirmation' && order.funds_in_escrow == false
+                - if order.status == 'pending_confirmation' && !order.funds_in_escrow?
                   = link_to 'Cancel Order', '#modal_cancel_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
-                - elsif order.status == 'queued' && order.funds_in_escrow == false
+                - elsif order.status == 'queued' && !order.funds_in_escrow?
                   = link_to 'Cancel Order', '#modal_cancel_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
-                - if order.not_inspected && order.status == 'pending_inspection' && order.inspection_date_today? && order.funds_in_escrow == true
+                - if order.not_inspected && order.status == 'pending_inspection' && order.inspection_date_today? && order.funds_in_escrow?
                   = link_to 'Complete Inspection', fly_buy_order_complete_inspection_path(order.id), class: 'view'
-                - elsif order.inspected && order.status == 'placed' && order.funds_in_escrow == true
+                - elsif order.inspected && order.status == 'placed' && order.funds_in_escrow?
                   = link_to 'Release Payment', fly_buy_order_release_payment_path(order.id), class: 'view'
                 - elsif order.payment_release == true && order.status == 'completed'
                   span.label
                     | Payment Released
-              - elsif order.seller == current_user && order.status == 'completed'&& order.instance_of?(FlyBuyOrder) && order.payment_release == true
+              - elsif order.seller == current_user && order.status == 'completed' && order.instance_of?(FlyBuyOrder) && order.payment_release?
                 - if order.seller_group.present?
-                  - if order.additional_sellers_account_created_verified? == false
+                  - if !order.additional_sellers_account_created_verified?
                     = link_to 'Release Payment To Additional Sellers', '#modal_release_payment_info_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
                   - else
                     = link_to 'Release Payment To Additional Sellers', fly_buy_order_release_payment_to_additional_sellers_path(order.id), class: 'view'
                 - else
                   = link_to 'Release Payment To Additional Sellers', fly_buy_order_release_payment_to_additional_sellers_path(order.id), class: 'view'
               - elsif order.seller == current_user && order.class.to_s == "FlyBuyOrder"
-                - if order.payment_released_to_group == true
+                - if order.payment_released_to_group?
                   span.label
                     | Payment Released To Group
               - else

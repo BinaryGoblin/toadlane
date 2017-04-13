@@ -21,7 +21,7 @@
             dt Name:
             dd= order.buyer.name
 
-            - if !order.buyer.addresses[0].nil?
+            - if order.buyer.addresses[0].present?
               dt Address:
               dd= order.buyer.addresses[0].line1 + (order.buyer.addresses[0].line2 || '')
 
@@ -45,7 +45,7 @@
           br
           dl
 
-            - if is_a_group_product? order.product
+            - if order.product.group.present?
               dt Group Name:
               dd.text-uppercase= order.product.group.name
 
@@ -67,7 +67,7 @@
               dt Name:
               dd= order.seller.name
 
-              - if !order.seller.addresses[0].nil?
+              - if order.seller.addresses[0].present?
                 dt Country:
                 dd= order.seller.addresses[0].country
 
@@ -100,19 +100,11 @@
           td.rightAlign - #{number_to_currency(get_amount_for_rebate(order))}
 
       - if order.instance_of?(FlyBuyOrder)
-        - if user == order.seller
-          tr
-            td colspan="3" Toadlane Fee (#{order.get_toadlane_fee}% - #{Fee::FlyBuyReductionFeeAmount}% reduced)
-            td.rightAlign #{number_to_currency(order.fee)}
-          tr
-            td colspan="3" Seller Fees #{order.seller_fees_percent}%
-            td.rightAlign - #{number_to_currency(order.seller_fees_amount)}
-        - elsif user == order.buyer
-          tr
-            td colspan="3" Toadlane Fee (#{order.get_toadlane_fee}% - #{Fee::FlyBuyReductionFeeAmount}% reduced)
-            td.rightAlign #{number_to_currency(order.fee)}
         tr
-          td colspan="3" Fly & Buy Fee (#{Fee::FLY_BUY[:over_million]}% - #{Fee::FLY_BUY[:under_million]}%)
+          td colspan="3" Toadlane Fee
+          td.rightAlign #{number_to_currency(order.fee)}
+        tr
+          td colspan="3" Fly & Buy Fee
           td.rightAlign #{number_to_currency(order.fly_buy_fee)}
         tr
           td Inspection service fee

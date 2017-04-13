@@ -28,6 +28,7 @@
 #  group_seller              :boolean          default(FALSE)
 #  payment_released_to_group :boolean          default(FALSE)
 #  fly_buy_fee               :float
+#  error_details             :json
 #
 
 class FlyBuyOrder < ActiveRecord::Base
@@ -52,7 +53,7 @@ class FlyBuyOrder < ActiveRecord::Base
   ##  “Pending Inspection”, and on the date of inspection the status changes to
   ###  “Pending Fund Release”, and then the final status should be “Completed”.
 
-  enum status: [ :cancelled, :placed, :completed, :refunded,
+  enum status: [:cancelled, :placed, :completed, :refunded,
                 :processing, :pending_confirmation, :pending_inspection, :pending_fund_release,
                 :processing_fund_release, :queued, :processing_fund_release_to_group,
                 :payment_released_to_group]
@@ -121,5 +122,13 @@ class FlyBuyOrder < ActiveRecord::Base
     unit_prices = (count.to_f * unit_price.to_f)
     
     unit_prices + get_toadlane_fee.to_f + fly_buy_fee.to_f + shipping_cost.to_f - (unit_prices * rebate.to_f / 100)
+  end
+
+  def amount_pay_to_seller_account
+    total.to_f - fee.to_f - fly_buy_fee.to_f
+  end
+
+  def total_fees
+    fee.to_f + fly_buy_fee.to_f
   end
 end

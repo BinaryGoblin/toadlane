@@ -27,12 +27,9 @@ Toad::Application.configure do
   # number of complex assets.
   config.assets.debug = true
 
-  #-----------------------
-  #config.action_mailer.default_url_options = { :host => 'localhost:3000' }
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = { :address => "localhost", :port => 1025 }
-  #-----------------------
-  config.action_mailer.default_url_options = { :host => "localhost:3000" }
+  config.action_mailer.smtp_settings = { address: 'localhost', port: 1025 }
+  config.action_mailer.default_url_options = { host: 'localhost:3000' }
 
   ENV['STRIPE_CLIENT_ID'] = 'ca_84wji8nX79sEzFhHa9WifOU5d69WNSVs'
   ENV['STRIPE_API_KEY'] = 'sk_test_Ejq6XT0escvFPGdciJ4DMECe'

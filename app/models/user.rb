@@ -255,7 +255,7 @@ class User < ActiveRecord::Base
   end
 
   def fly_buy_profile_account_added?
-    fly_buy_profile.present? && fly_buy_profile.completed == true && fly_buy_profile.error_details.present? == false
+    fly_buy_profile.present? && fly_buy_profile.completed? && !fly_buy_profile.error_details.present?
   end
 
   def fly_buy_verified_by_admin?

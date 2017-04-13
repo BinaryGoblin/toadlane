@@ -49,6 +49,8 @@ class Dashboard::AccountsController < DashboardController
     end
 
     if fly_buy_params.present?
+      fly_buy_profile.update_attribute(:error_details, {})
+
       unless address_id.present?
         address = current_user.addresses.last
         address_id = address.id rescue nil
@@ -62,26 +64,30 @@ class Dashboard::AccountsController < DashboardController
         routing_num: fly_buy_params['routing_num'],
         address_id: address_id
       }
+      bank_account_details.merge!(swift: fly_buy_params['additional_information']) if fly_buy_params['additional_information'].present?
 
-      CreateUserForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id) unless fly_buy_profile.synapse_user_id.present?
-      AddBankDetailsForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id, bank_account_details)
+      FlyAndBuy::CreateUserJob.perform_later(current_user, fly_buy_profile) unless fly_buy_profile.synapse_user_id.present?
+      FlyAndBuy::AddBankDetailsJob.perform_later(current_user, fly_buy_profile, bank_account_details)
 
       UserMailer.send_notification_for_fly_buy_profile(fly_buy_profile, address_id).deliver_later
-
-      fly_buy_profile.update_attribute(:completed, true)
     end
 
-    redirect_to dashboard_accounts_path
-  rescue SynapsePayRest::Error::Conflict => e
-    flash[:error] = e.message
-    redirect_to dashboard_accounts_path
+    fly_buy_profile.update_attribute(:submited, true)
+
+    if session[:redirect_back].present?
+      redirect_back = session[:redirect_back]
+      session[:redirect_back] = nil
+
+      redirect_to redirect_back
+    else
+      redirect_to dashboard_accounts_path
+    end
   end
 
   def answer_kba_question
     if request.post? && fly_buy_params.present?
-      fly_buy_profile = current_user.fly_buy_profile
-      FlyAndBuy::AnswerKbaQuestions.new(current_user, fly_buy_profile, fly_buy_params).process
-      fly_buy_profile.update_attribute(:completed, true)
+      FlyAndBuy::AnswerKbaQuestions.new(current_user, current_user.fly_buy_profile, fly_buy_params).process
+
       redirect_to dashboard_accounts_path
     end
   end
@@ -298,14 +304,8 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def set_fly_buy_profile
-    current_fly_buy_profile = current_user.fly_buy_profile
-    if current_fly_buy_profile.present?
-      @fly_buy_profile = current_fly_buy_profile
-    elsif params['fly_buy_profile_id'].present?
-      @fly_buy_profile = FlyBuyProfile.find_by_id(params['fly_buy_profile_id'])
-    else
-      @fly_buy_profile = FlyBuyProfile.new
-    end
+    @fly_buy_profile = current_user.fly_buy_profile
+    @fly_buy_profile = FlyBuyProfile.new unless @fly_buy_profile.present?
   end
 
   def user_params
@@ -384,7 +384,7 @@ class Dashboard::AccountsController < DashboardController
     necessary_fly_buy_params = fly_buy_params.except(:email, :address_id, :fingerprint, :bank_name, :name_on_account, :account_num, :company)
     necessary_fly_buy_params.merge!(
       synapse_ip_address: request.ip,
-      encrypted_fingerprint: "user_#{current_user.id}" + '_' + fly_buy_params['fingerprint'],
+      encrypted_fingerprint: generate_encrypted_fingerprint(fly_buy_params['fingerprint']),
       user_id: current_user.id,
       company_email: fly_buy_params['email']
     )

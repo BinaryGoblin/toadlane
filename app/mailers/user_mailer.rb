@@ -173,7 +173,7 @@ class UserMailer < ApplicationMailer
     @user = @fly_buy_profile.user
     @address = Address.find(address_id)
 
-    mail to: 'johnb@toadlane.com', to: 'calvinw@toadlane.com', subject: 'Fly & Buy profile submitted'
+    mail to: 'johnb@toadlane.com', cc: 'calvinw@toadlane.com', subject: 'Fly & Buy profile submitted'
   end
 
   def send_account_verified_notification_to_user(fly_buy_profile)

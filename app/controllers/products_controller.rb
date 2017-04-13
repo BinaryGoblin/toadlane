@@ -206,7 +206,8 @@ class ProductsController < ApplicationController
         fee: options[:fee_amount],
         percentage_of_inspection_service: options[:percentage_of_inspection_service],
         inspection_service_cost: options[:inspection_service_cost],
-        inspection_service_comment: options[:inspection_service_comment]
+        inspection_service_comment: options[:inspection_service_comment],
+        fly_buy_fee: options[:fly_buy_fee]
       })
 
       selected_inspection_date = InspectionDate.find_by_id(options[:inspection_date_id])

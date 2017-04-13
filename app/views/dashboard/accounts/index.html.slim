@@ -1,30 +1,30 @@
 = render '/shared/tabs'
 
 .wrap-sm
-  - if !flash[:error].nil?
+  - if flash[:error].present?
     .error-explanation.text-center
       - if flash[:error].kind_of?(Array)
         - flash[:error].each do |error|
           = error
       - else
         = flash[:error].scan(/[a-zA-Z0-9]+/).join(' ')
-  - elsif !flash[:account_error].nil?
+  - elsif flash[:account_error].present?
     .error-explanation.text-center
-      - if flash[:account_error] == "You must complete your profile before you can create a bank account."
+      - if flash[:account_error] == 'You must complete your profile before you can create a bank account.'
         | You must complete your&nbsp;
         = link_to 'profile', dashboard_profile_path, class: 'view'
         | &nbsp;to add bank account.
       - else
         = flash[:account_error]
         | &nbsp;
-        - if flash[:account_error].include? "company name"
+        - if flash[:account_error].include? 'company name'
           = link_to 'Click Here To Edit', dashboard_profile_path(req_company: true), class: 'view'
         - else
           = link_to 'Click Here To Edit', dashboard_profile_path(req_name: true), class: 'view'
   - if @fly_buy_profile.present? && @fly_buy_profile.error_details.present?
     .error-explanation.text-center
-      - if @fly_buy_profile.error_details["en"].present?
-        | Please provide a valid routing number.
+      - if @fly_buy_profile.error_details['en'].present?
+        = @fly_buy_profile.error_details['en']
 
   .row.account-table
     .col-md-3
