@@ -19,6 +19,8 @@ class ProductsController < ApplicationController
     # end
     set_product
 
+    set_nil_fly_buy_order_id_session
+
     impressionist(@product)
 
     @stripe_order = StripeOrder.new
@@ -194,10 +196,9 @@ class ProductsController < ApplicationController
       selected_inspection_date = InspectionDate.find_by_id(options[:inspection_date_id])
       save_inspection_date(selected_inspection_date, fly_buy_order)
     elsif options[:inspection_date_id].present?
-      fly_buy_order = FlyBuyOrder.create({
-        buyer_id: current_user.id,
-        seller_id: product.user.id,
-        product_id: product.id,
+      fly_buy_order = FlyBuyOrder.find_by_id(session[:fly_buy_order_id]) if session[:fly_buy_order_id].present?
+
+      attrs = {
         unit_price: options[:unit_price],
         count: options[:quantity],
         total: options[:total],
@@ -208,7 +209,15 @@ class ProductsController < ApplicationController
         inspection_service_cost: options[:inspection_service_cost],
         inspection_service_comment: options[:inspection_service_comment],
         fly_buy_fee: options[:fly_buy_fee]
-      })
+      }
+
+      if fly_buy_order.present?
+        fly_buy_order.update_attributes(attrs)
+      else
+        attrs.merge!(buyer_id: current_user.id, seller_id: product.user.id, product_id: product.id)
+
+        fly_buy_order = FlyBuyOrder.create(attrs)
+      end
 
       selected_inspection_date = InspectionDate.find_by_id(options[:inspection_date_id])
       save_inspection_date(selected_inspection_date, fly_buy_order)
@@ -228,6 +237,8 @@ class ProductsController < ApplicationController
       fly_buy_order.update_attributes(group_seller_id: product.group.id, group_seller: true)
       fly_buy_order.reload
     end
+
+    fly_buy_order.create_additional_seller_fee_transactions
 
     [fly_buy_order, fly_buy_profile]
   end
@@ -276,5 +287,9 @@ class ProductsController < ApplicationController
 
   def over_million_dollars?(amount)
     amount > 1000000
+  end
+
+  def set_nil_fly_buy_order_id_session
+    session[:fly_buy_order_id] = nil
   end
 end

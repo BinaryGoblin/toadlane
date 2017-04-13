@@ -114,7 +114,7 @@ class FlyBuyOrdersController < ApplicationController
 
   def release_payment
     fly_buy_order = FlyBuyOrder.find_by_id(params[:fly_buy_order_id])
-    FlyAndBuy::ReleasePaymentToSeller.new(current_user, fly_buy_order).process
+    Services::FlyAndBuy::ReleasePaymentToSeller.new(current_user, fly_buy_order).process
     fly_buy_order.reload
 
     if fly_buy_order.error_details.present?
@@ -155,7 +155,7 @@ class FlyBuyOrdersController < ApplicationController
     product = fly_buy_order.product
 
     if current_user.fly_buy_profile.kba_questions.present? && params['fly_buy_profile'].present?
-      FlyAndBuy::AnswerKbaQuestions.new(current_user, current_user.fly_buy_profile, fly_buy_params).process
+      Services::FlyAndBuy::AnswerKbaQuestions.new(current_user, current_user.fly_buy_profile, fly_buy_params).process
 
       redirect_to product_checkout_path(product_id: product.id, fly_buy_order_id: fly_buy_order.id)
     end
@@ -170,7 +170,7 @@ class FlyBuyOrdersController < ApplicationController
 
   def cancel_transaction
     fly_buy_order = FlyBuyOrder.find_by_id(params[:fly_buy_order_id])
-    FlyAndBuy::CancelTransaction.new(current_user, fly_buy_order).process
+    Services::FlyAndBuy::CancelTransaction.new(current_user, fly_buy_order).process
     fly_buy_order.reload
 
     if fly_buy_order.error_details.present?

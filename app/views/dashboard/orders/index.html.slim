@@ -68,6 +68,10 @@
                   = link_to 'Cancel Order', '#modal_cancel_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
                 - elsif order.status == 'queued' && !order.funds_in_escrow?
                   = link_to 'Cancel Order', '#modal_cancel_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
+
+                /- unless FlyBuyOrder::RELEASE_PAYMENT_STATE.include?(order.status)
+                  = link_to 'Cancel Order', "#modal_cancel_order_#{order.id}", class: 'view', data: { toggle: 'modal' }
+
                 - if order.not_inspected && order.status == 'pending_inspection' && order.inspection_date_today? && order.funds_in_escrow?
                   = link_to 'Complete Inspection', fly_buy_order_complete_inspection_path(order.id), class: 'view'
                 - elsif order.inspected && order.status == 'placed' && order.funds_in_escrow?

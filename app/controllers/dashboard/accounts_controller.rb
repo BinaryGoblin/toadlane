@@ -166,6 +166,8 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def callback
+    Services::FlyAndBuy::Webhook::Responses.new(params)
+
     # Handled wehbook for when the status of the transaction is "SETTLED"
     if params["account"].present?
       if params["account"]["extra"]["note"] == "Transaction Created"
@@ -285,6 +287,7 @@ class Dashboard::AccountsController < DashboardController
         end
       end
     end
+
     render nothing: true, status: 200
   end
 

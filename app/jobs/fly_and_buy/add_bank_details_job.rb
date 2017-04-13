@@ -5,7 +5,7 @@ module FlyAndBuy
     queue_as :add_bank_details
 
     def perform(user, fly_buy_profile, fly_buy_params)
-      FlyAndBuy::BankDetails.new(user, fly_buy_profile, fly_buy_params).add
+      Services::FlyAndBuy::BankDetails.new(user, fly_buy_profile, fly_buy_params).add
     end
   end
 end
