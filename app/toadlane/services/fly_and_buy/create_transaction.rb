@@ -54,7 +54,7 @@ module Services
       end
 
       def send_email_notification
-        UserMailer.sales_order_notification_to_buyer(fly_buy_order).deliver_later
+        UserMailer.fly_buy_order_notification_to_buyer(fly_buy_order).deliver_later
         UserMailer.sales_order_notification_to_seller(fly_buy_order).deliver_later
         fly_buy_order.seller_group.group_sellers.each do |group_seller|
           UserMailer.sales_order_notification_to_additional_seller(fly_buy_order, fly_buy_order.seller_group, group_seller).deliver_later

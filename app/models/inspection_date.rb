@@ -16,7 +16,7 @@
 
 class InspectionDate < ActiveRecord::Base
   belongs_to :product, class_name: 'Product', foreign_key: 'product_id'
-  belongs_to :fly_buy_order, class_name: 'FlyBuyOrder', foreign_key: 'fly_buy_id'
+  belongs_to :fly_buy_order, class_name: 'FlyBuyOrder', foreign_key: 'fly_buy_order_id'
 
   scope :approved, -> { where(approved: true) }
   scope :rejected, -> { where(approved: false) }

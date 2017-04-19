@@ -1,5 +1,6 @@
 class UserMailer < ApplicationMailer
   add_template_helper(EmailHelper)
+  add_template_helper(ProductHelper)
 
   def sales_order_notification_to_seller(order)
     @order = order
@@ -7,7 +8,7 @@ class UserMailer < ApplicationMailer
     @buyer = User.find_by_id(@order.buyer_id)
     @product = Product.find_by_id(@order.product_id)
 
-    mail to: @seller.email, subject: 'You have a sales order!!!'
+    mail to: @seller.email, subject: 'You have a sales order!'
   end
 
   def sales_order_notification_to_additional_seller(order, group, group_seller)
@@ -17,7 +18,7 @@ class UserMailer < ApplicationMailer
     @buyer = User.find_by_id(@order.buyer_id)
     @product = Product.find_by_id(@order.product_id)
 
-    mail to: @additional_seller.user.email, subject: 'You have a sales order!!!'
+    mail to: @additional_seller.user.email, subject: 'You have a sales order!'
   end
 
   def sales_order_notification_to_buyer(order)
@@ -26,7 +27,20 @@ class UserMailer < ApplicationMailer
     @buyer = User.find_by_id(@order.buyer_id)
     @product = Product.find_by_id(@order.product_id)
 
-    mail to: @buyer.email, subject: 'Your order has been placed!!!'
+    mail to: @buyer.email, subject: 'Your order has been placed!'
+  end
+
+  def fly_buy_order_notification_to_buyer(order)
+    @order = order
+    @seller = User.find_by_id(@order.seller_id)
+    @buyer = User.find_by_id(@order.buyer_id)
+    @product = Product.find_by_id(@order.product_id)
+    attachments['fly_buy_wire_instructions.pdf'] = File.read('app/assets/pdfs/fly_buy_wire_instructions.pdf')
+    attachments["order_#{@order.id}_invoice.pdf"] = WickedPdf.new.pdf_from_string(
+      render_to_string(partial: '/templates/fly_buy_invoice', :locals => {:order => @order, :user => @buyer})
+    )
+
+    mail to: @buyer.email, subject: "Next steps to confirm order (#{@order.count})"
   end
 
   def order_canceled_notification_to_seller(stripe_order)
@@ -35,7 +49,7 @@ class UserMailer < ApplicationMailer
     @buyer = User.find_by_id(@stripe_order.buyer_id)
     @product = Product.find_by_id(@stripe_order.product_id)
 
-    mail to: @seller.email, subject: "#{@buyer.name} has canceled an order!!!"
+    mail to: @seller.email, subject: "#{@buyer.name} has canceled an order!"
   end
 
   def refund_request_notification_to_seller(stripe_order)
@@ -44,7 +58,7 @@ class UserMailer < ApplicationMailer
     @buyer = User.find_by_id(@stripe_order.buyer_id)
     @product = Product.find_by_id(@stripe_order.product_id)
 
-    mail to: @seller.email, subject: "#{@buyer.name} has requested refund for an order!!!"
+    mail to: @seller.email, subject: "#{@buyer.name} has requested refund for an order!"
   end
 
   def refund_request_accepted_notification_to_buyer(stripe_order)
@@ -53,7 +67,7 @@ class UserMailer < ApplicationMailer
     @buyer = User.find_by_id(@stripe_order.buyer_id)
     @product = Product.find_by_id(@stripe_order.product_id)
 
-    mail to: @buyer.email, subject: 'Your refund request has been accepted!!!'
+    mail to: @buyer.email, subject: 'Your refund request has been accepted!'
   end
 
   def refund_request_rejected_notification_to_buyer(stripe_order)
@@ -62,7 +76,7 @@ class UserMailer < ApplicationMailer
     @buyer = User.find_by_id(@stripe_order.buyer_id)
     @product = Product.find_by_id(@stripe_order.product_id)
 
-    mail to: @buyer.email, subject: 'Your refund request has been rejected!!!'
+    mail to: @buyer.email, subject: 'Your refund request has been rejected!'
   end
 
   def refund_request_canceled_notification_to_seller(stripe_order)
@@ -71,7 +85,7 @@ class UserMailer < ApplicationMailer
     @buyer = User.find_by_id(@stripe_order.buyer_id)
     @product = Product.find_by_id(@stripe_order.product_id)
 
-    mail to: @seller.email, subject: "#{@buyer.name} has canceled a refund request!!!"
+    mail to: @seller.email, subject: "#{@buyer.name} has canceled a refund request!"
   end
 
   def send_confirmation_email(user, product = nil, armor_order = nil)
