@@ -105,6 +105,7 @@ class Product < ActiveRecord::Base
 
   SELLER = 'seller'
   BUYER = 'buyer'
+  INSPECTION_SERVICE_PRICE = 1
 
   def self.newest_products
     unexpired.for_sell.most_recent

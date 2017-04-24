@@ -1,6 +1,29 @@
 .view-product {
   padding: 20px 0;
 
+  #inspection_service_block{
+    margin-top: 10px;
+
+    .select-inspect-percentage{
+      width: 20%;
+      float: left;
+      margin-right: 10px;
+    }
+    .item-count{
+      float: left;
+      margin: 0 0 0 20px;
+      position: relative;
+      top: 9px;
+    }
+    .inspect-service-comment{
+      float: left;
+      height: 20%;
+      left: 30px;
+      position: relative;
+      width: 26%;
+    }
+  }
+
   .white-panel {
     background: white;
     padding: 15px;
@@ -569,6 +592,10 @@
   margin-top: 20px;
   p{
     margin-bottom: 0px;
+  }
+
+  .inspection-date-radio{
+    margin-right: 4px;
   }
 }
 

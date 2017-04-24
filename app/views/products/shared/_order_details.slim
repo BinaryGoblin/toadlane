@@ -22,6 +22,11 @@
     td.stripe_quantity.rightAlign =fly_buy_order.count
     td class="rightAlign" <span class="calc-shipping" data-type="PerUnit">#{number_to_currency(data[:shipping_cost])}</span>
     td class="rightAlign" <span class="stripe-shipping-price">#{number_to_currency(get_shipping_cost(fly_buy_order.count, data[:shipping_cost]))}</span>
+  tr
+    td Inspection Service Fee
+    td.stripe_quantity.rightAlign =inspected_items_count(fly_buy_order.percentage_of_inspection_service, fly_buy_order.count)
+    td class="rightAlign" <span class="calc-shipping" data-type="PerUnit">#{number_to_currency(Product::INSPECTION_SERVICE_PRICE)}</span>
+    td class="rightAlign" <span class="calc-fees-fly-buy-price">#{number_to_currency(fly_buy_order.inspection_service_cost)}</span>
 
   tr
     td.no-border colspan="2"
