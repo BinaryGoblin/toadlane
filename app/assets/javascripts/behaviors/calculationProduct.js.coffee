@@ -56,7 +56,6 @@ class Behavior.CalculationProduct
 
     do @calculation
     @$quantity.on 'change:quantity keyup', => do @calculation
-    console.log 'hello'
     @$checkOutFrom.on 'submit', => do @set_inspection_params
 
   fixed: (number) =>
