@@ -140,8 +140,8 @@ class Dashboard::ProductsController < DashboardController
       :videos_attributes => [:id, :video, :product_id, :_destroy], :videos_attributes_delete => [],
       :shipping_estimates_attributes => [ :id, :cost, :description, :product_id, :_destroy, :type ],
       :pricebreaks_attributes => [ :id, :quantity, :price, :product_id, :_destroy ], :inspection_dates_attributes => [:id, :date, :product_id, :_destroy],
-      :product_categories_attributes => [:id, :product_id, :category_id],
-      group_attributes: [:id, :name, :product_id, :_destroy, group_sellers_attributes: [:id, :group_id, :user_id, :fee, :_destroy, :role_id]]
+      group_attributes: [:id, :name, :product_id, :_destroy, group_sellers_attributes: [:id, :group_id, :user_id, :fee, :_destroy, :role_id]],
+      # :product_categories_attributes => [:id, :product_id, :category_id]
     )
   end
 
