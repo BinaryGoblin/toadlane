@@ -31,6 +31,13 @@ class UserMailerPreview < ActionMailer::Preview
     UserMailer.sales_order_notification_to_additional_seller(order, group, group_seller)
   end
 
+  def order_canceled_fund_not_sent
+    order = FlyBuyOrder.first
+    user = User.find(order.buyer_id)
+
+    UserMailer.order_canceled_fund_not_sent(order, user)
+  end
+
   def order_canceled_notification_to_seller
     stripe_order = StripeOrder.first
     UserMailer.order_canceled_notification_to_seller(stripe_order)
@@ -116,7 +123,6 @@ class UserMailerPreview < ActionMailer::Preview
 
     UserMailer.send_payment_released_notification_to_seller(order)
   end
-
 
   def send_order_queued_notification_to_seller
     order = FlyBuyOrder.first
