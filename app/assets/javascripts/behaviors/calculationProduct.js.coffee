@@ -15,6 +15,12 @@ class Behavior.CalculationProduct
     @$feePrice      = @$calculationPanel.find '.calc-fees-price'
     @$shippingPrice = @$calculationPanel.find '.calc-shipping-price'
     @$flyBuyPrice   = @$calculationPanel.find '.calc-fees-fly-buy-price'
+    @$InspectionService = @$calculationPanel.find '#inspection_service'
+    @$InspectionServiceNote = @$calculationPanel.find '#inspection_service_comment'
+
+    @$PercentageOfItemsToInspect = @$calculationPanel.find '#number_of_items_to_inspect'
+    @$NumberOfItemsToInspect = @$calculationPanel.find '.item-count'
+    @$InspectServiceFee = @$PercentageOfItemsToInspect.parent().find '.pull-right'
 
     @fees       = parseFloat @$calculationPanel.find('.calc-fees').text(), 10
     @unitPrice  = @$calculationPanel.find('[data-unit-price]').data 'unit-price'
@@ -40,13 +46,18 @@ class Behavior.CalculationProduct
     @$stripeRebatePrice   = $ '[name="rebate"]'
     @$stripeRebatePercent = $ '[name="rebate_percent"]'
     @$flyBuyFeesPrice     = $ '[name="fly_buy_fee"]'
+    @$flyBuyInspectionPercentage  = $ '[name="percentage_of_items_to_inspect"]'
+    @$flyBuyInspectionNote  = $ '[name="inspection_service_note"]'
 
     @$footer = $ '.payment-button'
 
     @$checkout = $ '.checkout'
+    @$checkOutFrom = $ 'form.text-center'
 
     do @calculation
     @$quantity.on 'change:quantity keyup', => do @calculation
+    console.log 'hello'
+    @$checkOutFrom.on 'submit', => do @set_inspection_params
 
   fixed: (number) =>
     number.toFixed(2).toString()
@@ -54,12 +65,28 @@ class Behavior.CalculationProduct
   number_to_currency: (amount) =>
     amount.replace /(\d)(?=(\d{3})+(?!\d))/g, "$1,"
 
+  set_inspection_params: =>
+    percentage_of_inspection_service = 0
+    inspection_service_note = ''
+    if @$InspectionService.is(':checked')
+      percentage_of_inspection_service = parseInt @$PercentageOfItemsToInspect.val(), 10
+      inspection_service_note = @$InspectionServiceNote.val()
+    @$flyBuyInspectionPercentage.val percentage_of_inspection_service
+    @$flyBuyInspectionNote.val inspection_service_note
+
   calculation: =>
     total         = 0
     rebate        = 0
     fees_fly_buy  = 0
+    charge_inspection_per_unit = 1
     quantity = parseInt @$quantity.val(), 10
     quantity = 1 unless quantity
+    inspection_service_fee = 0
+
+    if @$InspectionService.is(':checked')
+      percentage_of_inspection_service = parseInt @$PercentageOfItemsToInspect.val(), 10
+      number_of_items_for_inspection_service = Math.round((percentage_of_inspection_service * quantity)/100)
+      inspection_service_fee = number_of_items_for_inspection_service * charge_inspection_per_unit
 
     if quantity <= @options.maxquantity
       if @options.pricebreaks.length > 0
@@ -108,7 +135,7 @@ class Behavior.CalculationProduct
         fees_fly_buy = @feesFlyBuyUnderMillion * total / 100
 
     rebatep           = (rebate * 100) / (@unitPrice * quantity)
-    cart              = total + fees + shipping_cost - rebate + fees_fly_buy
+    cart              = total + fees + shipping_cost - rebate + fees_fly_buy + inspection_service_fee
 
     if total > 1
       @$checkout.removeClass 'disabled'
@@ -126,6 +153,8 @@ class Behavior.CalculationProduct
     @$flyBuyPrice.text @number_to_currency(@fixed fees_fly_buy)
     @$shippingPrice.text @number_to_currency(@fixed shipping_cost)
     @$rebPrice.text @number_to_currency(@fixed rebate)
+    @$NumberOfItemsToInspect.text number_of_items_for_inspection_service
+    @$InspectServiceFee.text @number_to_currency(@fixed inspection_service_fee)
     @$cart.text @number_to_currency(@fixed cart)
     @$subTotal.text @number_to_currency(@fixed total)
 

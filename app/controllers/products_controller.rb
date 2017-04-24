@@ -2,7 +2,6 @@ class ProductsController < ApplicationController
 
   # impressionist is for allowing view count and ease of it
   # impressionist :actions=>[:show], :unique => [:user_id]
-
   layout 'user_dashboard'
 
   before_filter :authenticate_user!
@@ -83,13 +82,15 @@ class ProductsController < ApplicationController
       fees = without_reduction_fees - reduction_in_fees
       fly_buy_fee = over_million_dollars?(sum_unit_price) ? Fee::FLY_BUY[:over_million] : Fee::FLY_BUY[:under_million]
       fly_buy_fees = sum_unit_price * fly_buy_fee / 100
+      number_of_items_to_inspect = inspected_items_count(params[:percentage_of_items_to_inspect].to_i, params[:count].to_i)
+      inspection__service_fee = number_of_items_to_inspect * Product::INSPECTION_SERVICE_PRICE
     else
       fee = Fee.find_by(module_name: 'Stripe').value
       fees = sum_unit_price * fee.to_f / 100
       fly_buy_fees = nil
     end
 
-    total = sum_unit_price + fees + fly_buy_fees.to_f + params[:shipping_cost].to_f - params[:rebate].to_f
+    total = sum_unit_price + fees + fly_buy_fees.to_f + params[:shipping_cost].to_f + inspection__service_fee.to_f - params[:rebate].to_f
 
     options = {
       quantity: params[:count],
@@ -100,7 +101,10 @@ class ProductsController < ApplicationController
       rebate_percent: params[:rebate_percent],
       available_product: @product.remaining_amount,
       fly_buy_fee: fly_buy_fees,
-      total: total
+      total: total,
+      percentage_of_inspection_service: params[:percentage_of_items_to_inspect],
+      inspection_service_cost: inspection__service_fee.to_f,
+      inspection_service_comment: params[:inspection_service_note]
     }
 
     @data = options
@@ -181,7 +185,10 @@ class ProductsController < ApplicationController
         rebate_price: options[:rebate],
         rebate: options[:rebate_percent],
         fee: options[:fee_amount],
-        fly_buy_fee: options[:fly_buy_fee]
+        fly_buy_fee: options[:fly_buy_fee],
+        percentage_of_inspection_service: options[:percentage_of_inspection_service],
+        inspection_service_cost: options[:inspection_service_cost],
+        inspection_service_comment: options[:inspection_service_comment]
       })
 
       selected_inspection_date = InspectionDate.find_by_id(options[:inspection_date_id])
@@ -196,7 +203,10 @@ class ProductsController < ApplicationController
         total: options[:total],
         rebate_price: options[:rebate],
         rebate: options[:rebate_percent],
-        fee: options[:fee_amount]
+        fee: options[:fee_amount],
+        percentage_of_inspection_service: options[:percentage_of_inspection_service],
+        inspection_service_cost: options[:inspection_service_cost],
+        inspection_service_comment: options[:inspection_service_comment]
       })
 
       selected_inspection_date = InspectionDate.find_by_id(options[:inspection_date_id])

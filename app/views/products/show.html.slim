@@ -134,7 +134,23 @@
               li
                 span Shipping Estimate ($<span class="calc-shipping" data-type="PerUnit">0.00</span>/unit):
                 b.pull-right.calc-shipping-price 0.00
-              hr
+              li
+                span
+                  = check_box_tag :inspection_service, 'yes', nil, class: 'inspection_service', data: { behavior: 'optInInspectionService' }
+                  label for = 'inspection_service' &nbsp; Would you like to send a Toadlane Agent to inspect this?
+                div#inspection_service_block.hide
+                  label How many do you want inspected?
+                  - n = []
+                  - 0.step(100, 25) { |i| n << "#{i}%"}
+                  br
+                  = select_tag 'number_of_items_to_inspect', options_for_select(n), class: 'form-control select-inspect-percentage',  data: { behavior: "inspectionServicePercentageField" }
+                  span.item-count
+                  = text_field_tag :inspection_service_comment, nil, size: "25x5", class: 'form-control inspect-service-comment'
+                  span.pull-right
+                    b 0.00
+                  span.clearfix
+                  br
+                hr
               - if @product.status_characteristic == 'sell'
                 li.text-green
                   b Cart Subtotal:

@@ -114,6 +114,11 @@
         tr
           td colspan="3" Fly & Buy Fee (#{Fee::FLY_BUY[:over_million]}% - #{Fee::FLY_BUY[:under_million]}%)
           td.rightAlign #{number_to_currency(order.fly_buy_fee)}
+        tr
+          td Inspection service fee
+          td.rightAlign= inspected_items_count(order.percentage_of_inspection_service, order.count)
+          td.rightAlign #{number_to_currency(Product::INSPECTION_SERVICE_PRICE)}
+          td.rightAlign #{number_to_currency(order.inspection_service_cost)}
       - else
         tr
           td colspan="3" Shipping
@@ -128,14 +133,14 @@
           - total = order.total_price unless total.present?
 
           = number_to_currency(total)
-  
+
   .clearfix
 
   .invoice-note
     h3 Note:
     p For help and support, email <a href="mailto:johnb@toadlane.com">johnb@toadlane.com</a>.
     p Payment instructions are sent via our payment partner, Synapse Financial Technologies, Inc. and are processed by Triumph Bank. To report complaints email <a href="mailto:issues@synapsepay.com">issues@synapsepay.com</a>.
-          
+
   - if order.instance_of? GreenOrder
     table.table-checkout.invoiceCheckout
       thead
