@@ -129,4 +129,10 @@ module ProductHelper
   def is_a_group_product? product
     product.group.present?
   end
+
+  def percentage_value_for_inspection
+    values = []
+    0.step(100, 25) { |n| values << "#{n}%"}
+    values
+  end
 end
