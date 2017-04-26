@@ -45,6 +45,7 @@
 #  additional_information           :string
 #  outside_the_us                   :boolean          default(FALSE)
 #  submited                         :boolean          default(FALSE)
+#  bank_details_verified            :boolean          default(FALSE)
 #
 
 class FlyBuyProfile < ActiveRecord::Base
@@ -70,5 +71,4 @@ class FlyBuyProfile < ActiveRecord::Base
   do_not_validate_attachment_file_type :business_documents
 
   scope :permission_verified, -> { where(permission_scope_verified: true) }
-
 end

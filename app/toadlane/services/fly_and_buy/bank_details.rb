@@ -128,7 +128,7 @@ module Services
         }
         account_info.merge!(swift: options[:swift]) if options[:swift].present?
        
-        bank_details = if fly_buy_profile.outside_the_us?
+        bank_response = if fly_buy_profile.outside_the_us?
           account_info.merge!(nickname: "#{user.name} (WIRE-INT)")
 
           synapse_user.create_wire_int_node(account_info)
@@ -138,19 +138,10 @@ module Services
           synapse_user.create_wire_us_node(account_info)
         end
 
-        save_node_details(bank_details)
+        update_fly_buy_profile(synapse_node_id: bank_response.id, error_details: {})
       rescue SynapsePayRest::Error => e
         UserMailer.send_routing_number_incorrect_notification(user).deliver_later if e.response['error']['en'].present? && e.response['error']['en'].include?('routing_num')
         update_fly_buy_profile(error_details: e.response['error'])
-      end
-
-      def save_node_details(bank_response)
-        # Refresh user
-        synapse_user = synapse_pay.user(user_id: fly_buy_profile.synapse_user_id)
-
-        update_fly_buy_profile(synapse_node_id: bank_response.id, error_details: {})
-
-        fly_buy_profile_completed(synapse_pay: synapse_pay, fly_buy_profile: fly_buy_profile)
       end
 
       def formatted_email

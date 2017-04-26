@@ -11,15 +11,19 @@ module Services
         end
 
         def handle
-          Services::FlyAndBuy::Webhook::DocumentsResponse.new(params['_id']['$oid'], options['permission'], options['documents']) if response_for_document?
-
-          Services::FlyAndBuy::Webhook::TransactionsResponse.new(options) if response_for_transaction?
+          DocumentsResponse.new(options['_id']['$oid'], options['permission'], options['documents']) if response_for_document?
+          NodeResponse.new(options['user_id'], options) if response_for_node?
+          TransactionsResponse.new(options) if response_for_transaction?
         end
 
         private
 
         def response_for_document?
           options['documents'].present?
+        end
+
+        def response_for_node?
+          options['info'].present? && options['allowed'].present? && options['user_id'].present? && options['is_active'].present?
         end
 
         def response_for_transaction?

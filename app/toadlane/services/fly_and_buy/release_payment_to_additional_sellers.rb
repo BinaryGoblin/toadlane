@@ -18,19 +18,10 @@ module Services
         node = synapse_user.find_node(id: Services::SynapsePay::ESCROW_NODE_ID)
 
         additional_sellers = fly_buy_order.additional_seller_fee_transactions
-        a = 0
 
         additional_sellers.each do |additional_seller|
-          unless additional_seller.fee.zero?
-            transaction = node.create_transaction(transaction_settings(additional_seller))
-
-            a += 1 if transaction.recent_status['status'] == 'CREATED'
-          end
+          node.create_transaction(transaction_settings(additional_seller)) unless additional_seller.fee.zero?
         end
-
-        # if additional_sellers.count == a
-        #   fly_buy_order.update_attribute(:payment_released_to_group, true)
-        # end
       end
 
       private
