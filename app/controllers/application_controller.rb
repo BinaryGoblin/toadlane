@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include InspectionServiceHelper
+
   before_filter :authenticate
   protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json' }
   helper_method :inspected_items_count
@@ -100,10 +102,5 @@ class ApplicationController < ActionController::Base
     authenticate_or_request_with_http_basic do |username, password|
       username == "toadlane" && password == "mantoad007"
     end
-  end
-
-  def inspected_items_count(percentage, quantity)
-    items = ((quantity * percentage.to_f)/100).round
-    items
   end
 end

@@ -1,7 +1,7 @@
 module Services
   module FlyAndBuy
 
-    class Base
+    class Base < HtmlRenderer
 
       protected
 
@@ -28,20 +28,10 @@ module Services
       end
 
       def convert_invoice_to_image(fly_buy_order, user)
-        html = ActionController::Base.new.send(:render_to_string,
-          partial: 'shared/invoice',
-          #file: File.join(Rails.root, 'app/views/shared/_invoice.html.slim'),
-          locals: { order: fly_buy_order, user: user },
-          layouts: 'layouts/print.html.slim'
-        )
-
-        kit = IMGKit.new(html)
-        img = kit.to_png
-
-        file  = Tempfile.new(['invoice', '.png'], encoding: 'ascii-8bit')
-        file.write(img)
-
-        file
+        render_html(View.new.tap do |v|
+          v.partial = 'shared/invoice'
+          v.locals = { order: fly_buy_order, user: user }
+        end)
       end
 
       def seller_account_type(fly_buy_profile)
