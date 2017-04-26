@@ -56,7 +56,7 @@ module Services
       end
 
       def parse_original_path(path)
-        File.join(Rails.root, 'public', path)
+        Rails.env.development? ? File.join(Rails.root, 'public', path) : path
       end
     end
   end
