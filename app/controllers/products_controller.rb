@@ -85,14 +85,14 @@ class ProductsController < ApplicationController
       fly_buy_fee = over_million_dollars?(sum_unit_price) ? Fee::FLY_BUY[:over_million] : Fee::FLY_BUY[:under_million]
       fly_buy_fees = sum_unit_price * fly_buy_fee / 100
       number_of_items_to_inspect = inspected_items_count(params[:percentage_of_items_to_inspect].to_i, params[:count].to_i)
-      inspection__service_fee = number_of_items_to_inspect * Product::INSPECTION_SERVICE_PRICE
+      inspection_service_fee = number_of_items_to_inspect * Product::INSPECTION_SERVICE_PRICE
     else
       fee = Fee.find_by(module_name: 'Stripe').value
       fees = sum_unit_price * fee.to_f / 100
       fly_buy_fees = nil
     end
 
-    total = sum_unit_price + fees + fly_buy_fees.to_f + params[:shipping_cost].to_f + inspection__service_fee.to_f - params[:rebate].to_f
+    total = sum_unit_price + fees + fly_buy_fees.to_f + params[:shipping_cost].to_f - params[:rebate].to_f + inspection_service_fee.to_f
 
     options = {
       quantity: params[:count],
@@ -105,7 +105,7 @@ class ProductsController < ApplicationController
       fly_buy_fee: fly_buy_fees,
       total: total,
       percentage_of_inspection_service: params[:percentage_of_items_to_inspect],
-      inspection_service_cost: inspection__service_fee.to_f,
+      inspection_service_cost: inspection_service_fee.to_f,
       inspection_service_comment: params[:inspection_service_note]
     }
 
