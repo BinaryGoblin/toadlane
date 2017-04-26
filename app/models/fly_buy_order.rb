@@ -132,10 +132,9 @@ class FlyBuyOrder < ActiveRecord::Base
 
   def amount_pay_to_group_seller
     sum = 0
-    group_members = seller_group.group_sellers
-    group_members.each do |group_member|
+    seller_group.group_sellers.each do |group_member|
       sum += calulate_individual_seller_fee(group_member.fee)
-    end
+    end if seller_group.present?
     sum
   end
 
@@ -163,7 +162,7 @@ class FlyBuyOrder < ActiveRecord::Base
           )
         end
       end
-    end
+    end if seller_group.present?
   end
 
   def calulate_individual_seller_fee(per_unit_commission)

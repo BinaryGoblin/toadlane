@@ -166,6 +166,10 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def callback
+    logger.info '................. From Webhook ..........................'
+    logger.info params.inspect
+    logger.info '.........................................................'
+
     Services::FlyAndBuy::Webhook::Responses.new(params)
 
     render nothing: true, status: 200
