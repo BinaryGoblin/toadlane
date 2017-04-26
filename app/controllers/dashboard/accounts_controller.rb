@@ -187,8 +187,7 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def set_fly_buy_profile
-    @fly_buy_profile = current_user.fly_buy_profile
-    @fly_buy_profile = FlyBuyProfile.new unless @fly_buy_profile.present?
+    @fly_buy_profile = current_user.fly_buy_profile || FlyBuyProfile.new
   end
 
   def user_params

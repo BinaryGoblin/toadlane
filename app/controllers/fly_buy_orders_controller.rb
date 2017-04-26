@@ -132,10 +132,8 @@ class FlyBuyOrdersController < ApplicationController
   def release_payment_to_additional_sellers_not_possible
     fly_buy_order = FlyBuyOrder.find_by_id(params[:fly_buy_order_id])
 
-    fly_buy_order.product.additional_sellers.each do |add_seller|
-      if add_seller.fly_buy_profile.nil? || add_seller.fly_buy_profile_account_added? == false || add_seller.fly_buy_unverified_by_admin == true
-        UserMailer.release_payment_not_possible_notification_to_additional_seller(fly_buy_order, add_seller).deliver_later
-      end
+    fly_buy_order.product.additional_sellers.each do |additional_seller|
+      UserMailer.release_payment_not_possible_notification_to_additional_seller(fly_buy_order, additional_seller).deliver_later if !additional_seller.fly_buy_profile.present?|| !additional_seller.fly_buy_profile_account_added? || additional_seller.fly_buy_unverified_by_admin?
     end if fly_buy_order.seller_group.present?
 
     redirect_to dashboard_orders_path
