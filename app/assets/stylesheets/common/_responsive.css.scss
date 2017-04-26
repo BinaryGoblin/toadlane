@@ -354,10 +354,11 @@
   }
   .logoSideNav
   {
-    display: block;
-  width: 50%;
-  margin-left: 27%;
-  margin-bottom:5%;
+    margin: 0 auto;
+  }
+  .logoSideNav img
+  {
+    margin: 0 auto;
   }
   .fe-search,.header-user
   {
@@ -374,15 +375,22 @@
   .header
   {
     width:100%;
-  }
-  .header
-  {
     margin-bottom:10px !important;
+    .logo-div{
+      width: 100%;
+    }
   }
   .footer
   {
     float:left;
     width:100%;
+    .logo{
+      margin: 0 auto;
+      width: 50%;
+      img{
+        margin-top: 15px;
+      }
+    }
   }
   .wrap-sm
   {
@@ -575,7 +583,7 @@
   {
     margin-top: -8px !important;
   }
-  
+
   .createGroupWrapper
   {
     margin-left: 57% !important;
