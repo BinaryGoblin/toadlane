@@ -98,11 +98,16 @@
   <body style="margin: 0;padding: 0;background: #f4f6f8;font-family: Helvetica, Arial, sans-serif;font-size: 14px;line-height: 20px;padding-bottom: 20px;">
     <div class="email-head" style="margin: 0;padding: 0;font-size: 16px;font-weight: 100;">
       <img class="logo" src="https://www.toadlane.com/assets/logo-header-09ff685e51c99351a07e5332f0996ef2.png" alt="Toadlane Logo" style="margin: 0;padding: 0;height: 100px;">
-      <div class="pull-right" style="margin: 0;padding: 0;float: right;margin-top: 25px;">
-        <strong><%= @receiver.name || @receiver.email %></strong>
-        <%= image_tag get_image(@receiver.asset(:small)), height: '50', :class => "pro-img", :style => "margin: 0;padding: 5px;height: 30px;vertical-align: middle;margin-right: 15px;border-radius: 5px;border: 1px solid #eaebec;background-color: #fff;margin-left: 10px;" %>
+      <div style ="float: left; padding: 22px 0 0 16px; width: 50%;">
+        <%=image_tag('newLogo.png', style: 'margin: 0;padding: 0;width: 232px', alt: 'Toadlane Logo') %>
+      <div style="margin: 25px 0px 0px; padding: 0 0 0 17px; width: 40%; float: right;">
+        <div style="float: right;">
+          <strong><%= @receiver.name || @receiver.email %></strong>
+          <%= image_tag get_image(@receiver.asset(:small)), height: '50', :class => "pro-img", :style => "margin: 0;padding: 5px;height: 30px;vertical-align: middle;margin-right: 15px;border-radius: 5px;border: 1px solid #eaebec;background-color: #fff;margin-left: 10px;" %>
+        </div>
       </div>
     </div>
+    <div style="clear: block;"></div>
     <div class="container" style="margin: 15px;padding: 15px;background: #fff;border: 1px solid #eaebec;border-radius: 3px;">
       <div class="message-each" style="margin: 0;padding: 0;">
         <div class="message-header" style="margin: 0;padding: 0;vertical-align: middle;font-size: 18px;font-weight: 100;margin-bottom: 20px;">

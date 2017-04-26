@@ -40,4 +40,11 @@ class NotificationMailerPreview < ActionMailer::Preview
 
     NotificationMailer.group_product_expired_notification_email(product, user, admins)
   end
+
+  def product_create_notification_email
+    product = Product.first
+    user = product.owner
+
+    NotificationMailer.product_create_notification_email(product, user)
+  end
 end

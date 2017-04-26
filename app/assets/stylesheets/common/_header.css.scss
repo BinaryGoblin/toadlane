@@ -23,6 +23,13 @@
     margin: auto;
     z-index: 1001;
   }
+
+  .logo-div{
+    float: left;
+    height: 50px;
+    overflow: hidden;
+    width: 345px;
+  }
 }
 
 .header-nav {
@@ -103,18 +110,11 @@
 }
 .logoSideNav
 {
-  width:10%;
-  float:left;
   text-align:center;
   cursor:pointer;
-  position:relative;
-  top:-5px;
-  margin-left:15%;
 }
 .logoSideNav img
 {
-  width: 90%;
-  position: relative;
-  top: 8px;
-  left: -10px;
+  margin-left: 24px;
+  width: 232px;
 }
