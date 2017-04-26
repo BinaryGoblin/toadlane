@@ -5,8 +5,6 @@
       h4.modal-title Cancel Order
 
     .modal-body
-      p Are you sure you want to cancel Order Id #{order.id}
-      p Transaction Id 
-      	= order.synapse_transaction_id unless order.class.to_s == "FlyBuyOrder"
+      p Are you sure you want to cancel Order Id: #{order.id}
       .pull-right
         = link_to "Cancel Order", fly_buy_order_cancel_transaction_path(order.id), class: "btn btn-success"

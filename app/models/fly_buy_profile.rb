@@ -43,17 +43,20 @@
 #  business_documents_file_size     :integer
 #  business_documents_updated_at    :datetime
 #  additional_information           :string
+#  outside_the_us                   :boolean          default(FALSE)
+#  submited                         :boolean          default(FALSE)
 #
 
 class FlyBuyProfile < ActiveRecord::Base
   belongs_to :user
 
-  attr_accessor :account_num, :routing_num, :bank_name, :address, :email,
-                  :question_1, :question_2, :question_3, :question_4, :question_5
+  attr_accessor :account_num, :routing_num, :bank_name, :address, :email, :question_1, :question_2, :question_3,
+    :question_4, :question_5
 
   EscrowNodeID = Rails.env.development? ? Rails.application.secrets['SYNAPSEPAY_ESCROW_NODE_ID'] : ENV['SYNAPSEPAY_ESCROW_NODE_ID']
   AppUserId = Rails.env.development? ? Rails.application.secrets['SYNAPSEPAY_APP_USER_ID'] : ENV['SYNAPSEPAY_APP_USER_ID']
   AppFingerPrint = Rails.env.development? ? Rails.application.secrets['SYNAPSEPAY_APP_FINGERPRINT'] : ENV['SYNAPSEPAY_APP_FINGERPRINT']
+
   EscrowFeeHolderNodeId = Rails.env.development? ? Rails.application.secrets['SYNAPSEPAY_ESCROW_FEE_HOLDER_NODE_ID'] : ENV['SYNAPSEPAY_ESCROW_FEE_HOLDER_NODE_ID']
 
   has_attached_file :eic_attachment

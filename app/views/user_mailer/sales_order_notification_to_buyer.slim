@@ -122,7 +122,10 @@ html[style="margin: 0;padding: 0;"]
             td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
               |  Buyer Fees
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
-              = number_to_currency(@order.fee)
+              - if @order.instance_of? FlyBuyOrder
+                = number_to_currency(@order.total_fees)
+              - else
+                = number_to_currency(@order.fee)
           - if !@order.instance_of? FlyBuyOrder
             tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
               td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]

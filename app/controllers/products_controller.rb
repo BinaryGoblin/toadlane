@@ -19,6 +19,8 @@ class ProductsController < ApplicationController
     # end
     set_product
 
+    set_nil_fly_buy_order_id_session
+
     impressionist(@product)
 
     @stripe_order = StripeOrder.new
@@ -83,14 +85,14 @@ class ProductsController < ApplicationController
       fly_buy_fee = over_million_dollars?(sum_unit_price) ? Fee::FLY_BUY[:over_million] : Fee::FLY_BUY[:under_million]
       fly_buy_fees = sum_unit_price * fly_buy_fee / 100
       number_of_items_to_inspect = inspected_items_count(params[:percentage_of_items_to_inspect].to_i, params[:count].to_i)
-      inspection__service_fee = number_of_items_to_inspect * Product::INSPECTION_SERVICE_PRICE
+      inspection_service_fee = number_of_items_to_inspect * Product::INSPECTION_SERVICE_PRICE
     else
       fee = Fee.find_by(module_name: 'Stripe').value
       fees = sum_unit_price * fee.to_f / 100
       fly_buy_fees = nil
     end
 
-    total = sum_unit_price + fees + fly_buy_fees.to_f + params[:shipping_cost].to_f + inspection__service_fee.to_f - params[:rebate].to_f
+    total = sum_unit_price + fees + fly_buy_fees.to_f + params[:shipping_cost].to_f - params[:rebate].to_f + inspection_service_fee.to_f
 
     options = {
       quantity: params[:count],
@@ -103,7 +105,7 @@ class ProductsController < ApplicationController
       fly_buy_fee: fly_buy_fees,
       total: total,
       percentage_of_inspection_service: params[:percentage_of_items_to_inspect],
-      inspection_service_cost: inspection__service_fee.to_f,
+      inspection_service_cost: inspection_service_fee.to_f,
       inspection_service_comment: params[:inspection_service_note]
     }
 
@@ -194,10 +196,9 @@ class ProductsController < ApplicationController
       selected_inspection_date = InspectionDate.find_by_id(options[:inspection_date_id])
       save_inspection_date(selected_inspection_date, fly_buy_order)
     elsif options[:inspection_date_id].present?
-      fly_buy_order = FlyBuyOrder.create({
-        buyer_id: current_user.id,
-        seller_id: product.user.id,
-        product_id: product.id,
+      fly_buy_order = FlyBuyOrder.find_by_id(session[:fly_buy_order_id]) if session[:fly_buy_order_id].present?
+
+      attrs = {
         unit_price: options[:unit_price],
         count: options[:quantity],
         total: options[:total],
@@ -206,8 +207,17 @@ class ProductsController < ApplicationController
         fee: options[:fee_amount],
         percentage_of_inspection_service: options[:percentage_of_inspection_service],
         inspection_service_cost: options[:inspection_service_cost],
-        inspection_service_comment: options[:inspection_service_comment]
-      })
+        inspection_service_comment: options[:inspection_service_comment],
+        fly_buy_fee: options[:fly_buy_fee]
+      }
+
+      if fly_buy_order.present?
+        fly_buy_order.update_attributes(attrs)
+      else
+        attrs.merge!(buyer_id: current_user.id, seller_id: product.user.id, product_id: product.id)
+
+        fly_buy_order = FlyBuyOrder.create(attrs)
+      end
 
       selected_inspection_date = InspectionDate.find_by_id(options[:inspection_date_id])
       save_inspection_date(selected_inspection_date, fly_buy_order)
@@ -227,6 +237,8 @@ class ProductsController < ApplicationController
       fly_buy_order.update_attributes(group_seller_id: product.group.id, group_seller: true)
       fly_buy_order.reload
     end
+
+    fly_buy_order.create_additional_seller_fee_transactions
 
     [fly_buy_order, fly_buy_profile]
   end
@@ -275,5 +287,9 @@ class ProductsController < ApplicationController
 
   def over_million_dollars?(amount)
     amount > 1000000
+  end
+
+  def set_nil_fly_buy_order_id_session
+    session[:fly_buy_order_id] = nil
   end
 end

@@ -67,8 +67,6 @@ Toad::Application.routes.draw do
         post :create_emb_profile
         post :create_fly_buy_profile
         post :answer_kba_question
-        get :callback
-        post :callback
       end
     end
 
@@ -82,6 +80,7 @@ Toad::Application.routes.draw do
         get '/:id/viewers', to: 'products#viewers', as: 'viewers'
       end
     end
+
     resources :groups do
       collection do
         get :accept_deal
@@ -230,4 +229,5 @@ Toad::Application.routes.draw do
 
   match '/postmark/inbound', to: 'messages#inbound', :via => [:get, :post]
 
+  match '/synapsepay/26143155/callback', to: 'dashboard/accounts#callback', via: [:get, :post]
 end

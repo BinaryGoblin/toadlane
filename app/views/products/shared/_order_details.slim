@@ -10,18 +10,13 @@
     td class="rightAlign" -<span class="stripe-rebate-price">#{number_to_currency(fly_buy_order.rebate_price)}</span>
 
   tr
-    td colspan="3" Toadlane Fee (<span class="calc-fees">#{data[:fee]}</span>% - #{Fee::FlyBuyReductionFeeAmount}% reduced):
+    td colspan="3" Toadlane Fee
     td class="rightAlign" <span class="stripe-fees-price">#{number_to_currency(fly_buy_order.fee)}</span>
 
   tr
-    td colspan="3" Fly & Buy Fee (<span class="calc-fees-fly-buy-over-million">#{Fee::FLY_BUY[:over_million]}</span>% - <span class="calc-fees-fly-buy-under-million">#{Fee::FLY_BUY[:under_million]}</span>%):
+    td colspan="3" Fly & Buy Fee
     td class="rightAlign" <span class="calc-fees-fly-buy-price">#{number_to_currency(fly_buy_order.fly_buy_fee)}</span>
 
-  tr
-    td Shipping Estimate
-    td.stripe_quantity.rightAlign =fly_buy_order.count
-    td class="rightAlign" <span class="calc-shipping" data-type="PerUnit">#{number_to_currency(data[:shipping_cost])}</span>
-    td class="rightAlign" <span class="stripe-shipping-price">#{number_to_currency(get_shipping_cost(fly_buy_order.count, data[:shipping_cost]))}</span>
   tr
     td Inspection Service Fee
     td.stripe_quantity.rightAlign =inspected_items_count(fly_buy_order.percentage_of_inspection_service, fly_buy_order.count)
@@ -45,7 +40,7 @@
     td class="rightAlign" -<span class="stripe-rebate-price">#{number_to_currency(data[:rebate])}</span>
 
   tr
-    td colspan="3" Toadlane Fee (<span class="calc-fees">#{data[:fee]}</span>%)
+    td colspan="3" Toadlane Fee
     td class="rightAlign" <span class="stripe-fees-price">#{number_to_currency(data[:fee_amount])}</span>
 
   tr

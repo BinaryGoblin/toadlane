@@ -66,11 +66,6 @@ class User < ActiveRecord::Base
   has_one :stripe_customer
   has_many :addresses
   has_one :fly_buy_profile
-  accepts_nested_attributes_for :addresses,
-  :allow_destroy => true,
-  :reject_if => lambda { |a| (a[:name].empty? && a[:line1].empty? && a[:line2].empty? && a[:city].empty? && a[:state].empty? && a[:zip].empty?) }
-  validates :terms_of_service, :inclusion => {:in => [true, false]}
-  validates :name, presence: true, on: :create
   has_many :requests_of_sender, class_name: 'Request', foreign_key: :sender_id
   has_many :requests_of_receiver, class_name: 'Request', foreign_key: :receiver_id
   has_many :notifications, dependent: :destroy
@@ -78,13 +73,12 @@ class User < ActiveRecord::Base
   has_many :products
   has_many :groups, foreign_key: 'group_owner_id', class_name: 'Group'
   has_many :group_sellers, dependent: :destroy
-
   has_one :certificate, dependent: :destroy
-
   has_and_belongs_to_many :roles,
-  :join_table => :users_roles,
-  :foreign_key => 'user_id',
-  :association_foreign_key => 'role_id'
+    :join_table => :users_roles,
+    :foreign_key => 'user_id',
+    :association_foreign_key => 'role_id'
+  has_many :additional_seller_fee_transactions, dependent: :destroy
 
   has_attached_file :asset, styles: {
     small: '155x155#',
@@ -93,14 +87,20 @@ class User < ActiveRecord::Base
   default_url: '/assets/avatar/:style/missing.png'
   do_not_validate_attachment_file_type :asset
 
+  validates :terms_of_service, inclusion: { in: [true, false] }
+  validates :name, presence: true, on: :create
+  validate :validate_phone_number
+  # validates :benefits, presence: true, on: :update
+
+  accepts_nested_attributes_for :addresses,
+    allow_destroy: true,
+    reject_if: lambda { |a| (a[:name].empty? && a[:line1].empty? && a[:line2].empty? && a[:city].empty? && a[:state].empty? && a[:zip].empty?) }
+
   before_destroy { roles.clear }
 
   serialize :benefits, Array
-  # validates :benefits, presence: true, :on=>:update
 
-  validate :validate_phone_number
-
-  scope :product_associated_users, -> (catagory) { where("benefits LIKE ?", "%#{catagory.name}%" ) }
+  scope :product_associated_users, -> (catagory) { where('benefits LIKE ?', "%#{catagory.name}%" ) }
   scope :ordered_by_name, -> { order(name: :asc) }
 
   # after_create :associate_api_user
@@ -255,7 +255,7 @@ class User < ActiveRecord::Base
   end
 
   def fly_buy_profile_account_added?
-    fly_buy_profile.present? && fly_buy_profile.completed == true && fly_buy_profile.error_details.present? == false
+    fly_buy_profile.present? && fly_buy_profile.completed? && !fly_buy_profile.error_details.present?
   end
 
   def fly_buy_verified_by_admin?

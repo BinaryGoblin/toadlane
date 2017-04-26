@@ -49,6 +49,8 @@ class Dashboard::AccountsController < DashboardController
     end
 
     if fly_buy_params.present?
+      fly_buy_profile.update_attribute(:error_details, {})
+
       unless address_id.present?
         address = current_user.addresses.last
         address_id = address.id rescue nil
@@ -62,26 +64,30 @@ class Dashboard::AccountsController < DashboardController
         routing_num: fly_buy_params['routing_num'],
         address_id: address_id
       }
+      bank_account_details.merge!(swift: fly_buy_params['additional_information']) if fly_buy_params['additional_information'].present?
 
-      CreateUserForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id) unless fly_buy_profile.synapse_user_id.present?
-      AddBankDetailsForFlyBuyJob.perform_later(current_user.id, fly_buy_profile.id, bank_account_details)
+      FlyAndBuy::CreateUserJob.perform_later(current_user, fly_buy_profile) unless fly_buy_profile.synapse_user_id.present?
+      FlyAndBuy::AddBankDetailsJob.perform_later(current_user, fly_buy_profile, bank_account_details)
 
       UserMailer.send_notification_for_fly_buy_profile(fly_buy_profile, address_id).deliver_later
-
-      fly_buy_profile.update_attribute(:completed, true)
     end
 
-    redirect_to dashboard_accounts_path
-  rescue SynapsePayRest::Error::Conflict => e
-    flash[:error] = e.message
-    redirect_to dashboard_accounts_path
+    fly_buy_profile.update_attribute(:submited, true)
+
+    if session[:redirect_back].present?
+      redirect_back = session[:redirect_back]
+      session[:redirect_back] = nil
+
+      redirect_to redirect_back
+    else
+      redirect_to dashboard_accounts_path
+    end
   end
 
   def answer_kba_question
     if request.post? && fly_buy_params.present?
-      fly_buy_profile = current_user.fly_buy_profile
-      FlyAndBuy::AnswerKbaQuestions.new(current_user, fly_buy_profile, fly_buy_params).process
-      fly_buy_profile.update_attribute(:completed, true)
+      FlyAndBuy::AnswerKbaQuestions.new(current_user, current_user.fly_buy_profile, fly_buy_params).process
+
       redirect_to dashboard_accounts_path
     end
   end
@@ -160,125 +166,8 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def callback
-    # Handled wehbook for when the status of the transaction is "SETTLED"
-    if params["account"].present?
-      if params["account"]["extra"]["note"] == "Transaction Created"
-        synapse_transaction_id = params["_id"]["$oid"]
-        fly_buy_order = FlyBuyOrder.find_by_synapse_transaction_id(synapse_transaction_id)
-      elsif params["account"]["extra"]["note"] == "Released Payment" && params["account"]["extra"]["supp_id"].present?
-        fly_buy_order_id = params["account"]["extra"]["supp_id"].split("_").last
-        fly_buy_order = FlyBuyOrder.find_by_id(fly_buy_order_id)
-      elsif params["account"]["extra"]["note"] == "Released Payment To Additional Seller" && params["account"]["extra"]["supp_id"].present?
-        fly_buy_order_id = params["account"]["extra"]["supp_id"].split("_").last
-        fly_buy_order = FlyBuyOrder.find_by_id(fly_buy_order_id)
-      end
+    Services::FlyAndBuy::Webhook::Responses.new(params)
 
-      if fly_buy_order.present? && params["recent_status"]["status"] == "SETTLED" && params["recent_status"]["status_id"] == "4"
-        if params["account"]["extra"]["note"] == "Transaction Created" && fly_buy_order.funds_in_escrow == false
-          fly_buy_order.update_attributes({
-            status: 'pending_inspection',
-            funds_in_escrow: true
-          })
-          UserMailer.send_funds_received_notification_to_seller(fly_buy_order).deliver_later
-          UserMailer.send_transaction_settled_notification_to_buyer(fly_buy_order).deliver_later
-        elsif params["account"]["extra"]["note"] == "Released Payment" && fly_buy_order.payment_release == false
-          fly_buy_order.update_attributes({
-            payment_release: true,
-            status: 'completed'
-           })
-          UserMailer.send_payment_released_notification_to_seller(fly_buy_order).deliver_later
-        elsif params["account"]["extra"]["note"] == "Released Payment To Additional Seller" && fly_buy_order.payment_released_to_group == false
-          fly_buy_order.update_attributes({
-            payment_released_to_group: true,
-            status: 'payment_released_to_group'
-           })
-          fly_buy_order.product.additional_sellers.each do |additional_seller|
-            UserMailer.send_payment_release_to_additional_seller(fly_buy_order, additional_seller).deliver_later
-          end
-        end
-      elsif fly_buy_order.present? && params["recent_status"]["status"] == "QUEUED-BY-SYNAPSE"
-        fly_buy_order.update_attribute(:status, 'queued')
-        UserMailer.send_order_queued_notification_to_seller(fly_buy_order).deliver_later
-        UserMailer.send_order_queued_notification_to_buyer(fly_buy_order).deliver_later
-      end
-    end
-
-    if params["documents"].present?
-      if params["_id"]["$oid"].present? && params["permission"] == "SEND-AND-RECEIVE"
-        # Handling webhook for if permission status is 'SEND-AND-RECEIVE'
-        permission_array = params["permission"].split('-')
-        synapse_user_id = params["_id"]["$oid"]
-        fly_buy_profile = FlyBuyProfile.find_by_synapse_user_id(synapse_user_id)
-        if fly_buy_profile.present? && fly_buy_profile.created_at.to_date > Date.today
-          fly_buy_profile.destroy
-        end
-        if fly_buy_profile.present? && permission_array.include?('SEND') && permission_array.include?('RECEIVE')
-          if fly_buy_profile.permission_scope_verified == false && fly_buy_profile.synapse_node_id.present?
-            fly_buy_profile.update_attributes({
-              permission_scope_verified: true,
-              kba_questions: {},
-              completed: true
-            })
-            UserMailer.send_account_verified_notification_to_user(fly_buy_profile).deliver_later
-          end
-        else
-          UserMailer.send_account_not_verified_yet_notification_to_user(fly_buy_profile).deliver_later
-        end
-      elsif params["_id"]["$oid"].present? && params["documents"][1]["virtual_docs"][0]["status"] == "SUBMITTED|INVALID"
-        # This is for SSN entered `1111` and is not valid
-        synapse_user_id = params["_id"]["$oid"]
-        fly_buy_profile = FlyBuyProfile.find_by_synapse_user_id(synapse_user_id)
-
-        if fly_buy_profile.present? && fly_buy_profile.completed == true
-          fly_buy_profile.update_attributes({
-            permission_scope_verified: false,
-            kba_questions: {},
-            completed: false
-          })
-          UserMailer.send_ssn_num_not_valid_notification_to_user(fly_buy_profile).deliver_later
-        end
-      elsif params["_id"]["$oid"].present? && params["documents"][1]["virtual_docs"][0]["status"] == "SUBMITTED|MFA_PENDING"
-        # this is for SSN `3333`
-        synapse_user_id = params["_id"]["$oid"]
-        fly_buy_profile = FlyBuyProfile.find_by_synapse_user_id(synapse_user_id)
-
-        if fly_buy_profile.present? && fly_buy_profile.permission_scope_verified == false && fly_buy_profile.completed == true
-          questions = params["documents"][1]["virtual_docs"][0]
-          fly_buy_profile.update_attributes({
-            permission_scope_verified: false,
-            kba_questions: questions,
-            completed: false
-          })
-          UserMailer.send_ssn_num_partially_valid_notification_to_user(fly_buy_profile).deliver_later
-        end
-      elsif params["_id"]["$oid"].present? && params["documents"][0]["virtual_docs"][0]["status"] == "SUBMITTED|MFA_PENDING"
-        # this is for EIN/TIN `3333`
-        synapse_user_id = params["_id"]["$oid"]
-        fly_buy_profile = FlyBuyProfile.find_by_synapse_user_id(synapse_user_id)
-
-        if fly_buy_profile.present? && fly_buy_profile.permission_scope_verified == false && fly_buy_profile.completed == true
-          questions = params["documents"][0]["virtual_docs"][0]
-          fly_buy_profile.update_attributes({
-            permission_scope_verified: false,
-            kba_questions: questions,
-            completed: false
-          })
-          UserMailer.send_tin_num_partially_valid_notification_to_user(fly_buy_profile).deliver_later
-        end
-      elsif params["_id"]["$oid"].present? && params["documents"][0]["virtual_docs"][0]["status"] == "SUBMITTED|INVALID"
-        # this is for EIN/TIN is entered `1111` and is not valid
-        synapse_user_id = params["_id"]["$oid"]
-        fly_buy_profile = FlyBuyProfile.find_by_synapse_user_id(synapse_user_id)
-
-        if fly_buy_profile.present? && fly_buy_profile.completed == true && fly_buy_profile.permission_scope_verified == false
-          fly_buy_profile.update_attributes({
-            completed: false
-          })
-
-          UserMailer.send_ein_num_not_valid_notification_to_user(fly_buy_profile).deliver_later
-        end
-      end
-    end
     render nothing: true, status: 200
   end
 
@@ -298,14 +187,7 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def set_fly_buy_profile
-    current_fly_buy_profile = current_user.fly_buy_profile
-    if current_fly_buy_profile.present?
-      @fly_buy_profile = current_fly_buy_profile
-    elsif params['fly_buy_profile_id'].present?
-      @fly_buy_profile = FlyBuyProfile.find_by_id(params['fly_buy_profile_id'])
-    else
-      @fly_buy_profile = FlyBuyProfile.new
-    end
+    @fly_buy_profile = current_user.fly_buy_profile || FlyBuyProfile.new
   end
 
   def user_params
@@ -384,7 +266,7 @@ class Dashboard::AccountsController < DashboardController
     necessary_fly_buy_params = fly_buy_params.except(:email, :address_id, :fingerprint, :bank_name, :name_on_account, :account_num, :company)
     necessary_fly_buy_params.merge!(
       synapse_ip_address: request.ip,
-      encrypted_fingerprint: "user_#{current_user.id}" + '_' + fly_buy_params['fingerprint'],
+      encrypted_fingerprint: generate_encrypted_fingerprint(fly_buy_params['fingerprint']),
       user_id: current_user.id,
       company_email: fly_buy_params['email']
     )

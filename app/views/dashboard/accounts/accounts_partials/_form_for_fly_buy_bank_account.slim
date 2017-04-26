@@ -29,7 +29,7 @@ br
       .offer-item
         .offer-date
           = label_tag 'outside_the_us', 'Outside the United States?:'
-          = check_box_tag :outside_the_us, nil, false, data: { behavior: 'CheckOutsideUS' }
+          = f.check_box :outside_the_us, data: { behavior: 'CheckOutsideUS' }
 
 .row
   .col-md-6
