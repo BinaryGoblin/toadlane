@@ -2,7 +2,7 @@ class Dashboard::AccountsController < DashboardController
   include ProductHelper
 
   before_filter :authenticate_user!, except: [:callback]
-  skip_before_filter :verify_authenticity_token, only: [:callback]
+  skip_before_filter :authenticate, only: [:callback]
 
   def index
     set_user

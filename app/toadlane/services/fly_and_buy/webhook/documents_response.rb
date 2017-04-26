@@ -14,9 +14,9 @@ module Services
 
         def handle
           if verified_user?
-            Services::FlyAndBuy::Webhook::Documents::ForVerifiedProfile.new(fly_buy_profile).process
+            Documents::ForVerifiedProfile.new(fly_buy_profile).process
           else
-            Services::FlyAndBuy::Webhook::Documents::ForUnverifiedProfile.new(fly_buy_profile, options).process
+            Documents::ForUnverifiedProfile.new(fly_buy_profile, options).process
           end
         end
 

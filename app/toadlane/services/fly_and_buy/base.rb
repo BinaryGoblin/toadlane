@@ -5,16 +5,6 @@ module Services
 
       protected
 
-      def fly_buy_profile_completed(synapse_pay:, fly_buy_profile:)
-        synapse_user = synapse_pay.user(user_id: fly_buy_profile.synapse_user_id)
-
-        if synapse_user.permission == 'SEND-AND-RECEIVE'
-          fly_buy_profile.update_attributes(permission_scope_verified: true, kba_questions: {}, error_details: {}, completed: true)
-
-          UserMailer.send_account_verified_notification_to_user(fly_buy_profile).deliver_later
-        end
-      end
-
       def encode_attachment(file_tempfile:, file_type:)
         file_content = open(parse_original_path(file_tempfile.gsub(/\?\d+$/, ''))) { |f| f.read }
 

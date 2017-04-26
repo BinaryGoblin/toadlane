@@ -16,7 +16,7 @@ module Services
         synapse_user = synapse_pay.user(user_id: fly_buy_profile.synapse_user_id)
         submit_kba_question_answers(synapse_user)
 
-        fly_buy_profile_completed(synapse_pay: synapse_pay, fly_buy_profile: fly_buy_profile)
+        fly_buy_profile.update_attributes(kba_questions: {})
       end
 
       private

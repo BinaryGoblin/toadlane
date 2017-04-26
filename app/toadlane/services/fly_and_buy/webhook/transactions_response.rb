@@ -15,14 +15,14 @@ module Services
 
           case recent_status
           when 'SETTLED'
-            Services::FlyAndBuy::Webhook::Transactions::SettledTransactions.new(
+            Transactions::SettledTransactions.new(
               fly_buy_order: fly_buy_order,
               additional_seller_fee_transaction: additional_seller_fee_transaction,
               synapse_transaction_id: synapse_transaction_id,
               note: transaction_note
             ).process
           when 'QUEUED-BY-SYNAPSE'
-            Services::FlyAndBuy::Webhook::Transactions::QueuedTransactions.new(fly_buy_order).process
+            Transactions::QueuedTransactions.new(fly_buy_order).process
           end
         end
 
