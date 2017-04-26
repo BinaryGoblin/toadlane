@@ -2,33 +2,36 @@
 #
 # Table name: fly_buy_orders
 #
-#  id                        :integer          not null, primary key
-#  buyer_id                  :integer
-#  seller_id                 :integer
-#  product_id                :integer
-#  status                    :integer
-#  unit_price                :float
-#  count                     :integer
-#  fee                       :float
-#  rebate                    :float
-#  rebate_price              :float
-#  total                     :float
-#  status_change             :datetime
-#  deleted                   :boolean          default(FALSE)
-#  created_at                :datetime         not null
-#  updated_at                :datetime         not null
-#  synapse_escrow_node_id    :string
-#  synapse_transaction_id    :string
-#  inspection_complete       :boolean          default(FALSE)
-#  payment_release           :boolean          default(FALSE)
-#  funds_in_escrow           :boolean          default(FALSE)
-#  seller_fees_percent       :float
-#  seller_fees_amount        :float
-#  group_seller_id           :integer
-#  group_seller              :boolean          default(FALSE)
-#  payment_released_to_group :boolean          default(FALSE)
-#  fly_buy_fee               :float
-#  error_details             :json
+#  id                                   :integer          not null, primary key
+#  buyer_id                             :integer
+#  seller_id                            :integer
+#  product_id                           :integer
+#  status                               :integer
+#  unit_price                           :float
+#  count                                :integer
+#  fee                                  :float
+#  rebate                               :float
+#  rebate_price                         :float
+#  total                                :float
+#  status_change                        :datetime
+#  deleted                              :boolean          default(FALSE)
+#  created_at                           :datetime         not null
+#  updated_at                           :datetime         not null
+#  synapse_escrow_node_id               :string
+#  synapse_transaction_id               :string
+#  inspection_complete                  :boolean          default(FALSE)
+#  payment_release                      :boolean          default(FALSE)
+#  funds_in_escrow                      :boolean          default(FALSE)
+#  seller_fees_percent                  :float
+#  seller_fees_amount                   :float
+#  group_seller_id                      :integer
+#  group_seller                         :boolean          default(FALSE)
+#  payment_released_to_group            :boolean          default(FALSE)
+#  fly_buy_fee                          :float
+#  error_details                        :json
+#  percentage_of_inspection_service     :integer
+#  inspection_service_cost              :float
+#  inspection_service_comment           :text
 #
 
 class FlyBuyOrder < ActiveRecord::Base
@@ -137,7 +140,7 @@ class FlyBuyOrder < ActiveRecord::Base
   end
 
   def total_fees
-    fee.to_f + fly_buy_fee.to_f
+    fee.to_f + fly_buy_fee.to_f + inspection_service_cost.to_f
   end
 
   def toadlane_earning
