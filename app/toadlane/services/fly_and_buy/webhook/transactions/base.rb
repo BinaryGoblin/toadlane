@@ -17,7 +17,7 @@ module Services
             fly_buy_order.update_attributes(options)
           end
 
-          def notify_the_user(method_name:, extra_arg=nil)
+          def notify_the_user(method_name:, extra_arg: nil)
             if extra_arg.present?
               UserMailer.send(:method_name, fly_buy_order, extra_arg)
             else

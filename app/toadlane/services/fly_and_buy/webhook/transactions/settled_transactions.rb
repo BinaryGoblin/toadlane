@@ -7,7 +7,7 @@ module Services
 
           attr_reader :additional_seller_fee_transaction, :synapse_transaction_id, :note
 
-          def initialize(fly_buy_order:, additional_seller_fee_transaction:, synapse_transaction_id: note:)
+          def initialize(fly_buy_order:, additional_seller_fee_transaction:, synapse_transaction_id:, note:)
             @additional_seller_fee_transaction = additional_seller_fee_transaction
             @synapse_transaction_id = synapse_transaction_id
             @note = note
@@ -43,7 +43,7 @@ module Services
 
                 update_fly_buy_order(options)
 
-                notify_the_user(method_name: :send_payment_release_to_additional_seller, additional_seller_fee_transaction.user)
+                notify_the_user(method_name: :send_payment_release_to_additional_seller, extra_arg: additional_seller_fee_transaction.user)
               end
             end
           end
