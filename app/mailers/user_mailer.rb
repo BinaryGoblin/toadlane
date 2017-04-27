@@ -43,6 +43,15 @@ class UserMailer < ApplicationMailer
     mail to: @buyer.email, subject: "Next steps to confirm order (#{@order.count})"
   end
 
+  def order_canceled_fund_not_sent(order, user)
+    @order = order
+    @user = user
+    @product = Product.find_by_id(@order.product_id)
+
+    mail to: @user.email, subject: "Order (#{@order.count}) is canceled!"
+  end
+
+
   def order_canceled_notification_to_seller(stripe_order)
     @stripe_order = stripe_order
     @seller = User.find_by_id(@stripe_order.seller_id)
