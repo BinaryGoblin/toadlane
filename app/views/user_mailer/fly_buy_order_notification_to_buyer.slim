@@ -14,7 +14,6 @@ html[style="margin: 0;padding: 0;"]
           strong
             = get_email_or_name(@buyer)
           = image_tag get_image(@buyer.asset(:small)), height: '50', :class => "pro-img", :style => "margin: 0;padding: 5px;height: 30px;vertical-align: middle;margin-right: 15px;border-radius: 5px;border: 1px solid #eaebec;background-color: #fff;margin-left: 10px;"
-    div style=('clear: both')
     .table-responsive[style="margin: 0 15px;padding: 0;"]
       table.table-checkout[style="margin-bottom: 0;margin: auto;padding: 5px;background: white;border-radius: 3px;border-collapse: collapse;height: 320px;width: 100%;box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);animation: float 5s infinite;"]
         tbody[style="margin: 0;padding: 0;"]
@@ -92,7 +91,7 @@ html[style="margin: 0;padding: 0;"]
         thead[style="margin: 0;padding: 0;"]
           tr[style="margin: 0;padding: 0;border-top: none;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;border-bottom: none;"]
             th[style="margin: 0;padding: 16px;color: #D5DDE5;background: #1b1e24;border-bottom: 4px solid #9ea7af;border-right: 1px solid #343a45;font-size: 23px;font-weight: 100;text-align: left;vertical-align: middle;border-top-left-radius: 3px;"]
-              |  Name
+              |  Description
             th[style="margin: 0;padding: 16px;color: #D5DDE5;background: #1b1e24;border-bottom: 4px solid #9ea7af;border-right: 1px solid #343a45;font-size: 23px;font-weight: 100;text-align: left;vertical-align: middle;"]
               |  Qty
             th[style="margin: 0;padding: 16px;color: #D5DDE5;background: #1b1e24;border-bottom: 4px solid #9ea7af;border-right: 1px solid #343a45;font-size: 23px;font-weight: 100;text-align: left;vertical-align: middle;"]
@@ -116,25 +115,22 @@ html[style="margin: 0;padding: 0;"]
               = @order.rebate
               | % rebate for purchasing #{@order.count} pcs
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
-              | -
-              - if @order.instance_of? FlyBuyOrder
-                = number_to_currency(@order.rebate_price)
-              - else
-                = number_to_currency(get_amount_for_rebate(@order))
+              | - #{number_to_currency(@order.rebate_price)}
           tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
             td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
-              |  Buyer Fees
+              |  Toadlane Fee
             td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
-              - if @order.instance_of? FlyBuyOrder
-                = number_to_currency(@order.total_fees)
-              - else
-                = number_to_currency(@order.fee)
-          - if !@order.instance_of? FlyBuyOrder
-            tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
-              td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
-                |  Shipping
-              td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
-                = number_to_currency(@order.shipping_cost)
+              = number_to_currency(@order.fee)
+          tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
+            td[colspan="3" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
+              |  Fly & Buy Fee
+            td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 0px;"]
+              = number_to_currency(@order.fly_buy_fee)
+          tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;"]
+            td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"] Inspection service fee
+            td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]= inspected_items_count(@order.percentage_of_inspection_service, @order.count)
+            td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"] #{number_to_currency(Product::INSPECTION_SERVICE_PRICE)}
+            td[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"] #{number_to_currency(@order.inspection_service_cost)}
           tr[style="margin: 0;padding: 0;border-top: 1px solid #C1C3D1;border-bottom-: 1px solid #C1C3D1;color: #666B85;font-size: 16px;font-weight: normal;border-bottom: none;"]
             td.no-border[colspan="2" style="margin: 0;padding: 16px;background: #FFFFFF;text-align: left;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
             td.text-center[style="margin: 0;padding: 16px;background: #FFFFFF;text-align: center;vertical-align: middle;font-weight: 300;font-size: 16px;border-right: 1px solid #C1C3D1;"]
@@ -160,5 +156,11 @@ html[style="margin: 0;padding: 0;"]
       h3 Note:
       p To cancel order click on 'View Order' and click on 'Cancel Order' button.
       p For help and support, email johnb@toadlane.com.
-      p Payment instructions are sent via our payment partner, Synapse Financial Technologies, Inc. and are processed by Triumph Bank. To report complaints email issues@synapsepay.com.
+      p To confirm your order you must send funds into your SynapsePay account.
+      p Attached is a banking instructions PDF from Synapsepay. payments are processed by Triumph Bank. To report complaints email issues@synapsepay.com.
+      p
+        |It is recommended to send in funds
+        b  atleast 24 hours in advance
+        |  of inspection date.
+        b  Otherwise inspection is cancelled.
       p After you inspect the products you will either release funds to the seller.

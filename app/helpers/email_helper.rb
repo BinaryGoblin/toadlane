@@ -1,5 +1,6 @@
 module EmailHelper
   include Rails.application.routes.url_helpers
+  include InspectionServiceHelper
 
   def get_image(image_path)
     attachments.inline[image_path] = open(image_path).read
