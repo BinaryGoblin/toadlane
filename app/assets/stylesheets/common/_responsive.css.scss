@@ -352,14 +352,6 @@
     float:none;
     margin-top:12%;
   }
-  .logoSideNav
-  {
-    margin: 0 auto;
-  }
-  .logoSideNav img
-  {
-    margin: 0 auto;
-  }
   .fe-search,.header-user
   {
     width:95% !important;
@@ -378,6 +370,32 @@
     margin-bottom:10px !important;
     .logo-div{
       width: 100%;
+      .logoSideNav
+      {
+        margin: 0 auto;
+        position: relative;
+        top: -3px;
+        float: none !important;
+      }
+      .logoSideNav img
+      {
+        margin: 0 auto;
+        width: 58px;
+      }
+    }
+    .public-page-logo-div{
+      width: 100%;
+      .logoSideNav
+      {
+        margin: 0 auto;
+        position: relative;
+        top: -3px;
+        float: none !important;
+      }
+      .logoSideNav img
+      {
+        margin: 0 auto;
+      }
     }
   }
   .footer
