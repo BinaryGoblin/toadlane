@@ -11,8 +11,8 @@ module Services
         end
 
         def handle
-          DocumentsResponse.new(options['_id']['$oid'], options['permission'], options['documents']).handle if response_for_document?
-          NodeResponse.new(options['user_id'], options).handle if response_for_node?
+          DocumentsResponse.new(options).handle if response_for_document?
+          NodeResponse.new(options).handle if response_for_node?
           TransactionsResponse.new(options).handle if response_for_transaction?
         end
 

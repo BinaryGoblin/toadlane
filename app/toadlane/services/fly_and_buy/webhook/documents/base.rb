@@ -18,7 +18,7 @@ module Services
           end
 
           def notify_the_user(method_name:)
-            UserMailer.send(:method_name, fly_buy_profile).deliver_later
+            UserMailer.send(method_name, fly_buy_profile).deliver_later
           end
         end
       end

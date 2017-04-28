@@ -39,8 +39,9 @@ module Services
                 fly_buy_order.reload
 
                 options = { status: :processing_fund_release_to_group, error_details: {} }
-                options.merge!(status: :payment_released_to_group, payment_released_to_group: true) unless fly_buy_order.additional_seller_fee_transactions.where(is_paid: false).present?
-
+                unless fly_buy_order.additional_seller_fee_transactions.where(is_paid: false).present?
+                  options.merge!(status: :payment_released_to_group, payment_released_to_group: true)
+                end
                 update_fly_buy_order(options)
 
                 notify_the_user(method_name: :send_payment_release_to_additional_seller, extra_arg: additional_seller_fee_transaction.user)

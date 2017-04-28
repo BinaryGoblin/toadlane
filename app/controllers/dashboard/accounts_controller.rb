@@ -167,7 +167,7 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def callback
-    Services::FlyAndBuy::Webhook::Responses.new(params)
+    Services::FlyAndBuy::Webhook::Responses.new(params).handle
 
     render nothing: true, status: 200
   end

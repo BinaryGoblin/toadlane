@@ -19,9 +19,9 @@ module Services
 
           def notify_the_user(method_name:, extra_arg: nil)
             if extra_arg.present?
-              UserMailer.send(:method_name, fly_buy_order, extra_arg)
+              UserMailer.send(method_name, fly_buy_order, extra_arg)
             else
-              UserMailer.send(:method_name, fly_buy_order)
+              UserMailer.send(method_name, fly_buy_order)
             end.deliver_later
           end
         end

@@ -4,10 +4,12 @@ module Services
       module Documents
 
         class ForUnverifiedProfile < Base
+          DOC_STATUS = ['SUBMITTED|VALID', 'SUBMITTED|INVALID'].freeze
 
-          attr_reader :options
+          attr_reader :doc_status, :options
 
-          def initialize(fly_buy_profile, options=[])
+          def initialize(fly_buy_profile, doc_status={}, options=[])
+            @doc_status = doc_status
             @options = options
 
             super(fly_buy_profile)
@@ -25,10 +27,14 @@ module Services
                   notify_the_user(method_name: :send_account_not_verified_yet_notification_to_user)
                 end
               end
-            end
+            end if valid_doc_status?
           end
 
           private
+
+          def valid_doc_status?
+            DOC_STATUS.include?(doc_status['physical_doc']) && DOC_STATUS.include?(doc_status['virtual_doc'])
+          end
 
           def invalid_kba_questions_submitted(virtual_document)
             update_fly_buy_profile(
