@@ -144,8 +144,7 @@
                   = select_tag 'number_of_items_to_inspect', options_for_select(percentage_value_for_inspection), class: 'form-control select-inspect-percentage',  data: { behavior: "inspectionServicePercentageField" }
                   span.item-count
                   = text_field_tag :inspection_service_comment, nil, size: "25x5", class: 'form-control inspect-service-comment', placeholder: 'Additional comments'
-                  span.pull-right
-                    b 0.00
+                  b.pull-right 0.00
                   span.clearfix
                   br
                 hr
