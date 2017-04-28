@@ -1,10 +1,13 @@
+- if signed_in?
+  - logo_path = image_tag('forg.png')
+  - div_class_name = 'logo-div'
+- else
+  - logo_path =image_tag('newLogo.png')
+  - div_class_name = 'public-page-logo-div'
 header.header.navbar.navbar-default.wrap.navbar-fixed-top
   .find-and-explore
-    .logo-div
-      =link_to image_tag('newLogo.png'), products_path, class: 'logoSideNav'
-      button.navbar-toggle.collapsed aria-expanded="false" data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button"
-    //.collapse.navbar-collapse#bs-example-navbar-collapse-1
-    //get_user_unread_message_notifications
+    div class=div_class_name
+      =link_to logo_path, products_path, class: 'logoSideNav'
 
     - if current_user
 
@@ -19,7 +22,7 @@ header.header.navbar.navbar-default.wrap.navbar-fixed-top
           = hidden_field_tag 'count', '16'
 
           .query-container
-              = text_field_tag :query, params[:query], placeholder: 'What are you searching for?'
+              = text_field_tag :query, params[:query], placeholder: 'Searching Toadlane?'
 
       .header-user.pull-right
         = link_to 'Sell', new_dashboard_product_path, class: 'sellBtn'

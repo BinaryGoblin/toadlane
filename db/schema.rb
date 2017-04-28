@@ -11,10 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170420065634) do
+ActiveRecord::Schema.define(version: 20170426160106) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "additional_seller_fee_transactions", force: :cascade do |t|
+    t.integer  "fly_buy_order_id"
+    t.integer  "user_id"
+    t.integer  "group_id"
+    t.string   "synapse_transaction_id"
+    t.float    "fee"
+    t.boolean  "is_paid",                default: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+  end
 
   create_table "additional_seller_fees", force: :cascade do |t|
     t.integer  "group_id"
@@ -343,6 +354,7 @@ ActiveRecord::Schema.define(version: 20170420065634) do
     t.integer  "percentage_of_inspection_service"
     t.float    "inspection_service_cost"
     t.text     "inspection_service_comment"
+    t.json     "error_details",                    default: {}
   end
 
   create_table "fly_buy_profiles", force: :cascade do |t|
@@ -387,6 +399,8 @@ ActiveRecord::Schema.define(version: 20170420065634) do
     t.datetime "business_documents_updated_at"
     t.string   "additional_information"
     t.boolean  "outside_the_us",                  default: false
+    t.boolean  "submited",                        default: false
+    t.boolean  "bank_details_verified",           default: false
   end
 
   create_table "green_checks", force: :cascade do |t|

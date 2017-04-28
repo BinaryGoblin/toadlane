@@ -23,12 +23,29 @@
     margin: auto;
     z-index: 1001;
   }
+  .public-page-logo-div{
+    float: left;
+    height: 50px;
+    overflow: hidden;
+    width: 345px;
+    .logoSideNav
+    {
+      text-align:center;
+      cursor:pointer;
+      float: right;
+      margin-right: 10px;
+      img
+      {
+        width: 232px;
+      }
+    }
+  }
 
   .logo-div{
     float: left;
     height: 50px;
     overflow: hidden;
-    width: 345px;
+    width: 222px;
   }
 }
 
@@ -112,9 +129,10 @@
 {
   text-align:center;
   cursor:pointer;
+  float: right;
+  margin-right: 10px;
 }
 .logoSideNav img
 {
-  margin-left: 24px;
-  width: 232px;
+  width: 42px;
 }
