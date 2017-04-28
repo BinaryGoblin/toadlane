@@ -22,7 +22,7 @@ header.header.navbar.navbar-default.wrap.navbar-fixed-top
           = hidden_field_tag 'count', '16'
 
           .query-container
-              = text_field_tag :query, params[:query], placeholder: 'Searching Toadlane?'
+              = text_field_tag :query, params[:query], placeholder: 'Search Toadlane'
 
       .header-user.pull-right
         = link_to 'Sell', new_dashboard_product_path, class: 'sellBtn'
