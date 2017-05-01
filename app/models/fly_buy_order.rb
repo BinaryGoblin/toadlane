@@ -62,7 +62,7 @@ class FlyBuyOrder < ActiveRecord::Base
                 :processing_fund_release, :queued, :processing_fund_release_to_group,
                 :payment_released_to_group]
 
-  RELEASE_PAYMENT_STATE = ['processing_fund_release', 'processing_fund_release_to_group', 'payment_released_to_group'].freeze
+  CANCEL_ORDER_STATE = ['processing', 'pending_confirmation', 'pending_inspection', 'queued'].freeze
 
   def seller_not_mark_approved
     inspection_dates.buyer_added.not_marked_approved.last
@@ -124,6 +124,10 @@ class FlyBuyOrder < ActiveRecord::Base
     unit_prices = (count.to_f * unit_price.to_f)
     
     unit_prices + get_toadlane_fee.to_f + fly_buy_fee.to_f + shipping_cost.to_f - (unit_prices * rebate.to_f / 100)
+  end
+
+  def refund_amount
+    total.to_f - 0.05 - 2
   end
 
   def amount_pay_to_seller

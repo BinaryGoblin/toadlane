@@ -2,22 +2,20 @@ module Services
   module FlyAndBuy
 
     class ReleasePaymentToAdditionalSellers < Base
-
-      attr_accessor :user, :fly_buy_profile, :fly_buy_order, :synapse_pay
+      attr_reader :user, :fly_buy_profile, :fly_buy_order, :synapse_pay
 
       def initialize(user, fly_buy_profile, fly_buy_order)
         @user = user
         @fly_buy_profile = fly_buy_profile
         @fly_buy_order = fly_buy_order
-
-        @synapse_pay = Services::SynapsePay.new(fingerprint: Services::SynapsePay::FINGERPRINT, ip_address: fly_buy_profile.synapse_ip_address)
+        @synapse_pay = SynapsePay.new(fingerprint: SynapsePay::FINGERPRINT, ip_address: fly_buy_profile.synapse_ip_address)
       end
 
       def process
-        synapse_user = synapse_pay.user(user_id: Services::SynapsePay::USER_ID)
-        node = synapse_user.find_node(id: Services::SynapsePay::ESCROW_NODE_ID)
+        synapse_user = synapse_pay.user(user_id: SynapsePay::USER_ID)
+        node = synapse_user.find_node(id: SynapsePay::ESCROW_NODE_ID)
 
-        additional_sellers = fly_buy_order.additional_seller_fee_transactions
+        additional_sellers = fly_buy_order.additional_seller_fee_transactions.unpaid
 
         additional_sellers.each do |additional_seller|
           node.create_transaction(transaction_settings(additional_seller)) unless additional_seller.fee.zero?

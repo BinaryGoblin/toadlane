@@ -15,4 +15,6 @@
 class AdditionalSellerFeeTransaction < ActiveRecord::Base
   belongs_to :fly_buy_order
   belongs_to :user
+
+  scope :unpaid, -> { where(is_paid: false) }
 end

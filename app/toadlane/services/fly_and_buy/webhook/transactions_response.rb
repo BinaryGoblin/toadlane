@@ -23,6 +23,13 @@ module Services
             ).process
           when 'QUEUED-BY-SYNAPSE'
             Transactions::QueuedTransactions.new(fly_buy_order).process
+          when 'CANCELED'
+            Transactions::CanceledTransactions.new(
+              fly_buy_order: fly_buy_order,
+              additional_seller_fee_transaction: additional_seller_fee_transaction,
+              error_note: options['recent_status']['note'],
+              note: transaction_note
+            ).process
           end
         end
 
@@ -49,6 +56,11 @@ module Services
             additional_seller_fee_transaction = AdditionalSellerFeeTransaction.where(id: additional_seller_fee_transaction_id).first
             
             [additional_seller_fee_transaction.fly_buy_order, synapse_transaction_id, additional_seller_fee_transaction]
+          when 'Transaction Refunded'
+            synapse_transaction_id = options['_id']['$oid']
+            fly_buy_order_id = options['extra']['supp_id'].split(':').last
+
+            [FlyBuyOrder.where(id: fly_buy_order_id).first, synapse_transaction_id, nil]
           end
         end
 

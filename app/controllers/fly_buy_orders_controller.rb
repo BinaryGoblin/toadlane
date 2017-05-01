@@ -168,7 +168,7 @@ class FlyBuyOrdersController < ApplicationController
 
   def cancel_transaction
     fly_buy_order = FlyBuyOrder.find_by_id(params[:fly_buy_order_id])
-    Services::FlyAndBuy::CancelTransaction.new(current_user, fly_buy_order).process
+    FlyAndBuy::CancelOrderJob.perform_later(current_user, fly_buy_order)
     fly_buy_order.reload
 
     if fly_buy_order.error_details.present?

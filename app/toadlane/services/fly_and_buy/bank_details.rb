@@ -2,8 +2,8 @@ module Services
   module FlyAndBuy
 
     class BankDetails < Base
-
-      attr_accessor :user, :fly_buy_profile, :options, :address, :synapse_pay
+      attr_reader :user, :options, :address, :synapse_pay
+      attr_accessor :fly_buy_profile
 
       DOC_TYPES = {
         ssn: 'SSN',
@@ -19,8 +19,7 @@ module Services
         @fly_buy_profile = fly_buy_profile
         @options = options
         @address = Address.where(id: options[:address_id]).first
-
-        @synapse_pay = Services::SynapsePay.new(fingerprint: fly_buy_profile.encrypted_fingerprint, ip_address: fly_buy_profile.synapse_ip_address)
+        @synapse_pay = SynapsePay.new(fingerprint: fly_buy_profile.encrypted_fingerprint, ip_address: fly_buy_profile.synapse_ip_address)
       end
 
       def add

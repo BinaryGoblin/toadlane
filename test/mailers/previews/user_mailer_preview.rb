@@ -287,4 +287,43 @@ class UserMailerPreview < ActionMailer::Preview
 
     UserMailer.send_payment_release_to_additional_seller(order, additional_seller)
   end
+
+  def notify_buyer_for_cancled_seller_payment
+    order = FlyBuyOrder.first
+
+    UserMailer.notify_buyer_for_cancled_seller_payment(order)
+  end
+
+  def notify_seller_for_cancled_additional_seller_payment
+    order = FlyBuyOrder.first
+    additional_seller = User.first
+
+    UserMailer.notify_seller_for_cancled_additional_seller_payment(order, additional_seller)
+  end
+
+  def notify_buyer_for_cancled_order
+    order = FlyBuyOrder.first
+
+    UserMailer.notify_buyer_for_cancled_order(order)
+  end
+
+  def notify_buyer_for_placed_cancle_fly_buy_order
+    order = FlyBuyOrder.first
+    buyer = order.buyer
+
+    UserMailer.notify_buyer_for_placed_cancle_fly_buy_order(order)
+  end
+
+  def notify_seller_and_additional_sellers_for_buyer_placed_cancle_fly_buy_order
+    order = FlyBuyOrder.first
+
+    UserMailer.notify_seller_and_additional_sellers_for_buyer_placed_cancle_fly_buy_order(order, [])
+  end
+
+  def send_transaction_refunded_notification_to_buyer
+    order = FlyBuyOrder.first
+    buyer = order.buyer
+
+    UserMailer.send_transaction_refunded_notification_to_buyer(order)
+  end
 end

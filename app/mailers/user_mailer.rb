@@ -152,6 +152,13 @@ class UserMailer < ApplicationMailer
     mail to: @buyer.email, subject: "Funds received in escrow"
   end
 
+  def notify_buyer_for_cancled_order(order)
+    @order = order
+    @buyer = order.buyer
+
+    mail to: @buyer.email, subject: "Canceled order #{@order.id}!"
+  end
+
   def send_routing_number_incorrect_notification(user)
     @user = user
 
@@ -174,6 +181,12 @@ class UserMailer < ApplicationMailer
     mail to: @seller.email, subject: "Payment released by #{@buyer.name} for order #{@order.id}"
   end
 
+  def notify_buyer_for_cancled_seller_payment(order)
+    @order = order
+    @buyer = @order.buyer
+
+    mail to: @buyer.email, subject: "Payment canceled for order ##{@order.id}!"
+  end
 
   def send_order_queued_notification_to_seller(order)
     @order = order
@@ -372,7 +385,43 @@ class UserMailer < ApplicationMailer
     mail to: @additional_seller.email, subject: "Payment released by #{@order.seller.name} for order #{@order.id}"
   end
 
+  def notify_seller_for_cancled_additional_seller_payment(order, additional_seller)
+    @order = order
+    @seller = order.seller
+    @additional_seller = additional_seller
+
+    mail to: @seller.email, subject: 'Additional member\'s payment canceled!'
+  end
+
   def test
     mail to: "testemails@mailinator.com", cc: "jailalawat@gmail.com", subject: "Payment rel"
+  end
+
+  def notify_buyer_for_placed_cancle_fly_buy_order(order)
+    @order = order
+    @buyer = @order.buyer
+
+    mail to: @buyer.email, subject: "Cancle order placed for order##{@order.id}!"
+  end
+
+  def notify_seller_and_additional_sellers_for_buyer_placed_cancle_fly_buy_order(order, additional_sellers_emails)
+    @order = order
+    bcc = additional_sellers_emails.join(',')
+
+    options = {
+      to: @order.seller.email,
+      subject: "Buyer placed cancle order for order##{@order.id}!"
+    }
+
+    options.merge!(bcc: bcc) if bcc.present?
+
+    mail(options)
+  end
+
+  def send_transaction_refunded_notification_to_buyer(order)
+    @order = order
+    @buyer = @order.buyer
+
+    mail to: @buyer.email, subject: "Transaction refunded successfully for order##{@order.id}"
   end
 end

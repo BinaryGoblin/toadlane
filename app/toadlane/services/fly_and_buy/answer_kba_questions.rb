@@ -2,14 +2,14 @@ module Services
   module FlyAndBuy
 
     class AnswerKbaQuestions < Base
-      attr_accessor :user, :fly_buy_profile, :answers, :synapse_pay
+      attr_reader :user, :answers, :synapse_pay
+      attr_accessor :fly_buy_profile
 
       def initialize(user, fly_buy_profile, answers = {})
         @user = user
         @fly_buy_profile = fly_buy_profile
         @answers = answers
-
-        @synapse_pay = Services::SynapsePay.new(fingerprint: fly_buy_profile.encrypted_fingerprint, ip_address: fly_buy_profile.synapse_ip_address)
+        @synapse_pay = SynapsePay.new(fingerprint: fly_buy_profile.encrypted_fingerprint, ip_address: fly_buy_profile.synapse_ip_address)
       end
 
       def process

@@ -17,6 +17,12 @@ module Services
             fly_buy_order.update_attributes(options)
           end
 
+          def update_product_count
+            product = fly_buy_order.product
+            product.sold_out -= fly_buy_order.count
+            product.save
+          end
+
           def notify_the_user(method_name:, extra_arg: nil)
             if extra_arg.present?
               UserMailer.send(method_name, fly_buy_order, extra_arg)

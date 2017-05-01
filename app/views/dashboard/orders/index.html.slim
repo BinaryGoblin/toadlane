@@ -64,12 +64,7 @@
                 = link_to 'Refund Requested', dashboard_refund_requests_path, class: 'view'
             td.text-center
               - if order.buyer == current_user && order.status != 'cancelled' && order.instance_of?(FlyBuyOrder)
-                - if order.status == 'pending_confirmation' && !order.funds_in_escrow?
-                  = link_to 'Cancel Order', '#modal_cancel_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
-                - elsif order.status == 'queued' && !order.funds_in_escrow?
-                  = link_to 'Cancel Order', '#modal_cancel_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
-
-                /- unless FlyBuyOrder::RELEASE_PAYMENT_STATE.include?(order.status)
+                - if FlyBuyOrder::CANCEL_ORDER_STATE.include?(order.status)
                   = link_to 'Cancel Order', "#modal_cancel_order_#{order.id}", class: 'view', data: { toggle: 'modal' }
 
                 - if order.not_inspected && order.status == 'pending_inspection' && order.inspection_date_today? && order.funds_in_escrow?
