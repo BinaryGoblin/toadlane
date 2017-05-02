@@ -3,7 +3,6 @@ module Services
 
     class BankDetails < Base
       attr_reader :user, :options, :address, :synapse_pay
-      attr_accessor :fly_buy_profile
 
       DOC_TYPES = {
         ssn: 'SSN',
@@ -16,10 +15,11 @@ module Services
 
       def initialize(user, fly_buy_profile, options = {})
         @user = user
-        @fly_buy_profile = fly_buy_profile
         @options = options
         @address = Address.where(id: options[:address_id]).first
         @synapse_pay = SynapsePay.new(fingerprint: fly_buy_profile.encrypted_fingerprint, ip_address: fly_buy_profile.synapse_ip_address)
+
+        super(nil, fly_buy_profile)
       end
 
       def add
@@ -147,10 +147,6 @@ module Services
         splited_email = user.email.split('@')
         updated_email = "#{splited_email.first}+#{user.first_name}"
         "#{updated_email}@#{splited_email.last}"
-      end
-
-      def update_fly_buy_profile(**options)
-        fly_buy_profile.update_attributes(options)
       end
     end
   end

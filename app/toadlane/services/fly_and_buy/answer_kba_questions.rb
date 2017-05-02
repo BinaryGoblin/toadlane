@@ -3,20 +3,20 @@ module Services
 
     class AnswerKbaQuestions < Base
       attr_reader :user, :answers, :synapse_pay
-      attr_accessor :fly_buy_profile
 
       def initialize(user, fly_buy_profile, answers = {})
         @user = user
-        @fly_buy_profile = fly_buy_profile
         @answers = answers
         @synapse_pay = SynapsePay.new(fingerprint: fly_buy_profile.encrypted_fingerprint, ip_address: fly_buy_profile.synapse_ip_address)
+
+        super(nil, fly_buy_profile)
       end
 
       def process
         synapse_user = synapse_pay.user(user_id: fly_buy_profile.synapse_user_id)
         submit_kba_question_answers(synapse_user)
 
-        fly_buy_profile.update_attributes(kba_questions: {})
+        update_fly_buy_profile(kba_questions: {})
       end
 
       private

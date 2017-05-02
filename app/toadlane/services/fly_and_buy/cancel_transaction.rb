@@ -2,12 +2,13 @@ module Services
   module FlyAndBuy
 
     class CancelTransaction < Base
-      attr_reader :user, :fly_buy_order, :synapse_pay
+      attr_reader :user, :synapse_pay
 
       def initialize(user, fly_buy_order)
         @user = user
-        @fly_buy_order = fly_buy_order
         @synapse_pay = SynapsePay.new(fingerprint: SynapsePay::FINGERPRINT, ip_address: user.fly_buy_profile.synapse_ip_address)
+
+        super(fly_buy_order, nil)
       end
 
       def process
@@ -26,16 +27,6 @@ module Services
       end
 
       private
-
-      def update_product_count
-        product = fly_buy_order.product
-        product.sold_out -= fly_buy_order.count
-        product.save
-      end
-
-      def update_fly_buy_order(**options)
-        fly_buy_order.update_attributes(options)
-      end
 
       def handle_synapse_pay_rest_error(node, e)
         transaction = node.find_transaction(id: fly_buy_order.synapse_transaction_id)

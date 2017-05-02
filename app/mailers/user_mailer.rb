@@ -11,12 +11,12 @@ class UserMailer < ApplicationMailer
     mail to: @seller.email, subject: 'You have a sales order!'
   end
 
-  def sales_order_notification_to_additional_seller(order, group, group_seller)
+  def sales_order_notification_to_additional_seller(order, group_seller)
     @order = order
-    @group = group
     @additional_seller = group_seller
-    @buyer = User.find_by_id(@order.buyer_id)
-    @product = Product.find_by_id(@order.product_id)
+    @group = group_seller.group
+    @buyer = order.buyer
+    @product = order.product
 
     mail to: @additional_seller.user.email, subject: 'You have a sales order!'
   end

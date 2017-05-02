@@ -2,23 +2,23 @@ module Services
   module FlyAndBuy
 
     class ReleasePaymentToSeller < Base
-      attr_reader :user, :fly_buy_profile, :synapse_pay
-      attr_accessor :fly_buy_order
+      attr_reader :user, :synapse_pay
 
       def initialize(user, fly_buy_order)
         @user = user
-        @fly_buy_order = fly_buy_order
-        @fly_buy_profile = fly_buy_order.seller.fly_buy_profile
+        fly_buy_profile = fly_buy_order.seller.fly_buy_profile
         @synapse_pay = SynapsePay.new(fingerprint: SynapsePay::FINGERPRINT, ip_address: fly_buy_profile.synapse_ip_address)
+
+        super(fly_buy_order, fly_buy_profile)
       end
 
       def process
         synapse_user = synapse_pay.user(user_id: SynapsePay::USER_ID)
         node = synapse_user.find_node(id: SynapsePay::ESCROW_NODE_ID)
         node.create_transaction(transaction_settings)
-        fly_buy_order.update_attribute(:status, :processing_fund_release)
+        update_fly_buy_order(status: :processing_fund_release)
       rescue SynapsePayRest::Error => e
-        fly_buy_order.update_attribute(:error_details, e.response['error'])
+        update_fly_buy_order(error_details: e.response['error'])
       end
 
       private

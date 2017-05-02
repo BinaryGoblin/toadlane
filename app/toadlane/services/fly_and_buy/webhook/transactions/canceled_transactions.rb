@@ -38,12 +38,6 @@ module Services
             error.merge('en': error_note) if error_note.present?
             error
           end
-
-          def update_product_count
-            product = fly_buy_order.product
-            product.sold_out -= fly_buy_order.count
-            product.save
-          end
         end
       end
     end

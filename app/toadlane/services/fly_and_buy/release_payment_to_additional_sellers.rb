@@ -2,13 +2,13 @@ module Services
   module FlyAndBuy
 
     class ReleasePaymentToAdditionalSellers < Base
-      attr_reader :user, :fly_buy_profile, :fly_buy_order, :synapse_pay
+      attr_reader :user, :synapse_pay
 
       def initialize(user, fly_buy_profile, fly_buy_order)
         @user = user
-        @fly_buy_profile = fly_buy_profile
-        @fly_buy_order = fly_buy_order
         @synapse_pay = SynapsePay.new(fingerprint: SynapsePay::FINGERPRINT, ip_address: fly_buy_profile.synapse_ip_address)
+
+        super(fly_buy_order, fly_buy_profile)
       end
 
       def process

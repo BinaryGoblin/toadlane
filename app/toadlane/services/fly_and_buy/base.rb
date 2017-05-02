@@ -3,7 +3,36 @@ module Services
 
     class Base < HtmlRenderer
 
+      attr_reader :fly_buy_order, :fly_buy_profile
+
+      def initialize(fly_buy_order, fly_buy_profile)
+        @fly_buy_order = fly_buy_order
+        @fly_buy_profile = fly_buy_profile
+      end
+
       protected
+
+      def update_fly_buy_profile(**options)
+        fly_buy_profile.update_attributes(options)
+      end
+
+      def update_fly_buy_order(**options)
+        fly_buy_order.update_attributes(options)
+      end
+
+      def update_product_count
+        product = fly_buy_order.product
+        product.sold_out += fly_buy_order.count
+        product.save
+      end
+
+      def notify_order_details_to_user(method_name:, extra_arg: nil)
+        if extra_arg.present?
+          UserMailer.send(method_name, fly_buy_order, extra_arg)
+        else
+          UserMailer.send(method_name, fly_buy_order)
+        end.deliver_later
+      end
 
       def encode_attachment(file_tempfile:, file_type:)
         file_content = open(parse_original_path(file_tempfile.gsub(/\?\d+$/, ''))) { |f| f.read }

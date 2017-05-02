@@ -2,13 +2,13 @@ module Services
   module FlyAndBuy
 
     class RefundRequest < Base
-      attr_reader :user, :fly_buy_order, :fly_buy_profile, :synapse_pay
+      attr_reader :user, :synapse_pay
 
       def initialize(user, fly_buy_order)
         @user = user
-        @fly_buy_order = fly_buy_order
-        @fly_buy_profile = fly_buy_order.buyer.fly_buy_profile
         @synapse_pay = SynapsePay.new(fingerprint: SynapsePay::FINGERPRINT, ip_address: user.fly_buy_profile.synapse_ip_address)
+
+        super(fly_buy_order, fly_buy_order.buyer.fly_buy_profile)
       end
 
       def process
@@ -42,16 +42,12 @@ module Services
       end
 
       def send_email_notification
-        UserMailer.notify_buyer_for_placed_cancle_fly_buy_order(fly_buy_order).deliver_later
+        notify_order_details_to_user(method_name: :notify_buyer_for_placed_cancle_fly_buy_order)
         
         additional_sellers_emails = []
         additional_sellers_emails = fly_buy_order.seller_group.group_sellers.map { |group_seller| group_seller.user.email } if fly_buy_order.seller_group.present?
 
-        UserMailer.notify_seller_and_additional_sellers_for_buyer_placed_cancle_fly_buy_order(fly_buy_order, additional_sellers_emails).deliver_later
-      end
-
-      def update_fly_buy_order(**options)
-        fly_buy_order.update_attributes(options)
+        notify_order_details_to_user(method_name: :notify_seller_and_additional_sellers_for_buyer_placed_cancle_fly_buy_order, extra_arg: additional_sellers_emails)
       end
     end
   end

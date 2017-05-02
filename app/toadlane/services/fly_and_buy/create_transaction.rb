@@ -2,14 +2,13 @@ module Services
   module FlyAndBuy
 
     class CreateTransaction < Base
-      attr_reader :user, :fly_buy_profile, :synapse_pay
-      attr_accessor :fly_buy_order
+      attr_reader :user, :synapse_pay
 
       def initialize(user, fly_buy_profile, fly_buy_order)
         @user = user
-        @fly_buy_profile = fly_buy_profile
-        @fly_buy_order = fly_buy_order
         @synapse_pay = SynapsePay.new(fingerprint: fly_buy_profile.encrypted_fingerprint, ip_address: fly_buy_profile.synapse_ip_address)
+
+        super(fly_buy_order, fly_buy_profile)
       end
 
       def process
@@ -46,22 +45,13 @@ module Services
         }
       end
 
-      def update_product_count
-        product = fly_buy_order.product
-        product.sold_out += fly_buy_order.count
-        product.save
-      end
-
       def send_email_notification
-        UserMailer.fly_buy_order_notification_to_buyer(fly_buy_order).deliver_later
-        UserMailer.sales_order_notification_to_seller(fly_buy_order).deliver_later
-        fly_buy_order.seller_group.group_sellers.each do |group_seller|
-          UserMailer.sales_order_notification_to_additional_seller(fly_buy_order, fly_buy_order.seller_group, group_seller).deliver_later
-        end if fly_buy_order.seller_group.present?
-      end
+        notify_order_details_to_user(method_name: :fly_buy_order_notification_to_buyer)
+        notify_order_details_to_user(method_name: :sales_order_notification_to_seller)
 
-      def update_fly_buy_order(**options)
-        fly_buy_order.update_attributes(options)
+        fly_buy_order.seller_group.group_sellers.each do |group_seller|
+          notify_order_details_to_user(method_name: :sales_order_notification_to_additional_seller, extra_arg: group_seller)
+        end if fly_buy_order.seller_group.present?
       end
     end
   end
