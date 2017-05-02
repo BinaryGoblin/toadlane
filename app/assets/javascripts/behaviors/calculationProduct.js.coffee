@@ -4,6 +4,8 @@ class Behavior.CalculationProduct
   constructor: ($el) ->
     @$shippingEstimate     =  $ '.calc-shipping'
     @$calculationPanel     =  $ '.vp-calculation'
+    @$toadlaneFee         =  $ '.toadlane-fee'
+    @$flybyFee           =  $ '.fly-by-fee'
 
     @options        = @$calculationPanel.data 'options'
     @$cart          = @$calculationPanel.find '.calc-cart'
@@ -22,11 +24,11 @@ class Behavior.CalculationProduct
     @$NumberOfItemsToInspect = @$calculationPanel.find '.item-count'
     @$InspectServiceFee = @$PercentageOfItemsToInspect.parent().find '.pull-right'
 
-    @fees       = parseFloat @$calculationPanel.find('.calc-fees').text(), 10
+    @fees       = parseFloat @$toadlaneFee.data('fees'), 10
     @unitPrice  = @$calculationPanel.find('[data-unit-price]').data 'unit-price'
 
-    @feesFlyBuyOverMillion    = parseFloat @$calculationPanel.find('.calc-fees-fly-buy-over-million').text(), 10
-    @feesFlyBuyUnderMillion   = parseFloat @$calculationPanel.find('.calc-fees-fly-buy-under-million').text(), 10
+    @feesFlyBuyOverMillion    = parseFloat @$flybyFee.data('fees-fly-buy-over-million'), 10
+    @feesFlyBuyUnderMillion   = parseFloat @$flybyFee.data('fees-fly-buy-under-million'), 10
 
     @$stripeQuantity      = $ '.stripe_quantity'
     @$stripeTotal         = $ '.stripe-total'

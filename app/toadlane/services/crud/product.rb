@@ -6,7 +6,7 @@ module Services
 
       def initialize(product_params, current_user, id = nil)
         @product_params = product_params
-        product_params[:group_attributes].merge!(group_owner_id: current_user.id)
+        product_params[:group_attributes].merge!(group_owner_id: current_user.id) unless product_params[:group_attributes].blank?
         product_params[:inspection_dates_attributes].each {|key, value| value[:creator_type] = ::Product::SELLER}
         @product = if id.nil?
           product = current_user.products.new(params)
