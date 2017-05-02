@@ -29,7 +29,7 @@ class Dashboard::ProductsController < DashboardController
       group_builder = @product.build_group
       group_builder.group_sellers.build
       expected_group_members(current_user)
-    elsif
+    else
       group = @product.group
       group.group_sellers.build unless group.group_sellers.present?
       expected_group_members(group.owner)
@@ -50,6 +50,7 @@ class Dashboard::ProductsController < DashboardController
         send_email_to_additional_sellers @product
         format.html { redirect_to after_create_and_update_path }
       else
+        get_expected_group_members
         format.html { render action: 'new' }
       end
     end
@@ -65,6 +66,7 @@ class Dashboard::ProductsController < DashboardController
         send_email_to_additional_sellers @product
         format.html { redirect_to after_create_and_update_path }
       else
+        get_expected_group_members
         format.html { render action: 'edit' }
       end
     end
@@ -187,6 +189,15 @@ class Dashboard::ProductsController < DashboardController
         param_hash = {group: product.group.name, product: product, group_seller: group_seller.user, current_user: current_user, admins: product.group_admins}
         NotificationMailer.group_product_removed_notification_email(param_hash).deliver_later
       end
+    end
+  end
+
+  def get_expected_group_members
+    if @product.group.blank?
+      expected_group_members(current_user)
+    else
+      group = @product.group
+      expected_group_members(group.owner)
     end
   end
 end

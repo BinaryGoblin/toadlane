@@ -99,10 +99,8 @@
 
             .quantity
               .pull-left
-                span.text-left Select quantity:
+                span.text-left Quantity:
                 .form-control-number data-behavior="FieldQuantity" data-options='{"min":1#{maxoptions}}'
-                  .minus= fa_icon 'minus'
-                  .plus= fa_icon 'plus'
                   input.calc-quantity.form-control.text-center type="text" value="1"
 
               .pull-right
@@ -120,14 +118,14 @@
 
               li
                 - if @product.default_payment_flybuy?
-                  span Toadlane Fee (<span class="calc-fees">#{@fee}</span>% - #{Fee::FlyBuyReductionFeeAmount}% reduced):
+                  span.toadlane-fee data-fees="#{@fee}" Toadlane Fee:
                 - else
-                  span Toadlane Fee (<span class="calc-fees">#{@fee}</span>%):
+                  span.toadlane-fee data-fees="#{@fee}" Toadlane Fee:
                 b.pull-right.calc-fees-price 0.00
 
               - if @product.default_payment_flybuy?
                 li
-                  span Fly & Buy Fee (<span class="calc-fees-fly-buy-over-million">#{Fee::FLY_BUY[:over_million]}</span>% - <span class="calc-fees-fly-buy-under-million">#{Fee::FLY_BUY[:under_million]}</span>%):
+                  span.fly-by-fee data-fees-fly-buy-over-million="#{Fee::FLY_BUY[:over_million]}" data-fees-fly-buy-under-million="#{Fee::FLY_BUY[:under_million]}" Fly & Buy Fee:
 
                   b.pull-right.calc-fees-fly-buy-price 0.00
 

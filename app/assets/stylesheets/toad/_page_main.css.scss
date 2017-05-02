@@ -92,6 +92,7 @@
   padding: 15px 25px;
   text-align: center;
   box-shadow: 0 0 15px $brand-success;
+  z-index: 9999;
   @include animation-name(notice);
   @include animation-duration(3s);
   @include animation-delay(3s);

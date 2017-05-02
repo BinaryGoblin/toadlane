@@ -669,7 +669,10 @@
 
 @media (max-width: 480px) {
   .mobile-main-container{
-    margin-top: 228px;
+    margin-top: 124px;
+    .wrap-sm{
+      margin-top: 4px !important;
+    }
   }
   .main-alert {
     top: 148px;
@@ -912,7 +915,6 @@
   }
 
   .main-notice {
-    top: 200px;
     font-size: 15px;
   }
 }
@@ -932,7 +934,7 @@
 
   .InvitePpl {
     .topArrowIcon {
-      margin-left: -19% !important;
+      margin-left: -23% !important;
       margin-top: 7.6% !important;
     }
 
@@ -947,7 +949,7 @@
 
   .logOutOptions {
     .logOutTopArrowIcon {
-      margin-left: -11.1% !important;
+      margin-left: -15.1% !important;
       margin-top: 7.6% !important;
     }
   }
