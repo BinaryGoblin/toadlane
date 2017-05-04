@@ -424,4 +424,27 @@ class UserMailer < ApplicationMailer
 
     mail to: @buyer.email, subject: "Transaction refunded successfully for order##{@order.id}"
   end
+
+  def send_new_inspection_date_requested_notification(order, receiver, sender)
+    @order = order
+    @receiver = receiver
+    @sender = sender
+
+    mail to: @receiver.email, subject: "#{@sender.name} has requested a new inspection date for order ##{order.id}"
+  end
+
+  def send_new_inspection_date_approved_notification(order, receiver, sender)
+    @order = order
+    @receiver = receiver
+    @sender = sender
+
+    mail to: @receiver.email, subject: "New inspection date request for order ##{order.id} is approved "
+  end
+
+  def order_inspection_date_change_notification_to_admin(order, user)
+    @order = order
+    @user = user
+
+    mail to: "calvinw@toadlane.com", subject: "Inspection date change for order ##{order.id}", bcc: ["hello@toadlane.com", "johnb@toadlane.com"]
+  end
 end

@@ -326,4 +326,27 @@ class UserMailerPreview < ActionMailer::Preview
 
     UserMailer.send_transaction_refunded_notification_to_buyer(order)
   end
+
+  def send_new_inspection_date_requested_notification
+    order = FlyBuyOrder.first
+    sender = order.buyer
+    receiver = order.seller
+
+    UserMailer.send_new_inspection_date_requested_notification(order, receiver, sender)
+  end
+
+  def send_new_inspection_date_approved_notification
+    order = FlyBuyOrder.first
+    sender = order.buyer
+    receiver = order.seller
+
+    UserMailer.send_new_inspection_date_approved_notification(order, receiver, sender)
+  end
+
+  def order_inspection_date_change_notification_to_admin
+    order = FlyBuyOrder.first
+    user = order.seller
+
+    UserMailer.order_inspection_date_change_notification_to_admin(order, user)
+  end
 end

@@ -115,8 +115,26 @@
                 span.label.label-green
                   | Sold
             td.text-center
-              - if order.instance_of?(FlyBuyOrder) && order.selected_inspection_date.present?
-                = order.selected_inspection_date.get_inspection_date
+              - fbo_inspection_date = order.inspection_dates.first
+              - if order.instance_of?(FlyBuyOrder)
+                - if order.selected_inspection_date.present?
+                  = order.selected_inspection_date.get_inspection_date
+                  - if !order.cancelled? && order.not_inspected && current_user_is_a_buyer?(order)
+                    br
+                    a href="#" data-toggle="modal" data-target="#newInpsectionDateModal_#{order.id}" request a different inspection date
+                    = render partial: 'request_new_inspection_date', locals: { fly_buy_order: order, product: order.product}
+                - if fbo_inspection_date.new_requested_date.present? && !order.selected_inspection_date.present?
+                  | #{fbo_inspection_date.creator_type.titleize} Requested new date
+                  br
+                  = fbo_inspection_date.get_new_inspection_date
+                  - if current_user_is_a_buyer?(order) && fbo_inspection_date.creator_type == "seller"
+                    br
+                    a href="#" data-toggle="modal" data-target="#ApproveChangeInspectionDateModal_#{order.id}" Approve/change
+                    = render partial: 'approve_change_inspection_date', locals: { fly_buy_order: order, product: order.product}
+                  - if current_user_is_a_seller?(order) && fbo_inspection_date.creator_type == "buyer"
+                    br
+                    a href="#" data-toggle="modal" data-target="#ApproveChangeInspectionDateModal_#{order.id}" Approve/change
+                    = render partial: 'approve_change_inspection_date', locals: { fly_buy_order: order, product: order.product}
 
           = render partial: 'dashboard/orders/cancel_transaction_pop_up', locals: { order: order}
           = render partial: 'dashboard/orders/release_payment_group_seller_flybuy_account_not_created', locals: { order: order}

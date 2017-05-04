@@ -109,4 +109,63 @@ class Dashboard::OrdersController < DashboardController
       format.js { render :template => 'shared/update_flash' }
     end
   end
+
+  def request_new_inspection_date
+    inspection_date = DateTime.new(
+      params["inspection_date"]["date(1i)"].to_i,
+      params["inspection_date"]["date(2i)"].to_i,
+      params["inspection_date"]["date(3i)"].to_i,
+      params["inspection_date"]["date(4i)"].to_i,
+      params["inspection_date"]["date(5i)"].to_i
+    )
+
+    fly_buy_order = FlyBuyOrder.find_by_id(params[:fly_buy_order_id])
+    fbo_inspection_date = fly_buy_order.inspection_dates.first
+    if current_user == fly_buy_order.buyer
+      creater_type = 'buyer'
+      responder = SELLER
+      receiver = fly_buy_order.seller
+      sender = fly_buy_order.buyer
+    elsif current_user == fly_buy_order.seller
+      creater_type = 'seller'
+      responder = BUYER
+      receiver = fly_buy_order.buyer
+      sender = fly_buy_order.seller
+    end
+    fbo_inspection_date.update_attributes({
+      new_requested_date: inspection_date,
+      creator_type: creator_type,
+      approved: false
+    })
+    new_inspection_date_notification(fly_buy_order, receiver, sender)
+    flash[:notice] = "Your requested inspection date has been submitted. You will be notified when the #{responder} responds."
+    redirect_to dashboard_orders_path
+  end
+
+  def approve_new_inspection_date
+    fly_buy_order = FlyBuyOrder.find_by_id(params[:fly_buy_order_id])
+    fbo_inspection_date = fly_buy_order.inspection_dates.first
+    fbo_inspection_date.update_attributes({
+      date: fbo_inspection_date.new_requested_date,
+      approved: true
+    })
+
+    if fbo_inspection_date.creator_type == "seller"
+      receiver = fly_buy_order.seller
+    elsif fbo_inspection_date.creator_type == "buyer"
+      receiver = fly_buy_order.buyer
+    end
+
+    flash[:notice] = "You have accepted requested inspection date."
+    UserMailer.send_new_inspection_date_approved_notification(fly_buy_order, receiver, current_user).deliver_later
+    UserMailer.order_inspection_date_change_notification_to_admin(fly_buy_order, current_user).deliver_later
+    redirect_to dashboard_orders_path
+  end
+
+  private
+
+  def new_inspection_date_notification(order, receiver, sender)
+    UserMailer.send_new_inspection_date_requested_notification(order, receiver, sender).deliver_later
+    UserMailer.order_inspection_date_change_notification_to_admin(order, sender).deliver_later
+  end
 end

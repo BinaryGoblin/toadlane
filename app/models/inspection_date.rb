@@ -12,6 +12,7 @@
 #  updated_at       :datetime         not null
 #  promise_order_id :integer
 #  fly_buy_order_id :integer
+#  new_requested_date :datetime       null
 #
 
 class InspectionDate < ActiveRecord::Base
@@ -32,6 +33,10 @@ class InspectionDate < ActiveRecord::Base
   # gives August 09, 2016, 06:00 PM
   def get_inspection_date
     date.strftime("%B %d, %Y, %I:%M %p")
+  end
+
+  def get_new_inspection_date
+    new_requested_date.strftime("%B %d, %Y, %I:%M %p")
   end
 
   def check_inspection_date

@@ -97,6 +97,8 @@ Toad::Application.routes.draw do
       collection do
         delete :delete_cascade
         get :cancel_order
+        post :request_new_inspection_date, to: 'orders#request_new_inspection_date', as: 'request_new_inspection_date'
+        post :approve_new_inspection_date, to: 'orders#approve_new_inspection_date', as: 'approve_new_inspection_date'
       end
     end
 
