@@ -1,6 +1,7 @@
 class SearchController < ApplicationController
   layout 'user_dashboard'
   before_action :check_terms_of_service
+  before_filter :authenticate_user!
 
   def index
     query = params[:query].presence || '*'
