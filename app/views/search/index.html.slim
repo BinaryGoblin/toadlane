@@ -1,5 +1,5 @@
 = render '/shared/tabs'
-.my-profile-open-link Profile
+i.fa.fa-bars.my-profile-open-link aria-hidden="true"
 .wrap-full
   - if @related_searches.present?
     - unless @related_searches.count == 1 && @related_searches.last["normalized_query"] == params[:query]
@@ -13,4 +13,4 @@
 
   .footer-actions: .wrap-sm
     - if @products
-      = will_paginate @products
+      = will_paginate @products, class: 'pagination middle'
