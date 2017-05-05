@@ -94,9 +94,10 @@ $sell-color: #FF8724;
   }
 
   .desc {
-    margin: 0;
+    margin: 5px 0 0;
     font-size: 14px;
     color: #90959c;
+    line-height: 20px;
     @include transition(color .3s);
   }
 

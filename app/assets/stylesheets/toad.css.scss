@@ -129,7 +129,6 @@ form .wrap-sm
   width:100% !important;
   float:left !important;
   padding:0px !important;
-  max-width:1540px !important;
   margin: 0;
 }
 .footer .wrap
@@ -171,7 +170,7 @@ form .wrap-sm
   float: left;
   margin-left: 20px;
   position: relative;
-  top: 15px;
+  top: 10px;
 }
 .headerIcons:hover{
   cursor:pointer;
@@ -220,6 +219,7 @@ form .wrap-sm
   position: relative;
   top: 1px;
   text-decoration: none !important;
+  line-height: 23px;
 }
 .loginBtn
 {
@@ -309,7 +309,7 @@ form .wrap-sm
   float:left;
   width:7% !important;
   position:relative;
-  top:17px;
+  top:12px;
   margin-left:25px;
   cursor:pointer;
   z-index: 999999999999999;
@@ -322,12 +322,12 @@ form .wrap-sm
 .logoutIcon
 {
   width: 6% !important;
-padding: 5px 0px 5px 10px;
-margin-left: 20px;
-cursor: pointer;
-border-left: 1px #787b7e solid;
-position: relative;
-top: 18px;
+  padding: 5px 0px 5px 10px;
+  margin-left: 20px;
+  cursor: pointer;
+  border-left: 1px #787b7e solid;
+  position: relative;
+  top: 13px;
 }
 .logoutIcon img
 {
@@ -867,6 +867,11 @@ min-width:550px;
 .pagination
 {
   margin:0px;
+  &.middle{
+    margin: 0 auto;
+    padding-right: 161px;
+    width: 100%;
+  }
 }
 .show-all
 {
@@ -927,15 +932,15 @@ min-width:550px;
 }
 .my-profile-open-link{
   left: 0px;
-  width: 15px;
+  width: 18px;
   position: fixed;
-  top: 201px;
-  word-wrap: break-word;
-  font-family: monospace;
+  top: 319px;
   cursor: pointer;
   color: white;
-  padding-left: 2px;
+  padding: 2px;
   background-color: $color-curious-blue;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 .close-collapse{
   float: right;
