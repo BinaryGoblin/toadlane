@@ -90,6 +90,7 @@ class User < ActiveRecord::Base
   validates :terms_of_service, inclusion: { in: [true, false] }
   validates :name, presence: true, on: :create
   validate :validate_phone_number
+  validates :tag_list, presence: { message: ': Please let us know what are items you want to buy and sell' }
   # validates :benefits, presence: true, on: :update
 
   accepts_nested_attributes_for :addresses,

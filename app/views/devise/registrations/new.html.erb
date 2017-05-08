@@ -22,6 +22,11 @@
 
     <div><%= f.label :password_confirmation %>
     <%= f.password_field :password_confirmation, autocomplete: "off", class: 'form-control' %></div>
+    <div>
+    <br>
+    <label><%= f.label :tag_list, value: 'I buy and sell' %></label>
+    <%= f.select :tag_list, options_from_collection_for_select(get_all_tags, :name, :name, f.object.tag_list), {}, multiple: true, data: { behavior: 'Select', options: '{"plugins":["remove_button"],"create":"true"}' } %>
+    </div>
     <div class="terms_of_service">
       <%= f.check_box :terms_of_service, required: true %> I agree to the <a href="../terms_of_service" target="_blank">Terms of Service</a>
     </div>
