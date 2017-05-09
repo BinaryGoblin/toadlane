@@ -8,7 +8,7 @@ br
 
   .col-md-6
     .form-group
-      = f.label :company, 'Comapny Name', class: 'required'
+      = f.label :company, 'Company Name', class: 'required'
       = f.text_field :company, class: 'form-control', required: true, value: user.company
 
 .row
@@ -111,7 +111,7 @@ br
       = link_to "Lost your ein?", 'https://www.irs.gov/businesses/small-businesses-self-employed/lost-or-misplaced-your-ein', class: 'view', target: '_blank'
       = f.file_field :eic_attachment
       p.warning Format must be png, jpg or pdf
-  
+
   .col-md-6
     .form-group
       = f.label :bank_statement, 'Bank statement:', class: 'required'
