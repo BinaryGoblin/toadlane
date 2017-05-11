@@ -130,8 +130,13 @@ br
           = date_select :fly_buy_profile, :dob, { start_year: 60.year.ago.year, end_year: Date.today.year, order: [:month, :day, :year] }, { class: 'form-control' }
   .col-md-6
     .form-group
+      .info-btn-link
         = f.label :ssn_number, 'SOCIAL SECURITY NUMBER:', class: 'required'
         = f.text_field :ssn_number, class: 'form-control', required: true, placeholder: '77772222'
+        = link_to toadlane_trust_path, title: 'Why do we need this?', target: :_blank
+          span
+            .info-btn
+              i.fa.fa-question-circle
 
 .row
   .col-md-6

@@ -13,6 +13,9 @@ class StaticPagesController < ApplicationController
   def escrow_faq
   end
 
+  def toadlane_trust
+  end
+
   def home
     if current_user
       redirect_to products_path
