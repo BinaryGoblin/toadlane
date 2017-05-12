@@ -127,7 +127,7 @@ br
       .offer-item
         .offer-date
           label Your date of birth:
-          = date_select :fly_buy_profile, :dob, { :start_year => 60.year.ago.year, :end_year => Date.today.year, order: [:month, :day, :year]}, { class: "form-control" }
+          = date_select :fly_buy_profile, :dob, { start_year: 60.year.ago.year, end_year: Date.today.year, order: [:month, :day, :year] }, { class: 'form-control' }
   .col-md-6
     .form-group
         = f.label :ssn_number, 'SOCIAL SECURITY NUMBER:', class: 'required'
@@ -136,7 +136,7 @@ br
 .row
   .col-md-6
     .form-group
-      = f.label :gov_id, 'GOVERNMENT ISSUED ID:', class: 'required'
+      = f.label :gov_id, 'SOCIAL SECURITY CARD:', class: 'required'
       = f.file_field :gov_id, required: true
       p.warning Format must be png, jpg or pdf
   .col-md-6.hide

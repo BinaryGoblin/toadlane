@@ -9,6 +9,7 @@ module Services
         ein: 'EIN_DOC',
         bank_statement: 'PROOF_OF_ACCOUNT',
         gov_id: 'GOVT_ID',
+        ssn_card: 'SSN_CARD',
         tin: 'TIN',
         business_documents: 'OTHER'
       }.freeze
@@ -77,9 +78,11 @@ module Services
       end
 
       def payload_for_user
+        doc_type = fly_buy_profile.outside_the_us? ? DOC_TYPES[:gov_id] : DOC_TYPES[:ssn_card]
+
         physical_documents = [
           SynapsePayRest::PhysicalDocument.create(
-            type: DOC_TYPES[:gov_id],
+            type: doc_type,
             value: encode_attachment(file_tempfile: fly_buy_profile.gov_id.url, file_type: fly_buy_profile.gov_id_content_type)
           )
         ]
