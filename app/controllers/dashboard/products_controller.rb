@@ -2,11 +2,6 @@ class Dashboard::ProductsController < DashboardController
   def index
     @products = current_user.products.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
     @products_count = @products.count
-    @products.each do |product|
-      if inactive_product? product
-        product.update_attribute(:status, false)
-      end
-    end
   end
 
   def new
