@@ -42,6 +42,7 @@
             - sold_out = (@product.sold_out.present? ? @product.sold_out : 0)
             - available = @product.amount - sold_out
             - maxoptions = ',"max":' + available.to_s
+            - minimum_order_quantity = @product.minimum_order_quantity
           - else
             - purchased = (@product.sold_out.present? ? @product.sold_out : 0)
             - desired = @product.amount - purchased
@@ -73,16 +74,19 @@
               .progress: i style="width:#{100-((desired/@product.amount)*100)}%"
 
     		- if @product.status_characteristic == 'sell'
-              table: tr
-                td
-                  span For sale:
-                  b= @product.amount
-                td
-                  span Sold:
-                  b= sold_out
-                td
-                  span Available to buy:
-                  b.text-green= available
+              -if available < minimum_order_quantity
+                .sold_out Out of Stock
+              - else
+                table: tr
+                  td
+                    span For sale:
+                    b= @product.amount
+                  td
+                    span Sold:
+                    b= sold_out
+                  td
+                    span Available to buy:
+                    b.text-green= available
             - else
               table: tr
                 td
@@ -101,7 +105,13 @@
               .pull-left
                 span.text-left Quantity:
                 .form-control-number data-behavior="FieldQuantity" data-options='{"min":1#{maxoptions}}'
-                  input.calc-quantity.form-control.text-center type="text" value="1"
+                  input.calc-quantity.form-control.text-center type="text" value="#{minimum_order_quantity}"
+                = hidden_field_tag 'minimum_order_quantity', minimum_order_quantity
+                - if minimum_order_quantity > 1
+                  span.min_order_note
+                    | *Minimum order: &nbsp;
+                    b = minimum_order_quantity
+                    | &nbsp;units
 
               .pull-right
                 span.text-right Totals:
@@ -166,13 +176,14 @@
           .white-panel.wp-table
             - if current_user.present?
               -if @product.status_characteristic == 'sell'
-                - if strip_tags(time_left(@product.end_date)) == 'Time ended'
-                  .wrong.text-center
-                    | The Time allocated by seller has ended for this product.
-                - else
-                  = render partial: 'products/shared/product_checkout_form',
-                      locals: { product: @product, fly_buy_order: @fly_buy_order,
-                                user: current_user }
+                - unless available < minimum_order_quantity
+                  - if strip_tags(time_left(@product.end_date)) == 'Time ended'
+                    .wrong.text-center
+                      | The Time allocated by seller has ended for this product.
+                  - else
+                    = render partial: 'products/shared/product_checkout_form',
+                        locals: { product: @product, fly_buy_order: @fly_buy_order,
+                                  user: current_user }
                 end
               -else
                 .text-center= link_to 'Make Sale', '#', class: 'btn btn-success-sell btn-lg checkout', data: {  toggle: 'modal', target: '#stripe_form_checkout'  }

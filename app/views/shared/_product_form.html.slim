@@ -87,10 +87,14 @@
             = f.label :amount, 'Amount in Stock:', class: 'required number'
             = f.number_field :amount, class: 'form-control width-70'
       .row.row-top-padding-10
-        .col-md-12
+        .col-md-6
           .form-group
             = f.label :sold_out, 'Number Purchased:'
-            = f.number_field :sold_out, class: 'form-control width-33'
+            = f.number_field :sold_out, class: 'form-control width-70'
+        .col-md-6
+          .form-group
+            = f.label :minimum_order_quantity , 'Minimum Order Quantity:'
+            = f.number_field :minimum_order_quantity, class: 'form-control width-70'
 
     .col-md-6
       .clearfix

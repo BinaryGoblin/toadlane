@@ -447,4 +447,11 @@ class UserMailer < ApplicationMailer
 
     mail to: "calvinw@toadlane.com", subject: "Inspection date change for order ##{order.id}", bcc: ["hello@toadlane.com", "johnb@toadlane.com"]
   end
+
+  def product_sold_out_notification_to_seller(product)
+    @product = product
+    @seller = @product.owner
+
+    mail to: '@seller.email', subject: "#{@product.name} is out of stock"
+  end
 end
