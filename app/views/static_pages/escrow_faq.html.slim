@@ -1,62 +1,69 @@
-.infos-title: .wrap-sm: h2 Fly & Buy FAQ
-  
-.infos-content: .wrap-sm
-  h2.text-center What the heck is FLY & BUY(™)? 
-  p We have teamed up with <a href="https://synapsepay.com/" class="view" target="_blank">Synapsepay LLC</a> to create our patent pending wholesale purchase method called <strong>“Fly & BUY(™)”</strong>. We follow strict <a href="https://en.wikipedia.org/wiki/Know_your_customer" class="view" target="_blank">Know Your Customer</a> processes to ensure the identity of all parties involved in these transactions. <strong>We charge the lowest fees online</strong>. 
+- if current_user.present?
+  = render '/shared/tabs'
+  - css_class_name = 'wrap-sm'
+- else
+  - css_class_name = 'infos'
 
-  h2.strong How does it work for the buyer?
-  ol
-    li Buyer selects inspection date
-    li Buyer places order
-    li Buyer is sent wire instructions
-    li.strong Buyer wires in funds to confirm inspection
-    li Buyer inspects products
-    li Buyer approves items, funds are released to the seller
+div class="#{css_class_name}"
+  .infos-title: h2 Fly & Buy FAQ
 
-  h2.strong How does it work for the sellers?
-  ol
-    li Seller creates product listings
-    li When buyer places an order, seller is notified
-    li.strong Seller is notified when funds are wired into Toadlane holding account
-    li Seller conducts inspection
-    li Once product is approved, funds are disbursed into Seller's account
-    li Once funds hit Seller's account, seller releases inventory to buyer
-  p We not only make it easy to sell millions of dollars worth of inventory in a single transaction, we provide different levels of verification depending on the size of the transaction. 
+  .infos-content
+    h2.text-center What the heck is FLY & BUY(™)?
+    p We have teamed up with <a href="https://synapsepay.com/" class="view" target="_blank">Synapsepay LLC</a> to create our patent pending wholesale purchase method called <strong>“Fly & BUY(™)”</strong>. We follow strict <a href="https://en.wikipedia.org/wiki/Know_your_customer" class="view" target="_blank">Know Your Customer</a> processes to ensure the identity of all parties involved in these transactions. <strong>We charge the lowest fees online</strong>.
 
-  h2 What are the fees?
-  p We have partnered with <a href="https://synapsepay.com/" class="view" target="_blank">Synapsepay LLC</a> as our clearing house for <strong>Fly & BUY(™)</strong> transactions.
-  p When using FLY & BUY(™) a <strong>75%</strong> rebate applies to our <strong>.5% fee</strong>. Which brings our platform fee to <strong>.125%</strong>.
+    h2.strong How does it work for the buyer?
+    ol
+      li Buyer selects inspection date
+      li Buyer places order
+      li Buyer is sent wire instructions
+      li.strong Buyer wires in funds to confirm inspection
+      li Buyer inspects products
+      li Buyer approves items, funds are released to the seller
 
-  p We charge <strong>#{Fee::FLY_BUY[:under_million]}%</strong> on transactions less than a million dollars and just <strong>#{Fee::FLY_BUY[:over_million]}%</strong> for over a million dollar transactions for use of the escrow service. That is <strong>atleast 80% less</strong> expensive than the most popular escrow service providers online.
+    h2.strong How does it work for the sellers?
+    ol
+      li Seller creates product listings
+      li When buyer places an order, seller is notified
+      li.strong Seller is notified when funds are wired into Toadlane holding account
+      li Seller conducts inspection
+      li Once product is approved, funds are disbursed into Seller's account
+      li Once funds hit Seller's account, seller releases inventory to buyer
+    p We not only make it easy to sell millions of dollars worth of inventory in a single transaction, we provide different levels of verification depending on the size of the transaction.
 
-  strong Example of Fly & Buy (™) Fees:
-  table class="table table-bordered"
-    thead
-      tr 
-        th Transaction Amount
-        th Total FEE (.125% + .35%)
-    tbody
-      tr.strong
-        td $250,000
-        td $2,812
-      tr.strong
-        td $500,000
-        td $5,625
-      tr.strong
-        td $1,000,001
-        td $4,750
-      tr.strong
-        td $10,000,000+
-        td $47,500
+    h2 What are the fees?
+    p We have partnered with <a href="https://synapsepay.com/" class="view" target="_blank">Synapsepay LLC</a> as our clearing house for <strong>Fly & BUY(™)</strong> transactions.
+    p When using FLY & BUY(™) a <strong>75%</strong> rebate applies to our <strong>.5% fee</strong>. Which brings our platform fee to <strong>.125%</strong>.
 
-  p Most escrow companies will charge three times that amount for transactions around <strong>10% flat fee</strong> for use of the platform and escrow service. The fees are deducted after successful inspection. We support international transactions. We offer a price match guarantee because we are the best place to sell items in wholesale online.
+    p We charge <strong>#{Fee::FLY_BUY[:under_million]}%</strong> on transactions less than a million dollars and just <strong>#{Fee::FLY_BUY[:over_million]}%</strong> for over a million dollar transactions for use of the escrow service. That is <strong>atleast 80% less</strong> expensive than the most popular escrow service providers online.
 
-  strong Due to our level of verification we also offer line of credit financing to buyers. 
+    strong Example of Fly & Buy (™) Fees:
+    table class="table table-bordered"
+      thead
+        tr
+          th Transaction Amount
+          th Total FEE (.125% + .35%)
+      tbody
+        tr.strong
+          td $250,000
+          td $2,812
+        tr.strong
+          td $500,000
+          td $5,625
+        tr.strong
+          td $1,000,001
+          td $4,750
+        tr.strong
+          td $10,000,000+
+          td $47,500
 
-  p While our larger competitors charge exorbitant rates…..up to 10% we’ve heard and monthly fee commitments, we charge the lowest rates in the industry with no monthly fees. 
+    p Most escrow companies will charge three times that amount for transactions around <strong>10% flat fee</strong> for use of the platform and escrow service. The fees are deducted after successful inspection. We support international transactions. We offer a price match guarantee because we are the best place to sell items in wholesale online.
 
-  p <strong>FLY & BUY(™)</strong>  is exclusively for the electronics industry at this point. Other industries soon.
+    strong Due to our level of verification we also offer line of credit financing to buyers.
 
-  p <strong>Each depositor's funds within FLY & BUY(™) are held at SynapsePay’s partner Triumph Bank and are FDIC insured for at least a balance of $250,000.
+    p While our larger competitors charge exorbitant rates…..up to 10% we’ve heard and monthly fee commitments, we charge the lowest rates in the industry with no monthly fees.
 
-  p <strong> Financial Services are provided by Triumph Bank, SynapsePay’s Bank Partner. To report complaints email <a href="mailto:issues@synapsepay.com">issues@synapsepay.com</a>
+    p <strong>FLY & BUY(™)</strong>  is exclusively for the electronics industry at this point. Other industries soon.
+
+    p <strong>Each depositor's funds within FLY & BUY(™) are held at SynapsePay’s partner Triumph Bank and are FDIC insured for at least a balance of $250,000.
+
+    p <strong> Financial Services are provided by Triumph Bank, SynapsePay’s Bank Partner. To report complaints email <a href="mailto:issues@synapsepay.com">issues@synapsepay.com</a>

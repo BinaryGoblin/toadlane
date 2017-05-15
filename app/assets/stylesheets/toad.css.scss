@@ -234,7 +234,7 @@ form .wrap-sm
 {
   position:relative;
   top:3px;
-  margin-right: -65px;
+  margin-right: -45px;
 }
 
 .createGroupHeading {
@@ -984,3 +984,26 @@ min-width:550px;
     }
   }
 }
+
+.info-btn-link {
+  input {
+    width: 90%;
+  }
+  a {
+    position: relative;
+    top: -33px;
+    right: -93%;
+  }
+  .info-btn {
+    background: #2987d8;
+    border-radius: 5px;
+    color: #fff;
+
+    i {
+      font-size: 24px;
+      margin: 3px;
+      position: static;
+    }
+  }
+}
+

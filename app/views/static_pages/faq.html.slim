@@ -1,85 +1,92 @@
-.infos-title: .wrap-sm: h2 faq
-  
-.infos-content: .wrap-sm
-  h1 General
-  h2 What is Toadlane?
-  p We are a platform that supports wholesale transactions among brokers, entrepreneurs, retail buyers and traders.
+- if current_user.present?
+  = render '/shared/tabs'
+  - css_class_name = 'wrap-sm'
+- else
+  - css_class_name = 'infos'
 
-  h2 Why Toadlane?
-  ul
-    li Purchase from a global network of suppliers representing different markets.
-    li Sell to wholesale buyers.
-    li Conduct wholesale transactions with unprecedented ease.
-    li Keep track of your purchase orders.
-    li Share your wholesale listings around the web.
-    li Communicate with your buyers prior to sale.
-    li Receive or give volume based discounts to wholesalers.
-    li Share your wholesale listings with your current marketing across the web.
+div class="#{css_class_name}"
+  .infos-title: h2 faq
 
-  p If there’s a product category that you want to see listed on Toadlane, let us know:&nbsp;<a href="mailto:hello@toadlane.com">hello@toadlane.com</a>
+  .infos-content
+    h1 General
+    h2 What is Toadlane?
+    p We are a platform that supports wholesale transactions among brokers, entrepreneurs, retail buyers and traders.
 
-  h2 How do I know when it is time to pay?
-  p Once you submit an order the seller has to approve the sale based on your address.
-  p Simply click email links and we work in the background to verify with Sellers and Payment Intermediaries.
+    h2 Why Toadlane?
+    ul
+      li Purchase from a global network of suppliers representing different markets.
+      li Sell to wholesale buyers.
+      li Conduct wholesale transactions with unprecedented ease.
+      li Keep track of your purchase orders.
+      li Share your wholesale listings around the web.
+      li Communicate with your buyers prior to sale.
+      li Receive or give volume based discounts to wholesalers.
+      li Share your wholesale listings with your current marketing across the web.
 
-  h2 What are my payment options?
-  p Toadlane has partnered with Stripe payments.
-  p Stripe is one of the most trusted and popular payment gateways online.
+    p If there’s a product category that you want to see listed on Toadlane, let us know:&nbsp;<a href="mailto:hello@toadlane.com">hello@toadlane.com</a>
 
-  h2 Who are Toadlane’s Sellers?
-  p The merchandise sold on Toadlane comes from a variety of sources: OEM manufacturers, distributors, agents, globally recognized depots and liquidators.
-  p Our Sellers go through a vetting process before they are permitted to sell merchandise on Toadlane. We take every measure we can to verify that every Seller has the legal right to sell the merchandise they are offering on Toadlane.
+    h2 How do I know when it is time to pay?
+    p Once you submit an order the seller has to approve the sale based on your address.
+    p Simply click email links and we work in the background to verify with Sellers and Payment Intermediaries.
 
-  h2 How much inventory do you have available?
-  p Product inventory will vary depending on the Seller and product in question.
+    h2 What are my payment options?
+    p Toadlane has partnered with Stripe payments.
+    p Stripe is one of the most trusted and popular payment gateways online.
 
-  h2 How are taxes calculated and handled?
-  p The Buyer and Seller are responsible for taxes. We keep track of purchase orders for parties to make processing taxes easier.
+    h2 Who are Toadlane’s Sellers?
+    p The merchandise sold on Toadlane comes from a variety of sources: OEM manufacturers, distributors, agents, globally recognized depots and liquidators.
+    p Our Sellers go through a vetting process before they are permitted to sell merchandise on Toadlane. We take every measure we can to verify that every Seller has the legal right to sell the merchandise they are offering on Toadlane.
 
-  h1 Technical Questions
-  h2 I have not received an email notification from Toadlane even though I was expecting one. What's up?
-  p Sometimes our automated emails can get marked by spam filters and sent to your trash or spam folder. In order to avoid this inconvenience, add <a href="mailto:hello@toadlane.com">hello@toadlane.com</a> your list of email contacts and manually move any emails marked as spam back to your inbox.
+    h2 How much inventory do you have available?
+    p Product inventory will vary depending on the Seller and product in question.
 
-  h2 I was exploring Toadlane and I stumbled across a bug in the platform. Who should I contact?
-  p We are constantly working to improve Toadlane, but we are still in Beta and sometimes bugs do get through. If you stumble across any issues on the site or if the interface isn't as intuitive as it should be, please reach out to us at <a href="mailto:hello@toadlane.com">hello@toadlane.com</a> and we will do our best to resolve the issue immediately. And thanks for the help!
+    h2 How are taxes calculated and handled?
+    p The Buyer and Seller are responsible for taxes. We keep track of purchase orders for parties to make processing taxes easier.
 
-  h1 For Sellers
-  h2 What type of items can I list on Toadlane?
-  p You can list any goods that you have the legal rights to, so sell whatever you think will be most profitable for you.
-  p If there’s a product category you would like to purchase using our purchasing platform, send us an email so we can reach out to our global network of suppliers and get it listed for you on Toadlane: <a href="mailto:hello@toadlane.com">hello@toadlane.com</a>
+    h1 Technical Questions
+    h2 I have not received an email notification from Toadlane even though I was expecting one. What's up?
+    p Sometimes our automated emails can get marked by spam filters and sent to your trash or spam folder. In order to avoid this inconvenience, add <a href="mailto:hello@toadlane.com">hello@toadlane.com</a> your list of email contacts and manually move any emails marked as spam back to your inbox.
 
-  h2 How do Buyers pay for an order?
-  p All payments on Toadlane are handled by Stripe. A buyer can pay through the instrument most convenient to them and funds are transferred to the seller. For more information on this refer to <a href="http://stripe.com/docs/transfers">stripe.com/docs/transfers</a>.
+    h2 I was exploring Toadlane and I stumbled across a bug in the platform. Who should I contact?
+    p We are constantly working to improve Toadlane, but we are still in Beta and sometimes bugs do get through. If you stumble across any issues on the site or if the interface isn't as intuitive as it should be, please reach out to us at <a href="mailto:hello@toadlane.com">hello@toadlane.com</a> and we will do our best to resolve the issue immediately. And thanks for the help!
 
-  h2 How are orders shipped and who is responsible for arranging shipping?
-  p Once the seller is notified an order had been placed they will confirm your shipping fee. The shipping fee must be approved and then the payment is received, item shipped.
+    h1 For Sellers
+    h2 What type of items can I list on Toadlane?
+    p You can list any goods that you have the legal rights to, so sell whatever you think will be most profitable for you.
+    p If there’s a product category you would like to purchase using our purchasing platform, send us an email so we can reach out to our global network of suppliers and get it listed for you on Toadlane: <a href="mailto:hello@toadlane.com">hello@toadlane.com</a>
 
-  h2 Why is there a payment tab?
-  p The payment tab is for Stripe, so they can process payments from Buyers to our Sellers. Sensitive data transfers are encrypted using Secure Socket-Layer encryption. All data stored at Stripe is stored with encryption that exceeds US government standards for classified data, so you can rest assured that your bank account data is safe.
+    h2 How do Buyers pay for an order?
+    p All payments on Toadlane are handled by Stripe. A buyer can pay through the instrument most convenient to them and funds are transferred to the seller. For more information on this refer to <a href="http://stripe.com/docs/transfers">stripe.com/docs/transfers</a>.
 
-  h2 Who do I contact to handle disputes?
-  p For disputes please contact Toadlane directly at <a href="mailto:hello@toadlane.com">hello@toadlane.com</a> and we will be in touch immediately.
+    h2 How are orders shipped and who is responsible for arranging shipping?
+    p Once the seller is notified an order had been placed they will confirm your shipping fee. The shipping fee must be approved and then the payment is received, item shipped.
 
-  h2 How much does it cost for me to use Toadlane?
-  p We charge transaction fees which vary depending on the market. The fees are added to the final sale price of the item.
+    h2 Why is there a payment tab?
+    p The payment tab is for Stripe, so they can process payments from Buyers to our Sellers. Sensitive data transfers are encrypted using Secure Socket-Layer encryption. All data stored at Stripe is stored with encryption that exceeds US government standards for classified data, so you can rest assured that your bank account data is safe.
 
-  h2 How do I register on Toadlane and what info is required?
-  p Registering on Toadlane is a quick process:
-  ul
-    li Pre-Registration: Some basic information (email, password and terms of use agreement) that gives you access to browse deals.
-    li Business Registration: Required in order to submit a purchase on Toadlane; this gives us more information about your legal entity and includes any documents we will need for payment and shipping.
-  p To make purchases on Toadlane, we require:
-  ul
-    li Photocopy of your business license (e.g. incorporation, LLC, partnership document etc.)
-    li Additional documentation may be needed for transactions in certain product categories.
+    h2 Who do I contact to handle disputes?
+    p For disputes please contact Toadlane directly at <a href="mailto:hello@toadlane.com">hello@toadlane.com</a> and we will be in touch immediately.
 
-  h2 How can I learn about other people’s experiences with a particular Seller?
-  p Toadlane isn’t just a purchasing platform – we’re a community. We are constantly experimenting with ways to make sure that our Buyers have the information they needed to make safe, well informed purchasing decisions. Members can chat freely with suppliers prior to their purchases.
-  p It is always a prudent strategy to start with a sample order of any wholesale item prior to placing large orders.
+    h2 How much does it cost for me to use Toadlane?
+    p We charge transaction fees which vary depending on the market. The fees are added to the final sale price of the item.
 
-  h2 What documents will I receive with my order?
-  p As your orders gets processed, you will receive a variety of notifications telling you the status of your order as well as a purchase order invoice.
+    h2 How do I register on Toadlane and what info is required?
+    p Registering on Toadlane is a quick process:
+    ul
+      li Pre-Registration: Some basic information (email, password and terms of use agreement) that gives you access to browse deals.
+      li Business Registration: Required in order to submit a purchase on Toadlane; this gives us more information about your legal entity and includes any documents we will need for payment and shipping.
+    p To make purchases on Toadlane, we require:
+    ul
+      li Photocopy of your business license (e.g. incorporation, LLC, partnership document etc.)
+      li Additional documentation may be needed for transactions in certain product categories.
 
-  h2 Are there any restrictions on who can sell goods on Toadlane?
-  p We are a Los Angeles (CA, USA) based company and therefore have to abide by the rules regulation of the sale and shipment of goods to and from the United States. Users outside of the country selling to users outside of our country can use our platform but our outside our jurisdiction.
-  p Individual deals may have additional restrictions based on the manufacturer, agent and the terms that have been negotiated between the two.
+    h2 How can I learn about other people’s experiences with a particular Seller?
+    p Toadlane isn’t just a purchasing platform – we’re a community. We are constantly experimenting with ways to make sure that our Buyers have the information they needed to make safe, well informed purchasing decisions. Members can chat freely with suppliers prior to their purchases.
+    p It is always a prudent strategy to start with a sample order of any wholesale item prior to placing large orders.
+
+    h2 What documents will I receive with my order?
+    p As your orders gets processed, you will receive a variety of notifications telling you the status of your order as well as a purchase order invoice.
+
+    h2 Are there any restrictions on who can sell goods on Toadlane?
+    p We are a Los Angeles (CA, USA) based company and therefore have to abide by the rules regulation of the sale and shipment of goods to and from the United States. Users outside of the country selling to users outside of our country can use our platform but our outside our jurisdiction.
+    p Individual deals may have additional restrictions based on the manufacturer, agent and the terms that have been negotiated between the two.
