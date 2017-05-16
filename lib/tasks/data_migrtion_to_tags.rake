@@ -45,7 +45,6 @@ namespace :data_migration do
               tag_name = ActsAsTaggableOn::Tag.find(value).name
               product.tag_list.add(tag_name)
               product.tag_list.remove(tag)
-              ActsAsTaggableOn::Tag.where(name: tag).first.destroy
             end
           end
           product.save
