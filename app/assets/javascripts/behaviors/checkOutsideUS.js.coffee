@@ -36,7 +36,7 @@ class Behavior.CheckOutsideUS
 
   hide_and_changes: =>
     $(@$variables['country']).closest('.col-md-6').addClass('hide')
-    $(@$variables['tin_number']).closest('.form-group').find('label').text('EIN Number:')
+    $(@$variables['tin_number']).closest('.form-group').find('label').text('TIN Number:')
     $(@$variables['eic_attachment']).closest('.form-group').find('label').text('EIN Document:')
     $(@$variables['eic_attachment']).closest('.form-group').find('a.view').removeClass('hide')
     $(@$variables['business_documents']).closest('.col-md-6').addClass('hide')
