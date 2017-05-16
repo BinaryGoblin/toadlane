@@ -31,4 +31,29 @@ namespace :data_migration do
     end
     Rails.logger.info '**************___________________________**************'
   end
+
+  desc 'Replace tag id with proper tag name'
+  task replace_tag_id_with_tag_name: :environment do
+    puts '************** Process start: Replace tag id with proper tag name **************'
+    begin
+      Product.all.each do |product|
+        if product.tag_list.present?
+          product.tag_list.each do |tag|
+            value = tag.to_i
+            unless value.zero?
+              puts "For product id: #{product.id}"
+              tag_name = ActsAsTaggableOn::Tag.find(value).name
+              product.tag_list.add(tag_name)
+              product.tag_list.remove(tag)
+              ActsAsTaggableOn::Tag.where(name: tag).first.destroy
+            end
+          end
+          product.save
+        end
+      end
+    rescue => e
+      puts "Error: #{e.inspect}"
+    end
+    puts '**************___________________________**************'
+  end
 end

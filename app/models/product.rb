@@ -106,6 +106,8 @@ class Product < ActiveRecord::Base
   SELLER = 'seller'
   BUYER = 'buyer'
   INSPECTION_SERVICE_PRICE = 1
+  ACTIVE = 'Active'
+  INACTIVE = 'Inactive'
 
   def self.newest_products
     unexpired.for_sell.most_recent
@@ -261,5 +263,9 @@ class Product < ActiveRecord::Base
     end
     admins << owner
     return admins.uniq
+  end
+
+  def display_status
+    status == true ? ACTIVE : INACTIVE
   end
 end

@@ -6,12 +6,13 @@ module Services
 
       def initialize(product_params, current_user, id = nil)
         @product_params = product_params
-        product_params[:group_attributes].merge!(group_owner_id: current_user.id) unless product_params[:group_attributes].blank?
-        product_params[:inspection_dates_attributes].each {|key, value| value[:creator_type] = ::Product::SELLER}
+        assign_inspection_date_creator
         @product = if id.nil?
+          assign_group_owner(current_user.id)
           product = current_user.products.new(params)
         else
           product = ::Product.where(id: id).first
+          assign_group_owner(product.owner.id)
           product.assign_attributes(product_params)
           product
         end
@@ -24,6 +25,14 @@ module Services
       end
 
       private
+
+      def assign_group_owner(owner_id)
+        product_params[:group_attributes].merge!(group_owner_id: owner_id) unless product_params[:group_attributes].blank?
+      end
+
+      def assign_inspection_date_creator
+        product_params[:inspection_dates_attributes].each {|key, value| value[:creator_type] = ::Product::SELLER}
+      end
 
       def negotiable
         product_params["negotiable"] == ONE ? true : false

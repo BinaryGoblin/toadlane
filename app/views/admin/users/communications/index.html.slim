@@ -11,6 +11,7 @@
           th Location
           th Email
           th Phone Number
+          th I buy and Sell
           th
 
       tbody
@@ -32,6 +33,7 @@
               td Unknown
             td = mail_to user.email
             td = user.phone
+            td = user.tag_list
             td.text-center=link_to 'Message', '#modal_message_' + user.id.to_s, class: 'view', data: { toggle: 'modal' }
 
 .footer-actions

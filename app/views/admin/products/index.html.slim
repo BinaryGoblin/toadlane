@@ -7,9 +7,11 @@
         tr
           th ID
           th Product name
+          th Tags
           th Unit price
           th Valid from
           th Valid until
+          th Status
           th Actions
 
       tbody
@@ -17,6 +19,7 @@
           tr
             td= product.id
             td= link_to product.name, product_path(product, cat_id: product.main_category), class: 'link link-ulined', target: '_blank'
+            td= product.tag_list
             td= number_to_currency(product.unit_price, :unit => "$ ", precision: 2)
             td
               small.date= product.start_date.strftime('%d-%m-%Y')
@@ -24,11 +27,12 @@
             td
               small.date= product.end_date.strftime('%d-%m-%Y')
               small.time= product.end_date.strftime('%T')
+            td= product.display_status
             td= link_to "Edit", edit_admin_product_path(product), class: 'link link-ulined'
 
 .footer-actions: .fa-container: .wrap-sm
   .show_all style="font-size:14px;padding-top:8px"
-    | #{@products.count} Products 
+    | #{@products.count} Products
     - unless params[:count].present? || @products.count < 20
       = link_to 'Show all', admin_products_path(count: @products.count), class: 'link link-ulined'
 

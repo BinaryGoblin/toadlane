@@ -7,27 +7,22 @@ module Mixins
         @product = Product.new(product_params)
       else
         @product = Product.new
-        group_builder = @product.build_group
-        group_builder.group_sellers.build
+        build_group
       end
-      @product.inspection_dates.build
-      @product.pricebreaks.build
+      build_related_models
       expected_group_members(current_user)
     end
 
     def edit_product
       if @product.group.blank?
-        group_builder = @product.build_group
-        group_builder.group_sellers.build
+        build_group
         expected_group_members(@product.owner)
       else
         group = @product.group
         group.group_sellers.build unless group.group_sellers.present?
         expected_group_members(group.owner)
       end
-
-      @product.inspection_dates.build if @product.inspection_dates.blank?
-      @product.pricebreaks.build if @product.pricebreaks.blank?
+      build_related_models
       @history = PaperTrail::Version.where(item_id: @product.id).order('created_at DESC')
     end
 
@@ -42,6 +37,8 @@ module Mixins
           format.html { redirect_to after_create_and_update_path }
         else
           get_expected_group_members
+          build_group
+          build_related_models
           format.html { render action: 'new' }
         end
       end
@@ -57,7 +54,7 @@ module Mixins
           send_email_to_additional_sellers @product
           format.html { redirect_to after_create_and_update_path }
         else
-          get_expected_group_members
+          edit_product
           format.html { render action: 'edit' }
         end
       end
@@ -107,6 +104,16 @@ module Mixins
 
     def product_creator
       product_params[:user_id].blank? ? current_user : User.where(id: product_params[:user_id]).first
+    end
+
+    def build_related_models
+      @product.inspection_dates.build if @product.inspection_dates.blank?
+      @product.pricebreaks.build if @product.pricebreaks.blank?
+    end
+
+    def build_group
+      group_builder = @product.build_group
+      group_builder.group_sellers.build
     end
   end
 end
