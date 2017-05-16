@@ -115,8 +115,8 @@
                 span.label.label-green
                   | Sold
             td.text-center
-              - fbo_inspection_date = order.inspection_dates.first
               - if order.instance_of?(FlyBuyOrder)
+                - fbo_inspection_date = order.inspection_dates.first
                 - if order.selected_inspection_date.present?
                   = order.selected_inspection_date.get_inspection_date
                   - if !order.cancelled? && order.not_inspected && current_user_is_a_buyer?(order)

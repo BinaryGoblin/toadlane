@@ -122,13 +122,13 @@ class Dashboard::OrdersController < DashboardController
     fly_buy_order = FlyBuyOrder.find_by_id(params[:fly_buy_order_id])
     fbo_inspection_date = fly_buy_order.inspection_dates.first
     if current_user == fly_buy_order.buyer
-      creater_type = 'buyer'
-      responder = SELLER
+      creator_type = Product::BUYER
+      responder = Product::SELLER
       receiver = fly_buy_order.seller
       sender = fly_buy_order.buyer
     elsif current_user == fly_buy_order.seller
-      creater_type = 'seller'
-      responder = BUYER
+      creator_type = Product::SELLER
+      responder = Product::BUYER
       receiver = fly_buy_order.buyer
       sender = fly_buy_order.seller
     end
