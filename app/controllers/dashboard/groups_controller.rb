@@ -1,5 +1,6 @@
 class Dashboard::GroupsController < DashboardController
 	layout 'user_dashboard'
+  include Mixins::ProductHelper
 
 	def index
 		groups = Group.where(product_id: current_user.products.with_deleted.ids)

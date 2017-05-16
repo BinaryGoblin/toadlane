@@ -10,8 +10,11 @@
 #= require_tree ./helpers/
 #= require_tree ./behaviors/
 #= require_tree ./admin/
+#= require_tree ./dashboard/
 
 #= require bootstrap
+#= require moment
+#= require bootstrap-datetimepicker
 
 $(document).ready ->
   Elemental.addNamespace App

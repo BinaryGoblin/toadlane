@@ -1,70 +1,27 @@
 class Dashboard::ProductsController < DashboardController
+  include Mixins::ProductHelper
+
   def index
     @products = current_user.products.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
     @products_count = @products.count
   end
 
   def new
-    if params[:product].present?
-      @product = Product.new(product_params)
-    else
-      @product = Product.new
-      group_builder = @product.build_group
-      group_builder.group_sellers.build
-    end
-    @product.inspection_dates.build
-    @product.pricebreaks.build
-    expected_group_members(current_user)
+    new_product
   end
 
   def edit
     set_product
     raise 'Unauthorized user access!' unless authorized_user?
-    if @product.group.blank?
-      group_builder = @product.build_group
-      group_builder.group_sellers.build
-      expected_group_members(current_user)
-    else
-      group = @product.group
-      group.group_sellers.build unless group.group_sellers.present?
-      expected_group_members(group.owner)
-    end
-
-    @product.inspection_dates.build if @product.inspection_dates.blank?
-    @product.pricebreaks.build if @product.pricebreaks.blank?
-    @history = PaperTrail::Version.where(item_id: @product.id).order('created_at DESC')
+    edit_product
   end
 
   def create
-    product_service = Services::Crud::Product.new(product_params, current_user)
-    @product = product_service.product
-    respond_to do |format|
-      if @product.valid?
-        product_service.save!
-        @product = product_service.product
-        send_email_to_additional_sellers @product
-        format.html { redirect_to after_create_and_update_path }
-      else
-        get_expected_group_members
-        format.html { render action: 'new' }
-      end
-    end
+    create_product
   end
 
   def update
-    product_service = Services::Crud::Product.new(product_params, current_user, params[:id])
-    @product = product_service.product
-    respond_to do |format|
-      if @product.valid?
-        product_service.save!
-        @product = product_service.product
-        send_email_to_additional_sellers @product
-        format.html { redirect_to after_create_and_update_path }
-      else
-        get_expected_group_members
-        format.html { render action: 'edit' }
-      end
-    end
+    update_product
   end
 
   def destroy
@@ -120,32 +77,6 @@ class Dashboard::ProductsController < DashboardController
 
   private
 
-  def set_product
-    @product = Product.find(params[:id])
-  end
-
-  def product_params
-    params.require(:product)
-    .permit(:id, :name, :negotiable, :description,
-      :user_id, :unit_price, :status_action,
-      :status, :status_characteristic, :start_date,
-      :end_date, :amount, :sold_out, :dimension_width,
-      :dimension_height, :dimension_depth,
-      :dimension_weight, :main_category, { tag_list: []}, :default_payment, :fee_percent, :sku,
-      :slug, images_attributes: [:id, :image, :product_id, :_destroy],
-      :certificates_attributes => [:id, :uploaded_file, :_destroy],
-      :videos_attributes => [:id, :video, :product_id, :_destroy], :videos_attributes_delete => [],
-      :shipping_estimates_attributes => [ :id, :cost, :description, :product_id, :_destroy, :type ],
-      :pricebreaks_attributes => [ :id, :quantity, :price, :product_id, :_destroy ], :inspection_dates_attributes => [:id, :date, :product_id, :_destroy],
-      group_attributes: [:id, :name, :product_id, :_destroy, group_sellers_attributes: [:id, :group_id, :user_id, :fee, :_destroy, :role_id]],
-      # :product_categories_attributes => [:id, :product_id, :category_id]
-    )
-  end
-
-  def parse_date_time(date)
-    DateTime.strptime(date, '%Y-%m-%d %I:%M %p')
-  end
-
   def after_create_and_update_path
     if params[:button] == 'new'
       path = new_dashboard_product_path
@@ -172,9 +103,8 @@ class Dashboard::ProductsController < DashboardController
   end
 
   def authorized_user?
-    product = Product.find(params[:id])
-    group_seller = product.group.group_sellers.find_by_user_id(current_user.id) if product.group.present?
-    (group_seller.present? && group_seller.is_group_admin?) || product.owner == current_user
+    group_seller = @product.group.group_sellers.find_by_user_id(current_user.id) if @product.group.present?
+    (group_seller.present? && group_seller.is_group_admin?) || @product.owner == current_user
   end
 
   def send_product_deleted_message(product)
@@ -184,15 +114,6 @@ class Dashboard::ProductsController < DashboardController
         param_hash = {group: product.group.name, product: product, group_seller: group_seller.user, current_user: current_user, admins: product.group_admins}
         NotificationMailer.group_product_removed_notification_email(param_hash).deliver_later
       end
-    end
-  end
-
-  def get_expected_group_members
-    if @product.group.blank?
-      expected_group_members(current_user)
-    else
-      group = @product.group
-      expected_group_members(group.owner)
     end
   end
 end

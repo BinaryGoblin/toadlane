@@ -11,7 +11,8 @@
           th Location
           th Email
           th Phone Number
-          th 
+          th I buy and Sell
+          th
 
       tbody
         - @users.each do |user|
@@ -20,7 +21,7 @@
             td = user.name
             td = user.company
             - if user.addresses[0]
-              td 
+              td
                 = user.addresses[0].line1
                 - if user.addresses[0].line2.nil?
                 - else
@@ -28,15 +29,16 @@
                   = user.addresses[0].line2
                 br
                 = user.addresses[0].city + ", " + user.addresses[0].state + " " + user.addresses[0].zip + ", " + user.addresses[0].country
-            -else 
+            -else
               td Unknown
             td = mail_to user.email
             td = user.phone
+            td = user.tag_list
             td.text-center=link_to 'Message', '#modal_message_' + user.id.to_s, class: 'view', data: { toggle: 'modal' }
-          
-.footer-actions: .fa-container: .wrap-sm
+
+.footer-actions
   .show_all style="font-size:14px;padding-top:8px"
-    | #{@users.count} Users 
+    | #{@users.count} Users
     - unless params[:count].present? || @users.count < 20
       = link_to 'Show all', admin_users_communications_path(count: @users.count), class: 'link link-ulined'
 

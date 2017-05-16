@@ -1,4 +1,5 @@
 @import "compass/css3";
+@import 'bootstrap-sprockets';
 @import "bootstrap";
 @import "font-awesome";
 
@@ -44,15 +45,13 @@
 @import "toad/custom_select";
 @import "toad/find_and_explore";
 @import "toad/page_view_product";
+@import 'bootstrap-datetimepicker';
 
 @import "common/responsive";
 
 .admin_dashboard .wrap-sm
 {
-  width:100% !important;
-  float:left !important;
   margin-top:10%;
-  max-width:1920px !important;
 }
 .admin_dashboard .header
 {
@@ -71,11 +70,7 @@
   padding: 5px 0px;
   left: 0;
 }
-.admin_dashboard .footer-actions .fa-container
-{
-  position:fixed;
-  height:45px;
-}
+
 .admin_dashboard .show_all
 {
   font-size: 14px;
