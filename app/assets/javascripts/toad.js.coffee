@@ -508,19 +508,14 @@ $(document).ready ->
                   "fly_buy_profile[ssn_number]":
                     minlength: 4
                     maxlength: 10
-                    required: true
                   "fly_buy_profile[tin_number]":
                     minlength: 4
                     maxlength: 10
-                    required: true
                   "fly_buy_profile[eic_attachment]":
-                    required: true,
                     extension: "jpeg|jpg|png|pdf"
                   "fly_buy_profile[bank_statement]":
-                    required: true,
                     extension: "jpeg|jpg|png|pdf"
                   "fly_buy_profile[gov_id]":
-                    required: true,
                     extension: "jpeg|jpg|png|pdf"
                   "fly_buy_profile[dob(1i)]":
                     check_date_of_birth: true

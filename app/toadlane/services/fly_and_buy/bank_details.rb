@@ -78,14 +78,18 @@ module Services
       end
 
       def payload_for_user
-        doc_type = fly_buy_profile.outside_the_us? ? DOC_TYPES[:gov_id] : DOC_TYPES[:ssn_card]
+        physical_documents = []
 
-        physical_documents = [
-          SynapsePayRest::PhysicalDocument.create(
-            type: doc_type,
-            value: encode_attachment(file_tempfile: fly_buy_profile.gov_id.url, file_type: fly_buy_profile.gov_id_content_type)
+        if fly_buy_profile.gov_id.present?
+          doc_type = fly_buy_profile.outside_the_us? ? DOC_TYPES[:gov_id] : DOC_TYPES[:ssn_card]
+
+          physical_documents.push(
+            SynapsePayRest::PhysicalDocument.create(
+              type: doc_type,
+              value: encode_attachment(file_tempfile: fly_buy_profile.gov_id.url, file_type: fly_buy_profile.gov_id_content_type)
+            )
           )
-        ]
+        end
 
         physical_documents.push(
           SynapsePayRest::PhysicalDocument.create(
@@ -94,7 +98,7 @@ module Services
           )
         ) if fly_buy_profile.business_documents.present?
 
-        {
+        payload = {
           email: formatted_email,
           phone_number: user.phone,
           ip: fly_buy_profile.synapse_ip_address,
@@ -110,7 +114,6 @@ module Services
           address_subdivision: address.state,
           address_postal_code: address.zip,
           address_country_code: address.country,
-          physical_documents: physical_documents,
           virtual_documents: [
             SynapsePayRest::VirtualDocument.create(
               type: DOC_TYPES[:ssn],
@@ -118,6 +121,9 @@ module Services
             )
           ]
         }
+        payload.merge!(physical_documents: physical_documents) if physical_documents.present?
+
+        payload
       end
 
       def create_bank_account(synapse_user)

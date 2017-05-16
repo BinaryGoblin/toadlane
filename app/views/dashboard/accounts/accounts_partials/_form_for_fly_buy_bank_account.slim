@@ -34,7 +34,7 @@ br
 .row
   .col-md-6
     .form-group
-        = f.label :tin_number, 'EIN Number:', class: 'required'
+        = f.label :tin_number, 'TIN Number:', class: 'required'
         = f.text_field :tin_number, class: 'form-control', required: true, placeholder: '77772222'
   .col-md-6.hide
     .form-group
@@ -109,7 +109,7 @@ br
     .form-group
       = f.label :eic_attachment, 'EIN Document:', class: 'required'
       = link_to "Lost your ein?", 'https://www.irs.gov/businesses/small-businesses-self-employed/lost-or-misplaced-your-ein', class: 'view', target: '_blank'
-      = f.file_field :eic_attachment
+      = f.file_field :eic_attachment, required: true
       p.warning Format must be png, jpg or pdf
 
   .col-md-6
@@ -141,8 +141,8 @@ br
 .row
   .col-md-6
     .form-group
-      = f.label :gov_id, 'SOCIAL SECURITY CARD:', class: 'required'
-      = f.file_field :gov_id, required: true
+      = f.label :gov_id, 'SOCIAL SECURITY CARD:'
+      = f.file_field :gov_id
       p.warning Format must be png, jpg or pdf
   .col-md-6.hide
     .form-group
