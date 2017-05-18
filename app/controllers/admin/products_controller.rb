@@ -11,10 +11,12 @@ class Admin::ProductsController < Admin::ApplicationController
     status_actions
     set_product
     edit_product
+    product_owner_field
   end
 
   def new
     new_product
+    product_owner_field
   end
 
   def create
@@ -64,5 +66,13 @@ class Admin::ProductsController < Admin::ApplicationController
       ['Recommended', 'recommended'],
       ['Best', 'best']
     ]
+  end
+
+  def product_owner_field
+    if StripeOrder.where(:product_id => @product.id).blank?
+      @product_owner_field = {disabled: false, label: ''}
+    else
+      @product_owner_field = {disabled: true, label: ' (locked after first sale)'}
+    end
   end
 end
