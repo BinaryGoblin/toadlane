@@ -18,8 +18,6 @@ class Group < ActiveRecord::Base
 
 	accepts_nested_attributes_for :group_sellers, allow_destroy: true, reject_if: ->(attributes) { attributes[:user_id].blank? || attributes[:role_id].blank? }
 
-	validates_uniqueness_of :name
-
 	attr_accessor :additional_seller_ids, :create_new_product, :role
 
 	def additional_sellers

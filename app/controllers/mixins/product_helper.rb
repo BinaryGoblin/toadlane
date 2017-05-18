@@ -10,6 +10,7 @@ module Mixins
         build_group
       end
       build_related_models
+      product_owner_field
       expected_group_members(current_user)
     end
 
@@ -23,6 +24,7 @@ module Mixins
         expected_group_members(group.owner)
       end
       build_related_models
+      product_owner_field
       @history = PaperTrail::Version.where(item_id: @product.id).order('created_at DESC')
     end
 
@@ -39,6 +41,7 @@ module Mixins
           get_expected_group_members
           build_group
           build_related_models
+          product_owner_field
           format.html { render action: 'new' }
         end
       end
@@ -114,6 +117,14 @@ module Mixins
     def build_group
       group_builder = @product.build_group
       group_builder.group_sellers.build
+    end
+
+    def product_owner_field
+      if StripeOrder.where(:product_id => @product.id).blank?
+        @product_owner_field = {disabled: false, label: ''}
+      else
+        @product_owner_field = {disabled: true, label: ' (locked after first sale)'}
+      end
     end
   end
 end
