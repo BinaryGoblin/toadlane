@@ -349,4 +349,10 @@ class UserMailerPreview < ActionMailer::Preview
 
     UserMailer.order_inspection_date_change_notification_to_admin(order, user)
   end
+
+  def product_sold_out_notification_to_seller
+    product = Product.first
+
+    UserMailer.product_sold_out_notification_to_seller(product)
+  end
 end

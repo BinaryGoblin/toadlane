@@ -28,6 +28,7 @@
 #  deleted_at            :datetime
 #  negotiable            :boolean
 #  default_payment       :string
+#  minimum_order_quantity :integer         default(0)
 #
 
 class Product < ActiveRecord::Base
@@ -102,6 +103,7 @@ class Product < ActiveRecord::Base
   alias :user :owner
 
   after_create :product_create_notification
+  after_update :count_remaning_product
 
   SELLER = 'seller'
   BUYER = 'buyer'
@@ -123,6 +125,10 @@ class Product < ActiveRecord::Base
 
   def expired?
     end_date < DateTime.now
+  end
+
+  def active_product?
+    status == true
   end
 
   def available_amount_for_sale
@@ -251,6 +257,12 @@ class Product < ActiveRecord::Base
         NotificationMailer.product_create_notification_email(self, user).deliver_later
         ProductNotification.new(self, user).product_created
       end
+    end
+  end
+
+  def count_remaning_product
+    if self.remaining_amount < self.minimum_order_quantity
+      UserMailer.product_sold_out_notification_to_seller(self).deliver_later
     end
   end
 

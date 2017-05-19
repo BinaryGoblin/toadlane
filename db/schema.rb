@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170505072323) do
+ActiveRecord::Schema.define(version: 20170512070526) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -632,25 +632,26 @@ ActiveRecord::Schema.define(version: 20170505072323) do
     t.datetime "start_date"
     t.datetime "end_date"
     t.float    "unit_price"
-    t.boolean  "status",                          default: true
+    t.boolean  "status",                           default: true
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "status_action"
     t.string   "status_characteristic"
     t.integer  "amount"
-    t.integer  "sold_out",              limit: 8, default: 0,    null: false
+    t.integer  "sold_out",               limit: 8, default: 0,    null: false
     t.string   "dimension_width"
     t.string   "dimension_height"
     t.string   "dimension_depth"
     t.string   "dimension_weight"
     t.integer  "main_category"
-    t.integer  "type",                            default: 0
-    t.integer  "views_count",                     default: 0
+    t.integer  "type",                             default: 0
+    t.integer  "views_count",                      default: 0
     t.datetime "deleted_at"
     t.boolean  "negotiable"
     t.string   "default_payment"
-    t.string   "shared_to",                       default: [],                array: true
+    t.string   "shared_to",                        default: [],                array: true
+    t.integer  "minimum_order_quantity",           default: 1,    null: false
   end
 
   add_index "products", ["deleted_at"], name: "index_products_on_deleted_at", using: :btree

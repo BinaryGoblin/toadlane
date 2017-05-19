@@ -6,6 +6,7 @@ class Behavior.CalculationProduct
     @$calculationPanel     =  $ '.vp-calculation'
     @$toadlaneFee         =  $ '.toadlane-fee'
     @$flybyFee           =  $ '.fly-by-fee'
+    @$progress_bar        = $ '.progress'
 
     @options        = @$calculationPanel.data 'options'
     @$cart          = @$calculationPanel.find '.calc-cart'
@@ -19,6 +20,7 @@ class Behavior.CalculationProduct
     @$flyBuyPrice   = @$calculationPanel.find '.calc-fees-fly-buy-price'
     @$InspectionService = @$calculationPanel.find '#inspection_service'
     @$InspectionServiceNote = @$calculationPanel.find '#inspection_service_comment'
+    @$MinQuantity   = @$calculationPanel.find '#minimum_order_quantity'
 
     @$PercentageOfItemsToInspect = @$calculationPanel.find '#number_of_items_to_inspect'
     @$NumberOfItemsToInspect = @$calculationPanel.find '.item-count'
@@ -58,13 +60,24 @@ class Behavior.CalculationProduct
 
     do @calculation
     @$quantity.on 'change:quantity keyup', => do @calculation
-    @$checkOutFrom.on 'submit', => do @set_inspection_params
+    @$checkOutFrom.on 'submit', => do @check_minimum_quantity
 
   fixed: (number) =>
     number.toFixed(2).toString()
 
   number_to_currency: (amount) =>
     amount.replace /(\d)(?=(\d{3})+(?!\d))/g, "$1,"
+
+  check_minimum_quantity: =>
+    minimum_quantity = parseInt @$MinQuantity.val(), 10
+    quantity = parseInt @$quantity.val(), 10
+
+    if quantity < minimum_quantity
+      $('html, body').animate { scrollTop: @$progress_bar.offset().top - 60}, 'fast'
+      @$quantity.focus()
+      return false
+    else
+      do @set_inspection_params
 
   set_inspection_params: =>
     percentage_of_inspection_service = 0

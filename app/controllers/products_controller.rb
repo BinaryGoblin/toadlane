@@ -74,7 +74,7 @@ class ProductsController < ApplicationController
     end
 
     return redirect_to product_path(@product), flash: { account_error: 'You cannot currently use Fly & Buy services. Please contact johnb@toadlane.com for more information.' } if current_user.fly_buy_profile_account_added? && current_user.fly_buy_unverified_by_admin == true
-
+    return redirect_to product_path(@product), flash: { error: "To place order you must select minimum #{@product.minimum_order_quantity} units for this product" } if params[:count].to_i < @product.minimum_order_quantity
     sum_unit_price = (@product.unit_price * params[:count].to_f)
 
     if @product.default_payment_flybuy?
