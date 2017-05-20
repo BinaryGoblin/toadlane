@@ -47,4 +47,10 @@ class NotificationMailerPreview < ActionMailer::Preview
 
     NotificationMailer.product_create_notification_email(product, user)
   end
+
+  def product_expired_notification_to_owner
+    product = Product.first
+
+    NotificationMailer.product_expired_notification_to_owner(product)
+  end
 end

@@ -35,6 +35,7 @@ module Mixins
         if @product.valid?
           product_service.save!
           @product = product_service.product
+          set_flash_message @product
           send_email_to_additional_sellers @product
           format.html { redirect_to after_create_and_update_path }
         else
@@ -124,6 +125,14 @@ module Mixins
         @product_owner_field = {disabled: false, label: ''}
       else
         @product_owner_field = {disabled: true, label: ' (locked after first sale)'}
+      end
+    end
+
+    def set_flash_message product
+      if !product.active_product? && !product.owner_default_payment_verified?
+        flash[:error] = 'Your product is not active, since your payment profile not complete.'
+      else
+        flash[:notice] = 'Your have successfully added a product to your listing.'
       end
     end
   end
