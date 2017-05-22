@@ -388,8 +388,8 @@
     .form-group
       .checkbox: label
         = f.check_box :negotiable, :checked => @product.negotiable
-        span
-          Allow buyer to suggest alternative inspection date
+        span.font-color-red
+          | by checking this box you allow the buyer to request an inspection date. You will have to approve the request in order to initiate the transaction.
     label Inspection Dates:
     ul.inspectiondates
       = f.fields_for :inspection_dates do |builder|

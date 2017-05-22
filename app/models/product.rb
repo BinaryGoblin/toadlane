@@ -97,6 +97,7 @@ class Product < ActiveRecord::Base
   scope :most_viewed, -> { order(views_count: :desc) }
   scope :not_sold_out, -> { where("amount > sold_out") }
   scope :inactive, -> { where(status: false) }
+  scope :order_by_modified_date, -> { order('updated_at DESC') }
 
   self.per_page = 16
 

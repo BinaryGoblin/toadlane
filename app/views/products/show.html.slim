@@ -77,7 +77,7 @@
               -if available < minimum_order_quantity
                 .sold_out Out of Stock
               - else
-                table: tr
+                table.sale-summary: tr
                   td
                     span For sale:
                     b= @product.amount
@@ -88,7 +88,7 @@
                     span Available to buy:
                     b.text-green= available
             - else
-              table: tr
+              table.sale-summary: tr
                 td
                   span Total Sought:
                   b= @product.amount
@@ -100,7 +100,13 @@
                   b.text-orange= desired;
 
             hr
-
+            .white-panel.wp-table
+              - if @product.pricebreaks.any?
+                .vp-title Pricebreaks:
+                - if @product.status_characteristic == 'sell'
+                  = pricebreak_table @product.pricebreaks, @product.unit_price, available
+                - else
+                  = pricebreak_table @product.pricebreaks, @product.unit_price, desired
             .quantity
               .pull-left
                 span.text-left Quantity:
@@ -165,13 +171,6 @@
                   b Cart Subtotal
                   b.pull-right.calc-cart 0.00
           .warning.note Note: All inspections include live video testing at suppliers warehouse, a video report, and detailed involvement with the buyer. Additional travel fees may apply. For larger transactions additional travel fees are usually waived. We will be intouch with you immediately to confirm costs before inspection takes place.
-          .white-panel.wp-table
-            - if @product.pricebreaks.any?
-              .vp-title Pricebreaks:
-              - if @product.status_characteristic == 'sell'
-                = pricebreak_table @product.pricebreaks, @product.unit_price, available
-              - else
-                = pricebreak_table @product.pricebreaks, @product.unit_price, desired
 
           .white-panel.wp-table
             - if current_user.present?
@@ -219,13 +218,13 @@
                 /     span.star
               td
                 .status.text-uppercase
-                  - if true
-                    b Status:
+                  - if payment_verified? @product
+                    b Status:&nbsp;
                     span.text-green
                       |
                         Verified
                   - else
-                    b Status:
+                    b Status:&nbsp;
                     span.text-red
                       |
                         Unverified

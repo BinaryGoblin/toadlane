@@ -62,7 +62,8 @@
           p The inspection date set by buyer has been passed.
         - else
           input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
-
+    - elsif not product.default_payment_flybuy?
+      input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
   / Set inspection date link
   - if !product.expired? && product.status? && !product.is_buyer_product_owner?(user) && product.default_payment_flybuy? && !(params[:fly_buy_order_id].present? && params[:inspection_date_by_seller] == 'true')
     - unless fly_buy_order.seller_not_mark_approved.present?
