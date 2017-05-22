@@ -1,21 +1,5 @@
 module ProductHelper
 
-  def payment_verified?(product)
-    payment_options =  Product::PaymentOptions
-    default_payment = product.default_payment
-    owner = product.owner
-    case default_payment
-    when payment_options[:fly_buy]
-      owner.fly_buy_profile_account_added?
-    when payment_options[:stripe]
-      owner.stripe_profile.present?
-    when payment_options[:green]
-      owner.green_profile.present?
-    when payment_options[:amg]
-      owner.amg_profile.present?
-    end
-  end
-
   def get_shipping_cost(quantity, shipping_cost)
     quantity.to_i * shipping_cost.to_f
   end

@@ -218,7 +218,7 @@
                 /     span.star
               td
                 .status.text-uppercase
-                  - if payment_verified? @product
+                  - if @product.owner_payment_verified?
                     b Status:&nbsp;
                     span.text-green
                       |

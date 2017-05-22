@@ -281,4 +281,17 @@ class Product < ActiveRecord::Base
   def display_status
     status == true ? ACTIVE : INACTIVE
   end
+
+  def owner_payment_verified?
+    case default_payment
+    when PaymentOptions[:fly_buy]
+      owner.fly_buy_profile_account_added?
+    when PaymentOptions[:stripe]
+      owner.stripe_profile.present?
+    when PaymentOptions[:green]
+      owner.green_profile.present?
+    when PaymentOptions[:amg]
+      owner.amg_profile.present?
+    end
+  end
 end
