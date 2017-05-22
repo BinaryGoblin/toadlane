@@ -282,7 +282,7 @@ class Product < ActiveRecord::Base
     status == true ? ACTIVE : INACTIVE
   end
 
-  def owner_payment_verified?
+  def owner_default_payment_verified?
     case default_payment
     when PaymentOptions[:fly_buy]
       owner.fly_buy_profile_account_added?
