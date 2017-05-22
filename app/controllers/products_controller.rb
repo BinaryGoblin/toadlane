@@ -41,8 +41,7 @@ class ProductsController < ApplicationController
   end
 
   def products
-    unexpired_products = Product.unexpired.where(status_characteristic: 'sell').order('updated_at DESC').order('id DESC')
-    @products = unexpired_products.select { |p| p.if_fly_buy_check_valid_inspection_date }.paginate(page: params[:page], per_page: params[:count])
+    @products = Product.unexpired.for_sell.order_by_modified_date.paginate(page: params[:page], per_page: params[:count])
   end
 
   def deals

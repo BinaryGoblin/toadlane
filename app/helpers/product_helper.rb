@@ -1,5 +1,19 @@
 module ProductHelper
 
+  def payment_verified?(product)
+    default_payment = product.default_payment.downcase.to_sym
+    owner = product.owner
+    if default_payment == :fly_buy
+      owner.fly_buy_profile_account_added?
+    elsif default_payment == :stripe
+      owner.stripe_profile.present?
+    elsif default_payment == :green
+      owner.green_profile.present?
+    elsif default_payment == :amg
+      owner.amg_profile.present?
+    end
+  end
+
   def get_shipping_cost(quantity, shipping_cost)
     quantity.to_i * shipping_cost.to_f
   end
