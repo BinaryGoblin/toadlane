@@ -1,15 +1,17 @@
 module ProductHelper
 
   def payment_verified?(product)
-    default_payment = product.default_payment.downcase.to_sym
+    payment_options =  Product::PaymentOptions
+    default_payment = product.default_payment
     owner = product.owner
-    if default_payment == :fly_buy
+    case default_payment
+    when payment_options[:fly_buy]
       owner.fly_buy_profile_account_added?
-    elsif default_payment == :stripe
+    when payment_options[:stripe]
       owner.stripe_profile.present?
-    elsif default_payment == :green
+    when payment_options[:green]
       owner.green_profile.present?
-    elsif default_payment == :amg
+    when payment_options[:amg]
       owner.amg_profile.present?
     end
   end
