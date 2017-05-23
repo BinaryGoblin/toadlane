@@ -55,6 +55,9 @@ br
 hr
 .row.flybuy-address-block
   - address = Address.where(user: user).order('created_at')
+  - display_address_btn = address.present? ? 'show' : 'hide'
+  - display_address = address.present? ? 'hide' : 'show'
+
   .col-md-8
     table
       thead
@@ -68,10 +71,11 @@ hr
               = b.label { b.radio_button(:"checked" => (b.object.id == address.first.id), class: 'fly-buy-profile-address') + b.text }
     br
     .text-left
-      button.btn.btn-success.show-address-block-button = fa_icon 'plus', text: 'ADD ANOTHER ADDRESS'
+      button.btn.btn-success.show-address-block-button class="#{display_address_btn}" = fa_icon 'plus', text: 'ADD ANOTHER ADDRESS'
   .clearfix
   br
-  .insert-new-address-block style="display:none;"
+
+  .insert-new-address-block class="#{display_address}"
     - address_count = (address.count + 1).to_s
     = f.fields_for :addresses do |ff|
       - if ff.index == 0

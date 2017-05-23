@@ -27,9 +27,17 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def create_fly_buy_profile
+    fly_buy_profile = create_update_fly_buy_profile
     address_id = fly_buy_params['address_id']
 
-    fly_buy_profile = create_update_fly_buy_profile
+    if fly_buy_params['address_attributes'].present?
+      address_attributes_param = fly_buy_params['address_attributes'][(current_user.addresses.count + 1).to_s]
+      empty_keys = address_attributes_param.select {|k, v| v.empty?}
+
+      return redirect_to dashboard_accounts_path, flash: { error: 'You must enter valid address to submitting your profile.' } if !address_id.present? && empty_keys.count > 0
+    else
+      return redirect_to dashboard_accounts_path, flash: { error: 'You must enter atleast one address to submitting your profile.' } unless address_id.present?
+    end
 
     if current_user.profile_complete?
       unless current_user.name.present?
