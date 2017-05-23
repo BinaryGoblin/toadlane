@@ -134,9 +134,8 @@ module Services
           name_on_account:  options[:name_on_account],
           address:          options[:address]
         }
-        account_info.merge!(swift: options[:swift]) if options[:swift].present?
-       
         bank_response = if fly_buy_profile.outside_the_us?
+          account_info.merge!(swift: options[:swift]) if options[:swift].present?
           account_info.merge!(nickname: "#{user.name} (WIRE-INT)")
 
           synapse_user.create_wire_int_node(account_info)
