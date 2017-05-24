@@ -1017,3 +1017,17 @@ min-width:550px;
   font-size: 47px;
   color: #cd5c5c;
 }
+
+.strike {
+  position: relative;
+  display: inline-block;
+}
+.strike::before {
+  content: '';
+  border-bottom: 2px solid $color-curious-blue;
+  width: 100%;
+  position: absolute;
+  right: 0;
+  top: 50%;
+}
+
