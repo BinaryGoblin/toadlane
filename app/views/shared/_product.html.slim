@@ -7,7 +7,9 @@
 
    .show-time= fa_icon 'clock-o'
 
-   .price #{number_to_currency(product.unit_price, precision: 0, unit: '$')}/Unit
+   .price
+      spam.strike
+        = "#{number_to_currency(product.unit_price, precision: 0, unit: '$')}/Unit"
 
    .name= link_to product.name, product_path(product, cat_id: product.main_category)
 

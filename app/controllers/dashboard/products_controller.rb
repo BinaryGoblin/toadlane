@@ -116,4 +116,24 @@ class Dashboard::ProductsController < DashboardController
       end
     end
   end
+
+  # WIP
+  def validate_pricebreaks
+    array_of_quantity_price = product_params[:pricebreaks_attributes].each_with_object([]) do |hash, array|
+      array << [ hash.last[:quantity].to_i, hash.last[:price].to_f ]
+    end
+    quatity_ascending_ordered = array_of_quantity_price.sort
+    price_descending_ordered = array_of_quantity_price.sort_by(&:last).reverse
+    quantities = array_of_quantity_price.collect(&:first)
+    prices = array_of_quantity_price.collect(&:last)
+
+    invalid_quantity = quantities.any? {|item| [1,0].include?(item) }
+    invalid_price = prices.any? {|item| item.zero? || (item > product_params[:unit_price].to_f) }
+
+    if invalid_quantity || invalid_price || (quantities.count != quantities.uniq.count) || (quatity_ascending_ordered != price_descending_ordered)
+      puts 'invalid'
+    else
+      puts 'valid'
+    end
+  end
 end
