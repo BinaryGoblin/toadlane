@@ -27,8 +27,8 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def create_fly_buy_profile
-    fly_buy_profile = create_update_fly_buy_profile
     address_id = fly_buy_params['address_id']
+    fly_buy_profile = create_update_fly_buy_profile
 
     if fly_buy_params['address_attributes'].present?
       address_attributes_param = fly_buy_params['address_attributes'][(current_user.addresses.count + 1).to_s]
