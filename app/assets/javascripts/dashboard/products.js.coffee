@@ -8,7 +8,7 @@ $(document).ready ->
     time = dateTime[1].split(':')
     h = time[0]
     m = time[1]
-    s = parseInt(time[2])
+    s = 0
 
     new Date(yyyy, mm, dd, h, m, s)
 
@@ -17,8 +17,9 @@ $(document).ready ->
   sell_starting_date.setDate sell_starting_date.getDate()
   date_format = 'YYYY-MM-DD hh:mm a'
 
-  if($('.product_edit').length > 0)
+  if($('.product_edit, .product_update').length > 0)
     sell_starting_date = convertDateTime($('#product_start_date').val())
+
   $('#product_start_date, #start-date').datetimepicker
     minDate: sell_starting_date
     useCurrent: false

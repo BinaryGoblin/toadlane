@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170512070526) do
+ActiveRecord::Schema.define(version: 20170524130948) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -369,7 +369,7 @@ ActiveRecord::Schema.define(version: 20170512070526) do
     t.string   "eic_attachment_content_type"
     t.integer  "eic_attachment_file_size"
     t.datetime "eic_attachment_updated_at"
-    t.string   "synapse_document_id"
+    t.string   "synapse_user_doc_id"
     t.string   "bank_statement_file_name"
     t.string   "bank_statement_content_type"
     t.integer  "bank_statement_file_size"
@@ -401,6 +401,9 @@ ActiveRecord::Schema.define(version: 20170512070526) do
     t.boolean  "outside_the_us",                  default: false
     t.boolean  "submited",                        default: false
     t.boolean  "bank_details_verified",           default: false
+    t.string   "synapse_company_doc_id"
+    t.boolean  "company_doc_verified",            default: false
+    t.boolean  "user_doc_verified",               default: false
   end
 
   create_table "green_checks", force: :cascade do |t|
