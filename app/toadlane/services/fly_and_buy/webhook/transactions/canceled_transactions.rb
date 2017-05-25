@@ -3,7 +3,7 @@ module Services
     module Webhook
       module Transactions
 
-        class CanceledTransactions < Base
+        class CanceledTransactions < Transactions::Base
           attr_reader :additional_seller_fee_transaction, :error_note, :note
 
           def initialize(fly_buy_order:, additional_seller_fee_transaction:, error_note:, note:)

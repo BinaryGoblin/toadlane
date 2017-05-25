@@ -8,9 +8,7 @@ class Behavior.CheckOutsideUS
       'country': '#fly_buy_profile_country',
       'tin_number': '#fly_buy_profile_tin_number',
       'eic_attachment': '#fly_buy_profile_eic_attachment',
-      'business_documents': '#fly_buy_profile_business_documents',
       'ssn_number': '#fly_buy_profile_ssn_number',
-      'ssn_card': '#fly_buy_profile_gov_id',
       'additional_information': '#fly_buy_profile_additional_information'
     }
 
@@ -31,17 +29,13 @@ class Behavior.CheckOutsideUS
     $(@$variables['tin_number']).closest('.form-group').find('label').text('Business Tax Number:')
     $(@$variables['eic_attachment']).closest('.form-group').find('label').text('Tax Document:')
     $(@$variables['eic_attachment']).closest('.form-group').find('a.view').addClass('hide')
-    $(@$variables['business_documents']).closest('.col-md-6').removeClass('hide')
     $(@$variables['ssn_number']).closest('.form-group').find('label').text('GOVERNMENT IDENTIFICATION NUMBER:')
-    $(@$variables['ssn_card']).closest('.form-group').find('label').text('GOVERNMENT ISSUED ID:')
     $(@$variables['additional_information']).closest('.col-md-6').removeClass('hide')
 
   hide_and_changes: =>
     $(@$variables['country']).closest('.col-md-6').addClass('hide')
-    $(@$variables['tin_number']).closest('.form-group').find('label').text('TIN Number:')
+    $(@$variables['tin_number']).closest('.form-group').find('label').text('EIN Number:')
     $(@$variables['eic_attachment']).closest('.form-group').find('label').text('EIN Document:')
     $(@$variables['eic_attachment']).closest('.form-group').find('a.view').removeClass('hide')
-    $(@$variables['business_documents']).closest('.col-md-6').addClass('hide')
     $(@$variables['ssn_number']).closest('.form-group').find('label').text('SOCIAL SECURITY NUMBER:')
-    $(@$variables['ssn_card']).closest('.form-group').find('label').text('SOCIAL SECURITY CARD:')
     $(@$variables['additional_information']).closest('.col-md-6').addClass('hide')

@@ -10,6 +10,16 @@ class SynapsePay
   ESCROW_FEE_HOLDER_NODE_ID = Rails.application.secrets['synapsepay_escrow_fee_holder_node_id']
   SCOPE = ['USERS|POST', 'USERS|PATCH', 'NODES|POST', 'NODES|PATCH', 'NODES|DELETE', 'TRANS|POST', 'TRANS|PATCH', 'TRANS|DELETE'].freeze
 
+  DOC_TYPES = {
+    ssn: 'SSN',
+    ein: 'EIN_DOC',
+    bank_statement: 'PROOF_OF_ACCOUNT',
+    gov_id: 'GOVT_ID',
+    ssn_card: 'SSN_CARD',
+    tin: 'TIN',
+    business_documents: 'OTHER'
+  }.freeze
+
   def initialize(fingerprint:, ip_address:)
     @client_id = Rails.application.secrets['synapsepay_client_id']
     @client_secret = Rails.application.secrets['synapsepay_client_secret']
