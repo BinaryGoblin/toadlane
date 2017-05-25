@@ -78,7 +78,7 @@ class Dashboard::AccountsController < DashboardController
       FlyAndBuy::CreateUserJob.perform_later(current_user, fly_buy_profile) unless fly_buy_profile.synapse_user_id.present?
       FlyAndBuy::AddCompanyDocumentJob.perform_later(current_user, fly_buy_profile, address_id) unless fly_buy_profile.company_doc_verified?
       FlyAndBuy::AddUserDocumentJob.perform_later(current_user, fly_buy_profile, address_id) unless fly_buy_profile.user_doc_verified?
-      FlyAndBuy::AddBankDetailsJob.perform_later(current_user, fly_buy_profile, address_id) unless fly_buy_profile.bank_details_verified?
+      FlyAndBuy::AddBankDetailsJob.perform_later(current_user, fly_buy_profile, bank_account_details) unless fly_buy_profile.bank_details_verified?
 
       UserMailer.send_notification_for_fly_buy_profile(fly_buy_profile, address_id).deliver_later
     end
