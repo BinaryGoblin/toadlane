@@ -40,7 +40,7 @@
 
       .form-group
         = f.label :main_category, 'Main category:', class: 'required'
-        = f.select :main_category, options_from_collection_for_select(main_categories, :id, :name, f.object.main_category), {}, data: { behavior: 'Select', subcategory: '#sub_categories' }, placeholder: 'Select the main category...'
+        = f.select :main_category, options_from_collection_for_select(main_categories, :id, :name, f.object.main_category), {}, data: { behavior: 'Select' }, placeholder: 'Select the main category...'
 
       / .form-group
       /   label Additional categories:

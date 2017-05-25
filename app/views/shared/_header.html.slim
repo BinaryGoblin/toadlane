@@ -75,7 +75,6 @@ header.header.navbar.navbar-default.navbar-fixed-top
           ul#logOutOptionsList
             li.headingList YOUR OPTIONS
             li= link_to fa_icon('caret-square-o-left', text: 'Refunds'),  dashboard_refund_requests_path(bought_or_sold: 'bought'), is: 'refund_requests'
-            li= link_to fa_icon('check-square-o', text: 'Verify'), dashboard_forms_path, is: 'forms'
             li= link_to fa_icon('power-off', text: 'Logout'), destroy_user_session_path, class: 'logout'
 
     - unless devise_controller? || signed_in?
