@@ -3,7 +3,7 @@ module Services
     module Webhook
       module Transactions
 
-        class SettledTransactions < Base
+        class SettledTransactions < Transactions::Base
 
           attr_reader :additional_seller_fee_transaction, :synapse_transaction_id, :note
 

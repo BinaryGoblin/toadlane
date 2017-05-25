@@ -28,7 +28,6 @@ class Dashboard::AccountsController < DashboardController
 
   def create_fly_buy_profile
     address_id = fly_buy_params['address_id']
-    fly_buy_profile = create_update_fly_buy_profile
 
     if fly_buy_params['address_attributes'].present?
       address_attributes_param = fly_buy_params['address_attributes'][(current_user.addresses.count + 1).to_s]
@@ -38,6 +37,8 @@ class Dashboard::AccountsController < DashboardController
     else
       return redirect_to dashboard_accounts_path, flash: { error: 'You must enter atleast one address to submitting your profile.' } unless address_id.present?
     end
+
+    fly_buy_profile = create_update_fly_buy_profile
 
     if current_user.profile_complete?
       unless current_user.name.present?
@@ -70,13 +71,14 @@ class Dashboard::AccountsController < DashboardController
         address: fly_buy_params['address'],
         name_on_account: fly_buy_params['name_on_account'],
         account_num: fly_buy_params['account_num'],
-        routing_num: fly_buy_params['routing_num'],
-        address_id: address_id
+        routing_num: fly_buy_params['routing_num']
       }
       bank_account_details.merge!(swift: fly_buy_params['additional_information']) if fly_buy_params['additional_information'].present?
 
       FlyAndBuy::CreateUserJob.perform_later(current_user, fly_buy_profile) unless fly_buy_profile.synapse_user_id.present?
-      FlyAndBuy::AddBankDetailsJob.perform_later(current_user, fly_buy_profile, bank_account_details)
+      FlyAndBuy::AddCompanyDocumentJob.perform_later(current_user, fly_buy_profile, address_id) unless fly_buy_profile.company_doc_verified?
+      FlyAndBuy::AddUserDocumentJob.perform_later(current_user, fly_buy_profile, address_id) unless fly_buy_profile.user_doc_verified?
+      FlyAndBuy::AddBankDetailsJob.perform_later(current_user, fly_buy_profile, address_id) unless fly_buy_profile.bank_details_verified?
 
       UserMailer.send_notification_for_fly_buy_profile(fly_buy_profile, address_id).deliver_later
     end

@@ -34,7 +34,7 @@ br
 .row
   .col-md-6
     .form-group
-        = f.label :tin_number, 'TIN Number:', class: 'required'
+        = f.label :tin_number, 'EIN Number:', class: 'required'
         = f.text_field :tin_number, class: 'form-control', required: true, placeholder: '77772222'
   .col-md-6.hide
     .form-group
@@ -114,13 +114,13 @@ br
       = f.label :eic_attachment, 'EIN Document:', class: 'required'
       = link_to "Lost your ein?", 'https://www.irs.gov/businesses/small-businesses-self-employed/lost-or-misplaced-your-ein', class: 'view', target: '_blank'
       = f.file_field :eic_attachment, required: true
-      p.warning Format must be png, jpg or pdf
+      p.warning Format must be png, jpg, jpeg or pdf
 
   .col-md-6
     .form-group
       = f.label :bank_statement, 'Bank statement:', class: 'required'
       = f.file_field :bank_statement, required: true
-      p.warning Format must be png, jpg or pdf
+      p.warning Format must be png, jpg, jpeg or pdf
 hr
 
 h4 User Verification:
@@ -145,14 +145,12 @@ br
 .row
   .col-md-6
     .form-group
-      = f.label :gov_id, 'SOCIAL SECURITY CARD:'
-      = f.file_field :gov_id
-      p.warning Format must be png, jpg or pdf
-  .col-md-6.hide
-    .form-group
-      = f.label :business_documents, 'ADDITIONAL BUSINESS DOCUMENTS:', class: 'required'
-      = f.file_field :business_documents, required: true
-      p.warning Format must be png, jpg or pdf
+      = f.label :gov_id, 'GOVERNMENT ISSUED ID:', class: 'required'
+      = f.file_field :gov_id, required: true
+      p.warning
+        | User's government issued photo ID (driver's license, state ID, passport etc.).
+        br
+        | Format must be png, jpg or jpeg
 
 hr
 

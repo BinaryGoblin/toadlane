@@ -3,7 +3,7 @@ module Services
     module Webhook
       module Transactions
 
-        class QueuedTransactions < Base
+        class QueuedTransactions < Transactions::Base
 
           def initialize(fly_buy_order)
             super(fly_buy_order)

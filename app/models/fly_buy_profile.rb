@@ -14,7 +14,6 @@
 #  eic_attachment_content_type      :string
 #  eic_attachment_file_size         :integer
 #  eic_attachment_updated_at        :datetime
-#  synapse_document_id              :string
 #  bank_statement_file_name         :string
 #  bank_statement_content_type      :string
 #  bank_statement_file_size         :integer
@@ -46,6 +45,10 @@
 #  outside_the_us                   :boolean          default(FALSE)
 #  submited                         :boolean          default(FALSE)
 #  bank_details_verified            :boolean          default(FALSE)
+#  synapse_company_doc_id           :string
+#  synapse_user_doc_id              :string
+#  company_doc_verified             :boolean          default(FALSE)
+#  user_doc_verified                :boolean          default(FALSE)
 #
 
 class FlyBuyProfile < ActiveRecord::Base
