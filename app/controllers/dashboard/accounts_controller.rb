@@ -272,11 +272,11 @@ class Dashboard::AccountsController < DashboardController
 
       if fly_buy_params['ssn_number'].present?
         ssn_number_array = fly_buy_params['ssn_number'].split('*')
-        fly_buy_params['ssn_number'] = (ssn_number_array.count == 2) ? ssn_number_array.last : ssn_number_array.first
+        fly_buy_params['ssn_number'] = (ssn_number_array.count > 1) ? ssn_number_array.last : ssn_number_array.first
       end
       if fly_buy_params['tin_number'].present?
         tin_number_array = fly_buy_params['tin_number'].split('*')
-        fly_buy_params['tin_number'] = (tin_number_array.count == 2) ? tin_number_array.last : tin_number_array.first
+        fly_buy_params['tin_number'] = (tin_number_array.count > 1) ? tin_number_array.last : tin_number_array.first
       end
     end
 
