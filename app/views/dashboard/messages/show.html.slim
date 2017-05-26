@@ -9,7 +9,7 @@
       - if other_user.present? && conversation.is_read?(other_user)
         | #{other_user.try(:name)} viewed this conversation&nbsp;
         = time_ago_in_words conversation.receipts_for(other_user).last.updated_at
-        | .
+        | &nbsp;ago.
       - else
         | #{other_user.try(:name)} hasn't viewed your latest message yet.
 

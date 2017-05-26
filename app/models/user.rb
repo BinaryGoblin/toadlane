@@ -116,6 +116,10 @@ class User < ActiveRecord::Base
     # !self.addresses.nil? && !self.name.nil? && !self.email.nil? && !self.phone.nil?
   end
 
+  def i_buy_and_sell_present?
+    tag_list.present?
+  end
+
   # user should have at least one payment method to create products
   def has_payment_account?
     self.stripe_profile.present? || self.green_profile.present? ||

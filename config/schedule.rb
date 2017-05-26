@@ -24,5 +24,5 @@ every :day, :at => '12:01am' do
   rake "email_notification_buyer_send_funds"
   rake "cancel_transaction_funds_not_received"
   rake "product_expired_notification"
-  rake "order_canceled_fund_not_sent"
+  # rake "order_canceled_fund_not_sent"
 end
