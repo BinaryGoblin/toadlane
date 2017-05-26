@@ -43,4 +43,11 @@ class NotificationMailer < ApplicationMailer
 
     mail to: @user.email, subject: "#{@product.name} has expired"
   end
+
+  def product_expired_notification_to_owner(product)
+    @product = product
+    @owner = @product.owner
+
+    mail to: @owner.email, subject: "#{@product.name} has expired"
+  end
 end

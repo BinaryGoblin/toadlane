@@ -84,8 +84,8 @@ class Product < ActiveRecord::Base
   accepts_nested_attributes_for :pricebreaks, allow_destroy: true, :reject_if => :all_blank
 
   validates_numericality_of :unit_price, :amount, only_integer: false, greater_than: 0, less_than: 1000000
-  validates_presence_of :end_date, :status_characteristic, :name, :tag_list
-  validates_presence_of :shipping_estimates, if: :default_payment_not_flybuy
+  validates :end_date, :status_characteristic, :name, :tag_list, presence: true
+  validates :shipping_estimates, presence: true, if: :default_payment_not_flybuy
   # searchkick autocomplete: ['name'], fields: [:name, :main_category]
   searchkick word_start: ['name'], fields: [:name, :description]
 
@@ -98,6 +98,13 @@ class Product < ActiveRecord::Base
   scope :not_sold_out, -> { where("amount > sold_out") }
   scope :inactive, -> { where(status: false) }
   scope :order_by_modified_date, -> { order('updated_at DESC') }
+  scope :active, -> { where(status: true) }
+  scope :expired_yesterday, -> { where('end_date BETWEEN ? AND ?',
+                      1.day.ago.beginning_of_day,
+                      1.day.ago.end_of_day
+                    )}
+
+  attr_accessor :flash_message
 
   self.per_page = 16
 
@@ -105,6 +112,7 @@ class Product < ActiveRecord::Base
 
   after_create :product_create_notification
   after_update :count_remaning_product
+  before_validation :check_for_payment_account
 
   SELLER = 'seller'
   BUYER = 'buyer'
@@ -293,5 +301,11 @@ class Product < ActiveRecord::Base
     when PaymentOptions[:amg]
       owner.amg_profile.present?
     end
+  end
+
+  private
+
+  def check_for_payment_account
+    self.status = 0 unless owner_default_payment_verified?
   end
 end
