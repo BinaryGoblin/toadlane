@@ -1,3 +1,7 @@
+- user_fly_buy_profile = user.fly_buy_profile
+- user_company_doc_verified = (user_fly_buy_profile.present? && user_fly_buy_profile.company_doc_verified?) ? true : false
+- user_doc_verified = (user_fly_buy_profile.present? && user_fly_buy_profile.user_doc_verified?) ? true : false
+- user_bank_details_verified = (user_fly_buy_profile.present? && user_fly_buy_profile.bank_details_verified?) ? true : false
 h4 Company Information:
 br
 .row
@@ -35,7 +39,7 @@ br
   .col-md-6
     .form-group
         = f.label :tin_number, 'EIN Number:', class: 'required'
-        = f.text_field :tin_number, class: 'form-control', required: true, placeholder: '77772222'
+        = f.text_field :tin_number, class: 'form-control', required: true, placeholder: '77772222', disabled: user_company_doc_verified
   .col-md-6.hide
     .form-group
         = label_tag 'country_name', 'What country are you from?:', class: 'required'
@@ -105,87 +109,90 @@ hr
           = ff.label :country, 'Country:', class: 'required'
           = ff.country_select 'country', ['US', 'GB'], { iso_codes: true, include_blank: 'Select a country' }, { name: "fly_buy_profile[address_attributes][#{address_count}][country]", required: true, id: "fly_buy_profile_address_attributes_#{address_count}_country", class: 'form-control fly-buy-profile-address-country' }
 
-hr
-h4 Company Documents:
-br
-.row
-  .col-md-6
-    .form-group
-      = f.label :eic_attachment, 'EIN Document:', class: 'required'
-      = link_to "Lost your ein?", 'https://www.irs.gov/businesses/small-businesses-self-employed/lost-or-misplaced-your-ein', class: 'view', target: '_blank'
-      = f.file_field :eic_attachment, required: true
-      p.warning Format must be png, jpg, jpeg or pdf
+- unless user_company_doc_verified
+  hr
+  h4 Company Documents:
+  br
+  .row
+    .col-md-6
+      .form-group
+        = f.label :eic_attachment, 'EIN Document:', class: 'required'
+        = link_to "Lost your ein?", 'https://www.irs.gov/businesses/small-businesses-self-employed/lost-or-misplaced-your-ein', class: 'view', target: '_blank'
+        = f.file_field :eic_attachment, required: true
+        p.warning Format must be png, jpg, jpeg or pdf
 
-  .col-md-6
-    .form-group
-      = f.label :bank_statement, 'Bank statement:', class: 'required'
-      = f.file_field :bank_statement, required: true
-      p.warning Format must be png, jpg, jpeg or pdf
-hr
+    .col-md-6
+      .form-group
+        = f.label :bank_statement, 'Bank statement:', class: 'required'
+        = f.file_field :bank_statement, required: true
+        p.warning Format must be png, jpg, jpeg or pdf
+- unless user_doc_verified
+  hr
 
-h4 User Verification:
-br
-.row
-  .col-md-6
-    .form-group
-      .offer-item
-        .offer-date
-          label Your date of birth:
-          = date_select :fly_buy_profile, :dob, { start_year: 60.year.ago.year, end_year: Date.today.year, order: [:month, :day, :year] }, { class: 'form-control' }
-  .col-md-6
-    .form-group
-      .info-btn-link
-        = f.label :ssn_number, 'SOCIAL SECURITY NUMBER:', class: 'required'
-        = f.text_field :ssn_number, class: 'form-control', required: true, placeholder: '77772222'
-        = link_to toadlane_trust_path, title: 'Why do we need this?', target: :_blank
-          span
-            .info-btn
-              i.fa.fa-question-circle
+  h4 User Verification:
+  br
+  .row
+    .col-md-6
+      .form-group
+        .offer-item
+          .offer-date
+            label Your date of birth:
+            = date_select :fly_buy_profile, :dob, { start_year: 60.year.ago.year, end_year: Date.today.year, order: [:month, :day, :year] }, { class: 'form-control' }
+    .col-md-6
+      .form-group
+        .info-btn-link
+          = f.label :ssn_number, 'SOCIAL SECURITY NUMBER:', class: 'required'
+          = f.text_field :ssn_number, class: 'form-control', required: true, placeholder: '77772222'
+          = link_to toadlane_trust_path, title: 'Why do we need this?', target: :_blank
+            span
+              .info-btn
+                i.fa.fa-question-circle
 
-.row
-  .col-md-6
-    .form-group
-      = f.label :gov_id, 'GOVERNMENT ISSUED ID:', class: 'required'
-      = f.file_field :gov_id, required: true
-      p.warning
-        | User's government issued photo ID (driver's license, state ID, or passport).
-        |  Format must be png, jpg or jpeg
+  .row
+    .col-md-6
+      .form-group
+        = f.label :gov_id, 'GOVERNMENT ISSUED ID:', class: 'required'
+        = f.file_field :gov_id, required: true
+        p.warning
+          | User's government issued photo ID (driver's license, state ID, or passport).
+          |  Format must be png, jpg or jpeg
 
-hr
+- unless user_bank_details_verified
+  hr
 
-h4 Bank Account Verification:
-p.warning This is the account you use to send and receive funds with Fly & Buy
-br
-.row
-  .col-md-6
-    .form-group
-      = f.label :bank_name, 'Bank Name:', class: 'required'
-      = f.text_field :bank_name, class: 'form-control', required: true
+  h4 Bank Account Verification:
+  p.warning This is the account you use to send and receive funds with Fly & Buy
+  br
+  .row
+    .col-md-6
+      .form-group
+        = f.label :bank_name, 'Bank Name:', class: 'required'
+        = f.text_field :bank_name, class: 'form-control', required: true
 
-  .col-md-6
-    .form-group
-      = f.label :address, 'Bank Address:', class: 'required'
-      = f.text_field :address, class: 'form-control', required: true
-.row
-  .col-md-6
-    .form-group
-      = f.label :name_on_account, 'Account Name:', class: 'required'
-      = f.text_field :name_on_account, class: 'form-control', required: true
+    .col-md-6
+      .form-group
+        = f.label :address, 'Bank Address:', class: 'required'
+        = f.text_field :address, class: 'form-control', required: true
+  .row
+    .col-md-6
+      .form-group
+        = f.label :name_on_account, 'Account Name:', class: 'required'
+        = f.text_field :name_on_account, class: 'form-control', required: true
 
-  .col-md-6
-    .form-group
-      = f.label :account_num, 'Account Number:', class: 'required'
-      = f.text_field :account_num, class: 'form-control', required: true
-.row
-  .col-md-6
-    .form-group
-      = f.label :routing_num, 'Routing Number:', class: 'required'
-      = f.text_field :routing_num, class: 'form-control', required: true
+    .col-md-6
+      .form-group
+        = f.label :account_num, 'Account Number:', class: 'required'
+        = f.text_field :account_num, class: 'form-control', required: true
+  .row
+    .col-md-6
+      .form-group
+        = f.label :routing_num, 'Routing Number:', class: 'required'
+        = f.text_field :routing_num, class: 'form-control', required: true
 
-  .col-md-6
-    .form-group
-      = f.label :additional_information, 'Swift Code:', class: 'required'
-      = f.text_field :additional_information, class: 'form-control', required: true
+    .col-md-6
+      .form-group
+        = f.label :additional_information, 'Swift Code:', class: 'required'
+        = f.text_field :additional_information, class: 'form-control', required: true
 hr
 
 .row
