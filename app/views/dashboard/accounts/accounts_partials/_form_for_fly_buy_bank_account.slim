@@ -1,5 +1,7 @@
 - user_fly_buy_profile = user.fly_buy_profile
-- ein_disable = user_fly_buy_profile.company_doc_verified? ? true : false
+- user_company_doc_verified = (user_fly_buy_profile.present? && user_fly_buy_profile.company_doc_verified?) ? true : false
+- user_doc_verified = (user_fly_buy_profile.present? && user_fly_buy_profile.user_doc_verified?) ? true : false
+- user_bank_details_verified = (user_fly_buy_profile.present? && user_fly_buy_profile.bank_details_verified?) ? true : false
 h4 Company Information:
 br
 .row
@@ -37,7 +39,7 @@ br
   .col-md-6
     .form-group
         = f.label :tin_number, 'EIN Number:', class: 'required'
-        = f.text_field :tin_number, class: 'form-control', required: true, placeholder: '77772222', disabled: ein_disable
+        = f.text_field :tin_number, class: 'form-control', required: true, placeholder: '77772222', disabled: user_company_doc_verified
   .col-md-6.hide
     .form-group
         = label_tag 'country_name', 'What country are you from?:', class: 'required'
@@ -107,7 +109,7 @@ hr
           = ff.label :country, 'Country:', class: 'required'
           = ff.country_select 'country', ['US', 'GB'], { iso_codes: true, include_blank: 'Select a country' }, { name: "fly_buy_profile[address_attributes][#{address_count}][country]", required: true, id: "fly_buy_profile_address_attributes_#{address_count}_country", class: 'form-control fly-buy-profile-address-country' }
 
-- unless user_fly_buy_profile.company_doc_verified?
+- unless user_company_doc_verified
   hr
   h4 Company Documents:
   br
@@ -124,7 +126,7 @@ hr
         = f.label :bank_statement, 'Bank statement:', class: 'required'
         = f.file_field :bank_statement, required: true
         p.warning Format must be png, jpg, jpeg or pdf
-- unless user_fly_buy_profile.user_doc_verified?
+- unless user_doc_verified
   hr
 
   h4 User Verification:
@@ -155,7 +157,7 @@ hr
           | User's government issued photo ID (driver's license, state ID, or passport).
           |  Format must be png, jpg or jpeg
 
-- unless user_fly_buy_profile.bank_details_verified?
+- unless user_bank_details_verified
   hr
 
   h4 Bank Account Verification:
