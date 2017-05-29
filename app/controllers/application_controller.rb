@@ -80,8 +80,12 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def redirect_to_concerned_path
-    products_path
+  def redirect_to_concerned_path(resource)
+    if !resource.i_buy_and_sell_present?
+      products_path(i_buy_and_sell: false)
+    else
+      products_path
+    end
   end
 
   def redirect_path_for_user(resource)
@@ -91,7 +95,7 @@ class ApplicationController < ActionController::Base
         session.delete(:previous_url)
         return previous_visited_url
       else
-        redirect_to_concerned_path
+        redirect_to_concerned_path(resource)
       end
     else
       account_deactivated_path

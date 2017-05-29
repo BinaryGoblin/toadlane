@@ -56,7 +56,11 @@ Toad::Application.routes.draw do
       end
     end
 
-    resource :profile, only: [:update, :show]
+    resource :profile, only: [:update, :show] do
+      collection do
+        put :update_i_buy_and_sell
+      end
+    end
 
     resources :accounts do
       collection do

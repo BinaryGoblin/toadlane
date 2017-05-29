@@ -1,5 +1,5 @@
 class Dashboard::ProfilesController < DashboardController
-  before_action :set_user, only: [:show, :update]
+  before_action :set_user, only: [:show, :update, :update_i_buy_and_sell]
 
   def show
     session[:previous_url] = request.referrer
@@ -58,6 +58,16 @@ class Dashboard::ProfilesController < DashboardController
       else
         format.html { render action: 'show' }
       end
+    end
+  end
+
+  def update_i_buy_and_sell
+    @user.tag_list = params[:user][:tag_list]
+    if @user.save(:validate => false)
+      flash[:notice] = 'I Buy and Sell information added successfully.'
+      redirect_to products_url
+    else
+      redirect_to dashboard_profile_path
     end
   end
 
