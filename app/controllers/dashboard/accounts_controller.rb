@@ -39,6 +39,7 @@ class Dashboard::AccountsController < DashboardController
     end
 
     fly_buy_profile = create_update_fly_buy_profile
+    create_and_update_fly_buy_profile_notification(fly_buy_profile)
 
     if current_user.profile_complete?
       unless current_user.name.present?
@@ -285,12 +286,13 @@ class Dashboard::AccountsController < DashboardController
       synapse_ip_address: request.ip,
       encrypted_fingerprint: generate_encrypted_fingerprint(fly_buy_params['fingerprint']),
       user_id: current_user.id,
-      company_email: fly_buy_params['email']
+      company_email: fly_buy_params['email'],
+      error_details: {}
     )
 
     if current_user.fly_buy_profile.present?
-      fly_buy_profile = FlyBuyProfile.where(user_id: current_user.id).first
-      fly_buy_profile.update(necessary_fly_buy_params)
+      fly_buy_profile = current_user.fly_buy_profile
+      fly_buy_profile.update_attributes(necessary_fly_buy_params)
     else
       fly_buy_profile = FlyBuyProfile.create(necessary_fly_buy_params)
     end
@@ -300,5 +302,18 @@ class Dashboard::AccountsController < DashboardController
 
   def remove_ssn_tin_data(fly_buy_profile)
     fly_buy_profile.update_attributes(ssn_number: nil, tin_number: nil)
+  end
+
+  def create_and_update_fly_buy_profile_notification(fly_buy_profile)
+    if fly_buy_profile.fly_buy_profile_notification.present?
+      fly_buy_profile.fly_buy_profile_notification.update_attributes(
+        invalid_tin: false,
+        invalid_ssn: false,
+        mfa_pending_tin: false,
+        mfa_pending_ssn: false
+      )
+    else
+      FlyBuyProfileNotification.create(fly_buy_profile_id: fly_buy_profile.id)
+    end
   end
 end

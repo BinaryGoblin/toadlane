@@ -53,6 +53,7 @@
 
 class FlyBuyProfile < ActiveRecord::Base
   belongs_to :user
+  has_one :fly_buy_profile_notification
 
   attr_accessor :account_num, :routing_num, :bank_name, :address, :email, :question_1, :question_2, :question_3,
     :question_4, :question_5
