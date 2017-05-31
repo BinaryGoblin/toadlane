@@ -15,7 +15,7 @@ module Services
           if verified_user?
             Documents::ForVerifiedProfile.new(fly_buy_profile, options['documents']).process
           else
-            Documents::ForUnverifiedProfile.new(fly_buy_profile, options['doc_status'], options['documents']).process
+            Documents::ForUnverifiedProfile.new(fly_buy_profile, options['documents']).process
           end
         end
 

@@ -13,27 +13,29 @@ module Services
           end
 
           def process
-            already_verified = fly_buy_profile.permission_scope_verified?
+            unless documents_have_reviewing_status?
+              already_verified = fly_buy_profile.permission_scope_verified?
 
-            options = {}
+              options = {}
 
-            options.merge!(
-              permission_scope_verified: true,
-              kba_questions: {},
-              completed: fly_buy_profile.bank_details_verified?
-            )
+              options.merge!(
+                permission_scope_verified: true,
+                kba_questions: {},
+                completed: fly_buy_profile.bank_details_verified?
+              )
 
-            if fly_buy_profile.bank_details_verified?
-              options.merge!(error_details: {})
+              if fly_buy_profile.bank_details_verified?
+                options.merge!(error_details: {})
 
-              notify_the_user(method_name: :send_account_verified_notification_to_user) unless already_verified
+                notify_the_user(method_name: :send_account_verified_notification_to_user) unless already_verified
+              end
+
+              documents.each do |document|
+                options.merge!(get_fly_buy_doc_status(document))
+              end
+
+              update_fly_buy_profile(options)
             end
-
-            documents.each do |document|
-              options.merge!(get_fly_buy_doc_status(document))
-            end
-
-            update_fly_buy_profile(options)
           end
 
           private
@@ -52,8 +54,14 @@ module Services
             args
           end
 
-          def permission_scope(document)
-            document['permission_scope'] == 'SEND|RECEIVE|1000000|DAILY'
+          def documents_have_reviewing_status?
+            status = false
+
+            documents.each do |document|
+              status = true if sub_documents_have_reviewing_status?(document['virtual_docs']) || sub_documents_have_reviewing_status?(document['physical_docs'])
+            end
+
+            status
           end
         end
       end
