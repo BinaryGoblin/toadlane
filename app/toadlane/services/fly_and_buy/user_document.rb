@@ -77,7 +77,7 @@ module Services
       def synapse_user_doc_id
         synapse_user = synapse_pay.user(user_id: fly_buy_profile.synapse_user_id)
         base_document = synapse_user.base_documents.find { |doc| doc.name == user_name }
-        if base_document.present? ? base_document.id : nil
+        base_document.present? ? base_document.id : nil
       end
     end
   end
