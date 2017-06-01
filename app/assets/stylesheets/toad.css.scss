@@ -1031,6 +1031,11 @@ min-width:550px;
   top: 50%;
 }
 
+.quantity .price span {
+  font-size:16px;
+  text-transform: none;
+}
+
 #iBuySellModal {
   .modal-dialog {
     margin: 60px auto;

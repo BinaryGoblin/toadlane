@@ -147,11 +147,10 @@ module ApplicationHelper
       quantityPrev = pricebreaks[index-1]
       quantityNext = pricebreaks[index+1]
 
-      if index == 0
+      if index == 0 && pricebreak.quantity > 1
         trs += content_tag :tr do
           concat content_tag :td, number_with_delimiter(needed) + ' - ' + (number_with_delimiter(pricebreak.quantity - 1))
           concat content_tag :td, number_to_currency(unit_price)
-          concat content_tag :td, number_with_delimiter(needed) + ' needed'
         end
       end
 
@@ -175,14 +174,12 @@ module ApplicationHelper
 
       tr_first = number_with_delimiter((pricebreak.quantity)) + ' - ' + number_with_delimiter(last_quantity)
       tr_second = number_to_currency(pricebreak.price)
-      tr_third = number_with_delimiter((pricebreak.quantity)) + ' needed'
 
       needed = pricebreak.quantity
 
       trs += content_tag :tr do
         concat content_tag :td, tr_first
         concat content_tag :td, tr_second
-        concat content_tag :td, tr_third
       end
     end
 
