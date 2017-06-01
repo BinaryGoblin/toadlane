@@ -133,7 +133,7 @@ module Mixins
       if !product.active_product? && !product.owner_default_payment_verified?
         flash[:error] = 'Your product is not active, since your payment profile is not complete.'
       else
-        flash[:notice] = 'Product has been successfully saved.'
+        flash[:notice] = 'Your product was successfully listed!!!'
       end
     end
   end
