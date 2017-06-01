@@ -14,9 +14,9 @@ module Services
 
       def submit
         synapse_user = synapse_pay.user(user_id: fly_buy_profile.synapse_user_id)
-        company_document = create_or_update_base_document(synapse_user)
+        create_or_update_base_document(synapse_user)
 
-        update_fly_buy_profile(synapse_company_doc_id: company_document.id) unless fly_buy_profile.synapse_company_doc_id.present?
+        update_fly_buy_profile(synapse_company_doc_id: synapse_company_doc_id) unless fly_buy_profile.synapse_company_doc_id.present?
       rescue SynapsePayRest::Error => e
         update_fly_buy_profile(error_details: e.response['error'])
       end
@@ -37,7 +37,7 @@ module Services
           email: user.email,
           phone_number: user.phone,
           ip: fly_buy_profile.synapse_ip_address,
-          name: [user.first_name, user.company].join(' '),
+          name: company_name,
           aka: user.company,
           entity_type: fly_buy_profile.entity_type,
           entity_scope: fly_buy_profile.entity_scope,
@@ -66,6 +66,16 @@ module Services
             )
           ]
         }
+      end
+
+      def company_name
+        [user.first_name, user.company].join(' ')
+      end
+
+      def synapse_company_doc_id
+        synapse_user = synapse_pay.user(user_id: fly_buy_profile.synapse_user_id)
+        base_document = synapse_user.base_documents.find { |doc| doc.name == company_name }
+        if base_document.present? ? base_document.id : nil
       end
     end
   end

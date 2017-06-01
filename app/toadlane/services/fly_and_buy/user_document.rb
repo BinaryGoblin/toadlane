@@ -14,9 +14,9 @@ module Services
 
       def submit
         synapse_user = synapse_pay.user(user_id: fly_buy_profile.synapse_user_id)
-        user_document = create_or_update_base_document(synapse_user)
+        create_or_update_base_document(synapse_user)
 
-        update_fly_buy_profile(synapse_user_doc_id: user_document.id) unless fly_buy_profile.synapse_user_doc_id.present?
+        update_fly_buy_profile(synapse_user_doc_id: synapse_user_doc_id) unless fly_buy_profile.synapse_user_doc_id.present?
       rescue SynapsePayRest::Error => e
         update_fly_buy_profile(error_details: e.response['error'])
       end
@@ -37,8 +37,8 @@ module Services
           email: formatted_email,
           phone_number: user.phone,
           ip: fly_buy_profile.synapse_ip_address,
-          name: user.name,
-          aka: user.name,
+          name: user_name,
+          aka: user_name,
           entity_type: fly_buy_profile.entity_type,
           entity_scope: fly_buy_profile.entity_scope,
           birth_day: fly_buy_profile.dob.day,
@@ -68,6 +68,16 @@ module Services
         splited_email = user.email.split('@')
         updated_email = "#{splited_email.first}+#{user.first_name}"
         "#{updated_email}@#{splited_email.last}"
+      end
+
+      def user_name
+        user.name
+      end
+
+      def synapse_user_doc_id
+        synapse_user = synapse_pay.user(user_id: fly_buy_profile.synapse_user_id)
+        base_document = synapse_user.base_documents.find { |doc| doc.name == user_name }
+        if base_document.present? ? base_document.id : nil
       end
     end
   end
