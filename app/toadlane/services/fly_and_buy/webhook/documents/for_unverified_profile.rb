@@ -44,12 +44,12 @@ module Services
             when 'TIN'
               unless notification.mfa_pending_tin?
                 notify_the_user(method_name: :send_tin_num_partially_valid_notification_to_user)
-                notification.update_attribute(mfa_pending_tin: true)
+                notification.update_attribute(:mfa_pending_tin, true)
               end
             when 'SSN'
               unless notification.mfa_pending_ssn?
                 notify_the_user(method_name: :send_ssn_num_partially_valid_notification_to_user)
-                notification.update_attribute(mfa_pending_ssn: true)
+                notification.update_attribute(:mfa_pending_ssn, true)
               end
             end
             #notify_the_user(method_name: :send_account_not_verified_yet_notification_to_user)
@@ -66,14 +66,14 @@ module Services
 
               unless notification.invalid_tin?
                 notify_the_user(method_name: :send_ein_num_not_valid_notification_to_user)
-                notification.update_attribute(invalid_tin: true)
+                notification.update_attribute(:invalid_tin, true)
               end
             when 'SSN'
               data[:error_details] = { 'en': "Invalid field value supplied. #{fly_buy_profile.ssn_number} is not a valid SSN number." }
 
               unless notification.invalid_ssn?
                 notify_the_user(method_name: :send_ssn_num_not_valid_notification_to_user)
-                notification.update_attribute(invalid_ssn: true)
+                notification.update_attribute(:invalid_ssn, true)
               end
             end
 
