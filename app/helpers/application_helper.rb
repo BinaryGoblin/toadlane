@@ -148,10 +148,7 @@ module ApplicationHelper
       quantityNext = pricebreaks[index+1]
 
       if index == 0 && pricebreak.quantity > 1
-        trs += content_tag :tr do
-          concat content_tag :td, number_with_delimiter(needed) + ' - ' + (number_with_delimiter(pricebreak.quantity - 1))
-          concat content_tag :td, number_to_currency(unit_price)
-        end
+        trs += price_break_content_table(needed, (pricebreak.quantity - 1), unit_price)
       end
 
       if quantityPrev.present?
@@ -162,7 +159,7 @@ module ApplicationHelper
             last_quantity = (quantityNext.quantity - 1).to_s
           end
 
-        elsif available > pricebreak.quantity
+        elsif available >= pricebreak.quantity
           last_quantity = available.to_s
 
         else
@@ -172,18 +169,23 @@ module ApplicationHelper
         last_quantity = ''
       end
 
-      tr_first = number_with_delimiter((pricebreak.quantity)) + ' - ' + number_with_delimiter(last_quantity)
-      tr_second = number_to_currency(pricebreak.price)
+      trs += price_break_content_table((pricebreak.quantity), last_quantity, pricebreak.price) if last_quantity.present?
 
       needed = pricebreak.quantity
-
-      trs += content_tag :tr do
-        concat content_tag :td, tr_first
-        concat content_tag :td, tr_second
-      end
     end
 
     content_tag :table, content_tag(:tbody, trs.html_safe)
+  end
+
+  def price_break_content_table(lower_limit, upper_limit, unit_price)
+    content_tag :tr do
+      if number_with_delimiter(upper_limit) > number_with_delimiter(lower_limit)
+        concat content_tag :td, number_with_delimiter(lower_limit) + ' - ' + (number_with_delimiter(upper_limit))
+      else
+        concat content_tag :td, number_with_delimiter(lower_limit)
+      end
+      concat content_tag :td, number_to_currency(unit_price)
+    end
   end
 
   def slider_pricebreaks pricebreaks, unit_price
