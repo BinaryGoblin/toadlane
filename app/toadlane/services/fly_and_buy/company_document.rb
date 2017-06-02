@@ -36,7 +36,7 @@ module Services
           phone_number: user.phone,
           ip: fly_buy_profile.synapse_ip_address,
           name: company_name,
-          aka: company_name,
+          aka: user.company,
           entity_type: fly_buy_profile.entity_type,
           entity_scope: fly_buy_profile.entity_scope,
           birth_day: fly_buy_profile.date_of_company.day,
@@ -67,7 +67,7 @@ module Services
       end
 
       def company_name
-        user.company
+        "#{user.name} (#{user.company})"
       end
 
       def remove_base_document(synapse_user)
