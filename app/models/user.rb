@@ -79,6 +79,7 @@ class User < ActiveRecord::Base
     :foreign_key => 'user_id',
     :association_foreign_key => 'role_id'
   has_many :additional_seller_fee_transactions, dependent: :destroy
+  has_many :folders, dependent: :destroy
 
   has_attached_file :asset, styles: {
     small: '155x155#',
@@ -316,6 +317,10 @@ class User < ActiveRecord::Base
     slord << fly_buy_orders('sold').completed
 
     slord.flatten
+  end
+
+  def my_products
+    products.for_sell.independent
   end
 
   private

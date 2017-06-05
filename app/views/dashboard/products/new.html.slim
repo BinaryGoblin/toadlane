@@ -2,7 +2,8 @@
 
 .wrap-sm
   .product-form
-    h4 New product:
-
+    h4.new-product New product:
+    = link_to 'Bulk Product', new_dashboard_folder_path, class: 'sellBtn pull-left'
+    span.clearfix
     = render 'shared/product_form'
 .clearfix

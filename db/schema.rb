@@ -418,6 +418,19 @@ ActiveRecord::Schema.define(version: 20170612082424) do
     t.string   "gender"
   end
 
+  create_table "folders", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.string   "import_file_name"
+    t.string   "import_content_type"
+    t.integer  "import_file_size"
+    t.datetime "import_updated_at"
+    t.integer  "user_id"
+    t.string   "import_status"
+    t.string   "error_message"
+  end
+
   create_table "green_checks", force: :cascade do |t|
     t.string   "result"
     t.string   "result_description"
@@ -667,6 +680,10 @@ ActiveRecord::Schema.define(version: 20170612082424) do
     t.string   "default_payment"
     t.string   "shared_to",                        default: [],                array: true
     t.integer  "minimum_order_quantity",           default: 1,    null: false
+    t.integer  "folder_id"
+    t.string   "brand"
+    t.string   "model"
+    t.string   "condition"
   end
 
   add_index "products", ["deleted_at"], name: "index_products_on_deleted_at", using: :btree

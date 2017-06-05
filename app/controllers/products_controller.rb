@@ -10,6 +10,7 @@ class ProductsController < ApplicationController
   def index
     @most_viewed_products = Product.most_viewed_products.limit(7)
     @newest_products = Product.newest_products.first(7)
+    @folders = Folder.importing_completed
   end
 
   def show

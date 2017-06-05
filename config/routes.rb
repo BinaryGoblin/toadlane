@@ -77,11 +77,15 @@ Toad::Application.routes.draw do
 
     resource :finances, only: [:create, :show]
 
+    resources :folders
+
     resources :products, except: :show do
       collection do
         delete :delete_cascade
         post :active_cascade
         post :inactive_cascade
+        post :import
+        get 'template'
         get '/:id/viewers', to: 'products#viewers', as: 'viewers'
       end
     end
