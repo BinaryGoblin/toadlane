@@ -39,7 +39,10 @@
                 - else
                   = order.status
             td.text-center
-              = link_to order.product.name.titleize, product_path(order.product, cat_id: order.product.main_category), class: 'link link-ulined', target: '_blank'
+              - if order.product.is_for_sell?
+                = link_to order.product.name.titleize, product_path(order.product, cat_id: order.product.main_category), class: 'link link-ulined', target: '_blank'
+              - else
+                = link_to order.product.name.titleize, dashboard_offer_path(order.product), class: 'link link-ulined', target: '_blank'
               - if order.class.to_s == "FlyBuyOrder"
                 - if order.seller_group.present?
                   br

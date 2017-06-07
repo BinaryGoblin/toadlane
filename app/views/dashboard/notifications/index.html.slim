@@ -24,8 +24,11 @@
             td: input type="checkbox" value="#{notification.id}"
             - if notification.notifiable_type == 'Product'
               td
-                = "#{notification.notifiable.owner.name.titleize} has added product "
-                = link_to notification.notifiable.name, product_path(notification.notifiable, cat_id: notification.notifiable.main_category), class: 'link link-ulined', target: '_blank'
+                = "#{notification.notifiable.owner.name.titleize} added "
+                - if notification.notifiable.is_for_sell?
+                  = link_to notification.notifiable.name, product_path(notification.notifiable, cat_id: notification.notifiable.main_category), class: 'link link-ulined', target: '_blank'
+                - else
+                  = link_to notification.notifiable.name, dashboard_request_path(notification.notifiable), class: 'link link-ulined', target: '_blank'
             - else
               td= notification.title
             td

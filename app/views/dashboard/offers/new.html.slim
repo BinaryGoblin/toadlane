@@ -1,0 +1,45 @@
+= render '/shared/tabs'
+
+.view-product
+  .wrap-sm.request-show-block
+    .div[style='border: solid 1px blue']
+      .col-md-7
+        .row.text-uppercase
+          .col-md-6.pull-left
+            .name
+              h3
+                b #{@request.owner.name}
+                span.flag-icon.flag-icon-us title=("US") &nbsp;
+            .status.text-uppercase.pull-left
+              b Status:
+              - if @request.owner_default_payment_verified?
+                span.text-green Verified
+              - else
+                span.text-red Unverified
+          .col-md-6.pull-left
+        .row.request-name.text-uppercase
+          h1
+            | #{@request.name}
+          h3
+            span Categories: &nbsp;
+            = all_categories_of_product @request.id
+          h3
+            | Tags: &nbsp;
+            = all_tags_of_product @request.id
+        .white-panel
+          h3 Description:
+          p #{@request.description}
+        .row.request-info
+          .col-md-6.pull-left
+            h2 Request Price: #{@request.unit_price}/Unit
+          .col-md-6.pull-left
+            h2 Request Quantity: #{@request.amount}
+      .col-md-5
+      .clearfix
+
+.wrap-sm
+  .product-form
+    h4 Place Your Offer:
+    = form_for @offer, url: dashboard_offers_path(request_id: @request.id), metod: :post , :html => { multipart: true,class: "request_form_partial request_#{params["action"]}" } do |f|
+      = render partial: 'offer_form', locals: { f: f }
+.clearfix

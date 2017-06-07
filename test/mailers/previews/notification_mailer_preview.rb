@@ -48,6 +48,20 @@ class NotificationMailerPreview < ActionMailer::Preview
     NotificationMailer.product_create_notification_email(product, user)
   end
 
+  def request_create_notification_email
+    product = Product.first
+    user = product.owner
+
+    NotificationMailer.request_create_notification_email(product, user)
+  end
+
+  def offer_notification_email
+    offer = Product.where(status_characteristic: 'offer').first
+    request = offer.request
+
+    NotificationMailer.offer_notification_email(offer, request)
+  end
+
   def product_expired_notification_to_owner
     product = Product.first
 

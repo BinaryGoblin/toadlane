@@ -88,7 +88,7 @@ class ApplicationController < ActionController::Base
   private
 
   def authenticate
-    unless Rails.env.production?
+    if Rails.env.staging?
       authenticate_or_request_with_http_basic do |username, password|
         username == "toadlane" && password == "mantoad333"
       end

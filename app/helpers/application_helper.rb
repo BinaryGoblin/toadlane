@@ -32,7 +32,7 @@ module ApplicationHelper
   def all_categories_of_product id
     product = Product.find(id)
 
-    content_tag :div do
+    content_tag :span do
       concat link_to product.category.name, search_path(cat_id: product.category.id, count: 16) if product.category.present?
       if product.categories.present?
         product.categories.each do |category|
@@ -47,6 +47,22 @@ module ApplicationHelper
     end
   end
 
+  def all_tags_of_product id
+    product = Product.find(id)
+
+    content_tag :span do
+      if product.tag_list.present?
+        product.tag_list.each_with_index do |tag, index|
+          if index == 0
+            concat link_to tag, "#"
+          else
+            concat ', '
+            concat link_to tag, "#"
+          end
+        end
+      end
+    end
+  end
   def products_carousel_items products, class_name=''
     class_inner = ['carousel-inner']
 
@@ -249,7 +265,7 @@ module ApplicationHelper
 
   def product_border_color(product)
     if product.present?
-      product.status_characteristic == "sell" ? "green_border" : "orange_border"
+      product.status_characteristic == "sell" ? "green_border" : "red_border"
     end
   end
 
