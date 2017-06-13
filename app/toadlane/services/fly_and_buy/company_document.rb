@@ -14,20 +14,85 @@ module Services
 
       def submit
         synapse_user = synapse_pay.user(user_id: fly_buy_profile.synapse_user_id)
-        create_or_update_base_document(synapse_user)
 
-        update_fly_buy_profile(synapse_company_doc_id: synapse_company_doc_id)
+        create_or_update_document(synapse_user)
       rescue SynapsePayRest::Error => e
         update_fly_buy_profile(error_details: e.response['error'])
       end
 
       private
 
-      def create_or_update_base_document(synapse_user)
-        remove_base_document(synapse_user) if fly_buy_profile.synapse_company_doc_id.present?
+      def create_or_update_document(synapse_user)
+        document = create_or_update_base_document(synapse_user)
 
+        if document.present?
+          create_physical_documents(document)
+          create_virtual_documents(document)
+
+          update_fly_buy_profile(synapse_company_doc_id: document.id)
+        end
+      end
+
+      def create_or_update_base_document(synapse_user)
+        base_documents = synapse_user.base_documents
+
+        if base_documents.present?
+          base_document = base_documents.find { |doc| doc.id == fly_buy_profile.synapse_company_doc_id } if fly_buy_profile.synapse_company_doc_id.present?
+          base_document = base_documents.find { |doc| doc.name == company_name } unless base_document.present?
+          if base_document.present?
+            base_document.update(payload)
+          else
+            synapse_user.create_base_document(payload)
+          end
+        else
+          synapse_user.create_base_document(payload)
+        end
+
+        company_document
+      end
+
+      def create_physical_documents(document)
+        ein_doc = SynapsePayRest::PhysicalDocument.create(
+          type: SynapsePay::DOC_TYPES[:ein],
+          value: encode_attachment(file_tempfile: fly_buy_profile.eic_attachment.url, file_type: fly_buy_profile.eic_attachment_content_type)
+        )
+
+        second_doc = case fly_buy_profile.profile_type
+        when 'tier_2'
+          SynapsePayRest::PhysicalDocument.create(
+            type: SynapsePay::DOC_TYPES[:address_proof],
+            value: encode_attachment(file_tempfile: fly_buy_profile.bank_statement.url, file_type: fly_buy_profile.bank_statement_content_type)
+          )
+        when 'tier_3'
+          SynapsePayRest::PhysicalDocument.create(
+            type: SynapsePay::DOC_TYPES[:bank_statement],
+            value: encode_attachment(file_tempfile: fly_buy_profile.bank_statement.url, file_type: fly_buy_profile.bank_statement_content_type)
+          )
+        end
+
+        if second_doc.present?
+          document.add_physical_documents(ein_doc, second_doc)
+        else
+          document.add_physical_documents(ein_doc)
+        end
+      end
+
+      def create_virtual_documents(document)
+        virtual_doc = SynapsePayRest::VirtualDocument.create(
+          type: SynapsePay::DOC_TYPES[:tin],
+          value: fly_buy_profile.tin_number
+        )
+
+        document.add_virtual_documents(virtual_doc)
+      end
+
+      def company_document
         synapse_user = reload_synapse_user
-        synapse_user.create_base_document(payload)
+        synapse_user.base_documents.find { |doc| doc.name == company_name }
+      end
+
+      def reload_synapse_user
+        synapse_pay.user(user_id: fly_buy_profile.synapse_user_id)
       end
 
       def payload
@@ -46,44 +111,12 @@ module Services
           address_city: address.city,
           address_subdivision: address.state,
           address_postal_code: address.zip,
-          address_country_code: address.country,
-          physical_documents: [
-            SynapsePayRest::PhysicalDocument.create(
-              type: SynapsePay::DOC_TYPES[:ein],
-              value: encode_attachment(file_tempfile: fly_buy_profile.eic_attachment.url, file_type: fly_buy_profile.eic_attachment_content_type)
-            ),
-            SynapsePayRest::PhysicalDocument.create(
-              type: SynapsePay::DOC_TYPES[:bank_statement],
-              value: encode_attachment(file_tempfile: fly_buy_profile.bank_statement.url, file_type: fly_buy_profile.bank_statement_content_type)
-            )
-          ],
-          virtual_documents: [
-            SynapsePayRest::VirtualDocument.create(
-              type: SynapsePay::DOC_TYPES[:tin],
-              value: fly_buy_profile.tin_number
-            )
-          ]
+          address_country_code: address.country
         }
       end
 
       def company_name
         "#{user.name} (#{user.company})"
-      end
-
-      def remove_base_document(synapse_user)
-        base_document = SynapsePayRest::BaseDocument.new(user: synapse_user, id: fly_buy_profile.synapse_company_doc_id)
-        base_document.update(permission_scope: 'DELETE_DOCUMENT')
-      rescue SynapsePayRest::Error::NotFound
-      end
-
-      def synapse_company_doc_id
-        synapse_user = reload_synapse_user
-        base_document = synapse_user.base_documents.find { |doc| doc.name == company_name }
-        base_document.present? ? base_document.id : nil
-      end
-
-      def reload_synapse_user
-        synapse_pay.user(user_id: fly_buy_profile.synapse_user_id)
       end
     end
   end

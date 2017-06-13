@@ -23,7 +23,7 @@ module Services
 
           def permission_scope(document)
             permission_arry = document['permission_scope'].split('|')
-            permission_arry.include?('SEND') && permission_arry.include?('RECEIVE') && permission_arry.include?('DAILY')
+            permission_arry.include?('SEND') && permission_arry.include?('DAILY')
           end
 
           def sub_documents_have_reviewing_status?(sub_documents)
@@ -31,7 +31,7 @@ module Services
 
             sub_documents.each do |document|
               status = true if is_in_reviewing_status?(document)
-            end
+            end if sub_documents.present?
 
             status
           end

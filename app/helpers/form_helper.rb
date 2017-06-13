@@ -9,12 +9,20 @@ module FormHelper
     product
   end
 
+  def user_identification_program_options
+    [
+      ['Tier 1: Up to $100k', 'tier_1'],
+      ['Tier 2: Up to $500k', 'tier_2'],
+      ['Tier 3: $1M+', 'tier_3']
+    ]
+  end
+
   def user_entity_types
   	[
   		['Male', 'M'],
   		['Female', 'F'],
-  		['Other', 'o'],
-  		['NOT_KNOWN', 'Do not wish to specify']
+  		['Other', 'O'],
+  		['Do not wish to specify', 'NOT_KNOWN']
   	]
   end
 
@@ -29,7 +37,7 @@ module FormHelper
   	]
   end
 
-  def user_company_entity_scopes
+  def company_entity_scopes
   	[
   		['Not Known', 'Not Known'],
   		['Business Services', 'Business Services'],
@@ -110,6 +118,8 @@ module FormHelper
   		# ['Travel/Leisure', 'Travel/Leisure']
   	]
   end
+
+  alias_method :user_entity_scopes, :company_entity_scopes
 
   def get_type(order)
     if order.instance_of? FlyBuyOrder

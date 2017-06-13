@@ -14,6 +14,7 @@ class SynapsePay
     ssn: 'SSN',
     ein: 'EIN_DOC',
     bank_statement: 'PROOF_OF_ACCOUNT',
+    address_proof: 'PROOF_OF_ADDRESS',
     gov_id: 'GOVT_ID',
     ssn_card: 'SSN_CARD',
     tin: 'TIN',
@@ -28,7 +29,7 @@ class SynapsePay
     @development_mode = SANDBOX_MODE
     @webhook_url = Rails.application.secrets['synapsepay_webhook_url']
 
-    subscriptions.create
+    fetch_subscription
   end
 
   def client
@@ -45,7 +46,7 @@ class SynapsePay
   end
 
   def user(user_id:)
-    SynapsePayRest::User.find(client: client, id: user_id)
+    SynapsePayRest::User.find(client: client, id: user_id, full_dehydrate: 'yes')
   end
 
   def create_user(**options)
@@ -61,32 +62,36 @@ class SynapsePay
     SynapsePayRest::User.create(user_create_settings)
   end
 
-  def subscriptions
-    Subscriptions.new(client.http_client, webhook_url)
+  def fetch_subscription
+    create_or_update_subscription
   end
 
   private
 
-  Subscriptions = Struct.new(:http_client, :webhook_url) do
-    def all
-      http_client.get('/subscriptions')
+  def create_or_update_subscription
+    subscription = SynapsePaySubscription.first
+    if subscription.present?
+      synapse_pay_subscription = find_and_update_subscription(subscription.subscription_id)
+      unless synapse_pay_subscription
+        subscription.destroy
+        create_or_update_subscription
+      end
+    else
+      synapse_pay_subscription = create_subscription
+      SynapsePaySubscription.create(subscription_id: synapse_pay_subscription.id)
+      synapse_pay_subscription
     end
+  end
 
-    def create
-      data = {
-        url: webhook_url,
-        scope: SCOPE
-      }
-
-      http_client.post('/subscriptions', data)
+  def find_and_update_subscription(subscription_id)
+    if subscription_id.present?
+      subscription = SynapsePayRest::Subscription.find(client: client, id: subscription_id)
+      subscription = SynapsePayRest::Subscription.update(client: client, is_active: true, url: webhook_url, scope: SCOPE) if subscription && !subscription.is_active
+      subscription
     end
+  end
 
-    def find(id:)
-      http_client.get("/subscriptions/#{id}")
-    end
-
-    def update(id:, data:)
-      http_client.patch("/subscriptions/#{id}", data)
-    end
+  def create_subscription
+    SynapsePayRest::Subscription.create(client: client, url: webhook_url, scope: SCOPE)
   end
 end

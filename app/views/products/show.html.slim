@@ -222,8 +222,7 @@
                   - if @product.owner_default_payment_verified?
                     b Status:&nbsp;
                     span.text-green
-                      |
-                        Verified
+                      = show_account_status(@product)
                   - else
                     b Status:&nbsp;
                     span.text-red

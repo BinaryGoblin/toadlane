@@ -12,7 +12,7 @@ module Services
         end
 
         def handle
-          if verified_user?
+          if verified_user? && added_correct_documents? && !unverified_documents_present?
             Documents::ForVerifiedProfile.new(fly_buy_profile, options['documents']).process
           else
             Documents::ForUnverifiedProfile.new(fly_buy_profile, options['documents']).process
@@ -31,6 +31,19 @@ module Services
 
         def permission
           options['permission']
+        end
+
+        def added_correct_documents?
+          case fly_buy_profile.profile_type
+          when 'tier_1'
+            options['documents'].length == 1
+          else
+            options['documents'].length == 2
+          end
+        end
+
+        def unverified_documents_present?
+          options['documents'].select { |doc| doc['permission_scope'] == 'UNVERIFIED' }.present?
         end
       end
     end
