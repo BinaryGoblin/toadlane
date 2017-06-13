@@ -78,7 +78,7 @@ class Dashboard::AccountsController < DashboardController
 
       FlyAndBuy::CreateUserJob.perform_later(current_user, fly_buy_profile) unless fly_buy_profile.synapse_user_id.present?
       FlyAndBuy::AddCompanyDocumentJob.perform_later(current_user, fly_buy_profile, address_id) unless fly_buy_profile.company_doc_verified?
-      FlyAndBuy::AddUserDocumentJob.perform_later(current_user, fly_buy_profile, address_id) unless fly_buy_profile.user_doc_verified?
+      FlyAndBuy::AddUserDocumentJob.perform_later(current_user, fly_buy_profile, address_id) if !fly_buy_profile.user_doc_verified? && ['tier_2', 'tier_3'].include?(fly_buy_profile.profile_type)
       FlyAndBuy::AddBankDetailsJob.perform_later(current_user, fly_buy_profile, bank_account_details) unless fly_buy_profile.bank_details_verified?
 
       UserMailer.send_notification_for_fly_buy_profile(fly_buy_profile, address_id).deliver_later
@@ -258,7 +258,10 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def create_update_fly_buy_profile
-    current_user.update_attributes(phone: fly_buy_params['company_phone'], company: fly_buy_params['company'])
+    args = {}
+    args[:phone] = fly_buy_params['company_phone'] if fly_buy_params['company_phone'].present?
+    args[:company] = fly_buy_params['company'] if fly_buy_params['company'].present?
+    current_user.update_attributes(args) if args.present?
 
     if fly_buy_params['address_attributes'].present?
       address_attributes_param = fly_buy_params['address_attributes'][(current_user.addresses.count + 1).to_s]
@@ -270,16 +273,10 @@ class Dashboard::AccountsController < DashboardController
         address = current_user.addresses.create(address_attributes_param)
         fly_buy_params.merge!(address_id: address.id).except!(:address_attributes)
       end
-
-      if fly_buy_params['ssn_number'].present?
-        ssn_number_array = fly_buy_params['ssn_number'].split('*')
-        fly_buy_params['ssn_number'] = (ssn_number_array.count > 1) ? ssn_number_array.last : ssn_number_array.first
-      end
-      if fly_buy_params['tin_number'].present?
-        tin_number_array = fly_buy_params['tin_number'].split('*')
-        fly_buy_params['tin_number'] = (tin_number_array.count > 1) ? tin_number_array.last : tin_number_array.first
-      end
     end
+
+    fly_buy_params['ssn_number'] = fly_buy_params['ssn_number'].gsub(/\*/, '') if fly_buy_params['ssn_number'].present?
+    fly_buy_params['tin_number'] = fly_buy_params['tin_number'].gsub(/\*/, '') if fly_buy_params['tin_number'].present?
 
     necessary_fly_buy_params = fly_buy_params.except(:email, :address_id, :fingerprint, :bank_name, :name_on_account, :account_num, :company)
     necessary_fly_buy_params.merge!(

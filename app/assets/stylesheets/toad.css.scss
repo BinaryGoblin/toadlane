@@ -985,15 +985,41 @@ min-width:550px;
   }
 }
 
+.profileType {
+  .first {
+    float: left;
+    width: 88%;
+  }
+
+  .second {
+    float: right;
+    margin-top: 18px;
+  }
+
+  .info-btn {
+    background: #2987d8;
+    border-radius: 5px;
+    color: #fff;
+
+    i {
+      font-size: 24px;
+      margin: 3px;
+      position: static;
+    }
+  }
+}
+
 .info-btn-link {
-  input {
+  input, select {
     width: 90%;
   }
+
   a {
     position: relative;
     top: -33px;
     right: -93%;
   }
+
   .info-btn {
     background: #2987d8;
     border-radius: 5px;

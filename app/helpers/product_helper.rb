@@ -137,4 +137,20 @@ module ProductHelper
     0.step(100, 25) { |n| values << "#{n}%"}
     values
   end
+
+  def show_account_status(product)
+    case product.default_payment
+    when Product::PaymentOptions[:fly_buy]
+      case product.owner.fly_buy_profile.profile_type
+      when 'tier_1'
+        'Verified- up to $100k'
+      when 'tier_2'
+        'Verified- up to $500k'
+      when 'tier_3'
+        'Verified- $1M+'
+      end
+    else
+      'Verified'
+    end
+  end
 end

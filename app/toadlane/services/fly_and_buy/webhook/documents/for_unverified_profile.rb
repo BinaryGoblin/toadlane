@@ -28,13 +28,13 @@ module Services
           def invalid_doc_permission(document)
             document['physical_docs'].each do |physical_document|
               invalid_physical_document(physical_document) if invalid_doc_status?(physical_document)
-            end
+            end if document['physical_docs'].present?
 
             document['virtual_docs'].each do |virtual_document|
               invalid_virtual_document(virtual_document) if invalid_doc_status?(virtual_document)
 
               mfa_pending_virtual_document(virtual_document) if mfa_pending_doc_status?(virtual_document)
-            end
+            end if document['virtual_docs'].present?
 
             update_doc_status(document, false)
           end
@@ -62,17 +62,17 @@ module Services
 
             case document['document_type']
             when 'TIN'
-              data[:error_details] = { 'en': "Invalid field value supplied. #{fly_buy_profile.tin_number} is not a valid EIN number." }
+              data[:error_details] = { 'en': "Invalid field value supplied. #{fly_buy_profile.masked_tin_number} is not a valid EIN number." }
 
               unless notification.invalid_tin?
-                notify_the_user(method_name: :send_ein_num_not_valid_notification_to_user)
+                #notify_the_user(method_name: :send_ein_num_not_valid_notification_to_user)
                 notification.update_attribute(:invalid_tin, true)
               end
             when 'SSN'
-              data[:error_details] = { 'en': "Invalid field value supplied. #{fly_buy_profile.ssn_number} is not a valid SSN number." }
+              data[:error_details] = { 'en': "Invalid field value supplied. #{fly_buy_profile.masked_ssn_number} is not a valid SSN number." }
 
               unless notification.invalid_ssn?
-                notify_the_user(method_name: :send_ssn_num_not_valid_notification_to_user)
+                #notify_the_user(method_name: :send_ssn_num_not_valid_notification_to_user)
                 notification.update_attribute(:invalid_ssn, true)
               end
             end
@@ -88,6 +88,8 @@ module Services
               data[:error_details] = { 'en': 'Invalid EIN DOCUMENT uploaded. Please upload valid document.' }
             when 'PROOF_OF_ACCOUNT'
               data[:error_details] = { 'en': 'Invalid BANK STATEMENT uploaded. Please upload valid document.' }
+            when 'PROOF_OF_ADDRESS'
+              data[:error_details] = { 'en': 'Invalid ADDRESS PROOF uploaded. Please upload valid document.' }
             when 'GOVT_ID'
               data[:error_details] = { 'en': 'Invalid GOVERNMENT ISSUED ID uploaded. Please upload valid document.' }
             end

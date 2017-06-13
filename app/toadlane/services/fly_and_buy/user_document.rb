@@ -14,20 +14,68 @@ module Services
 
       def submit
         synapse_user = synapse_pay.user(user_id: fly_buy_profile.synapse_user_id)
-        create_or_update_base_document(synapse_user)
 
-        update_fly_buy_profile(synapse_user_doc_id: synapse_user_doc_id)
+        create_or_update_document(synapse_user)
       rescue SynapsePayRest::Error => e
         update_fly_buy_profile(error_details: e.response['error'])
       end
 
       private
 
-      def create_or_update_base_document(synapse_user)
-        remove_base_document(synapse_user) if fly_buy_profile.synapse_user_doc_id.present?
+      def create_or_update_document(synapse_user)
+        document = create_or_update_base_document(synapse_user)
 
+        if document.present?
+          create_physical_documents(document)
+          create_virtual_documents(document)
+
+          update_fly_buy_profile(synapse_user_doc_id: document.id)
+        end
+      end
+
+      def create_or_update_base_document(synapse_user)
+        base_documents = synapse_user.base_documents
+
+        if base_documents.present?
+          base_document = base_documents.find { |doc| doc.id == fly_buy_profile.synapse_user_doc_id } if fly_buy_profile.synapse_user_doc_id.present?
+          base_document = base_documents.find { |doc| doc.name == user_name } unless base_document.present?
+          if base_document.present?
+            base_document.update(payload)
+          else
+            synapse_user.create_base_document(payload)
+          end
+        else
+          synapse_user.create_base_document(payload)
+        end
+
+        user_document
+      end
+
+      def create_physical_documents(document)
+        gov_doc = SynapsePayRest::PhysicalDocument.create(
+          type: SynapsePay::DOC_TYPES[:gov_id],
+          value: encode_attachment(file_tempfile: fly_buy_profile.gov_id.url, file_type: fly_buy_profile.gov_id_content_type)
+        )
+
+        document.add_physical_documents(gov_doc)
+      end
+
+      def create_virtual_documents(document)
+        virtual_doc = SynapsePayRest::VirtualDocument.create(
+          type: SynapsePay::DOC_TYPES[:ssn],
+          value: fly_buy_profile.ssn_number
+        )
+
+        document.add_virtual_documents(virtual_doc)
+      end
+
+      def user_document
         synapse_user = reload_synapse_user
-        synapse_user.create_base_document(payload)
+        synapse_user.base_documents.find { |doc| doc.name == user_name }
+      end
+
+      def reload_synapse_user
+        synapse_pay.user(user_id: fly_buy_profile.synapse_user_id)
       end
 
       def payload
@@ -37,7 +85,7 @@ module Services
           ip: fly_buy_profile.synapse_ip_address,
           name: user_name,
           aka: user_name,
-          entity_type: fly_buy_profile.entity_type,
+          entity_type: fly_buy_profile.gender,
           entity_scope: fly_buy_profile.entity_scope,
           birth_day: fly_buy_profile.dob.day,
           birth_month: fly_buy_profile.dob.month,
@@ -46,19 +94,7 @@ module Services
           address_city: address.city,
           address_subdivision: address.state,
           address_postal_code: address.zip,
-          address_country_code: address.country,
-          virtual_documents: [
-            SynapsePayRest::VirtualDocument.create(
-              type: SynapsePay::DOC_TYPES[:ssn],
-              value: fly_buy_profile.ssn_number
-            )
-          ],
-          physical_documents: [
-            SynapsePayRest::PhysicalDocument.create(
-              type: SynapsePay::DOC_TYPES[:gov_id],
-              value: encode_attachment(file_tempfile: fly_buy_profile.gov_id.url, file_type: fly_buy_profile.gov_id_content_type)
-            )
-          ]
+          address_country_code: address.country
         }
       end
 
@@ -70,22 +106,6 @@ module Services
 
       def user_name
         user.name
-      end
-
-      def remove_base_document(synapse_user)
-        base_document = SynapsePayRest::BaseDocument.new(user: synapse_user, id: fly_buy_profile.synapse_user_doc_id)
-        base_document.update(permission_scope: 'DELETE_DOCUMENT')
-      rescue SynapsePayRest::Error::NotFound
-      end
-
-      def synapse_user_doc_id
-        synapse_user = reload_synapse_user
-        base_document = synapse_user.base_documents.find { |doc| doc.name == user_name }
-        base_document.present? ? base_document.id : nil
-      end
-
-      def reload_synapse_user
-        synapse_pay.user(user_id: fly_buy_profile.synapse_user_id)
       end
     end
   end

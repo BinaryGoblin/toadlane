@@ -126,12 +126,20 @@ $(document).ready ->
   $('.show-address-block-button').click (e)->
     e.preventDefault()
     $('.flybuy-address-block input:checked').prop('checked', false)
+
+    $('.show-address-block-button').removeClass('hide')
+    $('.show-address-block-button').addClass('show')
     $(this).hide()
-    $('.insert-new-address-block').show()
+
+    #$('.insert-new-address-block').show()
+    $('.insert-new-address-block').removeClass('hide')
+    $('.insert-new-address-block').addClass('show')
 
   $('.fly-buy-profile-address').click (e)->
-    $('.insert-new-address-block').hide()
-    $('.show-address-block-button').show()
+    $('.insert-new-address-block').removeClass('show')
+    $('.insert-new-address-block').addClass('hide')
+    $('.show-address-block-button').removeClass('hide')
+    $('.show-address-block-button').addClass('show')
 
   $('.related_searches a').click (event) ->
     event.preventDefault()

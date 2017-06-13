@@ -49,6 +49,8 @@
 #  synapse_user_doc_id              :string
 #  company_doc_verified             :boolean          default(FALSE)
 #  user_doc_verified                :boolean          default(FALSE)
+#  profile_type                     :string
+#  gender                           :string
 #
 
 class FlyBuyProfile < ActiveRecord::Base
@@ -75,4 +77,18 @@ class FlyBuyProfile < ActiveRecord::Base
   do_not_validate_attachment_file_type :business_documents
 
   scope :permission_verified, -> { where(permission_scope_verified: true) }
+
+  def masked_tin_number
+    masked_number(tin_number) if tin_number.present?
+  end
+
+  def masked_ssn_number
+    masked_number(ssn_number) if ssn_number.present?
+  end
+
+  private
+
+  def masked_number(number)
+    "*****#{number}"
+  end
 end
