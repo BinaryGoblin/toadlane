@@ -74,7 +74,7 @@ class Dashboard::AccountsController < DashboardController
         account_num: fly_buy_params['account_num'],
         routing_num: fly_buy_params['routing_num']
       }
-      bank_account_details.merge!(swift: fly_buy_params['additional_information']) if fly_buy_params['additional_information'].present?
+      bank_account_details.merge!(swift: fly_buy_params['additional_information']) if fly_buy_params['additional_information'].present? && fly_buy_profile.outside_the_us?
 
       FlyAndBuy::CreateUserJob.perform_later(current_user, fly_buy_profile) unless fly_buy_profile.synapse_user_id.present?
       FlyAndBuy::AddCompanyDocumentJob.perform_later(current_user, fly_buy_profile, address_id) unless fly_buy_profile.company_doc_verified?
