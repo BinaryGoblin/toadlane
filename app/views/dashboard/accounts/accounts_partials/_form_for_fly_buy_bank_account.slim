@@ -2,6 +2,7 @@
 - user_doc_verified = fly_buy_profile.present? && fly_buy_profile.user_doc_verified? ? true : false
 - user_bank_details_verified = fly_buy_profile.present? && fly_buy_profile.bank_details_verified? ? true : false
 - show_user_doc = fly_buy_profile.present? && fly_buy_profile.profile_type.present? && ['tier_2', 'tier_3'].include?(fly_buy_profile.profile_type) ? 'show' : 'hide'
+- show_swift_code = fly_buy_profile.present? && fly_buy_profile.outside_the_us? ? 'show' : 'hide'
 
 - physical_doc_text = nil
 - if fly_buy_profile.present? && fly_buy_profile.profile_type.present?
@@ -210,7 +211,7 @@
         .form-group
           = f.label :routing_num, 'Routing Number:', class: 'required'
           = f.text_field :routing_num, class: 'form-control', required: true
-      .col-md-6
+      .col-md-6 class="#{show_swift_code}"
         .form-group
           = f.label :additional_information, 'Swift Code:', class: 'required'
           = f.text_field :additional_information, class: 'form-control', required: true
