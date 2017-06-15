@@ -31,7 +31,7 @@ module Services
       end
 
       def assign_inspection_date_creator
-        product_params[:inspection_dates_attributes].each {|key, value| value[:creator_type] = ::Product::SELLER}
+        product_params[:inspection_dates_attributes].each {|key, value| value[:creator_type] = ::Product::SELLER} unless product_params[:inspection_dates_attributes].blank?
       end
 
       def negotiable
@@ -39,7 +39,11 @@ module Services
       end
 
       def parse_date_time(date)
-        DateTime.strptime(date, '%Y-%m-%d %I:%M %p')
+        if date.is_a? Date
+          date
+        else
+          DateTime.strptime(date, '%Y-%m-%d %I:%M %p')
+        end
       end
 
       def params

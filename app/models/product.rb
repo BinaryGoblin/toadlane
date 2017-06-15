@@ -29,6 +29,10 @@
 #  negotiable            :boolean
 #  default_payment       :string
 #  minimum_order_quantity :integer         default(0)
+#  model                 :string
+#  brand                 :string
+#  condition             :string
+#  folder_id             :integer
 #
 
 class Product < ActiveRecord::Base
@@ -70,6 +74,7 @@ class Product < ActiveRecord::Base
   has_many :certificates, dependent: :destroy
   has_many :inspection_dates, dependent: :destroy
   has_one :group, dependent: :destroy
+  belongs_to :folder
 
   accepts_nested_attributes_for :images, allow_destroy: true
   accepts_nested_attributes_for :certificates, allow_destroy: true
@@ -93,6 +98,7 @@ class Product < ActiveRecord::Base
   scope :offer_expired, -> { where('end_date < ?', DateTime.now) }
   scope :fly_buy_default_payment, -> { where(default_payment: "Fly And Buy") }
   scope :for_sell, -> { where(status_characteristic: 'sell') }
+  scope :independent, -> { where(folder_id: nil) }
   scope :most_recent, -> { order(created_at: :desc) }
   scope :most_viewed, -> { order(views_count: :desc) }
   scope :not_sold_out, -> { where("amount > sold_out") }
@@ -119,6 +125,8 @@ class Product < ActiveRecord::Base
   INSPECTION_SERVICE_PRICE = 1
   ACTIVE = 'Active'
   INACTIVE = 'Inactive'
+  TEMPLATE_HEADER = ["Product Name", "Brand", "Model", "Product SKU", "Amount in Stock", "Price", 'Valid From', 'Valid Until', 'Minimum Order Quantity', 'Description', 'Condition', 'Product Tags', 'Sell Product using']
+  CONDITIONS = { new: 'New', used: 'Used', refurbished: 'Refurbished' }
 
   def self.newest_products
     unexpired.for_sell.most_recent
@@ -259,6 +267,8 @@ class Product < ActiveRecord::Base
   end
 
   def product_create_notification
+    return if folder_id.present?
+
     users = User.tagged_with(self.tag_list, any: true)
 
     users.uniq.each do |user|
@@ -301,6 +311,10 @@ class Product < ActiveRecord::Base
     when PaymentOptions[:amg]
       owner.amg_profile.present?
     end
+  end
+
+  def orders_present?
+    stripe_orders.present? || green_orders.present? || armor_orders.present? || emb_orders.present? || fly_buy_orders.present?
   end
 
   private

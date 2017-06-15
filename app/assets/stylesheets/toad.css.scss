@@ -37,6 +37,8 @@
 @import "common/spacers";
 @import "common/chosen_select";
 
+@import "dashboard/folders";
+
 @import "toad/products";
 @import "toad/sellers";
 @import "toad/carousel";
@@ -640,6 +642,9 @@ form .wrap-sm
   padding:10px 0px;
   background:#1F2E34;
   margin: 2% 0px 1%;
+}
+.bulk-products{
+  padding: 5px 0 0 40px;
 }
 .subSection
 {

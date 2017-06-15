@@ -2,7 +2,7 @@ class Dashboard::ProductsController < DashboardController
   include Mixins::ProductHelper
 
   def index
-    @products = current_user.products.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    @products = current_user.my_products.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
     @products_count = @products.count
   end
 
@@ -26,8 +26,12 @@ class Dashboard::ProductsController < DashboardController
 
   def destroy
     set_product
-    send_product_deleted_message(@product)
-    @product.destroy
+    if @product.orders_present?
+      flash[:error] =  'You are not allowed to remove this product from the list.'
+    else
+      send_product_deleted_message(@product)
+      @product.destroy
+    end
     respond_to do |format|
       format.html { redirect_to dashboard_products_path }
     end
@@ -36,7 +40,8 @@ class Dashboard::ProductsController < DashboardController
   def delete_cascade
     if params[:products_ids].present?
       params[:products_ids].each do |id|
-        Product.find(id).destroy
+        product = Product.find(id)
+        product.destroy unless product.orders_present?
       end
     end
 
@@ -73,6 +78,12 @@ class Dashboard::ProductsController < DashboardController
       user_ids.delete(@product.user.id)
     end
     @users = User.where(id: user_ids).order('id ASC')
+  end
+
+  def template
+    package = Services::Importers::ProductTemplate.render
+
+    send_data package.to_stream.read, :type => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", :filename => "bulk_products_template.xlsx"
   end
 
   private

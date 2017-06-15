@@ -67,7 +67,11 @@ gem 'whenever', require: false
 
 gem 'synapse_pay_rest', '~> 3.2.4'
 
+# Gems for import and export
 gem 'roo', '~> 2.4.0'
+gem 'roo-xls'
+gem 'roo-google'
+gem 'axlsx', '2.1.0.pre'
 
 gem 'countdown', '~> 0.1.0'
 
