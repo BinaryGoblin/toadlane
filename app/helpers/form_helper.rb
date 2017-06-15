@@ -11,9 +11,9 @@ module FormHelper
 
   def user_identification_program_options
     [
-      ['Tier 1: Up to $100k', 'tier_1'],
-      ['Tier 2: Up to $500k', 'tier_2'],
-      ['Tier 3: $1M+', 'tier_3']
+      ['Tier 1: Up to $100k/month', 'tier_1'],
+      ['Tier 2: Up to $500k/month', 'tier_2'],
+      ['Tier 3: $1M+/month', 'tier_3']
     ]
   end
 

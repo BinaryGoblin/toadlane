@@ -44,7 +44,7 @@
               .profileType
                 .first
                   = f.label :profile_type, 'Verification Level:', class: 'required'
-                  = f.select :profile_type, user_identification_program_options, { prompt: 'Please choose verification level' }, class: 'form-control', required: true, data: { behavior: 'SelectProfileType' }
+                  = f.select :profile_type, user_identification_program_options, { prompt: 'Please choose a verification level' }, class: 'form-control', required: true, data: { behavior: 'SelectProfileType' }
                 .second
                   = link_to toadlane_trust_path, title: 'Why do we need this?', target: :_blank
                     span

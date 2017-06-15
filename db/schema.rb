@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170524130948) do
+ActiveRecord::Schema.define(version: 20170612082424) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -357,6 +357,16 @@ ActiveRecord::Schema.define(version: 20170524130948) do
     t.json     "error_details",                    default: {}
   end
 
+  create_table "fly_buy_profile_notifications", force: :cascade do |t|
+    t.integer  "fly_buy_profile_id"
+    t.boolean  "invalid_tin",        default: false
+    t.boolean  "invalid_ssn",        default: false
+    t.boolean  "mfa_pending_tin",    default: false
+    t.boolean  "mfa_pending_ssn",    default: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+  end
+
   create_table "fly_buy_profiles", force: :cascade do |t|
     t.string   "synapse_user_id"
     t.integer  "user_id"
@@ -404,6 +414,8 @@ ActiveRecord::Schema.define(version: 20170524130948) do
     t.string   "synapse_company_doc_id"
     t.boolean  "company_doc_verified",            default: false
     t.boolean  "user_doc_verified",               default: false
+    t.string   "profile_type"
+    t.string   "gender"
   end
 
   create_table "green_checks", force: :cascade do |t|
@@ -812,6 +824,12 @@ ActiveRecord::Schema.define(version: 20170524130948) do
   end
 
   add_index "stripe_profiles", ["user_id"], name: "index_stripe_profiles_on_user_id", using: :btree
+
+  create_table "synapse_pay_subscriptions", force: :cascade do |t|
+    t.string   "subscription_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
 
   create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"
