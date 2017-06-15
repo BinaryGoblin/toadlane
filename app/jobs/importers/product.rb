@@ -8,7 +8,7 @@ module Importers
         Services::Importers::Product.import(folder, current_user)
         folder.update_attribute(:import_status, 'completed')
       rescue => e
-        folder.update_attribute(:error_message, "Error: #{e.message}")
+        folder.update_attributes( error_message: "Error: #{e.message}", import_status: 'error')
       end
     end
   end
