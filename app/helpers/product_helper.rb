@@ -141,14 +141,7 @@ module ProductHelper
   def show_account_status(product)
     case product.default_payment
     when Product::PaymentOptions[:fly_buy]
-      case product.owner.fly_buy_profile.profile_type
-      when 'tier_1'
-        'Verified- up to $100k'
-      when 'tier_2'
-        'Verified- up to $500k'
-      when 'tier_3'
-        'Verified- $1M+'
-      end
+      "Verified- #{product.owner.fly_buy_profile.profile_type.to_s.humanize}"
     else
       'Verified'
     end
