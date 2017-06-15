@@ -19,4 +19,5 @@ class Folder < ActiveRecord::Base
   has_many :products, dependent: :destroy
 
   scope :importing_completed, -> { where(import_status: 'completed') }
+  scope :importer_not_running, -> { where.not(import_status: 'running') }
 end

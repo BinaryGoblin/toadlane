@@ -19,7 +19,12 @@ class Dashboard::FoldersController < DashboardController
 
   def edit
     @folder = Folder.importing_completed.where(id: params[:id]).first
-    @products = @folder.products.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    if @folder.blank?
+      flash[:notice] = "Thank you for your patience as we import your products."
+      redirect_to dashboard_folders_path
+    else
+      @products = @folder.products.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    end
   end
 
   def show
@@ -28,8 +33,8 @@ class Dashboard::FoldersController < DashboardController
   end
 
   def destroy
-    @folder = current_user.folders.where(id: params[:id]).first
-    @folder.destroy
+    @folder = current_user.folders.importer_not_running.where(id: params[:id]).first
+    @folder.destroy if @folder.present?
     respond_to do |format|
       format.html { redirect_to dashboard_folders_path }
     end
