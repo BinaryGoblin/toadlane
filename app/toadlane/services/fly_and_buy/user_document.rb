@@ -26,8 +26,8 @@ module Services
         document = create_or_update_base_document(synapse_user)
 
         if document.present?
-          create_physical_documents(document)
           create_virtual_documents(document)
+          create_physical_documents(document)
 
           update_fly_buy_profile(synapse_user_doc_id: document.id)
         end
