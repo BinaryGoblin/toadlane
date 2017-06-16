@@ -254,17 +254,19 @@ class User < ActiveRecord::Base
     name.split(" ")[1]
   end
 
+
+
   def fly_buy_profile_exist?
     fly_buy_profile.present? && fly_buy_profile.synapse_user_id.present? &&
     fly_buy_profile.synapse_node_id.present?
   end
 
   def fly_buy_profile_account_added?
-    fly_buy_profile.present? && fly_buy_profile.completed? && !fly_buy_profile.error_details.present?
+    fly_buy_profile.present? && fly_buy_profile.completed?
   end
 
   def fly_buy_verified_by_admin?
-    fly_buy_profile.unverify_by_admin == false
+    !fly_buy_profile.unverify_by_admin?
   end
 
   def fly_buy_profile_verified?
@@ -272,7 +274,7 @@ class User < ActiveRecord::Base
   end
 
   def fly_buy_unverified_by_admin
-    fly_buy_profile.unverify_by_admin
+    fly_buy_profile.unverify_by_admin?
   end
 
   def fly_buy_profile_processing?
@@ -319,6 +321,7 @@ class User < ActiveRecord::Base
   end
 
   private
+
   def associate_api_user
     if armor_api_account_exists?
       armor_user = armor_api_users.find {|u| u['email'] == self.email }

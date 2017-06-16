@@ -86,6 +86,10 @@ class FlyBuyProfile < ActiveRecord::Base
     masked_number(ssn_number) if ssn_number.present?
   end
 
+  def profile_submited?
+    submited? && error_details.blank? && !completed?
+  end
+
   private
 
   def masked_number(number)
