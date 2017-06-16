@@ -3,7 +3,7 @@
   h3
     |*Required for Fly & Buy Transactions
 
-  - if user.fly_buy_profile_account_added? && fly_buy_profile.kba_questions.empty? && fly_buy_profile.permission_scope_verified?
+  - if user.fly_buy_profile_account_added?
     - if fly_buy_profile.unverify_by_admin?
       p <b>Status:</b> <span class="warning">You cannot currently use Fly & Buy services. Please contact <a href="mailto:johnb@toadlane.com">johnb@toadlane.com</a> for more information</span>
     - else
@@ -25,7 +25,7 @@
 
       = f.submit 'Submit', class: 'btn btn-primary'
   
-  - elsif (fly_buy_profile.present? && fly_buy_profile.completed? && !fly_buy_profile.permission_scope_verified?) || (fly_buy_profile.present? && !fly_buy_profile.completed? && fly_buy_profile.submited? && fly_buy_profile.error_details.blank?)
+  - elsif fly_buy_profile.present? && fly_buy_profile.profile_submited?
     p <b>Status:</b> <span class="warning">You have successfully submitted your information. You will receive updates as your account is verified.</span>
 
   - else
