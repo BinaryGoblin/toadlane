@@ -8,6 +8,23 @@
   position: fixed;
   top:0;
 
+  .login-form{
+    float: right;
+    padding-right: 150px;
+
+    .controls{
+      margin-right: 12px;
+    }
+    .btn{
+      height: 25px;
+      font-size: 13px;
+      padding-top: 3px;
+    }
+    a {
+      color: #fff;
+    }
+  }
+
   .wrap {
     padding-top: 30px;
     padding-bottom: 30px;
