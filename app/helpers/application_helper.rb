@@ -359,8 +359,6 @@ module ApplicationHelper
     GroupSeller.where(user_id: current_user.id).where(accept_deal: nil)
   end
 
-
-
   # def get_image(image_path)
   #   attachments.inline[image_path] = open(image_path).read
   #   attachments[image_path].url
