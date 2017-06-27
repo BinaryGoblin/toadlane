@@ -8,7 +8,7 @@ class ProductsController < ApplicationController
   before_action :check_terms_of_service
 
   def index
-    @most_viewed_products = Product.most_viewed_products.limit(7)
+    @most_viewed_products = Product.most_viewed_products.sample(7)
     @newest_products = Product.newest_products.first(7)
     @folders = Folder.importing_completed
   end
