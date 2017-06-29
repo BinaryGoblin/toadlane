@@ -243,6 +243,7 @@ class User < ActiveRecord::Base
     ap << Product::PaymentOptions[:amg] if amg_profile.present?
     ap << Product::PaymentOptions[:emb] if emb_profile.present?
     ap << Product::PaymentOptions[:fly_buy]
+    ap << Product::PaymentOptions[:same_day]
 
     ap
   end

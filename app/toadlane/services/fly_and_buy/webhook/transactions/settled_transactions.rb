@@ -19,7 +19,8 @@ module Services
             case note
             when 'Transaction Created'
               unless fly_buy_order.funds_in_escrow?
-                update_fly_buy_order(status: :pending_inspection, funds_in_escrow: true, error_details: {})
+                status = (fly_buy_order.order_type == 'same_day') ? :placed : :pending_inspection
+                update_fly_buy_order(status: status, funds_in_escrow: true, error_details: {})
 
                 notify_the_user(method_name: :send_funds_received_notification_to_seller)
                 notify_the_user(method_name: :send_transaction_settled_notification_to_buyer)

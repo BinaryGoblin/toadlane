@@ -64,8 +64,8 @@
                                   data: @data,
                                   product: @product}
 
-                                  
-        - elsif @product.default_payment_flybuy?
+
+        - elsif @product.default_payment_flybuy? || @product.default_payment_same_day?
           = render partial: 'products/shared/fly_buy_form_tab',
                     :locals => { user: current_user,
                                   fly_buy_order: @fly_buy_order,

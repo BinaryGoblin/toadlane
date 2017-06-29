@@ -61,9 +61,9 @@
         - elsif product.inspection_dates.passed_inspection_date.count == product.inspection_dates.count && !(buyer_inspection_dates.present? && params[:inspection_date_by_seller] == 'true') && !(seller_inspection_dates.present? && fly_buy_order.inspection_date_rejected_by_seller.present?)
           p The inspection date set by buyer has been passed.
         - else
-          input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
+          input.btn.btn-success.btn-lg.checkout value="Place Order" type="submit"
     - elsif not product.default_payment_flybuy?
-      input.btn.btn-success.btn-lg.checkout value="Checkout" type="submit"
+      input.btn.btn-success.btn-lg.checkout value="Place Order" type="submit"
   / Set inspection date link
   - if !product.expired? && product.status? && !product.is_buyer_product_owner?(user) && product.default_payment_flybuy? && !(params[:fly_buy_order_id].present? && params[:inspection_date_by_seller] == 'true')
     - unless fly_buy_order.seller_not_mark_approved.present?

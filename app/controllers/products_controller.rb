@@ -27,6 +27,8 @@ class ProductsController < ApplicationController
     @stripe_order = StripeOrder.new
     if @product.default_payment_flybuy?
       @fee = Fee.find_by(:module_name => "Fly & Buy").value
+    elsif @product.default_payment_same_day?
+      @fee = Fee.find_by(:module_name => "Same day").value
     else
       @fee = Fee.find_by(:module_name => "Stripe").value
     end
@@ -86,6 +88,10 @@ class ProductsController < ApplicationController
       fly_buy_fees = sum_unit_price * fly_buy_fee / 100
       number_of_items_to_inspect = inspected_items_count(params[:percentage_of_items_to_inspect].to_i, params[:count].to_i)
       inspection_service_fee = number_of_items_to_inspect * Product::INSPECTION_SERVICE_PRICE
+    elsif @product.default_payment_same_day?
+      fee = Fee.find_by(module_name: 'Same day').value
+      fees = sum_unit_price * fee.to_f / 100
+      fly_buy_fees = nil
     else
       fee = Fee.find_by(module_name: 'Stripe').value
       fees = sum_unit_price * fee.to_f / 100
@@ -195,9 +201,9 @@ class ProductsController < ApplicationController
 
       selected_inspection_date = InspectionDate.find_by_id(options[:inspection_date_id])
       save_inspection_date(selected_inspection_date, fly_buy_order)
-    elsif options[:inspection_date_id].present?
+    elsif options[:inspection_date_id].present? || @product.default_payment_same_day?
       fly_buy_order = FlyBuyOrder.find_by_id(session[:fly_buy_order_id]) if session[:fly_buy_order_id].present?
-
+      order_type = @product.default_payment_same_day? ? 'same_day' : 'fly_buy'
       attrs = {
         unit_price: options[:unit_price],
         count: options[:quantity],
@@ -208,7 +214,8 @@ class ProductsController < ApplicationController
         percentage_of_inspection_service: options[:percentage_of_inspection_service],
         inspection_service_cost: options[:inspection_service_cost],
         inspection_service_comment: options[:inspection_service_comment],
-        fly_buy_fee: options[:fly_buy_fee]
+        fly_buy_fee: options[:fly_buy_fee],
+        order_type: order_type
       }
 
       if fly_buy_order.present?
@@ -219,8 +226,10 @@ class ProductsController < ApplicationController
         fly_buy_order = FlyBuyOrder.create(attrs)
       end
 
-      selected_inspection_date = InspectionDate.find_by_id(options[:inspection_date_id])
-      save_inspection_date(selected_inspection_date, fly_buy_order)
+      unless @product.default_payment_same_day?
+        selected_inspection_date = InspectionDate.find_by_id(options[:inspection_date_id])
+        save_inspection_date(selected_inspection_date, fly_buy_order)
+      end
     elsif request.get? && session[:fly_buy_order_id].present?
       fly_buy_order = FlyBuyOrder.find_by_id(session[:fly_buy_order_id])
     elsif options[:fly_buy_order_id].present?

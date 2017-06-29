@@ -102,10 +102,7 @@
       - if order.instance_of?(FlyBuyOrder)
         tr
           td colspan="3" Toadlane Fee
-          td.rightAlign #{number_to_currency(order.fee)}
-        tr
-          td colspan="3" Fly & Buy Fee
-          td.rightAlign #{number_to_currency(order.fly_buy_fee)}
+          td.rightAlign #{number_to_currency(order.fee + order.fly_buy_fee.to_f)}
         tr
           td Inspection service fee
           td.rightAlign= inspected_items_count(order.percentage_of_inspection_service, order.count)
@@ -130,7 +127,7 @@
 
   .invoice-note
     h3 Note:
-    p For help and support, email <a href="mailto:johnb@toadlane.com">johnb@toadlane.com</a>.
+    p For help and support, email <a href="mailto:hello@toadlane.com">hello@toadlane.com</a>.
     p Payment instructions are sent via our payment partner, Synapse Financial Technologies, Inc. and are processed by Triumph Bank. To report complaints email <a href="mailto:issues@synapsepay.com">issues@synapsepay.com</a>.
 
   - if order.instance_of? GreenOrder

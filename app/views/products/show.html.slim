@@ -149,20 +149,21 @@
               li
                 span Shipping Estimate ($<span class="calc-shipping" data-type="PerUnit">0.00</span>/unit):
                 b.pull-right.calc-shipping-price 0.00
-              li
-                span
-                  = check_box_tag :inspection_service, 'yes', nil, class: 'inspection_service', data: { behavior: 'optInInspectionService' }
-                  label for = 'inspection_service' &nbsp; Would you like to send a Toadlane Agent to inspect this?
-                div#inspection_service_block.hide
-                  label How many do you want inspected?
-                  br
-                  = select_tag 'number_of_items_to_inspect', options_for_select(percentage_value_for_inspection), class: 'form-control select-inspect-percentage',  data: { behavior: "inspectionServicePercentageField" }
-                  span.item-count
-                  = text_field_tag :inspection_service_comment, nil, size: "25x5", class: 'form-control inspect-service-comment', placeholder: 'Additional comments'
-                  b.pull-right 0.00
-                  span.clearfix
-                  br
-                hr
+              - if @product.default_payment_flybuy?
+                li
+                  span
+                    = check_box_tag :inspection_service, 'yes', nil, class: 'inspection_service', data: { behavior: 'optInInspectionService' }
+                    label for = 'inspection_service' &nbsp; Would you like to send a Toadlane Agent to inspect this?
+                  div#inspection_service_block.hide
+                    label How many do you want inspected?
+                    br
+                    = select_tag 'number_of_items_to_inspect', options_for_select(percentage_value_for_inspection), class: 'form-control select-inspect-percentage',  data: { behavior: "inspectionServicePercentageField" }
+                    span.item-count
+                    = text_field_tag :inspection_service_comment, nil, class: 'form-control inspect-service-comment', placeholder: 'Additional comments'
+                    b.pull-right 0.00
+                    span.clearfix
+                    br
+              hr
               - if @product.status_characteristic == 'sell'
                 li.text-green
                   b Cart Subtotal:
@@ -171,7 +172,11 @@
                 li.text-orange
                   b Cart Subtotal
                   b.pull-right.calc-cart 0.00
-          .warning.note Note: All inspections include live video testing at suppliers warehouse, a video report, and detailed involvement with the buyer. Additional travel fees may apply. For larger transactions additional travel fees are usually waived. We will be intouch with you immediately to confirm costs before inspection takes place.
+              - if @product.default_payment_same_day?
+                br
+                = text_field_tag :inspection_service_comment, nil, class: 'form-control inspect-service-comment', placeholder: 'What terms need to be met before you release funds?'
+          - if @product.default_payment_flybuy?
+            .warning.note Note: All inspections include live video testing at suppliers warehouse, a video report, and detailed involvement with the buyer. Additional travel fees may apply. For larger transactions additional travel fees are usually waived. We will be intouch with you immediately to confirm costs before inspection takes place.
 
           .white-panel.wp-table
             - if current_user.present?
@@ -261,6 +266,9 @@
                     - elsif @product.default_payment_flybuy?
                       span.label.label-orange
                         | Fly & Buy
+                    - elsif @product.default_payment_same_day?
+                      span.label.label-orange
+                        | Same Day
                     - else
                         | Payment option has not been selected by the seller for this product.
                   - if current_user == @product.user

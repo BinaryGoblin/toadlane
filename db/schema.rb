@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170612082424) do
+ActiveRecord::Schema.define(version: 20170628125344) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -355,6 +355,7 @@ ActiveRecord::Schema.define(version: 20170612082424) do
     t.float    "inspection_service_cost"
     t.text     "inspection_service_comment"
     t.json     "error_details",                    default: {}
+    t.string   "order_type"
   end
 
   create_table "fly_buy_profile_notifications", force: :cascade do |t|

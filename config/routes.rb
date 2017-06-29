@@ -46,6 +46,7 @@ Toad::Application.routes.draw do
   get 'trust' => 'static_pages#toadlane_trust', as: :toadlane_trust
   get 'faq' => 'static_pages#faq', as: :faq
   get 'terms_of_service' => 'static_pages#terms_of_service'
+  get 'pay' => 'static_pages#pay'
   get 'account_deactivated' => 'static_pages#account_deactivated'
   # root 'static_pages#home'
 

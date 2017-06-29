@@ -5,7 +5,7 @@
 
   - if user.fly_buy_profile_account_added?
     - if fly_buy_profile.unverify_by_admin?
-      p <b>Status:</b> <span class="warning">You cannot currently use Fly & Buy services. Please contact <a href="mailto:johnb@toadlane.com">johnb@toadlane.com</a> for more information</span>
+      p <b>Status:</b> <span class="warning">You cannot currently use Fly & Buy services. Please contact <a href="mailto:hello@toadlane.com">hello@toadlane.com</a> for more information</span>
     - else
       p <b>Status:</b> <span class="success">You have successfully added your company information. You can now buy or sell using Fly & Buy.</span>
 
@@ -24,13 +24,13 @@
                     :locals => {  :f => f, :fly_buy_profile => fly_buy_profile}
 
       = f.submit 'Submit', class: 'btn btn-primary'
-  
+
   - elsif fly_buy_profile.present? && fly_buy_profile.profile_submited?
     p <b>Status:</b> <span class="warning">You have successfully submitted your information. You will receive updates as your account is verified.</span>
 
   - else
     p <b>Status:</b> <span class="warning">Add your company information to send and receive funds.</span>
-    
+
     = form_for fly_buy_profile, url: create_fly_buy_profile_dashboard_accounts_path, method: :post, html: { class: 'create_fly_buy_profile' } do |f|
       = f.hidden_field :fingerprint, value: nil
 

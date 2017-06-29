@@ -85,6 +85,8 @@ class Behavior.CalculationProduct
     if @$InspectionService.is(':checked')
       percentage_of_inspection_service = parseInt @$PercentageOfItemsToInspect.val(), 10
       inspection_service_note = @$InspectionServiceNote.val()
+    else
+      inspection_service_note = @$InspectionServiceNote.val()
     @$flyBuyInspectionPercentage.val percentage_of_inspection_service
     @$flyBuyInspectionNote.val inspection_service_note
 
