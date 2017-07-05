@@ -32,6 +32,8 @@ class StripeOrdersController < ApplicationController
 
       @stripe_order.process_payment()
 
+      Services::ActivityTracker.track(current_user, @stripe_order)
+
       UserMailer.sales_order_notification_to_seller(@stripe_order).deliver_later
       UserMailer.sales_order_notification_to_buyer(@stripe_order).deliver_later
       NotificationCreator.new(@stripe_order).after_order_created

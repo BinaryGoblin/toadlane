@@ -12,6 +12,8 @@
 
 class GreenProfile < ActiveRecord::Base
   belongs_to :user
+  has_many :activities, class_name: 'Task', as: :taskable, dependent: :destroy
+
   validates_presence_of :green_client_id, :green_api_password
   validates_uniqueness_of :green_client_id
 end

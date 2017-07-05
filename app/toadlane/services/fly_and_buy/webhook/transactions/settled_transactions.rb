@@ -24,12 +24,18 @@ module Services
 
                 notify_the_user(method_name: :send_funds_received_notification_to_seller)
                 notify_the_user(method_name: :send_transaction_settled_notification_to_buyer)
+
+                fly_buy_order.reload
+                Services::ActivityTracker.track(fly_buy_order.buyer, fly_buy_order)
               end
             when 'Released Payment'
               unless fly_buy_order.payment_release?
                 update_fly_buy_order(status: :completed, payment_release: true, error_details: {})
 
                 notify_the_user(method_name: :send_payment_released_notification_to_seller)
+
+                fly_buy_order.reload
+                Services::ActivityTracker.track(fly_buy_order.buyer, fly_buy_order)
               end
             when 'Released Payment To Additional Seller'
               unless fly_buy_order.payment_released_to_group?
@@ -50,6 +56,7 @@ module Services
             when 'Transaction Refunded'
               update_fly_buy_order(status: :refunded, error_details: {})
               update_product_count
+
               notify_the_user(method_name: :send_transaction_refunded_notification_to_buyer)
             end
           end

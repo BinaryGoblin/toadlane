@@ -152,6 +152,9 @@ class EmbOrdersController < ApplicationController
     @emb_order = EmbOrder.new(emb_order_params)
     if @emb_order.save
       @emb_order.place_order
+
+      Services::ActivityTracker.track(current_user, @emb_order)
+      
       send_after_order_emails(@emb_order)
       redirect_to dashboard_order_path(
         @emb_order,

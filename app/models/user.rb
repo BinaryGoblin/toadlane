@@ -47,6 +47,9 @@
 #
 
 class User < ActiveRecord::Base
+
+  attr_accessor :tag_changed
+
   rolify
   acts_as_messageable
   acts_as_commontator
@@ -80,6 +83,10 @@ class User < ActiveRecord::Base
     :association_foreign_key => 'role_id'
   has_many :additional_seller_fee_transactions, dependent: :destroy
   has_many :folders, dependent: :destroy
+  has_one :score, dependent: :destroy
+  has_many :tasks, dependent: :destroy
+  has_many :activities, class_name: 'Task', as: :taskable, dependent: :destroy
+  has_many :viewed_tasks, dependent: :destroy
 
   has_attached_file :asset, styles: {
     small: '155x155#',
@@ -322,6 +329,15 @@ class User < ActiveRecord::Base
 
   def my_products
     products.for_sell.independent
+  end
+
+  def latest_activities
+    Task.joins(user: { taggings: :tag })
+      .where(tags: { name: tag_list })
+      .where.not(user_id: id)
+      .where.not(id: viewed_tasks.select(:task_id))
+      .where('tasks.created_at > ?', 6.months.ago)
+      .uniq
   end
 
   private

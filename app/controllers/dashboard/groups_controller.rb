@@ -31,6 +31,8 @@ class Dashboard::GroupsController < DashboardController
         @group.product_id = product.id
         @group.save!
 
+        Services::ActivityTracker.track(current_user, @group)
+
         redirect_to edit_dashboard_product_path(product)
       end
     else

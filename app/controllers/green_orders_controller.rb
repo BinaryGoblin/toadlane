@@ -152,6 +152,9 @@ class GreenOrdersController < ApplicationController
     if @green_order.save
       @green_order.process_checks_breakdown if (@green_order.total > GreenOrder::MAX_AMOUNT)
       @green_order.place_order
+
+      Services::ActivityTracker.track(current_user, @green_order)
+      
       send_after_order_emails(@green_order)
       redirect_to dashboard_order_path(
         @green_order,

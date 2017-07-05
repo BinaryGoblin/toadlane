@@ -12,23 +12,24 @@
 #
 
 class Group < ActiveRecord::Base
-	belongs_to :product
-	has_many :group_sellers, dependent: :destroy
-	belongs_to :owner, class_name: "User", foreign_key: 'group_owner_id'
+  belongs_to :product
+  has_many :group_sellers, dependent: :destroy
+  belongs_to :owner, class_name: "User", foreign_key: 'group_owner_id'
+  has_many :activities, class_name: 'Task', as: :taskable, dependent: :destroy
 
-	accepts_nested_attributes_for :group_sellers, allow_destroy: true, reject_if: ->(attributes) { attributes[:user_id].blank? || attributes[:role_id].blank? }
+  accepts_nested_attributes_for :group_sellers, allow_destroy: true, reject_if: ->(attributes) { attributes[:user_id].blank? || attributes[:role_id].blank? }
 
-	attr_accessor :additional_seller_ids, :create_new_product, :role
+  attr_accessor :additional_seller_ids, :create_new_product, :role
 
-	def additional_sellers
-		group_sellers.map { |group_seller| group_seller.user }
-	end
+  def additional_sellers
+    group_sellers.map { |group_seller| group_seller.user }
+  end
 
-	def product_name
-		if product.present?
-			product.name.titleize
-		else
-			nil
-		end
-	end
+  def product_name
+    if product.present?
+      product.name.titleize
+    else
+      nil
+    end
+  end
 end

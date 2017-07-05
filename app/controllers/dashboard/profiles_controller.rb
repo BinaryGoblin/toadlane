@@ -46,8 +46,15 @@ class Dashboard::ProfilesController < DashboardController
       user_params.delete(:certificate_delete)
     end
 
+    past_tags = @user.tag_list
+
     respond_to do |format|
       if @user.update(user_params)
+        @user.reload
+        @user.tag_changed = past_tags != @user.tag_list
+
+        Services::ActivityTracker.track(current_user, @user)
+
         if session[:previous_url].present? && session[:previous_url] != products_url
           previous_visited_url = session[:previous_url]
           session.delete(:previous_url)
@@ -62,8 +69,14 @@ class Dashboard::ProfilesController < DashboardController
   end
 
   def update_i_buy_and_sell
+    past_tags = @user.tag_list
     @user.tag_list = params[:user][:tag_list]
-    if @user.save(:validate => false)
+
+    if @user.save(validate: false)
+      @user.tag_changed = past_tags != params[:user][:tag_list]
+
+      Services::ActivityTracker.track(current_user, @user)
+
       flash[:notice] = 'I Buy and Sell information added successfully.'
       redirect_to products_url
     else
@@ -72,6 +85,7 @@ class Dashboard::ProfilesController < DashboardController
   end
 
   private
+
   def set_user
     @user = current_user
   end

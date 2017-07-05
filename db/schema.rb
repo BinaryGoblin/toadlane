@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170628125344) do
+ActiveRecord::Schema.define(version: 20170711123242) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -756,6 +756,14 @@ ActiveRecord::Schema.define(version: 20170628125344) do
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
   add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
 
+  create_table "scores", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "positive",   default: 0
+    t.integer  "negative",   default: 0
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
   create_table "searchjoy_searches", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "search_type"
@@ -875,6 +883,15 @@ ActiveRecord::Schema.define(version: 20170628125344) do
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
+  create_table "tasks", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "taskable_id"
+    t.string   "taskable_type"
+    t.text     "description"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                            default: "",    null: false
     t.string   "encrypted_password",               default: "",    null: false
@@ -954,6 +971,17 @@ ActiveRecord::Schema.define(version: 20170628125344) do
     t.datetime "updated_at",         null: false
     t.integer  "listing_id"
   end
+
+  create_table "viewed_tasks", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "task_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "viewed_tasks", ["task_id"], name: "index_viewed_tasks_on_task_id", using: :btree
+  add_index "viewed_tasks", ["user_id", "task_id"], name: "viewed_tasks_user_and_task", unique: true, using: :btree
+  add_index "viewed_tasks", ["user_id"], name: "index_viewed_tasks_on_user_id", using: :btree
 
   add_foreign_key "addresses", "users"
   add_foreign_key "mailboxer_conversation_opt_outs", "mailboxer_conversations", column: "conversation_id", name: "mb_opt_outs_on_conversations_id"
