@@ -9,7 +9,7 @@ class FlyBuyOrdersController < ApplicationController
     if current_user.fly_buy_profile_account_added?
       FlyAndBuy::PlaceOrderJob.perform_later(current_user, fly_buy_order)
 
-      redirect_to dashboard_order_path(fly_buy_order, type: 'fly_buy'), notice: 'Your order was successfully placed.'
+      redirect_to dashboard_order_path(fly_buy_order, type: 'fly_buy'), notice: 'Your order has been placed. Please check your inbox for wire instructions.'
     else
       if fly_buy_order.update_attribute(:status, 'processing')
         product.sold_out += fly_buy_order.count
@@ -124,7 +124,9 @@ class FlyBuyOrdersController < ApplicationController
         redirect_to dashboard_orders_path, flash: { error: fly_buy_order.error_details['en'] }
       end
     else
-      flash[:notice] = 'Processing to release funds to seller.'
+      UserMailer.payment_released_processing_notification(fly_buy_order)
+      flash[:notice] = 'Your payment has been released. If it is past bank cut off time funds will hit the sellers account tomorrow.'
+
       redirect_to dashboard_orders_path
     end
   end

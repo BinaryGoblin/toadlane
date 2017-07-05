@@ -89,10 +89,10 @@
 
         button.btn.btn-default type="button" data-dismiss="modal" Cancel
 
-        = f.submit 'Place Order', class: "btn btn-primary"
+        = f.submit 'Checkout', class: "btn btn-primary"
 
       - else
         = f.hidden_field :seller_id, value: user.id
         = f.hidden_field :buyer_id, value: product.user.id
 
-        = f.submit 'Place Order', class: "btn btn-primary"
+        = f.submit 'Checkout', class: "btn btn-primary"

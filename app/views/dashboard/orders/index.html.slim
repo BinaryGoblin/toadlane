@@ -69,8 +69,10 @@
 
                 - if order.not_inspected && order.status == 'pending_inspection' && order.inspection_date_today? && order.funds_in_escrow?
                   = link_to 'Complete Inspection', fly_buy_order_complete_inspection_path(order.id), class: 'view'
-                - elsif order.inspected && order.status == 'placed' && order.funds_in_escrow?
-                  = link_to 'Release Payment', fly_buy_order_release_payment_path(order.id), class: 'view'
+                - elsif order.order_type == 'fly_buy' && order.inspected && order.status == 'placed' && order.funds_in_escrow?
+                  = link_to 'Release Payment', fly_buy_order_release_payment_path(order.id), data: { confirm: 'Please confirm your order.' }, class: 'view'
+                - elsif order.order_type == 'same_day' && order.status == 'placed' && order.funds_in_escrow?
+                  = link_to 'Release Payment', fly_buy_order_release_payment_path(order.id), data: { confirm: 'Please confirm your order.' }, class: 'view'
                 - elsif order.payment_release == true && order.status == 'completed'
                   span.label
                     | Payment Released
@@ -90,9 +92,12 @@
                 | -
             td.text-center
               // for displaying type of order
-              - if order.instance_of? FlyBuyOrder
+              - if order.instance_of?(FlyBuyOrder) && order.order_type == 'fly_buy'
                 span.label.label-orange
                   | Fly & Buy
+              - elsif order.instance_of?(FlyBuyOrder) && order.order_type == 'same_day'
+                span.label.label-green
+                  | Same Day
               - elsif order.instance_of? GreenOrder
                 span.label.label-green
                   | Green By Phone
@@ -115,7 +120,7 @@
                 span.label.label-green
                   | Sold
             td.text-center
-              - if order.instance_of?(FlyBuyOrder)
+              - if order.instance_of?(FlyBuyOrder) && order.order_type == 'fly_buy'
                 - fbo_inspection_date = order.inspection_dates.first
                 - if order.selected_inspection_date.present?
                   = order.selected_inspection_date.get_inspection_date

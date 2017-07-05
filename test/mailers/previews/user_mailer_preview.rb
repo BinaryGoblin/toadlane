@@ -118,6 +118,12 @@ class UserMailerPreview < ActionMailer::Preview
     UserMailer.send_payment_released_notification_to_buyer(order)
   end
 
+  def payment_released_processing_notification
+    order = FlyBuyOrder.first
+
+    UserMailer.payment_released_processing_notification(order)
+  end
+
   def send_payment_released_notification_to_seller
     order = FlyBuyOrder.first
 

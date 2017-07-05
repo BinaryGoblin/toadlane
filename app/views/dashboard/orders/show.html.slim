@@ -2,8 +2,6 @@
 
 .wrap-sm
   .pull-right
-    = link_to asset_path("fly_buy_wire_instructions.pdf"), class: "btn btn-success back-to-order-btn", :target => "_blank"
-      | View Wire Instructions
     - if @order.instance_of?(FlyBuyOrder) && @order.order_a_million?
       = link_to asset_path("risk-assessment.pdf"), class: "btn btn-success back-to-order-btn", :target => "_blank"
         | View Risk Assessment

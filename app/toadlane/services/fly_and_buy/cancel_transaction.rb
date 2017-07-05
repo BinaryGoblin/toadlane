@@ -29,8 +29,9 @@ module Services
       private
 
       def handle_synapse_pay_rest_error(node, e)
+        status = (fly_buy_order.order_type == 'same_day') ? :placed : :pending_inspection
         transaction = node.find_transaction(id: fly_buy_order.synapse_transaction_id)
-        update_fly_buy_order(status: :pending_inspection, funds_in_escrow: true) if transaction.recent_status['status_id'].to_i == 4
+        update_fly_buy_order(status: status, funds_in_escrow: true) if transaction.recent_status['status_id'].to_i == 4
         update_fly_buy_order(error_details: e.response['error'])
       end
     end

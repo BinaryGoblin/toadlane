@@ -47,7 +47,8 @@ class Product < ActiveRecord::Base
     stripe: 'Stripe',
     amg: 'Credit Card',
     emb: 'Credit Card (EMB)',
-    fly_buy: 'Fly And Buy'
+    fly_buy: 'Fly And Buy',
+    same_day: 'Same Day Pay'
   }
 
   has_many :notifications, :as => :notifiable, dependent: :destroy
@@ -160,6 +161,7 @@ class Product < ActiveRecord::Base
     ap << PaymentOptions[:emb] if emb_present?
     if user.fly_buy_profile_account_added?
       ap << PaymentOptions[:fly_buy]
+      ap << PaymentOptions[:same_day]
     end
     ap
   end
@@ -199,6 +201,10 @@ class Product < ActiveRecord::Base
 
   def default_payment_flybuy?
     default_payment == PaymentOptions[:fly_buy]
+  end
+
+  def default_payment_same_day?
+    default_payment == PaymentOptions[:same_day]
   end
 
   def default_payment_stripe?
@@ -302,7 +308,7 @@ class Product < ActiveRecord::Base
 
   def owner_default_payment_verified?
     case default_payment
-    when PaymentOptions[:fly_buy]
+    when PaymentOptions[:fly_buy], PaymentOptions[:same_day]
       owner.fly_buy_profile_account_added?
     when PaymentOptions[:stripe]
       owner.stripe_profile.present?

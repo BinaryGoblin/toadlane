@@ -40,7 +40,7 @@ class UserMailer < ApplicationMailer
       render_to_string(partial: '/templates/fly_buy_invoice', :locals => {:order => @order, :user => @buyer})
     )
 
-    mail to: @buyer.email, subject: "Next steps to confirm order (#{@order.count})"
+    mail to: @buyer.email, subject: "Order Confirmation Email"
   end
 
   def order_canceled_fund_not_sent(order, user)
@@ -171,6 +171,14 @@ class UserMailer < ApplicationMailer
     @seller = @order.seller
 
     mail to: @buyer.email, subject: "You have released payment for order #{@order.order_id}"
+  end
+
+  def payment_released_processing_notification(order)
+    @order = order
+    @seller = @order.seller
+    @buyer = @order.buyer
+
+    mail to: @seller.email, subject: "Payment released by #{@buyer.name} for order #{@order.id}"
   end
 
   def send_payment_released_notification_to_seller(order)

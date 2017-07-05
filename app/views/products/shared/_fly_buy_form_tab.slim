@@ -1,3 +1,6 @@
+p
+  | Your terms:&nbsp;
+  = @fly_buy_order.inspection_service_comment if @product.default_payment_same_day?
 - if fly_buy_profile.present? && fly_buy_profile.kba_questions.present?  && !fly_buy_profile.permission_scope_verified?
 
   - if fly_buy_profile.kba_questions['document_type'] == 'TIN'
@@ -14,9 +17,9 @@
     p <b>Status:</b> <span class="warning">You have added your bank account but it is not yet verified.</span>
 
 - elsif user.fly_buy_profile_account_added? && fly_buy_profile.unverify_by_admin?
-  p <b>Status:</b> <span class="warning">You cannot currently use Fly & Buy services. Please contact <a href="mailto:johnb@toadlane.com">johnb@toadlane.com</a> for more information</span>
+  p <b>Status:</b> <span class="warning">You cannot currently use Fly & Buy services. Please contact <a href="mailto:hello@toadlane.com">hello@toadlane.com</a> for more information</span>
 
 - else
   = form_for fly_buy_profile, url: fly_buy_order_place_order_path(fly_buy_order_id: fly_buy_order.id), method: 'post', html: { class: 'create_fly_buy_profile' } do |f|
     = f.hidden_field :fingerprint, value: nil
-    = f.submit 'Place Order', class: 'btn btn-primary'
+    = f.submit 'Confirm order', class: 'btn btn-primary'

@@ -35,7 +35,7 @@ class StripeOrdersController < ApplicationController
       UserMailer.sales_order_notification_to_seller(@stripe_order).deliver_later
       UserMailer.sales_order_notification_to_buyer(@stripe_order).deliver_later
       NotificationCreator.new(@stripe_order).after_order_created
-      redirect_to dashboard_order_path(@stripe_order, :type => "stripe"), notice: "Your order was succesfully placed."
+      redirect_to dashboard_order_path(@stripe_order, :type => "stripe"), notice: "Your order was successfully placed."
     else
       redirect_to product_checkout_path(stripe_order_params[:product_id], total: stripe_order_params[:total], count: stripe_order_params[:count], fee: stripe_order_params[:fee], shipping_cost: stripe_order_params[:shipping_cost], rebate: stripe_order_params[:rebate], rebate_percent: stripe_order_params[:rebate_percent]), alert: "#{@stripe_order.errors.full_messages.to_sentence}"
     end
