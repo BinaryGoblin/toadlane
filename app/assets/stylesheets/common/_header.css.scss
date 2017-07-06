@@ -11,17 +11,23 @@
   .login-form{
     float: right;
     padding-right: 150px;
-
+    width: 47%;
     .controls{
       margin-right: 12px;
+      width: 180px;
+      height: 28px;
     }
     .btn{
       height: 25px;
       font-size: 13px;
       padding-top: 3px;
+      margin-top: 2px;
     }
     a {
-      color: #fff;
+      color: $color-ash-grey;
+    }
+    .forgot-password{
+      margin-left: 70px;
     }
   }
 

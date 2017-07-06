@@ -82,11 +82,11 @@ header.header.navbar.navbar-default.navbar-fixed-top
     - elsif (controller_name == 'registrations') || (controller_name != 'sessions')
       div class="login-form"
         = form_tag session_path(:user) do
-          = email_field_tag 'user[email]', nil, autofocus: true, placeholder: 'email', class: 'controls'
-          = password_field_tag 'user[password', nil, autocomplete: "off", placeholder: 'password', class: 'controls'
-          = submit_tag "Sign in", class: 'btn btn-primary'
-          br/
-          span class="pull-left"
+          = email_field_tag 'user[email]', nil, autofocus: true, placeholder: 'email', class: 'controls form-control pull-left'
+          = password_field_tag 'user[password]', nil, autocomplete: "off", placeholder: 'password', class: 'controls form-control pull-left'
+          = submit_tag "Sign in", class: 'btn btn-primary pull-left'
+          span class="clearfix"
+          span class="forgot-password"
             a href="/users/password/new"  Forgot your password?
 
   - if signed_in?
