@@ -65,7 +65,7 @@ gem 'iso_country_codes', '~> 0.7.5'
 
 gem 'whenever', require: false
 
-gem 'synapse_pay_rest', '~> 3.2.4'
+gem 'synapse_pay_rest', '~> 3.2.5'
 
 # Gems for import and export
 gem 'roo', '~> 2.4.0'
