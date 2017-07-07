@@ -29,7 +29,7 @@ module Services
           create_virtual_documents
           create_physical_documents
 
-          update_fly_buy_profile(synapse_user_doc_id: document.id)
+          update_fly_buy_profile(synapse_user_doc_id: user_document.id)
         else
           update_fly_buy_profile(error_details: { en: 'Please enter valid information to verify your fly buy account.' })
         end
