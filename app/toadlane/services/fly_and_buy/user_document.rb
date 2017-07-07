@@ -26,8 +26,8 @@ module Services
         document = create_or_update_base_document(synapse_user)
 
         if document.present?
-          create_virtual_documents(document)
-          create_physical_documents(document)
+          create_virtual_documents(user_document(document.id))
+          create_physical_documents(user_document(document.id))
 
           update_fly_buy_profile(synapse_user_doc_id: document.id)
         end
@@ -69,9 +69,14 @@ module Services
         document.add_virtual_documents(virtual_doc)
       end
 
-      def user_document
+      def user_document(doc_id = nil)
         synapse_user = reload_synapse_user
-        synapse_user.base_documents.find { |doc| doc.name == user_name }
+
+        if doc_id.present?
+          synapse_user.base_documents.find { |doc| doc.id == doc_id }
+        else
+          synapse_user.base_documents.find { |doc| doc.name == user_name }
+        end
       end
 
       def reload_synapse_user
