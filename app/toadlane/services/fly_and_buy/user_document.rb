@@ -23,11 +23,11 @@ module Services
       private
 
       def create_or_update_document(synapse_user)
-        document = create_or_update_base_document(synapse_user)
+        create_or_update_base_document(synapse_user)
 
-        if document.present? && document.id.present?
-          create_virtual_documents(user_document(document.id))
-          create_physical_documents(user_document(document.id))
+        if user_document.present?
+          create_virtual_documents
+          create_physical_documents
 
           update_fly_buy_profile(synapse_user_doc_id: document.id)
         else
@@ -49,36 +49,30 @@ module Services
         else
           synapse_user.create_base_document(payload)
         end
-
-        user_document
       end
 
-      def create_physical_documents(document)
+      def create_physical_documents
         gov_doc = SynapsePayRest::PhysicalDocument.create(
           type: SynapsePay::DOC_TYPES[:gov_id],
           value: encode_attachment(file_tempfile: fly_buy_profile.gov_id.url, file_type: fly_buy_profile.gov_id_content_type)
         )
 
-        document.add_physical_documents(gov_doc)
+        user_document.add_physical_documents(gov_doc)
       end
 
-      def create_virtual_documents(document)
+      def create_virtual_documents
         virtual_doc = SynapsePayRest::VirtualDocument.create(
           type: SynapsePay::DOC_TYPES[:ssn],
           value: fly_buy_profile.ssn_number
         )
 
-        document.add_virtual_documents(virtual_doc)
+        user_document.add_virtual_documents(virtual_doc)
       end
 
       def user_document(doc_id = nil)
         synapse_user = reload_synapse_user
 
-        if doc_id.present?
-          synapse_user.base_documents.find { |doc| doc.id == doc_id }
-        else
-          synapse_user.base_documents.find { |doc| doc.name == user_name }
-        end
+        synapse_user.base_documents.find { |doc| doc.name == user_name }
       end
 
       def reload_synapse_user

@@ -23,11 +23,11 @@ module Services
       private
 
       def create_or_update_document(synapse_user)
-        document = create_or_update_base_document(synapse_user)
+        create_or_update_base_document(synapse_user)
 
-        if document.present? && document.id.present?
-          create_virtual_documents(company_document(document.id))
-          create_physical_documents(company_document(document.id))
+        if company_document.present?
+          create_virtual_documents
+          create_physical_documents
 
           update_fly_buy_profile(synapse_company_doc_id: document.id)
         else
@@ -49,11 +49,9 @@ module Services
         else
           synapse_user.create_base_document(payload)
         end
-
-        company_document
       end
 
-      def create_physical_documents(document)
+      def create_physical_documents
         ein_doc = SynapsePayRest::PhysicalDocument.create(
           type: SynapsePay::DOC_TYPES[:ein],
           value: encode_attachment(file_tempfile: fly_buy_profile.eic_attachment.url, file_type: fly_buy_profile.eic_attachment_content_type)
@@ -73,29 +71,25 @@ module Services
         end
 
         if second_doc.present?
-          document.add_physical_documents(ein_doc, second_doc)
+          company_document.add_physical_documents(ein_doc, second_doc)
         else
-          document.add_physical_documents(ein_doc)
+          company_document.add_physical_documents(ein_doc)
         end
       end
 
-      def create_virtual_documents(document)
+      def create_virtual_documents
         virtual_doc = SynapsePayRest::VirtualDocument.create(
           type: SynapsePay::DOC_TYPES[:tin],
           value: fly_buy_profile.tin_number
         )
 
-        document.add_virtual_documents(virtual_doc)
+        company_document.add_virtual_documents(virtual_doc)
       end
 
-      def company_document(doc_id = nil)
+      def company_document
         synapse_user = reload_synapse_user
 
-        if doc_id.present?
-          synapse_user.base_documents.find { |doc| doc.id == doc_id }
-        else
-          synapse_user.base_documents.find { |doc| doc.name == company_name }
-        end
+        synapse_user.base_documents.find { |doc| doc.name == company_name }
       end
 
       def reload_synapse_user
