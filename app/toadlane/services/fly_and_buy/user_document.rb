@@ -17,7 +17,7 @@ module Services
 
         create_or_update_document(synapse_user)
       rescue SynapsePayRest::Error => e
-        update_fly_buy_profile(error_details: e.response['error'])
+        update_fly_buy_profile(error_details: get_error_details(e.response))
       end
 
       private
@@ -25,11 +25,13 @@ module Services
       def create_or_update_document(synapse_user)
         document = create_or_update_base_document(synapse_user)
 
-        if document.present?
+        if document.present? && document.id.present?
           create_virtual_documents(user_document(document.id))
           create_physical_documents(user_document(document.id))
 
           update_fly_buy_profile(synapse_user_doc_id: document.id)
+        else
+          update_fly_buy_profile(error_details: { en: 'Please enter valid information to verify your fly buy account.' })
         end
       end
 

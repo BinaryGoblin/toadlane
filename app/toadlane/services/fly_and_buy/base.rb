@@ -65,6 +65,16 @@ module Services
         fly_buy_order.count * per_unit_commission.to_f
       end
 
+      def get_error_details(error_response={})
+        http_code = error_response['http_code'] || error_response[:http_code]
+
+        if ['500', '502', '503', '504'].include?(http_code.to_s)
+          { en: 'Sorry for the inconvenience, encounter a SynapsePay server error. Please try again later.' }
+        else
+          e.response['error'] || e.response[:error]
+        end
+      end
+
       private
 
       def encode_64(content, type)
