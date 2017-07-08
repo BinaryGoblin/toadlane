@@ -51,6 +51,9 @@ class FlyBuyOrder < ActiveRecord::Base
   scope :with_transaction_id, -> { where.not(synapse_transaction_id: nil) }
   scope :not_deleted, -> { where.not(deleted: true) }
 
+  scope :valid, -> { where.not(synapse_transaction_id: nil) }
+  scope :invalid, -> { where(synapse_transaction_id: nil) }
+
   # If the transaction is created in synapsepay, the status should be "Pending Confirmation",
   #  This is assuming the money has not been wired into escrow.
   ## if the money has been wired into the escrow the status of the order would be
@@ -171,5 +174,10 @@ class FlyBuyOrder < ActiveRecord::Base
 
   def calulate_individual_seller_fee(per_unit_commission)
     count * per_unit_commission.to_f
+  end
+
+  def rollback_product_count
+    product.sold_out -= count.to_i
+    product.save
   end
 end
