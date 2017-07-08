@@ -43,11 +43,16 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for resource
+    sign_in_url = new_user_session_url
     if current_user.present?
-      if current_user.has_role?(:superadmin) || current_user.has_role?(:admin)
-        admin_root_path
+      if request.referer == sign_in_url
+        super
       else
-        redirect_path_for_user(resource)
+        if current_user.has_role?(:superadmin) || current_user.has_role?(:admin)
+          admin_root_path
+        else
+          stored_location_for(resource) || request.referer || root_path
+        end
       end
     else
       super
