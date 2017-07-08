@@ -117,7 +117,7 @@ module Services
       end
 
       def company_name
-        "#{user.name} (#{user.company})"
+        "#{user.name.strip} (#{user.company.strip})"
       end
     end
   end

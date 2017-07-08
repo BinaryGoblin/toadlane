@@ -106,7 +106,7 @@ module Services
       end
 
       def user_name
-        user.name
+        user.name.strip
       end
     end
   end
