@@ -71,7 +71,7 @@ module Services
         if ['500', '502', '503', '504'].include?(http_code.to_s)
           { en: 'Sorry for the inconvenience, encounter a SynapsePay server error. Please try again later.' }
         else
-          e.response['error'] || e.response[:error]
+          error_response['error'] || error_response[:error]
         end
       end
 
