@@ -20,7 +20,7 @@ class StaticPagesController < ApplicationController
     if current_user
       redirect_to products_path
     else
-      render 'static_pages/home', layout: 'application'
+      redirect_to new_user_registration_path
     end
   end
 

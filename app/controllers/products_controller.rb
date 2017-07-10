@@ -8,6 +8,8 @@ class ProductsController < ApplicationController
   before_action :check_terms_of_service
 
   def index
+    @i_buy_and_sell = current_user.i_buy_and_sell_present? ? 'true' : 'false'
+
     @most_viewed_products = Product.most_viewed_products.sample(7)
     @newest_products = Product.newest_products.first(7)
     @folders = Folder.importing_completed

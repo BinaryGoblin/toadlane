@@ -11,10 +11,6 @@ Toad::Application.routes.draw do
     end
   end
 
-  devise_scope :user do
-    root to: "devise/registrations#new"
-  end
-
   resources :green_orders
 
   resources :amg_orders
@@ -48,7 +44,7 @@ Toad::Application.routes.draw do
   get 'terms_of_service' => 'static_pages#terms_of_service'
   get 'pay' => 'static_pages#pay'
   get 'account_deactivated' => 'static_pages#account_deactivated'
-  # root 'static_pages#home'
+  root 'static_pages#home'
 
   namespace :dashboard do
     resources :notifications, only: [:index] do

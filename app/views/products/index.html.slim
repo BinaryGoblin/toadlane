@@ -55,7 +55,7 @@
             = render partial: '/shared/product', locals: { product: product }
   .clearfix
 
-- if params[:i_buy_and_sell] == "false"
+- if @i_buy_and_sell == "false"
   = render partial: 'i_buy_sell_modal', locals: { user: current_user }
 
 .clearfix

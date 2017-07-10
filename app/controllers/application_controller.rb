@@ -43,14 +43,17 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for resource
-    if current_user.present?
+    sign_in_url = new_user_session_url
+    sign_up_url = new_user_registration_url
+
+    if  [sign_in_url, sign_up_url].include?(request.referer)
+      super
+    else
       if current_user.has_role?(:superadmin) || current_user.has_role?(:admin)
         admin_root_path
       else
-        redirect_path_for_user(resource)
+        stored_location_for(resource) || request.referer || root_path
       end
-    else
-      super
     end
   end
 
@@ -79,28 +82,6 @@ class ApplicationController < ActionController::Base
   end
 
   private
-
-  def redirect_to_concerned_path(resource)
-    if !resource.i_buy_and_sell_present?
-      products_path(i_buy_and_sell: false)
-    else
-      products_path
-    end
-  end
-
-  def redirect_path_for_user(resource)
-    if resource.has_role? :user
-      if session[:previous_url].present?
-        previous_visited_url = session[:previous_url]
-        session.delete(:previous_url)
-        return previous_visited_url
-      else
-        redirect_to_concerned_path(resource)
-      end
-    else
-      account_deactivated_path
-    end
-  end
 
   def authenticate
     unless Rails.env.production?
