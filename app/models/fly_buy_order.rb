@@ -150,7 +150,7 @@ class FlyBuyOrder < ActiveRecord::Base
   end
 
   def toadlane_earning
-    total_fees - (additional_seller_fee_transactions.count * 2) - 0.05
+    total_fees - (additional_seller_fee_transactions.count * 2) - 0.05 - 2
   end
 
   def create_additional_seller_fee_transactions
