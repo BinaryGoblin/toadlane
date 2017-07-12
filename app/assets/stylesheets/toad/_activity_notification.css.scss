@@ -1,0 +1,24 @@
+.activityNotification {
+  border: solid 1px black;
+  margin: 0 20px;
+  padding: 20px;
+  background-color: #F2F2F2;
+
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+
+    li {
+      margin: 1em 0 1em 0;
+
+      &:first-child {
+        margin-top: 0;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}

@@ -76,6 +76,7 @@ class Product < ActiveRecord::Base
   has_many :inspection_dates, dependent: :destroy
   has_one :group, dependent: :destroy
   belongs_to :folder
+  has_many :activities, class_name: 'Task', as: :taskable, dependent: :destroy
 
   accepts_nested_attributes_for :images, allow_destroy: true
   accepts_nested_attributes_for :certificates, allow_destroy: true

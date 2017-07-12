@@ -13,6 +13,9 @@ class ProductsController < ApplicationController
     @most_viewed_products = Product.most_viewed_products.sample(7)
     @newest_products = Product.newest_products.first(7)
     @folders = Folder.importing_completed
+    @latest_activities = current_user.latest_activities
+
+    AddViewedTasksJob.perform_later(current_user, @latest_activities.to_a) if @latest_activities.present?
   end
 
   def show

@@ -22,7 +22,11 @@ module Services
 
             if fly_buy_profile.permission_scope_verified?
               update_fly_buy_profile(error_details: {})
-              UserMailer.send_account_verified_notification_to_user(fly_buy_profile).deliver_later unless already_verified
+
+              unless already_verified
+                Services::ActivityTracker.track(fly_buy_profile.user, fly_buy_profile)
+                UserMailer.send_account_verified_notification_to_user(fly_buy_profile).deliver_later
+              end
             end
           else
             update_fly_buy_profile(

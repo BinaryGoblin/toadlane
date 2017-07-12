@@ -20,6 +20,9 @@ module Services
               update_product_count
 
               notify_the_user(method_name: :notify_buyer_for_cancled_order)
+
+              fly_buy_order.reload
+              Services::ActivityTracker.track(fly_buy_order.buyer, fly_buy_order)
             when 'Released Payment'
               update_fly_buy_order(status: :placed, payment_release: false, error_details: error_description)
 

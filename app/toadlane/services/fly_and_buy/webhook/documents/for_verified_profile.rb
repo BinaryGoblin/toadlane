@@ -27,7 +27,10 @@ module Services
               if fly_buy_profile.bank_details_verified?
                 options.merge!(error_details: {})
 
-                notify_the_user(method_name: :send_account_verified_notification_to_user) unless already_verified
+                unless already_verified
+                  Services::ActivityTracker.track(fly_buy_profile.user, fly_buy_profile)
+                  notify_the_user(method_name: :send_account_verified_notification_to_user)
+                end
               end
 
               documents.each do |document|

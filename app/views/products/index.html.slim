@@ -21,12 +21,21 @@
         span.subSectionCount.productViewCount #{total_viewers}
         span.subsectionDetail Product Views
     .clearfix
+
   - if @folders.present?
     .bulk-products
       h2 Bulk Products
       - @folders.each do |folder|
         = link_to folder.name, dashboard_folder_path(folder)
         | &nbsp;
+
+  - if @latest_activities.present?
+    .activityNotification
+      ul
+        - @latest_activities.each do |latest_activity|
+          li
+            =raw latest_activity.description
+
   .carousel-product-title
     h3 Newest
     .actions

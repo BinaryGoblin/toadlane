@@ -136,6 +136,9 @@ class AmgOrdersController < ApplicationController
     @amg_order = AmgOrder.new(amg_order_params)
     if @amg_order.save
       @amg_order.place_order
+
+      Services::ActivityTracker.track(current_user, @amg_order)
+
       send_after_order_emails(@amg_order)
       redirect_to dashboard_order_path(
         @amg_order,

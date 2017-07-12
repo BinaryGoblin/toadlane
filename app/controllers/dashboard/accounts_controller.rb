@@ -17,12 +17,46 @@ class Dashboard::AccountsController < DashboardController
       green_profile = GreenProfile.new(green_params)
       if green_profile.valid?
         current_user.green_profile = green_profile
-        redirect_to dashboard_accounts_path, :flash => { :notice => "Green Profile successfully created." }
+        Services::ActivityTracker.track(current_user, green_profile)
+
+        redirect_to dashboard_accounts_path, flash: { notice: 'Green Profile successfully created.' }
       else
-        redirect_to dashboard_accounts_path, :flash => { :alert => "#{green_profile.errors.full_messages.to_sentence}" }
+        redirect_to dashboard_accounts_path, flash: { alert: "#{green_profile.errors.full_messages.to_sentence}" }
       end
     else
-      redirect_to dashboard_accounts_path, :flash => { :alert => "Green Profile not created, please try again." }
+      redirect_to dashboard_accounts_path, flash: { alert: 'Green Profile not created, please try again.' }
+    end
+  end
+
+  def create_amg_profile
+    if amg_params.present?
+      amg_profile = AmgProfile.new(amg_params)
+      if amg_profile.valid?
+        current_user.amg_profile = amg_profile
+        Services::ActivityTracker.track(current_user, amg_profile)
+
+        redirect_to dashboard_accounts_path, flash: { notice: 'AMG Profile successfully created.' }
+      else
+        redirect_to dashboard_accounts_path, flash: { alert: "#{amg_profile.errors.full_messages.to_sentence}" }
+      end
+    else
+      redirect_to dashboard_accounts_path, flash: { alert: 'AMG Profile not created, please try again.' }
+    end
+  end
+
+  def create_emb_profile
+    if emb_params.present?
+      emb_profile = EmbProfile.new(emb_params)
+      if emb_profile.valid?
+        current_user.emb_profile = emb_profile
+        Services::ActivityTracker.track(current_user, emb_profile)
+
+        redirect_to dashboard_accounts_path, flash: { notice: 'EMB Profile successfully created.' }
+      else
+        redirect_to dashboard_accounts_path, flash: { alert: "#{emb_profile.errors.full_messages.to_sentence}" }
+      end
+    else
+      redirect_to dashboard_accounts_path, flash: { alert: 'EMB Profile not created, please try again.' }
     end
   end
 
@@ -104,76 +138,40 @@ class Dashboard::AccountsController < DashboardController
     end
   end
 
-  def create_amg_profile
-    if amg_params.present?
-      amg_profile = AmgProfile.new(amg_params)
-      if amg_profile.valid?
-        current_user.amg_profile = amg_profile
-        redirect_to dashboard_accounts_path, :flash => { :notice => "AMG Profile successfully created." }
-      else
-        redirect_to dashboard_accounts_path, :flash => { :alert => "#{amg_profile.errors.full_messages.to_sentence}" }
-      end
-    else
-      redirect_to dashboard_accounts_path, :flash => { :alert => "AMG Profile not created, please try again." }
-    end
-  end
-
-  def create_emb_profile
-    if emb_params.present?
-      emb_profile = EmbProfile.new(emb_params)
-      if emb_profile.valid?
-        current_user.emb_profile = emb_profile
-        redirect_to dashboard_accounts_path, :flash => { :notice => "EMB Profile successfully created." }
-      else
-        redirect_to dashboard_accounts_path, :flash => { :alert => "#{emb_profile.errors.full_messages.to_sentence}" }
-      end
-    else
-      redirect_to dashboard_accounts_path, :flash => { :alert => "EMB Profile not created, please try again." }
-    end
-  end
-
   def update
     if params[:green_profile].present?
       green_profile = current_user.green_profile
       green_profile.update_attributes(green_params)
-      redirect_to dashboard_accounts_path, :flash => { :notice => "Green Profile successfully updated." }
+
+      redirect_to dashboard_accounts_path, flash: { notice: 'Green Profile successfully updated.' }
     elsif params[:amg_profile].present?
       amg_profile = current_user.amg_profile
       amg_profile.update_attributes(amg_params)
-      redirect_to dashboard_accounts_path, :flash => { :notice => "AMG Profile successfully updated." }
+
+      redirect_to dashboard_accounts_path, flash: { notice: 'AMG Profile successfully updated.' }
     elsif params[:emb_profile].present?
       emb_profile = current_user.emb_profile
       emb_profile.update_attributes(emb_params)
-      redirect_to dashboard_accounts_path, :flash => { :notice => "EMB Profile successfully updated." }
+
+      redirect_to dashboard_accounts_path, flash: { notice: 'EMB Profile successfully updated.' }
     end
   end
 
-  # for valid phone number
   def check_valid_phone_number
     phone_number = Phonelib.parse(armor_params['phone'])
-    if phone_number.valid?
-      phone_number = true
-    else
-      phone_number = false
-    end
+    phone_number = phone_number.valid? ? true : false
 
     respond_to do |format|
-      format.json { render :json => phone_number }
+      format.json { render json: phone_number }
     end
   end
 
-  # for valid state
   def check_valid_state
     state = get_state(params['armor_profile']['addresses']['state'])
-
-    if state.present?
-      state = true
-    else
-      state = false
-    end
+    state = state.present? ? true : false
 
     respond_to do |format|
-      format.json { render :json => state }
+      format.json { render json: state }
     end
   end
 
@@ -190,16 +188,19 @@ class Dashboard::AccountsController < DashboardController
   end
 
   def set_green_profile
-    current_green_profile = current_user.green_profile
-    if current_green_profile.present?
-      @green_profile = current_green_profile
-    else
-      @green_profile = GreenProfile.new
-    end
+    @green_profile = current_user.green_profile || GreenProfile.new
   end
 
   def set_fly_buy_profile
     @fly_buy_profile = current_user.fly_buy_profile || FlyBuyProfile.new
+  end
+
+  def set_amg_profile
+    @amg_profile = current_user.amg_profile || AmgProfile.new
+  end
+
+  def set_emb_profile
+    @emb_profile = current_user.emb_profile || EmbProfile.new
   end
 
   def user_params
@@ -210,12 +211,20 @@ class Dashboard::AccountsController < DashboardController
     params.require(:green_profile).permit!
   end
 
-  def armor_params
-    params.require(:armor_profile).permit!
-  end
-
   def fly_buy_params
     params.require(:fly_buy_profile).permit!
+  end
+
+  def amg_params
+    params.require(:amg_profile).permit!
+  end
+
+  def emb_params
+    params.require(:emb_profile).permit!
+  end
+
+  def armor_params
+    params.require(:armor_profile).permit!
   end
 
   def create_update_address(armor_params)
@@ -225,36 +234,6 @@ class Dashboard::AccountsController < DashboardController
     else
       selected_address = current_user.addresses.find_by_id(armor_params[:address_id])
     end
-  end
-
-  def set_amg_profile
-    current_amg_profile = current_user.amg_profile
-    if current_amg_profile.present?
-      @amg_profile = current_amg_profile
-    else
-      @amg_profile = AmgProfile.new
-    end
-  end
-
-  def set_emb_profile
-    current_emb_profile = current_user.emb_profile
-    if current_emb_profile.present?
-      @emb_profile = current_emb_profile
-    else
-      @emb_profile = EmbProfile.new
-    end
-  end
-
-  def user_params
-    params.require(:user).permit!
-  end
-
-  def amg_params
-    params.require(:amg_profile).permit!
-  end
-
-  def emb_params
-    params.require(:emb_profile).permit!
   end
 
   def create_update_fly_buy_profile
