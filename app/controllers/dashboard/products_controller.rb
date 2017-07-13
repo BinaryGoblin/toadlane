@@ -115,7 +115,7 @@ class Dashboard::ProductsController < DashboardController
 
   def authorized_user?
     group_seller = @product.group.group_sellers.find_by_user_id(current_user.id) if @product.group.present?
-    (group_seller.present? && group_seller.is_group_admin?) || @product.owner == current_user
+    (group_seller.present? && group_seller.is_group_admin?) || @product.owner == current_user || current_user.has_role?(:superadmin) || current_user.has_role?(:admin)
   end
 
   def send_product_deleted_message(product)

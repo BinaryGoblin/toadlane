@@ -4,7 +4,10 @@ class Admin::OrdersController < Admin::ApplicationController
   before_action :set_product, only: [:update]
 
   def index
-    @orders = StripeOrder.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    stripe_order = StripeOrder.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    fly_buy_order = FlyBuyOrder.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    @orders = fly_buy_order + stripe_order
+    puts @orders.inspect
   end
 
   def update

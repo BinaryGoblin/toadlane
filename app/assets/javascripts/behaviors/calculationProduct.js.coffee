@@ -163,10 +163,11 @@ class Behavior.CalculationProduct
     else
       @$footer.hide()
 
+    total_fees = fees + fees_fly_buy
+
     @$rebate.text @fixed rebatep
     @$pcs.text quantity
-    @$feePrice.text @number_to_currency(@fixed fees)
-    @$flyBuyPrice.text @number_to_currency(@fixed fees_fly_buy)
+    @$feePrice.text @number_to_currency(@fixed total_fees)
     @$shippingPrice.text @number_to_currency(@fixed shipping_cost)
     @$rebPrice.text @number_to_currency(@fixed rebate)
     @$NumberOfItemsToInspect.text number_of_items_for_inspection_service

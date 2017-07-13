@@ -1,4 +1,4 @@
-= form_for [ controller.class.name.split("::").first.underscore.to_sym, setup_product(@product)], :html => { multipart: true, class: "product_form_partial product_#{params["action"]}" } do |f|
+= form_for [ controller.class.name.split("::").first.underscore.to_sym, @product], :html => { multipart: true, class: "product_form_partial product_#{params["action"]}" } do |f|
   - if @product.errors.any?
     .error-explanation
       h5= "Error:"
@@ -338,23 +338,22 @@
   label Shipping Estimates:
   ul.estimates
     = f.fields_for :shipping_estimates do |builder|
-      - if params[:action] == 'new' || builder.object.persisted?
-        li.estimate
-          .index = builder.index + 1
-          .estimate-type
-            = builder.label :type, 'Shipping Type:'
-            = builder.select :type, ShippingEstimate.select_options, {}, class: 'form-control'
+      li.estimate
+        .index = builder.index + 1
+        .estimate-type
+          = builder.label :type, 'Shipping Type:'
+          = builder.select :type, ShippingEstimate.select_options, {}, class: 'form-control'
 
-          .estimate-cost
-            = builder.label :cost, 'Cost (USD):'
-            = builder.text_field :cost, class: 'form-control'
+        .estimate-cost
+          = builder.label :cost, 'Cost (USD):'
+          = builder.text_field :cost, class: 'form-control'
 
-          .estimate-description
-            = builder.label :description, 'Description:'
-            = builder.text_field :description, class: 'form-control'
+        .estimate-description
+          = builder.label :description, 'Description:'
+          = builder.text_field :description, class: 'form-control'
 
-          span.btn.btn-default.remove data-index=builder.index = fa_icon 'trash-o'
-          = builder.hidden_field :_destroy
+        span.btn.btn-default.remove data-index=builder.index = fa_icon 'trash-o'
+        = builder.hidden_field :_destroy
 
     li.add-estimate data-behavior="ShippingEstimates"= fa_icon 'plus', text: 'Add another shipping estimate'
 
