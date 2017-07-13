@@ -114,6 +114,7 @@ module Mixins
     def build_related_models
       @product.inspection_dates.build if @product.inspection_dates.blank?
       @product.pricebreaks.build if @product.pricebreaks.blank?
+      @product.shipping_estimates.build if @product.shipping_estimates.blank?
     end
 
     def build_group

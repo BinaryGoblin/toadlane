@@ -4,11 +4,6 @@ module FormHelper
     user
   end
 
-  def setup_product(product)
-    1.times { product.shipping_estimates.build }
-    product
-  end
-
   def user_identification_program_options
     [
       ['Tier 1: Up to $100k/month', 'tier_1'],
