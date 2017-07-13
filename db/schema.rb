@@ -980,7 +980,7 @@ ActiveRecord::Schema.define(version: 20170711123242) do
   end
 
   add_index "viewed_tasks", ["task_id"], name: "index_viewed_tasks_on_task_id", using: :btree
-  add_index "viewed_tasks", ["user_id", "task_id"], name: "viewed_tasks_user_and_task", unique: true, using: :btree
+  add_index "viewed_tasks", ["user_id", "task_id"], name: "index_viewed_tasks_on_user_id_and_task_id", unique: true, using: :btree
   add_index "viewed_tasks", ["user_id"], name: "index_viewed_tasks_on_user_id", using: :btree
 
   add_foreign_key "addresses", "users"
