@@ -24,7 +24,7 @@ class SynapsePay
   def initialize(fingerprint:, ip_address:)
     @client_id = Rails.application.secrets['synapsepay_client_id']
     @client_secret = Rails.application.secrets['synapsepay_client_secret']
-    @fingerprint = Rails.application.secrets['synapsepay_fingerprint']
+    @fingerprint = fingerprint
     @ip_address = ip_address
     @development_mode = SANDBOX_MODE
     @webhook_url = Rails.application.secrets['synapsepay_webhook_url']
