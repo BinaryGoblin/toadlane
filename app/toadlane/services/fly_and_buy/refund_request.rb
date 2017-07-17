@@ -6,7 +6,7 @@ module Services
 
       def initialize(user, fly_buy_order)
         @user = user
-        @synapse_pay = SynapsePay.new(fingerprint: SynapsePay::FINGERPRINT, ip_address: user.fly_buy_profile.synapse_ip_address)
+        @synapse_pay = SynapsePay.new(fingerprint: SynapsePay::FINGERPRINT, ip_address: user.fly_buy_profile.synapse_ip_address, dynamic_fingerprint: user.fly_buy_profile.is_old_profile?)
 
         super(fly_buy_order, fly_buy_order.buyer.fly_buy_profile)
       end

@@ -21,10 +21,10 @@ class SynapsePay
     business_documents: 'OTHER'
   }.freeze
 
-  def initialize(fingerprint:, ip_address:)
+  def initialize(fingerprint:, ip_address:, dynamic_fingerprint:)
     @client_id = Rails.application.secrets['synapsepay_client_id']
     @client_secret = Rails.application.secrets['synapsepay_client_secret']
-    @fingerprint = fingerprint
+    @fingerprint = dynamic_fingerprint ? fingerprint : Rails.application.secrets['synapsepay_fingerprint']
     @ip_address = ip_address
     @development_mode = SANDBOX_MODE
     @webhook_url = Rails.application.secrets['synapsepay_webhook_url']
@@ -46,7 +46,7 @@ class SynapsePay
   end
 
   def user(user_id:)
-    SynapsePayRest::User.find(client: client, id: user_id, full_dehydrate: 'yes')
+    SynapsePayRest::User.find(client: client, id: user_id)
   end
 
   def create_user(**options)
