@@ -7,15 +7,20 @@ module Services
       def initialize(user, fly_buy_profile, address_id)
         @user = user
         @address = Address.where(id: address_id).first
-        @synapse_pay = SynapsePay.new(fingerprint: fly_buy_profile.encrypted_fingerprint, ip_address: fly_buy_profile.synapse_ip_address)
+        @synapse_pay = SynapsePay.new(fingerprint: fly_buy_profile.encrypted_fingerprint, ip_address: fly_buy_profile.synapse_ip_address, dynamic_fingerprint: fly_buy_profile.is_old_profile?)
 
         super(nil, fly_buy_profile)
       end
 
       def submit
         synapse_user = synapse_pay.user(user_id: fly_buy_profile.synapse_user_id)
+        document = create_or_update_document(synapse_user)
 
-        create_or_update_document(synapse_user)
+        if document.present?
+          update_fly_buy_profile(synapse_user_doc_id: document.id)
+        else
+          update_fly_buy_profile(error_details: { en: 'Please enter valid information to verify your fly buy account.' })
+        end
       rescue SynapsePayRest::Error => e
         update_fly_buy_profile(error_details: get_error_details(e.response))
       end
@@ -23,24 +28,12 @@ module Services
       private
 
       def create_or_update_document(synapse_user)
-        create_or_update_base_document(synapse_user)
-
-        if user_document.present?
-          create_virtual_documents
-          create_physical_documents
-
-          update_fly_buy_profile(synapse_user_doc_id: user_document.id)
-        else
-          update_fly_buy_profile(error_details: { en: 'Please enter valid information to verify your fly buy account.' })
-        end
-      end
-
-      def create_or_update_base_document(synapse_user)
         base_documents = synapse_user.base_documents
 
         if base_documents.present?
           base_document = base_documents.find { |doc| doc.id == fly_buy_profile.synapse_user_doc_id } if fly_buy_profile.synapse_user_doc_id.present?
           base_document = base_documents.find { |doc| doc.name == user_name } unless base_document.present?
+
           if base_document.present?
             base_document.update(payload)
           else
@@ -49,27 +42,11 @@ module Services
         else
           synapse_user.create_base_document(payload)
         end
+
+        user_document
       end
 
-      def create_physical_documents
-        gov_doc = SynapsePayRest::PhysicalDocument.create(
-          type: SynapsePay::DOC_TYPES[:gov_id],
-          value: encode_attachment(file_tempfile: fly_buy_profile.gov_id.url, file_type: fly_buy_profile.gov_id_content_type)
-        )
-
-        user_document.add_physical_documents(gov_doc)
-      end
-
-      def create_virtual_documents
-        virtual_doc = SynapsePayRest::VirtualDocument.create(
-          type: SynapsePay::DOC_TYPES[:ssn],
-          value: fly_buy_profile.ssn_number
-        )
-
-        user_document.add_virtual_documents(virtual_doc)
-      end
-
-      def user_document(doc_id = nil)
+      def user_document
         synapse_user = reload_synapse_user
 
         synapse_user.base_documents.find { |doc| doc.name == user_name }
@@ -95,14 +72,30 @@ module Services
           address_city: address.city,
           address_subdivision: address.state,
           address_postal_code: address.zip,
-          address_country_code: address.country
+          address_country_code: address.country,
+          physical_documents: payload_for_physical_documents,
+          virtual_documents: payload_for_virtual_documents
         }
       end
 
+      def payload_for_physical_documents
+        [SynapsePayRest::PhysicalDocument.create(
+          type: SynapsePay::DOC_TYPES[:gov_id],
+          value: encode_attachment(file_tempfile: fly_buy_profile.gov_id.url, file_type: fly_buy_profile.gov_id_content_type)
+        )]
+      end
+
+      def payload_for_virtual_documents
+        [SynapsePayRest::VirtualDocument.create(
+          type: SynapsePay::DOC_TYPES[:ssn],
+          value: fly_buy_profile.ssn_number
+        )]
+      end
+
       def formatted_email
-        splited_email = user.email.split('@')
-        updated_email = "#{splited_email.first}+#{user.first_name}"
-        "#{updated_email}@#{splited_email.last}"
+        mail = Mail::Address.new(user.email)
+
+        "#{user.first_name.downcase}_#{mail.local}@#{mail.domain}"
       end
 
       def user_name

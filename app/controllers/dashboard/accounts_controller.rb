@@ -238,8 +238,12 @@ class Dashboard::AccountsController < DashboardController
 
   def create_update_fly_buy_profile
     args = {}
-    args[:phone] = fly_buy_params['company_phone'] if fly_buy_params['company_phone'].present?
-    args[:company] = fly_buy_params['company'] if fly_buy_params['company'].present?
+    args[:phone] = fly_buy_params[:company_phone] if fly_buy_params[:company_phone].present?
+    if fly_buy_params[:company].present?
+      args[:company] = fly_buy_params[:company]
+    else
+      return redirect_to dashboard_accounts_path, flash: { error: 'Please enter company name.' }
+    end
     current_user.update_attributes(args) if args.present?
 
     if fly_buy_params['address_attributes'].present?
