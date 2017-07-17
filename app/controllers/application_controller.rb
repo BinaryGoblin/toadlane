@@ -1,7 +1,8 @@
 class ApplicationController < ActionController::Base
   include InspectionServiceHelper
 
-  before_filter :authenticate
+  before_action :authenticate
+
   protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json' }
   helper_method :inspected_items_count
 
@@ -43,10 +44,13 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for resource
-    sign_in_url = new_user_session_url
-    sign_up_url = new_user_registration_url
-
-    if  [sign_in_url, sign_up_url].include?(request.referer)
+    if (request.path == "/users/sign_in" ||
+        request.path == "/users/sign_up" ||
+        request.path == "/users/password/new" ||
+        request.path == "/users/password/edit" ||
+        request.path == "/users/confirmation" ||
+        request.path == "/users/sign_out" ||
+        !request.xhr?)
       super
     else
       if current_user.has_role?(:superadmin) || current_user.has_role?(:admin)
