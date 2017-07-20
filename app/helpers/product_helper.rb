@@ -1,5 +1,31 @@
 module ProductHelper
 
+  def display_error_message
+    case params[:error]
+    when 'profile_not_completed'
+      str = "You must complete your #{link_to 'profile', dashboard_profile_path, class: 'view'} to create order."
+    when 'no_company_info'
+      str = "You must add your company name prior to submitting your company information. #{link_to 'Click Here To Edit', dashboard_profile_path(req_company: true), class: 'view'}"
+    when 'no_fly_buy_profile'
+      str = "Please #{link_to('add a payment method', dashboard_accounts_path, class: 'view')} in order to place your order."
+    when 'minimum_order_quantity'
+      str = "To place order you must select minimum #{@product.minimum_order_quantity} units for this product"
+    when 'unverified_by_admin'
+      str = 'You cannot currently use Fly & Buy services. Please contact hello@toadlane.com for more information.'
+    end
+    error_template(str.html_safe)
+  end
+
+  def error_template(msg)
+    close_btn = content_tag(:button, type: 'button', class: 'close', 'data-dismiss': 'alert', 'aria-label': 'Close') do
+      content_tag(:span, raw('&times;'), 'aria-hidden': 'true')
+    end
+    content_tag :div, class: 'error-explanation text-center alert alert-warning' do
+      concat close_btn
+      concat msg
+    end.html_safe
+  end
+
   def get_shipping_cost(quantity, shipping_cost)
     quantity.to_i * shipping_cost.to_f
   end

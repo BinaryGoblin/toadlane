@@ -3,27 +3,7 @@
 .view-product
 
   .complete-profile-error
-    - if !flash[:error].nil?
-      .error-explanation.text-center
-        | You must complete your&nbsp;
-        = link_to 'profile', dashboard_profile_path, class: 'view'
-        | &nbsp;to create order.
-    - elsif !flash[:account_error].nil?
-      .error-explanation.text-center
-        - if flash[:account_error] == "You must complete your profile before you can create a bank account."
-          | You must complete your&nbsp;
-          = link_to 'profile', dashboard_profile_path, class: 'view'
-          | &nbsp;to add bank account.
-        - else
-          = flash[:account_error]
-          | &nbsp;
-          - if flash[:account_error].include? "company name"
-            = link_to 'Click Here To Edit', dashboard_profile_path(req_company: true), class: 'view'
-          - elsif flash[:account_error].include? "first and"
-            = link_to 'Click Here To Edit', dashboard_profile_path(req_name: true), class: 'view'
-    - if flash[:sign_up_error].present?
-      .error-explanation.text-center
-        = flash[:sign_up_error]
+    = display_error_message
   .clearfix
 
   .actions-panel-product.wrap-sm
