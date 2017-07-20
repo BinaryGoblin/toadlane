@@ -20,7 +20,6 @@
 # Learn more: http://github.com/javan/whenever
 every :day, :at => '12:01am' do
   rake "reminder_inspection_date_arriving"
-  rake "on_inspection_date_order_status_change"
   rake "email_notification_buyer_send_funds"
   rake "cancel_transaction_funds_not_received"
   rake "product_expired_notification"

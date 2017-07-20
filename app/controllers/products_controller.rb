@@ -70,16 +70,13 @@ class ProductsController < ApplicationController
   def checkout
     @product = Product.find(params[:product_id])
 
-    if current_user.profile_complete?
-      return redirect_to product_path(@product), flash: { account_error: 'You must update your first and last name prior to submitting your company information.' } unless current_user.name.present?
-      return redirect_to product_path(@product), flash: { account_error: 'You must add your company name prior to submitting your company information.' } unless current_user.company.present?
-    else
-      return redirect_to product_path(@product), flash: { error: 'You must complete your profile before you can view product details.' }
-    end
+    return redirect_to product_path(@product, error: :no_company_info) unless current_user.company.present?
+    return redirect_to product_path(@product, error: :profile_not_completed) unless current_user.profile_complete?
+    return redirect_to product_path(@product, error: :no_fly_buy_profile) unless current_user.fly_buy_profile_account_added?
+    return redirect_to product_path(@product, error: :minimum_order_quantity) if params[:count].to_i < @product.minimum_order_quantity
+    return redirect_to product_path(@product, error: :unverified_by_admin) if current_user.fly_buy_profile_account_added? && current_user.fly_buy_unverified_by_admin == true
 
-    return redirect_to product_path(@product), flash: { account_error: 'You must complete your fly & buy profile to placed your order.' } unless current_user.fly_buy_profile_account_added?
-    return redirect_to product_path(@product), flash: { account_error: 'You cannot currently use Fly & Buy services. Please contact hello@toadlane.com for more information.' } if current_user.fly_buy_profile_account_added? && current_user.fly_buy_unverified_by_admin == true
-    return redirect_to product_path(@product), flash: { error: "To place order you must select minimum #{@product.minimum_order_quantity} units for this product" } if params[:count].to_i < @product.minimum_order_quantity
+
     sum_unit_price = (@product.unit_price * params[:count].to_f)
 
     if @product.default_payment_flybuy?
