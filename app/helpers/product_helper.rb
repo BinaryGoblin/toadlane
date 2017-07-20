@@ -13,7 +13,7 @@ module ProductHelper
     when 'unverified_by_admin'
       str = 'You cannot currently use Fly & Buy services. Please contact hello@toadlane.com for more information.'
     end
-    error_template(str.html_safe)
+    error_template(str.html_safe) unless str.blank?
   end
 
   def error_template(msg)
