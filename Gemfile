@@ -81,6 +81,8 @@ gem 'devise_invitable', '~> 1.6.1'
 
 gem 'acts-as-taggable-on', '~> 4.0'
 
+gem 'exception_notification'
+
 # Dev - debugging group
 group :development do
   gem 'pry-rails'

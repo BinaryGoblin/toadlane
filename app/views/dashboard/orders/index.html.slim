@@ -66,8 +66,8 @@
               - if order.buyer == current_user && order.status != 'cancelled' && order.instance_of?(FlyBuyOrder)
                 - if FlyBuyOrder::CANCEL_ORDER_STATE.include?(order.status)
                   = link_to 'Cancel Order', "#modal_cancel_order_#{order.id}", class: 'view', data: { toggle: 'modal' }
-
-                - if order.not_inspected && order.status == 'pending_inspection' && order.inspection_date_today? && order.funds_in_escrow?
+                  br
+                - if order.not_inspected && order.status == 'pending_inspection' && order.inspection_date_today_onward? && order.funds_in_escrow?
                   = link_to 'Complete Inspection', fly_buy_order_complete_inspection_path(order.id), class: 'view'
                 - elsif order.order_type == 'fly_buy' && order.inspected && order.status == 'placed' && order.funds_in_escrow?
                   = link_to 'Release Payment', fly_buy_order_release_payment_path(order.id), data: { confirm: 'Please confirm your order.' }, class: 'view'

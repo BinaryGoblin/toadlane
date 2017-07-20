@@ -109,4 +109,11 @@ Toad::Application.configure do
 
   Paperclip::Attachment.default_options[:s3_host_name] = 's3-us-west-2.amazonaws.com'
 
+   # Error notifier
+  config.middleware.use ExceptionNotification::Rack,
+  email: {
+    email_prefix: "[Toadlane] ",
+    sender_address: %{"Error Notifier" <notifier@toadlane.com>},
+    exception_recipients: %w{diganta@codeapogee.com roy@codeapogee.com}
+  }
 end
