@@ -75,9 +75,9 @@ class FlyBuyOrder < ActiveRecord::Base
     inspection_complete == false
   end
 
-  def inspection_date_today?
+  def inspection_date_today_onward?
     if selected_inspection_date.present? && selected_inspection_date.date.present?
-      selected_inspection_date.date.to_date == Date.today
+      selected_inspection_date.date.to_date <= Date.today
     end
   end
 
@@ -125,7 +125,7 @@ class FlyBuyOrder < ActiveRecord::Base
 
   def total_price
     unit_prices = (count.to_f * unit_price.to_f)
-    
+
     unit_prices + get_toadlane_fee.to_f + fly_buy_fee.to_f + shipping_cost.to_f - (unit_prices * rebate.to_f / 100)
   end
 
