@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170717110535) do
+ActiveRecord::Schema.define(version: 20170720080834) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -494,14 +494,15 @@ ActiveRecord::Schema.define(version: 20170717110535) do
   create_table "group_sellers", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "product_id"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.boolean  "accept_deal"
     t.integer  "group_id"
-    t.boolean  "private_seller", default: false
-    t.integer  "role_id"
+    t.boolean  "private_seller",        default: false
+    t.decimal  "additional_seller_fee"
     t.decimal  "fee"
-    t.boolean  "notified",       default: false
+    t.integer  "role_id"
+    t.boolean  "notified",              default: false
   end
 
   create_table "groups", force: :cascade do |t|
@@ -889,8 +890,10 @@ ActiveRecord::Schema.define(version: 20170717110535) do
     t.integer  "taskable_id"
     t.string   "taskable_type"
     t.text     "description"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.boolean  "is_visible",    default: true
+    t.integer  "score",         default: 0
   end
 
   create_table "users", force: :cascade do |t|
@@ -981,7 +984,7 @@ ActiveRecord::Schema.define(version: 20170717110535) do
   end
 
   add_index "viewed_tasks", ["task_id"], name: "index_viewed_tasks_on_task_id", using: :btree
-  add_index "viewed_tasks", ["user_id", "task_id"], name: "index_viewed_tasks_on_user_id_and_task_id", unique: true, using: :btree
+  add_index "viewed_tasks", ["user_id", "task_id"], name: "viewed_tasks_user_and_task", unique: true, using: :btree
   add_index "viewed_tasks", ["user_id"], name: "index_viewed_tasks_on_user_id", using: :btree
 
   add_foreign_key "addresses", "users"

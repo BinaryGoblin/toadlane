@@ -1,6 +1,9 @@
 module Services
   module ActivityTracker
     class Base
+      include ActionView::Helpers
+      include ActionDispatch::Routing
+      include Rails.application.routes.url_helpers
 
       attr_reader :user, :obj
 
@@ -23,9 +26,13 @@ module Services
         score.save
       end
 
-      def add_task(task_name:, str_manipulator:)
+      def add_task(task_name:, str_manipulator:, options: {})
         user_task = user.tasks.build(taskable: obj)
+
         user_task.description = task_description(task_name: task_name, str_manipulator: str_manipulator)
+        user_task.assign_attributes(options)
+        user_task.score = get_score(task_name)
+
         user_task.save
       end
 
@@ -36,6 +43,11 @@ module Services
       end
 
       private
+
+      def get_score(task_name)
+        task = task(task_name)
+        task[:positive] + task[:negative]
+      end
 
       def task(task_name)
         Services::ActivityTracker::ConfigData::TASK_LIST[task_name]
