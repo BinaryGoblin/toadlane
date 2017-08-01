@@ -1,13 +1,13 @@
 .account-flybuy
   h4 Fly And Buy:
   h3
-    |*Required for Fly & Buy Transactions
+    |To get verified, use <a href="/fly">Fly & Buy</a> and <a href="/pay">Same Day Pay</a> please select a verification level.
 
   - if user.fly_buy_profile_account_added?
     - if fly_buy_profile.unverify_by_admin?
       p <b>Status:</b> <span class="warning">You cannot currently use Fly & Buy services. Please contact <a href="mailto:hello@toadlane.com">hello@toadlane.com</a> for more information</span>
     - else
-      p <b>Status:</b> <span class="success">You have successfully added your company information. You can now buy or sell using Fly & Buy.</span>
+      p <b>Status:</b> <span class="success">You are verified for #{user.fly_buy_profile.tier}</span>
 
 
   - elsif fly_buy_profile.present? && fly_buy_profile.kba_questions.present?  && !fly_buy_profile.permission_scope_verified?
