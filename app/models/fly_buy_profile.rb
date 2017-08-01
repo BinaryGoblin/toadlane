@@ -91,6 +91,10 @@ class FlyBuyProfile < ActiveRecord::Base
     submited? && error_details.blank? && !completed?
   end
 
+  def tier
+    profile_type.capitalize.gsub('_', ' ')
+  end
+
   private
 
   def masked_number(number)
