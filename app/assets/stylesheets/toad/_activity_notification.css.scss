@@ -5,6 +5,7 @@
   background-color: #F2F2F2;
 
   ul {
+    width: 80%;
     padding: 0;
     margin: 0;
     list-style-type: none;
@@ -20,5 +21,11 @@
         margin-bottom: 0;
       }
     }
+  }
+
+  .industryTags {
+    width: 20%;
+    font-weight: bold;
+    font-size: 16px;
   }
 }

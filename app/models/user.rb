@@ -333,10 +333,34 @@ class User < ActiveRecord::Base
 
   def latest_activities
     Task.joins(user: { taggings: :tag })
-      .where(tags: { name: tag_list })
+      .where(tags: { name: tag_list }, is_visible: true)
       .where.not(user_id: id)
       .where.not(id: viewed_tasks.select(:task_id))
+      .where.not(description: nil)
       .where('tasks.created_at > ?', 6.months.ago)
+      .uniq
+  end
+
+  def related_products
+    Product.joins('LEFT JOIN fly_buy_orders ON fly_buy_orders.product_id = products.id')
+      .joins('LEFT JOIN stripe_orders ON stripe_orders.product_id = products.id')
+      .joins('LEFT JOIN green_orders ON green_orders.product_id = products.id')
+      .joins('LEFT JOIN armor_orders ON armor_orders.product_id = products.id')
+      .joins('LEFT JOIN amg_orders ON amg_orders.product_id = products.id')
+      .joins('LEFT JOIN emb_orders ON emb_orders.product_id = products.id')
+      .where('fly_buy_orders.buyer_id = ?
+        OR fly_buy_orders.seller_id = ?
+        OR stripe_orders.buyer_id = ?
+        OR stripe_orders.seller_id = ?
+        OR green_orders.buyer_id = ?
+        OR green_orders.seller_id = ?
+        OR armor_orders.buyer_id = ?
+        OR armor_orders.seller_id = ?
+        OR amg_orders.buyer_id = ?
+        OR amg_orders.seller_id = ?
+        OR emb_orders.buyer_id = ?
+        OR emb_orders.seller_id = ?
+        OR products.user_id = ?', id, id, id, id, id, id, id, id, id, id, id, id, id)
       .uniq
   end
 

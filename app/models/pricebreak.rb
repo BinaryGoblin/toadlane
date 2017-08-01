@@ -14,5 +14,7 @@ class Pricebreak < ActiveRecord::Base
   belongs_to :product
 
   validates :price, :quantity, presence: true
-  validates :quantity, numericality: { only_integer: true}
+  validates :quantity, numericality: { only_integer: true }
+
+  scope :lowest_price, -> { order(quantity: :desc).take }
 end

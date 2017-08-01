@@ -36,7 +36,7 @@ module Mixins
           product_service.save!
           @product = product_service.product
           Services::ActivityTracker.track(product_creator, @product)
-          Services::ActivityTracker.track(product_creator, @product.group)
+          Services::ActivityTracker.track(product_creator, @product.group) if @product.group.present?
           set_flash_message @product
           send_email_to_additional_sellers @product
           format.html { redirect_to after_create_and_update_path }

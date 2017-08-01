@@ -10,7 +10,7 @@
 
     li#profilePicRow
       .userPic
-            =link_to image_tag('avatar/small/missing.png'), '', class: ''
+        = link_to image_tag(current_user.asset(:small)), ''
 
       .userDetails
         .userName
