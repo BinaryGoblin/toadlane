@@ -15,7 +15,7 @@ class ProductsController < ApplicationController
     @folders = Folder.importing_completed
     @latest_activities = current_user.latest_activities
 
-    AddViewedTasksJob.perform_later(current_user, @latest_activities.to_a) if @latest_activities.present?
+    # AddViewedTasksJob.perform_later(current_user, @latest_activities.to_a) if @latest_activities.present?
   end
 
   def show

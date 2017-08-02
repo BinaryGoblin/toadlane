@@ -7,18 +7,16 @@ module Services
           product = obj.product
           hash_arg = {}
 
-          path = url_for(controller: '/products', action: 'show', id: product.id, host: Toad::Application.config.action_mailer.default_url_options[:host], only_path: false)
-          link = ActionController::Base.helpers.link_to('View now', path)
-
           case task_name
           when :placing_order
             hash_arg[:p] = product.name
             hash_arg[:q] = product.remaining_amount
-            hash_arg[:link] = link
+            hash_arg[:link] = link('View now', url_for_products(product.id))
           when :fund_release
             hash_arg[:p] = product.name
             hash_arg[:u] = user.name
-            hash_arg[:link] = link
+            hash_arg[:link] = link('View now', url_for_products(product.id))
+            hash_arg[:rank] = number_in_percentage(user.ci_lower_bound)
           end
 
           save_score(task_name: task_name)
