@@ -5,7 +5,7 @@ class Admin::OrdersController < Admin::ApplicationController
 
   def index
     stripe_order = StripeOrder.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
-    fly_buy_order = FlyBuyOrder.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    fly_buy_order = FlyBuyOrder.valid.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
     @orders = fly_buy_order + stripe_order
   end
 
