@@ -35,10 +35,10 @@
         - @latest_activities.each do |latest_activity|
           li
             =raw latest_activity.description
-      .industryTags.pull-right
-        - if current_user.tag_list.present?
-          | Tags:&nbsp;
-          = current_user.tag_list.join(', ')
+      / .industryTags.pull-right
+      /   - if current_user.tag_list.present?
+      /     | Tags:&nbsp;
+      /     = current_user.tag_list.join(', ')
       .clearfix
 
   .carousel-product-title

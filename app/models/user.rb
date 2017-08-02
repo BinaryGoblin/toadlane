@@ -364,6 +364,24 @@ class User < ActiveRecord::Base
       .uniq
   end
 
+  # Used Lower Bound of Wilson Score Confidence Interval for a Bernoulli
+  def ci_lower_bound
+    return 0 unless score.present?
+
+    positive = score.positive
+    negative = score.negative
+
+    (
+      (positive + 1.9208) /
+      (positive + negative) -
+      1.96 *
+      Math.sqrt((positive * negative) / (positive + negative) + 0.9604) /
+      (positive + negative)
+    ) /
+    (1 + 3.8416 /
+    (positive + negative))
+  end
+
   private
 
   def associate_api_user
