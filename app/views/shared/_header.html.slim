@@ -19,7 +19,7 @@ header.header.navbar.navbar-default.navbar-fixed-top
 
           / = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, all_category.try(:id) || params[:cat_id] ), class: 'fe-categories', data: { behavior: 'CustomSelect' }
 
-          = submit_tag 'Find now', class: 'btn btn-warning fe-btn'
+          = submit_tag '', class: 'btn-search'
 
           = hidden_field_tag 'count', '16'
 
