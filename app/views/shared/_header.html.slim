@@ -19,8 +19,10 @@ header.header.navbar.navbar-default.navbar-fixed-top
 
           / = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, all_category.try(:id) || params[:cat_id] ), class: 'fe-categories', data: { behavior: 'CustomSelect' }
 
-          = submit_tag 'Find now', class: 'btn btn-warning fe-btn'
-
+          / = submit_tag '<i class="fa fa-search" aria-hidden="true"></i>'
+          = button_tag(type: "submit", class: "btn-search") do
+            <i class="fa fa-search" aria-hidden="true"></i>
+          /
           = hidden_field_tag 'count', '16'
 
           .query-container
@@ -28,6 +30,8 @@ header.header.navbar.navbar-default.navbar-fixed-top
 
       .header-user.pull-right
         = link_to 'Sell', new_dashboard_product_path, class: 'sellBtn'
+
+        = link_to '<i class="fa fa-home" aria-hidden="true"></i>'.html_safe, products_path, class: 'headerIcons'
 
         = link_to fa_icon('comment', text: get_user_unread_message_count), dashboard_messages_path, class: 'headerIcons messageNotification'
 

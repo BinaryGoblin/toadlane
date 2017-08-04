@@ -1128,3 +1128,28 @@ $sell-color: #FF8724;
     }
   }
 }
+
+.navbar-default .navbar-toggle{
+  border-color: #2C2E30;
+  border-radius: 0;
+}
+.navbar-default .navbar-toggle .icon-bar{
+  background-color: #2C2E30;
+}
+.navbar-default .navbar-collapse, .navbar-default .navbar-form{
+  padding-left: 0;
+  padding-right: 0;
+}
+.table-options .pull-right .btn.btn-success{
+  margin-top: 10px;
+}
+.footer-actions .fa-container
+{
+  background: #f2f2f2;
+}
+.btn-signin{
+  display: none;
+}
+.mobile{
+  display: none;
+}
