@@ -5,7 +5,7 @@ module Services
         product = obj.product
 
         save_score(task_name: :creating_seller_group)
-        add_task(task_name: :creating_seller_group, str_manipulator: { g: obj.name, link: link(link_text, url_for_products(product.id)) })
+        add_task(task_name: :creating_seller_group, str_manipulator: { g: obj.name, link: link(product.name, url_for_products(product.id)) })
       end
     end
   end
