@@ -58,7 +58,7 @@
 @import "toad/page_checkout";
 @import 'bootstrap-datetimepicker';
 
-@import "common/responsive";
+@import "media/*";
 
 .modal{
   z-index: 9999;
@@ -66,6 +66,10 @@
 
 .bold{
   font-weight: bold;
+}
+
+.modal-lg {
+  width: auto;
 }
 
 .search-tooltip {
@@ -350,7 +354,7 @@ form .wrap-sm
 
   .topArrowIcon {
     position: absolute;
-    margin-left: -32.7%;
+    margin-left: -20.7%;
     margin-top: 6.6%;
     height:0px;
 
@@ -458,7 +462,7 @@ form .wrap-sm
 
   .logOutTopArrowIcon {
     position: absolute;
-    margin-left: -18.3%;
+    margin-left: -6.3%;
     margin-top: 6.6%;
     height: 0px;
 
@@ -480,7 +484,7 @@ form .wrap-sm
   border-radius: 5px;
   z-index: 99999999;
   padding: 10px;
-  margin-left: 45%;
+  margin-left: 48%;
   margin-top: 15%;
   -webkit-box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);
   -moz-box-shadow: 1px 1px 4px 1px rgba(51,51,51,0.49);

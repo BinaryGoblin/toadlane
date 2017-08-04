@@ -1,0 +1,60 @@
+@media (max-width: 320px) {
+  .find-and-explore{
+    .sellBtn{
+      margin-left: -2px;
+    }
+    #invitePplList {
+      width: auto !important;
+      min-width: 300px;
+      margin-left: 0px !important;
+      height: 300px !important;
+
+      li {
+        .userDetails {
+          width: 46% !important;
+        }
+      }
+    }
+
+    .InvitePpl {
+      .topArrowIcon {
+        margin-left: -15.7% !important;
+        margin-top: 7.6% !important;
+      }
+
+      .createGroupBtn {
+        font-size: 11px !important;
+      }
+    }
+
+    .go-to-groups-page {
+      margin-top: 100px !important;
+    }
+
+    #logOutOptionsList {
+      margin-left: 41% !important;
+    }
+
+    .logOutOptions {
+      .logOutTopArrowIcon {
+        margin-left: -7% !important;
+        margin-top: 7.6% !important;
+      }
+    }
+  }
+
+  #inspection_service_block{
+    .item-count{
+      margin: 0 0 0 7px !important;
+    }
+    .inspect-service-comment{
+      left: 15px !important;
+    }
+    b{
+      margin-top: 6px;
+    }
+  }
+  .mobile{
+    display: block;
+  }
+}

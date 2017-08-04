@@ -20,7 +20,7 @@
      h3 class=(display_text) time left:
      = time_left product.end_date
      .product-end-date-countdown data-countdown="#{product.end_date.utc}"
-     = link_to "#{display_text} now!", product_path(product, cat_id: product.main_category), class: "#{product_button_color(product)}"
+     = link_to '<i class="fa fa-eye" aria-hidden="true"></i>'.html_safe + 'View', product_path(product, cat_id: product.main_category), class: "#{product_button_color(product)}"
 
    - if product.pricebreaks.present?
      = slider_pricebreaks product.pricebreaks, number_with_precision(product.unit_price, precision: 0, delimiter: '')

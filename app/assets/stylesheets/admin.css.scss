@@ -47,8 +47,11 @@
 @import "toad/page_view_product";
 @import 'bootstrap-datetimepicker';
 
-@import "common/responsive";
+@import "media/*";
 
+.modal-lg {
+  width: auto;
+}
 .admin_dashboard .wrap-sm
 {
   margin-top:10%;

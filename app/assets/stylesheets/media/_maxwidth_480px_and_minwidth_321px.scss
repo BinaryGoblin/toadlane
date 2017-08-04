@@ -1,0 +1,329 @@
+@media (max-width: 480px) and (min-width: 321px) {
+  .login-form{
+    display: none;
+  }
+  .btn-signin{
+    display: block;
+  }
+  .content{
+    display: none;
+  }
+  .mobile-main-container{
+    margin-top: 124px;
+    .wrap-sm{
+      margin-top: 4px !important;
+    }
+  }
+  .footer{
+    .inner{
+      width: 100%;
+    }
+  }
+  .main-alert {
+    top: 148px;
+  }
+  .buy-sell h2{
+    font-size: 46px;
+  }
+  .product, .product-carousel .product, .view-product .product-carousel .product{
+    width: 100%;
+  }
+  .products .product{
+    width: 85%;
+  }
+  .product-carousel .carousel-inner, .view-product .product-carousel .carousel-inner{
+    margin: 0 30px;
+  }
+  .carousel-control.left, .view-product .product-carousel .carousel-control.left{
+    left: 0;
+  }
+  .carousel-control.right, .view-product .product-carousel .carousel-control.right{
+    right: 0;
+  }
+  .carousel-product-title .actions{
+    position: relative;
+    top: 0;
+    display: block;
+    margin-top: 10px;
+  }
+  .carousel-product-title .ui-selectmenu-button{
+    margin-left: 0;
+  }
+  .products{
+    padding-left: 15px;
+    padding-bottom: 10px;
+    width: 100%;
+    &.all_products{
+      display: block;
+      float: none;
+    }
+  }
+  .result-action {
+    padding: 15px 15px 15px 24px;
+    .act{
+      width: 100% !important;
+      margin: 5px 0;
+      font-size: 14px;
+    }
+  }
+  .search-result .product-list .desc{
+    clear: both;
+  }
+  .find-and-explore .ui-selectmenu-button{
+    float: none;
+    display: block;
+    margin: 0;
+    border-right: none;
+    border-bottom: 2px solid #cccfd3;
+    background: #f5f5f5;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-topright: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    width: 100% !important;
+  }
+  .fe-search{
+    height: auto;
+    box-shadow: none;
+    .related_searches{
+      margin: 0;
+      padding: 5px;
+      background: #f5f5f5;
+      text-shadow: none;
+      -webkit-border-bottom-right-radius: 3px;
+      -moz-border-radius-bottomright: 3px;
+      border-bottom-right-radius: 3px;
+      -webkit-border-bottom-left-radius: 3px;
+      -moz-border-radius-bottomleft: 3px;
+      border-bottom-left-radius: 3px;
+      h4, a{
+        color: #555;
+      }
+    }
+    .query-container{
+      margin-left: 5px;
+      margin-right: 50px;
+    }
+    .fe-btn.btn-warning{
+      background: #ff8724 image-url("search-icon.png") no-repeat center center;
+      background-size: 32px 32px;
+      text-indent: -2000px;
+      overflow: hidden;
+      width: 50px;
+      margin: 0;
+      border-radius: 0;
+      -webkit-border-bottom-right-radius: 3px;
+      -moz-border-radius-bottomright: 3px;
+      border-bottom-right-radius: 3px;
+      border-left: 1px solid #DC7017;
+      &:hover{
+        background-color: #7a4124;
+      }
+    }
+  }
+  .vp-seller .img{
+    width: 100px;
+    height: 100px;
+    img{
+      width: 100%;
+      height: auto;
+    }
+  }
+  .offer-item > label{
+    margin-top: 0;
+  }
+
+  .product-form{
+    .mhide{
+      display: none;
+    }
+  }
+
+  .product-form .pricebreaks, .product-form .sellergroups, .group-form .sellergroups,
+  .product-form .inspectiondates{
+    margin: 0;
+    li{
+      margin-left: 0;
+      float: none;
+      width: 100%;
+      height: auto;
+      padding: 10px;
+      margin-bottom: 10px;
+      .col-md-6 .form-group{
+        margin-bottom: 10px;
+        .chosen-container{
+          width: 100% !important;
+        }
+      }
+      .add-seller-block{
+        padding-left: 0;
+        padding-right: 0;
+      }
+      &.item{
+        width: 98%;
+        height: auto;
+      }
+    }
+    .pricebreak,
+    .inspectiondate,
+    .sellergroup{
+      position: relative;
+      .btn.remove{
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        margin: 0;
+      }
+      .set-commission-text-box{
+        width: 200px;
+      }
+    }
+    .index{
+      margin: 0;
+      float: none;
+    }
+    .form-group{
+      float: none;
+      width: auto;
+      margin: 0 0 10px 0;
+    }
+  }
+  .product-form .dimensions-fields > div{
+    width: 100%;
+    padding: 0;
+    margin: 0 0 10px 0;
+  }
+  .product-form .estimates{
+    margin: 0;
+    li{
+      margin: 0 0 10px 0;
+      padding: 10px;
+      height: auto;
+    }
+    .estimate, .estimate-delete{
+      position: relative;
+      .btn.remove{
+        margin: 0;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+      }
+    }
+    .index{
+      float: none;
+      margin: 0;
+    }
+    .estimate-type, .estimate-cost, .estimate-description{
+      float: none;
+      width: 100% !important;
+      margin: 0 0 10px 0;
+    }
+  }
+  .footer-actions{
+    position: none;
+    .btn{
+      float: none !important;
+      margin: 10px 10px 0 0 !important;
+    }
+  }
+  .devise{
+    .btn-signup{
+      width: 100%;
+    }
+    .btn-signin{
+      margin: 13px 0 0;
+    }
+  }
+
+  a#collapse-link1{
+    display: block !important;
+    text-decoration: none;
+    text-align: center;
+    background: $background-color;
+  }
+
+  #products_first, #products_second{
+    margin-top: 0;
+  }
+  .my-profile-open-link{
+    display: none;
+  }
+  .related_searches{
+    padding: 0 0 0 24px;
+  }
+
+  .bx-wrapper .bx-controls-direction a {
+    display: none;
+  }
+
+  .main-notice {
+    font-size: 15px;
+  }
+
+  #inspection_service_block{
+    .item-count{
+      margin: 0 0 0 7px !important;
+    }
+    .inspect-service-comment{
+      left: 15px !important;
+    }
+    b{
+      margin-top: 6px;
+    }
+  }
+  .mobile{
+    display: block;
+  }
+  // Two files has been merged here.
+
+  #invitePplList {
+    width: auto !important;
+    min-width: 330px;
+    margin-left: 0px !important;
+
+    li {
+      .userDetails {
+        width: 51.7% !important;
+      }
+    }
+  }
+
+  .InvitePpl {
+    .topArrowIcon {
+      margin-left: -16.7% !important;
+      margin-top: 7.6% !important;
+    }
+
+    .createGroupBtn {
+      font-size: 11px !important;
+    }
+  }
+
+  .go-to-groups-page {
+    margin-top: 150px !important;
+  }
+
+  .logOutOptions {
+    .logOutTopArrowIcon {
+      margin-left: -8.3% !important;
+      margin-top: 7.6% !important;
+    }
+  }
+
+  #inspection_service_block{
+    .item-count{
+      margin: 0 0 0 7px !important;
+    }
+    .inspect-service-comment{
+      left: 15px !important;
+    }
+    b{
+      margin-top: 6px;
+    }
+  }
+  .mobile{
+    display: block;
+  }
+}
