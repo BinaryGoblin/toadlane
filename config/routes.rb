@@ -229,8 +229,8 @@ Toad::Application.routes.draw do
     end
   end
 
-  authenticate :user, lambda{|user| user.has_role?(:admin) } do
-    mount Searchjoy::Engine, at: "admin/searchjoy"
+  authenticate :user, lambda { |user| user.has_role?(:admin) } do
+    mount Searchjoy::Engine, at: 'admin/searchjoy'
   end
 
   mount Commontator::Engine => '/commontator'

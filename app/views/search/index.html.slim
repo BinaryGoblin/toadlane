@@ -2,8 +2,8 @@
 i.fa.fa-bars.my-profile-open-link aria-hidden="true"
 .wrap-full
   - if @related_searches.present?
-    - unless @related_searches.count == 1 && @related_searches.last["normalized_query"] == params[:query]
-      = render partial: "/shared/related_searches", locals: { related_searches: @related_searches, query: params[:query] }
+    - unless @related_searches.count == 1 && @related_searches.last['normalized_query'] == params[:query]
+      = render partial: '/shared/related_searches', locals: { related_searches: @related_searches, query: params[:query] }
   = render 'search_actions'
   .search-result: .products
     - if cookies[:view] == 'list'

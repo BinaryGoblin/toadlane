@@ -8,7 +8,7 @@ module Services
           options = { is_visible: obj.tag_changed }
 
           save_score(task_name: :updating_profile)
-          add_task(task_name: :updating_profile, str_manipulator: { img: profile_image, u: user.name, rank: number_in_percentage(user.ci_lower_bound), link: link('Click here', url_for_search(obj.tag_list.join(', '))) }, options: options)
+          add_task(task_name: :updating_profile, str_manipulator: { img: profile_image, u: user.name, rank: number_in_percentage(user.ci_lower_bound), link: link('Click here', url_for_search(obj.tag_list.join(','))) }, options: options)
         end
       end
     end

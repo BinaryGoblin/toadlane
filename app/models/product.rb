@@ -93,8 +93,11 @@ class Product < ActiveRecord::Base
   validates_numericality_of :unit_price, :amount, only_integer: false, greater_than: 0, less_than: 1000000
   validates :end_date, :status_characteristic, :name, :tag_list, presence: true
   validates :shipping_estimates, presence: true, if: :default_payment_not_flybuy
+
   # searchkick autocomplete: ['name'], fields: [:name, :main_category]
-  searchkick word_start: ['name'], fields: [:name, :description]
+  searchkick word_start: [:name, :description]
+
+  scope :search_import, -> { includes(:tags, :fly_buy_orders, :emb_orders, :amg_orders, :armor_orders, :green_orders, :stripe_orders) }
 
   scope :unexpired, -> { where('end_date > ?', DateTime.now).where(status: true) }
   scope :offer_expired, -> { where('end_date < ?', DateTime.now) }
@@ -129,6 +132,25 @@ class Product < ActiveRecord::Base
   INACTIVE = 'Inactive'
   TEMPLATE_HEADER = ["Product Name", "Brand", "Model", "Product SKU", "Amount in Stock", "Price", 'Valid From', 'Valid Until', 'Minimum Order Quantity', 'Description', 'Condition', 'Product Tags', 'Sell Product using']
   CONDITIONS = { new: 'New', used: 'Used', refurbished: 'Refurbished' }
+
+  def search_data
+    {
+      name: name,
+      description: description,
+      product_tags: tags.map(&:name).reject(&:empty?).join(' '),
+      start_date: start_date,
+      end_date: end_date,
+      status: status,
+      status_characteristic: status_characteristic,
+      owner_id: user_id,
+      fly_buyer_ids: fly_buy_orders.map(&:buyer_id).uniq,
+      stripe_buyer_ids: stripe_orders.map(&:buyer_id).uniq,
+      green_buyer_ids: green_orders.map(&:buyer_id).uniq,
+      armor_buyer_ids: armor_orders.map(&:buyer_id).uniq,
+      amg_buyer_ids: amg_orders.map(&:buyer_id).uniq,
+      emb_buyer_ids: emb_orders.map(&:buyer_id).uniq
+    }
+  end
 
   def self.newest_products
     unexpired.for_sell.most_recent

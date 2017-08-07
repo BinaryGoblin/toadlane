@@ -20,11 +20,14 @@ namespace :data_migration do
     Rails.logger.info '************** Migrate product sub categories to product tags **************'
     begin
       Product.all.each do |product|
-        sub_categories = product.categories.collect{ |p| p.name}.reject{|p| p == 'all'}
-        product.tag_list.add(sub_categories)
-        product.save
-        Rails.logger.info "Sub Categories:: #{sub_categories} ==>  Tags:: #{product.tag_list}"
-        puts "Sub Categories:: #{sub_categories} ==>  Product Tags:: #{product.tag_list}"
+        sub_categories = product.categories.where.not(name: 'all').map(&:name)
+        if sub_categories.present?
+          Rails.logger.info "Product:: #{product.name}"
+          Rails.logger.info "Sub Categories:: #{sub_categories.inspect}"
+
+          product.tag_list.add(sub_categories)
+          product.save(validate: false)
+        end
       end
     rescue => e
       Rails.logger.info e.inspect
