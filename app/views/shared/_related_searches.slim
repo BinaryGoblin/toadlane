@@ -2,6 +2,6 @@
   h4
     | Related Searches: 
   - related_searches.each do |rs|
-    - unless rs["normalized_query"] == query.downcase
+    - unless rs['normalized_query'] == query.downcase
       a href="#"
-        = rs["normalized_query"]
+        = rs['normalized_query']

@@ -56,7 +56,7 @@ module Services
       end
 
       def url_for_search(query)
-        url_for(controller: '/search', action: 'index', query: query, commit: 'Find now', count: '16', host: Toad::Application.config.action_mailer.default_url_options[:host], only_path: false)
+        url_for(controller: '/search', action: 'index', query: query, commit: 'Find now', user_id: user.id, count: '16', host: Toad::Application.config.action_mailer.default_url_options[:host], only_path: false)
       end
 
       def url_for_products(query)
