@@ -49,7 +49,7 @@ class SearchController < ApplicationController
       ] if user.present?
     end
 
-    @products = Product.search query, operator: 'or', fields: [{ name: :word_start }, { description: :word_start }, :product_tags], where: conditions, order: orders, page: params[:page], per_page: params[:count], track: { user_id: current_user.try(:id) }
+    @products = Product.search query, operator: 'or', fields: [{ name: :word_start }, { description: :word_start }, { main_category: :word_start }, :product_tags], where: conditions, order: orders, page: params[:page], per_page: params[:count], track: { user_id: current_user.try(:id) }
 
     unless query == '*'
       query_arr_with_percentage = query.split(',').map {|val| "%#{val.strip}%" }

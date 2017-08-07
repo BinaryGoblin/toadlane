@@ -95,7 +95,7 @@ class Product < ActiveRecord::Base
   validates :shipping_estimates, presence: true, if: :default_payment_not_flybuy
 
   # searchkick autocomplete: ['name'], fields: [:name, :main_category]
-  searchkick word_start: [:name, :description]
+  searchkick word_start: [:name, :description, :main_category]
 
   scope :search_import, -> { includes(:tags, :fly_buy_orders, :emb_orders, :amg_orders, :armor_orders, :green_orders, :stripe_orders) }
 
@@ -137,6 +137,7 @@ class Product < ActiveRecord::Base
     {
       name: name,
       description: description,
+      main_category: main_category,
       product_tags: tags.map(&:name).reject(&:empty?).join(' '),
       start_date: start_date,
       end_date: end_date,
