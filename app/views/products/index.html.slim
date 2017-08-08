@@ -29,12 +29,12 @@
         = link_to folder.name, dashboard_folder_path(folder)
         | &nbsp;
 
-  - if @latest_activities.present?
-    .activityNotification
-      ul.pull-left
-        - @latest_activities.each do |latest_activity|
-          li
-            =raw latest_activity.description
+  / - if @latest_activities.present?
+  /   .activityNotification
+  /     ul.pull-left
+  /       - @latest_activities.each do |latest_activity|
+  /         li
+  /           =raw latest_activity.description
       / .industryTags.pull-right
       /   - if current_user.tag_list.present?
       /     | Tags:&nbsp;
