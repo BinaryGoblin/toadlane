@@ -94,6 +94,9 @@ $(document).ready ->
       "product[group_attributes][group_sellers_attributes][0][role_id]":
         required: (element) ->
           return $("#product_group_attributes_name").val()!=""
+      "product[shipping_estimates_attributes][0][cost]":
+        required: (element) ->
+          return $('#product_default_payment').val()!="Fly And Buy"
     errorPlacement: (error, element) ->
       # this is done for displaying the error message for Product Start Date
       # # below the start date select boxes

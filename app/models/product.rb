@@ -133,6 +133,14 @@ class Product < ActiveRecord::Base
   TEMPLATE_HEADER = ["Product Name", "Brand", "Model", "Product SKU", "Amount in Stock", "Price", 'Valid From', 'Valid Until', 'Minimum Order Quantity', 'Description', 'Condition', 'Product Tags', 'Sell Product using']
   CONDITIONS = { new: 'New', used: 'Used', refurbished: 'Refurbished' }
 
+  def shipping_rate
+    shipping_estimates.first.cost
+  end
+
+  def shipping_estimate_type
+    shipping_estimates.first.type
+  end
+
   def search_data
     {
       name: name,
