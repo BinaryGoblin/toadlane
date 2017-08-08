@@ -111,7 +111,7 @@
       - if order.order_type != 'fly_buy'
         tr
           td colspan="3" Shipping
-          td.rightAlign #{number_to_currency(order.shipping_cost)}
+          td.rightAlign #{number_to_currency(order.shipping_cost.to_f)}
 
       tr
         td.no-border colspan="2"
