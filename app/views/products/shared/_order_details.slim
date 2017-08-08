@@ -42,8 +42,8 @@
   tr
     td Shipping Estimate
     td.stripe_quantity.rightAlign =data[:quantity]
-    td class="rightAlign" <span class="calc-shipping" data-type="PerUnit">#{number_to_currency(data[:shipping_cost])}</span>
-    td class="rightAlign" <span class="stripe-shipping-price">#{number_to_currency(get_shipping_cost(data[:quantity], data[:shipping_cost]))}</span>
+    td class="rightAlign" <span class="calc-shipping" data-type="#{data[:shipping_estimate_type]}">#{number_to_currency(data[:shipping_estimates_rate])}</span>
+    td class="rightAlign" <span class="stripe-shipping-price">#{number_to_currency(data[:shipping_cost])}</span>
 
   tr
     td.no-border colspan="2"

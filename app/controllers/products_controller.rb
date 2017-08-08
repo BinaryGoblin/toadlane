@@ -108,6 +108,8 @@ class ProductsController < ApplicationController
       fee: fee,
       fee_amount: fees,
       shipping_cost: params[:shipping_cost],
+      shipping_estimates_rate: @product.shipping_rate,
+      shipping_estimate_type: @product.shipping_estimate_type,
       rebate: params[:rebate],
       rebate_percent: params[:rebate_percent],
       available_product: @product.remaining_amount,
@@ -207,6 +209,7 @@ class ProductsController < ApplicationController
     elsif options[:inspection_date_id].present? || @product.default_payment_same_day?
       fly_buy_order = FlyBuyOrder.find_by_id(session[:fly_buy_order_id]) if session[:fly_buy_order_id].present?
       order_type = @product.default_payment_same_day? ? 'same_day' : 'fly_buy'
+      shipping_estimate_id = @product.default_payment_same_day? ? @product.shipping_estimates.first.id : nil
       attrs = {
         unit_price: options[:unit_price],
         count: options[:quantity],
@@ -218,7 +221,9 @@ class ProductsController < ApplicationController
         inspection_service_cost: options[:inspection_service_cost],
         inspection_service_comment: options[:inspection_service_comment],
         fly_buy_fee: options[:fly_buy_fee],
-        order_type: order_type
+        order_type: order_type,
+        shipping_cost: options[:shipping_cost],
+        shipping_estimate_id: shipping_estimate_id
       }
 
       if fly_buy_order.present?
