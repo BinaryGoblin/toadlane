@@ -92,22 +92,19 @@ div[style="min-height: 0.01%;overflow-x: auto;"]
         - else
           td[style="border: 1px solid #cccfd3;font-size: 14px;padding: 6px 5px 4px;text-align: right"] - #{number_to_currency(get_amount_for_rebate(order))}
 
-      - if order.instance_of?(FlyBuyOrder)
-        tr
-          td[style="border: 1px solid #cccfd3;font-size: 14px;padding: 6px 5px 4px;"colspan="3"] Toadlane Fee
-          td[style="border: 1px solid #cccfd3;font-size: 14px;padding: 6px 5px 4px;text-align: right"] #{number_to_currency(order.fee)}
-        tr
-          td[style="border: 1px solid #cccfd3;font-size: 14px;padding: 6px 5px 4px;" colspan="3"] Fly & Buy Fee
-          td[style="border: 1px solid #cccfd3;font-size: 14px;padding: 6px 5px 4px;text-align: right"] #{number_to_currency(order.fly_buy_fee)}
-      - if order.order_type != 'fly_buy'
-        tr
-          td[style="border: 1px solid #cccfd3;font-size: 14px;padding: 6px 5px 4px;"  colspan="3"] Shipping
-          td[style="border: 1px solid #cccfd3;font-size: 14px;padding: 6px 5px 4px;text-align: right"] #{number_to_currency(order.shipping_cost.to_f)}
       tr
-        td[style="border: 1px solid #cccfd3;font-size: 14px;padding: 6px 5px 4px;"] Inspection service fee
-        td[style="border: 1px solid #cccfd3;font-size: 14px;padding: 6px 5px 4px;text-align: right"] = inspected_items_count(@order.percentage_of_inspection_service, @order.count)
-        td[style="border: 1px solid #cccfd3;font-size: 14px;padding: 6px 5px 4px;text-align: right"] #{number_to_currency(Product::INSPECTION_SERVICE_PRICE)}
-        td[style="border: 1px solid #cccfd3;font-size: 14px;padding: 6px 5px 4px;text-align: right"] #{number_to_currency(@order.inspection_service_cost)}
+        td[style="border: 1px solid #cccfd3;font-size: 14px;padding: 6px 5px 4px;"colspan="3"] Toadlane Fee
+        td[style="border: 1px solid #cccfd3;font-size: 14px;padding: 6px 5px 4px;text-align: right"] #{number_to_currency(order.fee + order.fly_buy_fee.to_f)}
+      - if order.order_type == 'fly_buy'
+        tr
+          td[style="border: 1px solid #cccfd3;font-size: 14px;padding: 6px 5px 4px;"] Inspection service fee
+          td[style="border: 1px solid #cccfd3;font-size: 14px;padding: 6px 5px 4px;text-align: right"] = inspected_items_count(order.percentage_of_inspection_service, order.count)
+          td[style="border: 1px solid #cccfd3;font-size: 14px;padding: 6px 5px 4px;text-align: right"] #{number_to_currency(Product::INSPECTION_SERVICE_PRICE) }
+          td[style="border: 1px solid #cccfd3;font-size: 14px;padding: 6px 5px 4px;text-align: right"] #{number_to_currency(order.inspection_service_cost)}
+      - else
+        tr
+          td[style="border: 1px solid #cccfd3;font-size: 14px;padding: 6px 5px 4px;" colspan="3"] Shipping
+          td[style="border: 1px solid #cccfd3;font-size: 14px;padding: 6px 5px 4px;text-align: right"] #{number_to_currency(order.shipping_cost.to_f)}
 
       tr
         td colspan="2"
