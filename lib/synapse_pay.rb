@@ -28,8 +28,6 @@ class SynapsePay
     @ip_address = ip_address
     @development_mode = SANDBOX_MODE
     @webhook_url = Rails.application.secrets['synapsepay_webhook_url']
-
-    fetch_subscription
   end
 
   def client
@@ -46,10 +44,14 @@ class SynapsePay
   end
 
   def user(user_id:)
+    create_or_update_subscription
+
     SynapsePayRest::User.find(client: client, id: user_id)
   end
 
   def create_user(**options)
+    create_or_update_subscription
+
     user_create_settings = {
       client: client,
       logins: [{ email: options[:email] }],
@@ -60,10 +62,6 @@ class SynapsePay
     }
 
     SynapsePayRest::User.create(user_create_settings)
-  end
-
-  def fetch_subscription
-    create_or_update_subscription
   end
 
   private
