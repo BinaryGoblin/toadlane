@@ -110,10 +110,8 @@
           td.rightAlign #{number_to_currency(order.inspection_service_cost)}
       - if order.order_type != 'fly_buy'
         tr
-          td Shipping
-          td.rightAlign= order.count
-          td.rightAlign #{number_to_currency(order.shipping_cost / order.count)}
-          td.rightAlign #{number_to_currency(order.shipping_cost)}
+          td colspan="3" Shipping
+          td.rightAlign #{number_to_currency(order.shipping_cost.to_f)}
 
       tr
         td.no-border colspan="2"

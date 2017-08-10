@@ -134,11 +134,11 @@ class Product < ActiveRecord::Base
   CONDITIONS = { new: 'New', used: 'Used', refurbished: 'Refurbished' }
 
   def shipping_rate
-    shipping_estimates.first.cost
+    shipping_estimates.present? ? shipping_estimates.first.cost : 0
   end
 
   def shipping_estimate_type
-    shipping_estimates.first.type
+    shipping_estimates.first.type if shipping_estimates.present?
   end
 
   def search_data
