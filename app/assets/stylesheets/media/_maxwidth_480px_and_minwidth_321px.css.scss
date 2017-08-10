@@ -282,6 +282,7 @@
     width: auto !important;
     min-width: 330px;
     margin-left: 0px !important;
+    margin-top: 17.2% !important;
 
     li {
       .userDetails {
@@ -292,8 +293,21 @@
 
   .InvitePpl {
     .topArrowIcon {
-      margin-left: -16.7% !important;
-      margin-top: 7.6% !important;
+      margin-left: -12.6% !important;
+      margin-top: 9% !important;
+    }
+
+    #invitePplList {
+      width: auto !important;
+      min-width: 330px;
+      margin-left: 0px !important;
+      margin-top: 15.5% !important;
+
+      li {
+        .userDetails {
+          width: 51.7% !important;
+        }
+      }
     }
 
     .createGroupBtn {
@@ -307,8 +321,12 @@
 
   .logOutOptions {
     .logOutTopArrowIcon {
-      margin-left: -8.3% !important;
-      margin-top: 7.6% !important;
+      margin-left: -9.5% !important;
+      margin-top: 7.3% !important;
+    }
+    #logOutOptionsList{
+      margin-left: 48% !important;
+      margin-top: 15.6% !important;
     }
   }
 
@@ -325,5 +343,45 @@
   }
   .mobile{
     display: block;
+  }
+
+  .view-product {
+    .request-show-block {
+      .place-offer {
+        margin: 30px 0;
+        position: unset;
+        top: 0px;
+      }
+    }
+    .offers {
+      .pull-left.seller-info {
+        width: 40%;
+        height: 93px;
+      }
+
+      .offer-info {
+        padding-left: 5px;
+      }
+
+      .place-order {
+        float: right !important;
+        margin-top: -17px !important;
+        position: unset !important;
+      }
+    }
+  }
+
+  .header-user {
+    .requestBtn, .sellBtn {
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 18px;
+      margin-right: 14px;
+      padding: 8px 10px;
+    }
+
+    .headerIcons {
+      margin-left: 15px;
+    }
   }
 }

@@ -4,6 +4,7 @@ $product-offset: 6px;
 $product-carousel-height: $product-height + 54px;
 $buy-color: #5c8f10;
 $sell-color: #FF8724;
+$red-color: #ff0000;
 
 .products {
   margin: 20px 0 10px;
@@ -12,8 +13,8 @@ $sell-color: #FF8724;
   width: 100%;
 }
 
-.orange_border{
-  border: 3px solid $sell-color !important;
+.red_border{
+  border: 3px solid $red-color !important;
 }
 .green_border{
   border: 3px solid $buy-color !important;

@@ -73,11 +73,11 @@ class ProductsController < ApplicationController
   def checkout
     @product = Product.find(params[:product_id])
 
-    return redirect_to product_path(@product, error: :no_company_info) unless current_user.company.present?
-    return redirect_to product_path(@product, error: :profile_not_completed) unless current_user.profile_complete?
-    return redirect_to product_path(@product, error: :no_fly_buy_profile) unless current_user.fly_buy_profile_account_added?
-    return redirect_to product_path(@product, error: :minimum_order_quantity) if params[:count].to_i < @product.minimum_order_quantity
-    return redirect_to product_path(@product, error: :unverified_by_admin) if current_user.fly_buy_profile_account_added? && current_user.fly_buy_unverified_by_admin == true
+    return redirect_to return_path(:profile_not_completed) unless current_user.company.present?
+    return redirect_to return_path(:profile_not_completed) unless current_user.profile_complete?
+    return redirect_to return_path(:no_fly_buy_profile) unless current_user.fly_buy_profile_account_added?
+    return redirect_to return_path(:minimum_order_quantity) if params[:count].to_i < @product.minimum_order_quantity
+    return redirect_to return_path(:unverified_by_admin) if current_user.fly_buy_profile_account_added? && current_user.fly_buy_unverified_by_admin == true
 
 
     sum_unit_price = (@product.unit_price * params[:count].to_f)
@@ -308,5 +308,13 @@ class ProductsController < ApplicationController
 
   def set_nil_fly_buy_order_id_session
     session[:fly_buy_order_id] = nil
+  end
+
+  def return_path(error)
+    if @product.is_for_sell?
+      product_path(@product, error: error)
+    elsif @product.offer_for_request?
+      dashboard_offer_path(@product, error: error)
+    end
   end
 end

@@ -1,29 +1,51 @@
+// Header navigation, user area, logo
+
 .header {
   background: white;
-  height: 110px;
-  margin-bottom: 27px;
+  float:left;
+  width:100%;
+  z-index:999;
+  position: fixed;
+  top:0;
+
+  .wrap {
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
 
   .logo {
-    position: relative;
+    position: absolute;
     width: 230px;
-    height: 130px;
+    height: 122px;
     top: 10px;
     left: 0;
     right: 0;
     margin: auto;
-    z-index: 100;
+    z-index: 1001;
+  }
+  .public-page-logo-div{
+    float: left;
+    height: 50px;
+    overflow: hidden;
+    width: 345px;
+    .logoSideNav
+    {
+      text-align:center;
+      cursor:pointer;
+      float: right;
+      margin-right: 10px;
+      img
+      {
+        width: 232px;
+      }
+    }
   }
 
-  .wrap {
-    padding-bottom: 30px;
-  }
-
-  .sign-button {
-    width: 135px;
-  }
-
-  .nav-menu {
-    width: 280px;
+  .logo-div{
+    float: left;
+    height: 50px;
+    overflow: hidden;
+    width: 222px;
   }
 }
 
@@ -42,7 +64,7 @@
   }
 
   a {
-    color: black;
+    color: #dddddd;
     font-size: 16px;
     font-weight: 800;
     text-transform: uppercase;
@@ -52,7 +74,22 @@
 
     &.active,
     &:hover {
+      color: #ffffff;
       border-bottom-color: #5c8f10;
+    }
+  }
+}
+
+.admin_dashboard{
+  .header{
+    margin-bottom: 30px;
+  }
+}
+
+.header{
+  .header-nav{
+    a{
+      color: black;
     }
   }
 }
@@ -76,5 +113,26 @@
     line-height: 1;
     font-size: 18px;
     font-family: 'Segoe', sans-serif;
+
+    &:before {
+      content: '';
+      width: 79px;
+      height: 29px;
+      position: absolute;
+      top: 90%;
+      right: -20px;
+      background: image-url('user-header-arrow.png');
+    }
   }
+}
+.logoSideNav
+{
+  text-align:center;
+  cursor:pointer;
+  float: right;
+  margin-right: 10px;
+}
+.logoSideNav img
+{
+  width: 42px;
 }

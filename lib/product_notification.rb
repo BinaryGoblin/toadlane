@@ -14,7 +14,7 @@ class ProductNotification
   def send_product_create_notifications
     @product.notifications.create({
       user_id: @user.id,
-      title: "#{@product.owner.name.titleize} has added product #{@product.name.titleize}."
+      title: "#{@product.owner.name.titleize} added #{@product.name.titleize}."
     })
   end
 end

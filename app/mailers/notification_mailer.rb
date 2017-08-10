@@ -1,10 +1,26 @@
 class NotificationMailer < ApplicationMailer
   add_template_helper(EmailHelper)
+  include ActionView::Helpers::NumberHelper
 
   def product_create_notification_email(product, user)
     @user = user
     @product = product
     mail to: @user.email, subject: "#{@product.name} just listed for sale!"
+  end
+
+  def request_create_notification_email(product, user)
+    @user = user
+    @product = product
+    mail to: @user.email, subject: "#{@product.owner.name} wants to buy #{@product.name} from you!"
+  end
+
+  def offer_notification_email(offer, request)
+    @offer = offer
+    @offer_owner = @offer.owner
+    @request = request
+    @request_owner = @request.owner
+
+    mail to: @offer.owner.email, subject: "#{@offer.owner.name} offered you #{@offer.name} for #{number_to_currency(@offer.unit_price)}/Unit"
   end
 
   def additional_seller_removed_notification_email(product, user, current_user, admins)

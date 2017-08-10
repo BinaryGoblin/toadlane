@@ -28,7 +28,8 @@ header.header.navbar.navbar-default.navbar-fixed-top
           .query-container
               = text_field_tag :query, params[:query], placeholder: 'Search Toadlane'
 
-      .header-user.pull-right
+      .header-user.pull-left
+        = link_to 'Request', new_dashboard_request_path, class: 'requestBtn'
         = link_to 'Sell', new_dashboard_product_path, class: 'sellBtn'
 
         = link_to '<i class="fa fa-home" aria-hidden="true"></i>'.html_safe, products_path, class: 'headerIcons'

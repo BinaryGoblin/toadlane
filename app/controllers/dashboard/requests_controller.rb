@@ -1,38 +1,56 @@
 class Dashboard::RequestsController < DashboardController
+  include Mixins::RequestHelper
+
   def index
-    box = params[:box] || 'inbox'
+    @requests = current_user.products.requests.paginate(page: params[:page], per_page: params[:count]).order('id DESC')
+    @requests_count = @requests.count
+  end
 
-    unless params[:box]
-      redirect_to dashboard_requests_path(box: 'inbox')
-    end
+  def new
+    new_request
+  end
 
-    if box == 'inbox'
-      conversations = Request.where(receiver_id: current_user.id)
-    elsif box == 'sent'
-      conversations =  Request.where(sender_id: current_user.id)
-    end
-
-    @conversations = conversations.order('created_at DESC').uniq(&:conversation)
+  def create
+    create_request
   end
 
   def show
-    @conversation = Request.where(conversation: params[:id]).order(:created_at)
+    set_request
+    @offers = @request.active_offers
   end
 
-  def reply
-    data = Request.new(
-      sender_id: current_user.id,
-      conversation: request_params[:conversation],
-      receiver_id: request_params[:receiver_id],
-      subject: request_params[:subject],
-      body: request_params[:body]
-    )
+  def edit
+    set_request
+    raise 'Unauthorized user access!' unless authorized_user?
+    edit_request
+  end
 
-    redirect_to :back if data.save
+  def update
+    update_request
+  end
+
+  def destroy
+    set_request
+    raise 'Unauthorized user access!' unless authorized_user?
+    @request.destroy
+    respond_to do |format|
+      format.html { redirect_to dashboard_requests_path }
+    end
   end
 
   private
-    def request_params
-      params.require(:request).permit(:conversation, :receiver_id, :subject, :body)
+
+  def after_create_and_update_path
+    if params[:button] == 'new'
+      path = new_dashboard_request_path
+    elsif params[:button] == 'edit'
+      path = edit_dashboard_request_path(@request)
+    else
+      path = dashboard_requests_path
     end
+  end
+
+  def authorized_user?
+    @request.owner == current_user
+  end
 end

@@ -20,11 +20,11 @@ $(document).ready ->
   if($('.product_edit, .product_update').length > 0)
     sell_starting_date = convertDateTime($('#product_start_date').val())
 
-  $('#product_start_date, #start-date').datetimepicker
+  $('#start-date').datetimepicker
     minDate: sell_starting_date
     useCurrent: false
     format: date_format
-  $('#product_end_date, #end-date').datetimepicker
+  $('#end-date').datetimepicker
     useCurrent: false
     minDate: sell_starting_date
     format: date_format
@@ -65,6 +65,7 @@ $(document).ready ->
       $('.insert_inspection_dates').hide()
 
   $.validator.setDefaults({ ignore: ":hidden:not(.chosen-select)" })
+
   $('form.product_form_partial').validate
     rules:
       "product[name]":

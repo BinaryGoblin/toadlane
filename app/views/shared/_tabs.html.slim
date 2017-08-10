@@ -19,12 +19,13 @@
           = link_to 'Edit Profile', dashboard_profile_path, class: 'editProfile'
 
 
-    li
-      = link_to fa_icon('briefcase', text: 'Accounts'), dashboard_accounts_path, is: 'accounts'
-
+    li= link_to fa_icon('briefcase', text: 'Accounts'), dashboard_accounts_path, is: 'accounts'
     li= link_to fa_icon('cubes', text: 'My products'), dashboard_products_path, is: 'products'
     li= link_to fa_icon('upload', text: 'Bulk uploads'), dashboard_folders_path, is: 'products'
+    li= link_to image_tag("/assets/request.png") + ' My requests', dashboard_requests_path, is: 'request', class: 'request_icon'
+
     li= link_to fa_icon('users', text: 'My groups'),  dashboard_groups_path, is: 'groups'
+    li= link_to fa_icon('gift', text: 'My offers'), dashboard_offers_path, is: 'offers'
     li= link_to fa_icon('truck', text: 'Orders'), dashboard_orders_path, is: 'orders'
 
     li= link_to fa_icon('money', text: 'Financing'), dashboard_finances_path, is: 'forms'

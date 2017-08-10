@@ -44,6 +44,7 @@
     float: right !important;
   }
   .header-user{
+    margin: 0px -18% 20px 3% !important;
     width: 100%;
     margin: 20px 0;
     a.btn {
@@ -199,6 +200,12 @@
   }
   .header-user .sellBtn
   {
+    position: relative;
+    top: 10px;
+  }
+  .header-user .requestBtn
+  {
+    margin-left: 0px;
     position: relative;
     top: 10px;
   }
@@ -525,5 +532,16 @@
   }
   .mobile{
     display: block;
+  }
+  .header-user {
+    .messageNotification {
+      margin-left: 2% !important;
+    }
+  }
+
+  .header-user {
+    .otherNotification, .peopleInviteIcon, .logoutIcon {
+      margin-left: 4% !important;
+    }
   }
 }

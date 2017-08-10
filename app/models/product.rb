@@ -77,6 +77,8 @@ class Product < ActiveRecord::Base
   has_one :group, dependent: :destroy
   belongs_to :folder
   has_many :activities, class_name: 'Task', as: :taskable, dependent: :destroy
+  has_many :offers, class_name: 'Product', foreign_key: 'request_id', dependent: :destroy
+  belongs_to :request, class_name: 'Product', foreign_key: 'request_id'
 
   accepts_nested_attributes_for :images, allow_destroy: true
   accepts_nested_attributes_for :certificates, allow_destroy: true
@@ -91,9 +93,9 @@ class Product < ActiveRecord::Base
   accepts_nested_attributes_for :pricebreaks, allow_destroy: true, :reject_if => :all_blank
 
   validates_numericality_of :unit_price, :amount, only_integer: false, greater_than: 0, less_than: 1000000
-  validates :end_date, :status_characteristic, :name, :tag_list, presence: true
-  validates :shipping_estimates, presence: true, if: :default_payment_not_flybuy
-
+  validates :end_date, :status_characteristic, :name, presence: true
+  validates :shipping_estimates, presence: true, if: :default_payment_present_and_not_flybuy
+  validates :tag_list, presence: true, unless: :offer_for_request?
   # searchkick autocomplete: ['name'], fields: [:name, :main_category]
   searchkick word_start: [:name, :description, :main_category]
 
@@ -104,12 +106,15 @@ class Product < ActiveRecord::Base
   scope :fly_buy_default_payment, -> { where(default_payment: "Fly And Buy") }
   scope :for_sell, -> { where(status_characteristic: 'sell') }
   scope :independent, -> { where(folder_id: nil) }
+  scope :requests, -> { where(status_characteristic: 'buy') }
   scope :most_recent, -> { order(created_at: :desc) }
   scope :most_viewed, -> { order(views_count: :desc) }
   scope :not_sold_out, -> { where("amount > sold_out") }
   scope :inactive, -> { where(status: false) }
   scope :order_by_modified_date, -> { order('updated_at DESC') }
   scope :active, -> { where(status: true) }
+  scope :offers, -> { where(status_characteristic: 'offer') }
+  scope :product_and_request, -> { where.not(status_characteristic: 'offer') }
   scope :expired_yesterday, -> { where('end_date BETWEEN ? AND ?',
                       1.day.ago.beginning_of_day,
                       1.day.ago.end_of_day
@@ -123,7 +128,7 @@ class Product < ActiveRecord::Base
 
   after_create :product_create_notification
   after_update :count_remaning_product
-  before_validation :check_for_payment_account
+  before_validation :check_for_payment_account, if: :default_payment_present?
 
   SELLER = 'seller'
   BUYER = 'buyer'
@@ -162,15 +167,19 @@ class Product < ActiveRecord::Base
   end
 
   def self.newest_products
-    unexpired.for_sell.most_recent
+    product_and_request.unexpired.most_recent
   end
 
   def self.most_viewed_products
-    unexpired.for_sell.most_viewed
+    product_and_request.unexpired.most_viewed
   end
 
   def self.available_products()
     unexpired.for_sell.not_sold_out.count
+  end
+
+  def active_offers
+    offers.unexpired
   end
 
   def expired?
@@ -281,8 +290,12 @@ class Product < ActiveRecord::Base
     Fee.find_by(:fee_type => "ACH").value
   end
 
-  def default_payment_not_flybuy
-    default_payment != PaymentOptions[:fly_buy]
+  def default_payment_present_and_not_flybuy
+    default_payment.present? && default_payment != PaymentOptions[:fly_buy]
+  end
+
+  def default_payment_present?
+    default_payment.present?
   end
 
   # fly_buy_inspection_date_not_passed => if the product's default payment is
@@ -311,7 +324,8 @@ class Product < ActiveRecord::Base
 
     users.uniq.each do |user|
       if user != self.owner
-        NotificationMailer.product_create_notification_email(self, user).deliver_later
+        NotificationMailer.product_create_notification_email(self, user).deliver_later if is_for_sell?
+        NotificationMailer.request_create_notification_email(self, user).deliver_later if request_to_buy?
         ProductNotification.new(self, user).product_created
       end
     end
@@ -355,6 +369,17 @@ class Product < ActiveRecord::Base
     stripe_orders.present? || green_orders.present? || armor_orders.present? || emb_orders.present? || fly_buy_orders.present?
   end
 
+  def is_for_sell?
+    status_characteristic == 'sell'
+  end
+
+  def request_to_buy?
+    status_characteristic == 'buy'
+  end
+
+  def offer_for_request?
+    status_characteristic == 'offer'
+  end
   private
 
   def check_for_payment_account

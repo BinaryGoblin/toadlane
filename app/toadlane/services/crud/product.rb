@@ -6,7 +6,7 @@ module Services
 
       def initialize(product_params, current_user, id = nil)
         @product_params = product_params
-        assign_inspection_date_creator
+        assign_inspection_date_creator if product_params[:inspection_dates_attributes].present?
         @product = if id.nil?
           assign_group_owner(current_user.id)
           product = current_user.products.new(params)

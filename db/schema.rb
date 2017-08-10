@@ -14,6 +14,7 @@
 ActiveRecord::Schema.define(version: 20170807115150) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
   enable_extension "pg_stat_statements"
 
@@ -520,6 +521,7 @@ ActiveRecord::Schema.define(version: 20170807115150) do
     t.string   "image_content_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "listing_id"
   end
 
   add_index "images", ["product_id"], name: "index_images_on_product_id", using: :btree
@@ -682,6 +684,7 @@ ActiveRecord::Schema.define(version: 20170807115150) do
     t.string   "brand"
     t.string   "model"
     t.string   "condition"
+    t.integer  "request_id"
   end
 
   add_index "products", ["deleted_at"], name: "index_products_on_deleted_at", using: :btree
@@ -968,6 +971,7 @@ ActiveRecord::Schema.define(version: 20170807115150) do
     t.string   "video_content_type"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+    t.integer  "listing_id"
   end
 
   create_table "viewed_tasks", force: :cascade do |t|

@@ -87,6 +87,9 @@ Toad::Application.routes.draw do
       end
     end
 
+    resources :requests
+    resources :offers
+
     resources :groups do
       collection do
         get :accept_deal
