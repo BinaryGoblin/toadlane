@@ -7,16 +7,23 @@ module Services
         unit_price = obj.unit_price unless unit_price.present?
         link_text = "#{obj.name} (#{number_to_currency(unit_price)})"
 
+        save_score(task_name: identify_task_name)
+        add_task(task_name: identify_task_name, str_manipulator: { img: profile_image, u: user.name, rank: number_in_percentage(user.ci_lower_bound), link: link(link_text, url_for_products(obj.id)) })
+      end
+
+      private
+
+      def identify_task_name
         assets_present = obj.videos.present? || obj.images.present?
 
-        if assets_present
-          save_score(task_name: :creating_product_with_asset)
-          add_task(task_name: :creating_product_with_asset, str_manipulator: { img: profile_image, u: user.name, rank: number_in_percentage(user.ci_lower_bound), link: link(link_text, url_for_products(obj.id)) })
+        case obj.status_characteristic
+        when 'buy'
+          assets_present ? :requesting_product_with_asset : :requesting_product_without_asset
         else
-          save_score(task_name: :creating_product_without_asset)
-          add_task(task_name: :creating_product_without_asset, str_manipulator: { img: profile_image, u: user.name, rank: number_in_percentage(user.ci_lower_bound), link: link(link_text, url_for_products(obj.id)) })
+          assets_present ? :creating_product_with_asset : :creating_product_without_asset
         end
       end
+
     end
   end
 end
