@@ -14,9 +14,7 @@
 ActiveRecord::Schema.define(version: 20170807115150) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
-  enable_extension "pg_stat_statements"
 
   create_table "additional_seller_fee_transactions", force: :cascade do |t|
     t.integer  "fly_buy_order_id"
@@ -220,6 +218,7 @@ ActiveRecord::Schema.define(version: 20170807115150) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "product_id"
+    t.integer  "listing_id"
   end
 
   add_index "certificates", ["user_id"], name: "index_certificates_on_user_id", using: :btree
@@ -453,16 +452,16 @@ ActiveRecord::Schema.define(version: 20170807115150) do
     t.integer  "product_id"
     t.string   "check_number"
     t.string   "check_id"
-    t.integer  "status",                           default: 0
+    t.integer  "status",                                default: 0
     t.float    "unit_price"
     t.integer  "count"
     t.float    "fee"
     t.float    "rebate"
     t.float    "total"
-    t.string   "summary",              limit: 100
+    t.string   "summary",                   limit: 100
     t.text     "description"
     t.string   "tracking_number"
-    t.boolean  "deleted",                          default: false, null: false
+    t.boolean  "deleted",                               default: false, null: false
     t.float    "shipping_cost"
     t.string   "address_name"
     t.string   "address_city"
@@ -471,8 +470,10 @@ ActiveRecord::Schema.define(version: 20170807115150) do
     t.string   "address_country"
     t.integer  "shipping_estimate_id"
     t.integer  "address_id"
-    t.datetime "created_at",                                       null: false
-    t.datetime "updated_at",                                       null: false
+    t.datetime "created_at",                                            null: false
+    t.datetime "updated_at",                                            null: false
+    t.string   "verify_result"
+    t.string   "verify_result_description"
   end
 
   create_table "green_profiles", force: :cascade do |t|
@@ -495,14 +496,15 @@ ActiveRecord::Schema.define(version: 20170807115150) do
   create_table "group_sellers", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "product_id"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.boolean  "accept_deal"
     t.integer  "group_id"
-    t.boolean  "private_seller", default: false
-    t.integer  "role_id"
+    t.boolean  "private_seller",        default: false
+    t.decimal  "additional_seller_fee"
     t.decimal  "fee"
-    t.boolean  "notified",       default: false
+    t.integer  "role_id"
+    t.boolean  "notified",              default: false
   end
 
   create_table "groups", force: :cascade do |t|
@@ -642,6 +644,7 @@ ActiveRecord::Schema.define(version: 20170807115150) do
     t.integer  "product_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "listing_id"
   end
 
   add_index "pricebreaks", ["product_id"], name: "index_pricebreaks_on_product_id", using: :btree
@@ -679,6 +682,7 @@ ActiveRecord::Schema.define(version: 20170807115150) do
     t.datetime "deleted_at"
     t.boolean  "negotiable"
     t.string   "default_payment"
+    t.string   "shared_to",                        default: [],                array: true
     t.integer  "minimum_order_quantity",           default: 1,    null: false
     t.integer  "folder_id"
     t.string   "brand"
@@ -789,6 +793,7 @@ ActiveRecord::Schema.define(version: 20170807115150) do
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
     t.string   "type",        default: "PerUnit", null: false
+    t.integer  "listing_id"
   end
 
   add_index "shipping_estimates", ["product_id"], name: "index_shipping_estimates_on_product_id", using: :btree
@@ -982,7 +987,7 @@ ActiveRecord::Schema.define(version: 20170807115150) do
   end
 
   add_index "viewed_tasks", ["task_id"], name: "index_viewed_tasks_on_task_id", using: :btree
-  add_index "viewed_tasks", ["user_id", "task_id"], name: "index_viewed_tasks_on_user_id_and_task_id", unique: true, using: :btree
+  add_index "viewed_tasks", ["user_id", "task_id"], name: "viewed_tasks_user_and_task", unique: true, using: :btree
   add_index "viewed_tasks", ["user_id"], name: "index_viewed_tasks_on_user_id", using: :btree
 
   add_foreign_key "addresses", "users"

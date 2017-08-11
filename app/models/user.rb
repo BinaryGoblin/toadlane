@@ -131,9 +131,25 @@ class User < ActiveRecord::Base
 
   # user should have at least one payment method to create products
   def has_payment_account?
-    self.stripe_profile.present? || self.green_profile.present? ||
-        self.amg_profile.present? || self.emb_profile.present? ||
-        self.fly_buy_profile_verified?
+    self.stripe_profile_verified? || self.green_profile_verified? ||
+    self.amg_profile_verified? || self.emb_profile_verified? ||
+    self.fly_buy_profile_verified?
+  end
+
+  def stripe_profile_verified?
+    self.stripe_profile.present?
+  end
+
+  def green_profile_verified?
+    self.green_profile.present?
+  end
+
+  def amg_profile_verified?
+    self.amg_profile.present?
+  end
+
+  def emb_profile_verified?
+    self.emb_profile.present?
   end
 
   def armor_orders(type=nil)

@@ -1,18 +1,29 @@
 module ProductHelper
 
   def display_error_message
-    case params[:error]
+    str = case params[:error]
     when 'profile_not_completed'
-      str = "You must complete your #{link_to 'profile', dashboard_profile_path, class: 'view'} to create order."
+      "You must complete your #{link_to 'profile', dashboard_profile_path, class: 'view'} to create order."
     when 'no_company_info'
-      str = "You must add your company name prior to submitting your company information. #{link_to 'Click Here To Edit', dashboard_profile_path(req_company: true), class: 'view'}"
-    when 'no_fly_buy_profile'
-      str = "Please #{link_to('add a payment method', dashboard_accounts_path, class: 'view')} in order to place your order."
+      "You must add your company name prior to submitting your company information. #{link_to 'Click Here To Edit', dashboard_profile_path(req_company: true), class: 'view'}"
     when 'minimum_order_quantity'
-      str = "To place order you must select minimum #{@product.minimum_order_quantity} units for this product"
+      "To place order you must select minimum #{@product.minimum_order_quantity} units for this product"
     when 'unverified_by_admin'
-      str = 'You cannot currently use Fly & Buy services. Please contact hello@toadlane.com for more information.'
+      'You cannot currently use Fly & Buy services. Please contact hello@toadlane.com for more information.'
+    when 'no_fly_buy_profile'
+      "Please add a #{link_to('Fly & Buy account', dashboard_accounts_path, class: 'view')} to place your order."
+    when 'no_same_day_profile'
+      "Please add a #{link_to('Same Day Pay account', dashboard_accounts_path, class: 'view')} to place your order."
+    when 'no_strip_profile'
+      "Please add a #{link_to('Stripe account', dashboard_accounts_path, class: 'view')} to place your order."
+    when 'no_green_profile'
+      "Please add a #{link_to('Green By Phone account', dashboard_accounts_path, class: 'view')} to place your order."
+    when 'no_amg_profile'
+      "Please add a #{link_to('Advanced Merchant Group account', dashboard_accounts_path, class: 'view')} to place your order."
+    when 'no_emb_profile'
+      "Please add a #{link_to('eMerchant Broker account', dashboard_accounts_path, class: 'view')} to place your order."
     end
+
     error_template(str.html_safe) unless str.blank?
   end
 

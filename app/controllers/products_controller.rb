@@ -1,4 +1,5 @@
 class ProductsController < ApplicationController
+  include Mixins::PaymentProfileRequire
 
   # impressionist is for allowing view count and ease of it
   # impressionist :actions=>[:show], :unique => [:user_id]
@@ -6,6 +7,8 @@ class ProductsController < ApplicationController
 
   before_filter :authenticate_user!
   before_action :check_terms_of_service
+
+  before_action :require_profile_for_order, only: :checkout
 
   def index
     @i_buy_and_sell = current_user.i_buy_and_sell_present? ? 'true' : 'false'
@@ -71,15 +74,6 @@ class ProductsController < ApplicationController
 
   # TODO Refactor 10018
   def checkout
-    @product = Product.find(params[:product_id])
-
-    return redirect_to return_path(:profile_not_completed) unless current_user.company.present?
-    return redirect_to return_path(:profile_not_completed) unless current_user.profile_complete?
-    return redirect_to return_path(:no_fly_buy_profile) unless current_user.fly_buy_profile_account_added?
-    return redirect_to return_path(:minimum_order_quantity) if params[:count].to_i < @product.minimum_order_quantity
-    return redirect_to return_path(:unverified_by_admin) if current_user.fly_buy_profile_account_added? && current_user.fly_buy_unverified_by_admin == true
-
-
     sum_unit_price = (@product.unit_price * params[:count].to_f)
 
     if @product.default_payment_flybuy?
@@ -308,13 +302,5 @@ class ProductsController < ApplicationController
 
   def set_nil_fly_buy_order_id_session
     session[:fly_buy_order_id] = nil
-  end
-
-  def return_path(error)
-    if @product.is_for_sell?
-      product_path(@product, error: error)
-    elsif @product.offer_for_request?
-      dashboard_offer_path(@product, error: error)
-    end
   end
 end
