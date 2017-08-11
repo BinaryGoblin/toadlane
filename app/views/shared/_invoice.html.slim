@@ -108,7 +108,7 @@
           td.rightAlign= inspected_items_count(order.percentage_of_inspection_service, order.count)
           td.rightAlign #{number_to_currency(Product::INSPECTION_SERVICE_PRICE)}
           td.rightAlign #{number_to_currency(order.inspection_service_cost)}
-      - if order.order_type != 'fly_buy'
+      - unless (order.instance_of?(FlyBuyOrder) && order.order_type == 'fly_buy')
         tr
           td colspan="3" Shipping
           td.rightAlign #{number_to_currency(order.shipping_cost.to_f)}
