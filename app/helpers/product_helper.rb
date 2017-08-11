@@ -150,7 +150,7 @@ module ProductHelper
   end
 
   def total_viewers
-    current_user.products.collect{|p| p.views_count}.sum
+    current_user.products.for_sell.collect{|p| p.views_count}.sum
   end
 
   def available_products_for_user
