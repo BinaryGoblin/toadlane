@@ -12,10 +12,14 @@
                 span.flag-icon.flag-icon-us title=("US") &nbsp;
             .status.text-uppercase.pull-left
               b Status:
-              - if @request.owner_default_payment_verified?
+              - if @request.owner.has_payment_account?
                 span.text-green Verified
               - else
-                span.text-red Unverified
+                - if current_user == @request.owner
+                  span
+                    = link_to 'Unverified', dashboard_accounts_path, class: 'text-red'
+                - else
+                  span.text-red Unverified
           .col-md-6.pull-left
         .row.request-name.text-uppercase
           h1

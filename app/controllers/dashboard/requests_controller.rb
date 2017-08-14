@@ -16,7 +16,7 @@ class Dashboard::RequestsController < DashboardController
 
   def show
     set_request
-    @offers = @request.active_offers
+    @offers = @request.offers
   end
 
   def edit

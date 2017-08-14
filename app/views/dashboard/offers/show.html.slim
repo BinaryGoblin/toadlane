@@ -15,11 +15,15 @@
                 span.flag-icon.flag-icon-us title=("US") &nbsp;
             .status.text-uppercase.pull-left
               b Status:&nbsp;
-              - if @request.owner_default_payment_verified?
+              - if @request.owner.has_payment_account?
                 span.text-green
                   b = show_account_status(@request)
               - else
-                span.text-red Unverified
+                - if current_user == @request.owner
+                  span
+                    = link_to 'Unverified', dashboard_accounts_path, class: 'text-red'
+                - else
+                  span.text-red Unverified
           .col-md-6.pull-left
         .row.request-name.text-uppercase
           h1
@@ -135,15 +139,22 @@
           .warning.note Note: All inspections include live video testing at suppliers warehouse, a video report, and detailed involvement with the buyer. Additional travel fees may apply. For larger transactions additional travel fees are usually waived. We will be intouch with you immediately to confirm costs before inspection takes place.
 
           .white-panel.wp-table
-            - if current_user.present?
+            - if current_user.present? && (current_user == @request.owner || current_user == @offer.owner)
               - unless available < 1
                 - if strip_tags(time_left(@offer.end_date)) == 'Time ended'
                   .wrong.text-center
                     | The Time allocated by seller has ended for this product.
                 - else
-                  = render partial: 'products/shared/product_checkout_form',
+                  - if @offer.owner_default_payment_verified?
+                    = render partial: 'products/shared/product_checkout_form',
                       locals: { product: @offer, fly_buy_order: @fly_buy_order,
                                 user: current_user }
+                  - else
+                    .wrong.text-center
+                      | Owner is not verified to receive payment.
+            - elsif current_user.present? && current_user != @request.owner && current_user != @offer.owner
+              .wrong.text-center
+                | Only the request owner is allowed to place an order
             - else
               .wrong.text-center
                 | Please&nbsp;

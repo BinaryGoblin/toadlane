@@ -114,6 +114,6 @@ Toad::Application.configure do
   email: {
     email_prefix: "[Toadlane] ",
     sender_address: %{"Error Notifier" <notifier@toadlane.com>},
-    exception_recipients: %w{diganta@codeapogee.com roy@codeapogee.com}
+    exception_recipients: %w{diganta@codeapogee.com roy@codeapogee.com avijit@codeapogee.com}
   }
 end
