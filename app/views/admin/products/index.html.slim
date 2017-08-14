@@ -7,6 +7,7 @@
         tr
           th ID
           th Product name
+          th Type
           th Tags
           th Unit price
           th Valid from
@@ -18,7 +19,14 @@
         - @products.each do |product|
           tr
             td= product.id
-            td= link_to product.name, product_path(product, cat_id: product.main_category), class: 'link link-ulined', target: '_blank'
+            td
+              - if product.is_for_sell?
+                = link_to product.name, product_path(product, cat_id: product.main_category), class: 'link link-ulined', target: '_blank'
+              - elsif product.request_to_buy?
+                = link_to product.name, dashboard_request_path(product), class: 'link link-ulined', target: '_blank'
+              - elsif product.offer_for_request?
+                = link_to product.name, dashboard_offer_path(product), class: 'link link-ulined', target: '_blank'
+            td= product.status_characteristic
             td= product.tag_list
             td= number_to_currency(product.unit_price, :unit => "$ ", precision: 2)
             td

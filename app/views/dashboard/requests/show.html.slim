@@ -11,7 +11,7 @@
               span.flag-icon.flag-icon-us title=("US") &nbsp;
           .status.text-uppercase.pull-left
             b Status:&nbsp;
-            - if @request.owner_default_payment_verified?
+            - if @request.owner.has_payment_account?
               span.text-green Verified
             - else
               - if current_user == @request.owner
