@@ -37,11 +37,12 @@
     .col-md-12.checkout-payment-gateway
       .tab-content
         - if @product.default_payment_stripe?
-          = render partial: 'products/shared/stripe_payment_tab',
-                    :locals => { stripe_order: @stripe_order,
-                                  user: current_user,
-                                  data: @data,
-                                  product: @product}
+          | Currently we are not accepting any Stripe orders.
+          / = render partial: 'products/shared/stripe_payment_tab',
+          /           :locals => { stripe_order: @stripe_order,
+          /                         user: current_user,
+          /                         data: @data,
+          /                         product: @product}
 
         - elsif @product.default_payment_green?
           = render partial: 'products/shared/green_payment_tab',

@@ -44,7 +44,6 @@ class Product < ActiveRecord::Base
 
   PaymentOptions = {
     green: 'Echeck',
-    stripe: 'Stripe',
     amg: 'Credit Card',
     emb: 'Credit Card (EMB)',
     fly_buy: 'Fly And Buy',
@@ -99,7 +98,7 @@ class Product < ActiveRecord::Base
   # searchkick autocomplete: ['name'], fields: [:name, :main_category]
   searchkick word_start: [:name, :description, :main_category]
 
-  scope :search_import, -> { includes(:tags, :fly_buy_orders, :emb_orders, :amg_orders, :armor_orders, :green_orders, :stripe_orders) }
+  scope :search_import, -> { includes(:tags, :fly_buy_orders, :emb_orders, :amg_orders, :armor_orders, :green_orders) }
 
   scope :unexpired, -> { where('end_date > ?', DateTime.now).where(status: true) }
   scope :offer_expired, -> { where('end_date < ?', DateTime.now) }
@@ -158,7 +157,6 @@ class Product < ActiveRecord::Base
       status_characteristic: status_characteristic,
       owner_id: user_id,
       fly_buyer_ids: fly_buy_orders.map(&:buyer_id).uniq,
-      stripe_buyer_ids: stripe_orders.map(&:buyer_id).uniq,
       green_buyer_ids: green_orders.map(&:buyer_id).uniq,
       armor_buyer_ids: armor_orders.map(&:buyer_id).uniq,
       amg_buyer_ids: amg_orders.map(&:buyer_id).uniq,
@@ -196,7 +194,6 @@ class Product < ActiveRecord::Base
 
   def available_payments
     ap = []
-    ap << PaymentOptions[:stripe] if stripe_present?
     ap << PaymentOptions[:green] if green_present?
     ap << PaymentOptions[:amg] if amg_present?
     ap << PaymentOptions[:emb] if emb_present?
@@ -249,7 +246,7 @@ class Product < ActiveRecord::Base
   end
 
   def default_payment_stripe?
-    default_payment == PaymentOptions[:stripe]
+    default_payment == 'Stripe'
   end
 
   def default_payment_green?
@@ -356,8 +353,6 @@ class Product < ActiveRecord::Base
     case default_payment
     when PaymentOptions[:fly_buy], PaymentOptions[:same_day]
       owner.fly_buy_profile_account_added?
-    when PaymentOptions[:stripe]
-      owner.stripe_profile.present?
     when PaymentOptions[:green]
       owner.green_profile.present?
     when PaymentOptions[:amg]

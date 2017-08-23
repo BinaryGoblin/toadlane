@@ -16,8 +16,6 @@ module Mixins
         [current_user.fly_buy_profile_verified?, :no_fly_buy_profile]
       when Product::PaymentOptions[:same_day]
         [current_user.fly_buy_profile_verified?, :no_same_day_profile]
-      when Product::PaymentOptions[:stripe]
-        [current_user.stripe_profile_verified?, :no_strip_profile]
       when Product::PaymentOptions[:green]
         [current_user.green_profile_verified?, :no_green_profile]
       when Product::PaymentOptions[:amg]

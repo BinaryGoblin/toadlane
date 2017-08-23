@@ -33,10 +33,11 @@
       .row.account-list-table
         .col-md-8
           = render partial: 'dashboard/accounts/accounts_partials/fly_buy_account_create_partial', locals: { user: @user, fly_buy_profile: @fly_buy_profile }
-      hr
-      .row.account-list-table
-        = render partial: 'dashboard/accounts/accounts_partials/stripe_payment',
-                  :locals => { :user => @user }
+      /***Stripe payment removed***
+      / hr
+      / .row.account-list-table
+      /   = render partial: 'dashboard/accounts/accounts_partials/stripe_payment',
+      /             :locals => { :user => @user }
 
       hr
       .row.account-list-table
@@ -57,7 +58,7 @@
           = render partial: 'dashboard/accounts/accounts_partials/emb_payment',
                     :locals => {  :user => @user,
                                   :emb_profile => @emb_profile}
-                    
+
       hr
 
 .clearfix
