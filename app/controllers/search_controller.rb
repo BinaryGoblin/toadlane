@@ -40,7 +40,6 @@ class SearchController < ApplicationController
         [
           { owner_id: user.id },
           { fly_buyer_ids: user.id },
-          { stripe_buyer_ids: user.id },
           { green_buyer_ids: user.id },
           { armor_buyer_ids: user.id },
           { amg_buyer_ids: user.id },

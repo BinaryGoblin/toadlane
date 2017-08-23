@@ -131,7 +131,7 @@ class User < ActiveRecord::Base
 
   # user should have at least one payment method to create products
   def has_payment_account?
-    self.stripe_profile_verified? || self.green_profile_verified? ||
+    self.green_profile_verified? ||
     self.amg_profile_verified? || self.emb_profile_verified? ||
     self.fly_buy_profile_verified?
   end
@@ -262,7 +262,6 @@ class User < ActiveRecord::Base
 
   def available_payments
     ap = []
-    ap << Product::PaymentOptions[:stripe] if stripe_profile.present?
     ap << Product::PaymentOptions[:green] if green_profile.present?
     ap << Product::PaymentOptions[:amg] if amg_profile.present?
     ap << Product::PaymentOptions[:emb] if emb_profile.present?

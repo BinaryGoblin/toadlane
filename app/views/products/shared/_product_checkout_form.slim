@@ -1,4 +1,7 @@
 - if product.is_buyer_product_owner?(user)
+  - if  product.default_payment == 'Stripe'
+    .error-explanation.text-center
+      | Please add a different payment method. We no longer support Stripe.
   .wrong.text-center
     | You cannot buy your own product.
 - elsif product.is_buyer_additional_seller?(user)
@@ -63,7 +66,10 @@
         - else
           input.btn.btn-success.btn-lg.checkout value="Place Order" type="submit"
     - elsif not product.default_payment_flybuy?
-      input.btn.btn-success.btn-lg.checkout value="Place Order" type="submit"
+      - if  product.default_payment == 'Stripe'
+        | Sorry! We no longer support Stripe.
+      - else
+        input.btn.btn-success.btn-lg.checkout value="Place Order" type="submit"
   / Set inspection date link
   - if !product.expired? && product.status? && !product.is_buyer_product_owner?(user) && product.default_payment_flybuy? && !(params[:fly_buy_order_id].present? && params[:inspection_date_by_seller] == 'true') && product.inspection_dates.active_inspection_date.blank?
     - unless fly_buy_order.seller_not_mark_approved.present?
