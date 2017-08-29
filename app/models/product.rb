@@ -91,7 +91,7 @@ class Product < ActiveRecord::Base
   accepts_nested_attributes_for :product_categories
   accepts_nested_attributes_for :pricebreaks, allow_destroy: true, :reject_if => :all_blank
 
-  validates_numericality_of :unit_price, :amount, only_integer: false, greater_than: 0, less_than: 1000000
+  validates_numericality_of :unit_price, :amount, only_integer: false, greater_than: 0, less_than: 100000000
   validates :end_date, :status_characteristic, :name, presence: true
   validates :shipping_estimates, presence: true, if: :default_payment_present_and_not_flybuy
   validates :tag_list, presence: true, unless: :offer_for_request?
