@@ -68,7 +68,7 @@ class User < ActiveRecord::Base
   has_one :emb_profile
   has_one :stripe_customer
   has_many :addresses
-  has_one :fly_buy_profile
+  has_one :fly_buy_profile, dependent: :destroy
   has_many :requests_of_sender, class_name: 'Request', foreign_key: :sender_id
   has_many :requests_of_receiver, class_name: 'Request', foreign_key: :receiver_id
   has_many :notifications, dependent: :destroy

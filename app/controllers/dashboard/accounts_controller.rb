@@ -73,6 +73,8 @@ class Dashboard::AccountsController < DashboardController
     end
 
     fly_buy_profile = create_update_fly_buy_profile
+    return redirect_to dashboard_accounts_path, flash: { error: 'The system has encountered errors. Please try after sometime.' } unless fly_buy_profile.present?
+
     create_and_update_fly_buy_profile_notification(fly_buy_profile)
 
     if current_user.profile_complete?
@@ -262,22 +264,18 @@ class Dashboard::AccountsController < DashboardController
     fly_buy_params['tin_number'] = fly_buy_params['tin_number'].gsub(/\*/, '') if fly_buy_params['tin_number'].present?
 
     necessary_fly_buy_params = fly_buy_params.except(:email, :address_id, :fingerprint, :bank_name, :name_on_account, :account_num, :company)
-    necessary_fly_buy_params.merge!(
-      synapse_ip_address: request.ip,
-      encrypted_fingerprint: generate_encrypted_fingerprint(fly_buy_params['fingerprint']),
-      user_id: current_user.id,
-      company_email: fly_buy_params['email'],
-      error_details: {}
-    )
+    necessary_fly_buy_params[:synapse_ip_address] = request.ip
+    necessary_fly_buy_params[:encrypted_fingerprint] = generate_encrypted_fingerprint(fly_buy_params['fingerprint'])
+    necessary_fly_buy_params[:company_email] = fly_buy_params['email']
+    necessary_fly_buy_params[:error_details] = {}
 
     if current_user.fly_buy_profile.present?
-      fly_buy_profile = current_user.fly_buy_profile
-      fly_buy_profile.update_attributes(necessary_fly_buy_params)
+      current_user.fly_buy_profile.update_attributes(necessary_fly_buy_params)
     else
-      fly_buy_profile = FlyBuyProfile.create(necessary_fly_buy_params)
+      current_user.create_fly_buy_profile(necessary_fly_buy_params)
     end
 
-    fly_buy_profile
+    current_user.fly_buy_profile
   end
 
   def remove_ssn_tin_data(fly_buy_profile)
