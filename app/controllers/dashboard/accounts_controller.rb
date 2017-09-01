@@ -104,9 +104,9 @@ class Dashboard::AccountsController < DashboardController
       end
 
       bank_account_details = {
-        bank_name: fly_buy_params['bank_name'],
+        bank_name: fly_buy_params['bank_name'].to_s.strip,
         address: fly_buy_params['address'],
-        name_on_account: fly_buy_params['name_on_account'],
+        name_on_account: fly_buy_params['name_on_account'].to_s.strip,
         account_num: fly_buy_params['account_num'].to_s.strip,
         routing_num: fly_buy_params['routing_num'].to_s.strip
       }
