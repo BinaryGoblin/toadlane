@@ -105,8 +105,8 @@ class Dashboard::AccountsController < DashboardController
         bank_name: fly_buy_params['bank_name'],
         address: fly_buy_params['address'],
         name_on_account: fly_buy_params['name_on_account'],
-        account_num: fly_buy_params['account_num'],
-        routing_num: fly_buy_params['routing_num']
+        account_num: fly_buy_params['account_num'].to_s.strip,
+        routing_num: fly_buy_params['routing_num'].to_s.strip
       }
       bank_account_details.merge!(swift: fly_buy_params['additional_information']) if fly_buy_params['additional_information'].present? && fly_buy_profile.outside_the_us?
 
