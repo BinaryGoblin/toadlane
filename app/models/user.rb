@@ -97,6 +97,9 @@ class User < ActiveRecord::Base
   do_not_validate_attachment_file_type :asset
 
   validates :terms_of_service, inclusion: { in: [true, false] }
+  validates :terms_of_service, :acceptance => {:accept => true}
+  validates :Synapsetos, inclusion: { in: [true, false] }
+  validates :Synapsetos, :acceptance => {:accept => true}
   validates :name, presence: true
   validate :validate_phone_number
   validates :tag_list, presence: { message: ': Please let us know what are items you want to buy and sell' }, on: :create
