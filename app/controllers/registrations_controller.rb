@@ -12,6 +12,6 @@ class RegistrationsController < Devise::RegistrationsController
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) << [:terms_of_service, :terms_accepted_at, :email, :name, :password, :password_confirmation, { tag_list: []}]
+    devise_parameter_sanitizer.for(:sign_up) << [:terms_of_service, :terms_accepted_at, :synapsetos, :email, :name, :password, :password_confirmation, { tag_list: []}]
   end
 end

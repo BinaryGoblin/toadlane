@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170807115150) do
+ActiveRecord::Schema.define(version: 20171019212015) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -496,15 +496,14 @@ ActiveRecord::Schema.define(version: 20170807115150) do
   create_table "group_sellers", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "product_id"
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.boolean  "accept_deal"
     t.integer  "group_id"
-    t.boolean  "private_seller",        default: false
-    t.decimal  "additional_seller_fee"
-    t.decimal  "fee"
+    t.boolean  "private_seller", default: false
     t.integer  "role_id"
-    t.boolean  "notified",              default: false
+    t.decimal  "fee"
+    t.boolean  "notified",       default: false
   end
 
   create_table "groups", force: :cascade do |t|
@@ -524,6 +523,8 @@ ActiveRecord::Schema.define(version: 20170807115150) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "listing_id"
+    t.string   "imagable_type"
+    t.integer  "imagable_id"
   end
 
   add_index "images", ["product_id"], name: "index_images_on_product_id", using: :btree
@@ -566,6 +567,8 @@ ActiveRecord::Schema.define(version: 20170807115150) do
     t.integer  "promise_order_id"
     t.integer  "fly_buy_order_id"
     t.datetime "new_requested_date"
+    t.string   "inspectable_type"
+    t.integer  "inspectable_id"
   end
 
   create_table "mailboxer_conversation_opt_outs", force: :cascade do |t|
@@ -636,6 +639,16 @@ ActiveRecord::Schema.define(version: 20170807115150) do
     t.integer  "promise_order_id"
     t.integer  "notifiable_id"
     t.text     "notifiable_type"
+  end
+
+  create_table "offers", force: :cascade do |t|
+    t.integer  "request_id"
+    t.integer  "user_id"
+    t.float    "unit_price"
+    t.integer  "amount"
+    t.string   "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   create_table "pricebreaks", force: :cascade do |t|
@@ -941,6 +954,7 @@ ActiveRecord::Schema.define(version: 20170807115150) do
     t.integer  "invited_by_id"
     t.string   "invited_by_type"
     t.integer  "invitations_count",                default: 0
+    t.boolean  "Synapsetos"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
@@ -977,6 +991,8 @@ ActiveRecord::Schema.define(version: 20170807115150) do
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
     t.integer  "listing_id"
+    t.string   "videoable_type"
+    t.integer  "videoable_id"
   end
 
   create_table "viewed_tasks", force: :cascade do |t|
@@ -987,7 +1003,7 @@ ActiveRecord::Schema.define(version: 20170807115150) do
   end
 
   add_index "viewed_tasks", ["task_id"], name: "index_viewed_tasks_on_task_id", using: :btree
-  add_index "viewed_tasks", ["user_id", "task_id"], name: "viewed_tasks_user_and_task", unique: true, using: :btree
+  add_index "viewed_tasks", ["user_id", "task_id"], name: "index_viewed_tasks_on_user_id_and_task_id", unique: true, using: :btree
   add_index "viewed_tasks", ["user_id"], name: "index_viewed_tasks_on_user_id", using: :btree
 
   add_foreign_key "addresses", "users"
