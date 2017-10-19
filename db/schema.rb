@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171019212015) do
+ActiveRecord::Schema.define(version: 20171019231658) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -420,6 +420,7 @@ ActiveRecord::Schema.define(version: 20171019212015) do
     t.string   "profile_type"
     t.string   "gender"
     t.boolean  "is_old_profile",                  default: false
+    t.boolean  "ssn_agreement"
   end
 
   create_table "folders", force: :cascade do |t|
