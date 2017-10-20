@@ -100,19 +100,17 @@
           = f.label :gender, 'Entity Type:', class: 'required'
           = f.select :gender, user_entity_types, { prompt: 'Please select an Entity Type' }, class: 'form-control', required: true
     .row  
-      .col-md-12
-        .div
-          .p I certify, under penalty of perjury that:
-          .ol
-            .li 1.) The Taxpayer Identification Number or Social Security Number I provided is correct;
-            .li 2.) I am not subject to backup withholding because: (a) I am exempt from backup withholding, or (b) I have not been notified by the Internal Revenue Service (IRS) that I am subject to backup withholding as a result of a failure to report all interest or dividends, or (c) the IRS has notified me that I am no longer subject to backup withholding; and
-            .li 3.) I am a U.S. citizen or other U.S. person; and
-            .li 4.) The FATCA code(s) entered (if any) indicating that I am exempt from FATCA reporting is correct.
-        .p
-        .p The Internal Revenue Service does not require your consent to any provision of this document other than the certifications required to avoid backup withholding.
-        .form-group
-          = f.label :ssn_agreement, 'I certify:', class: 'required'
-          = f.check_box :ssn_agreement, required: true
+      p I certify, under penalty of perjury that:
+      ol
+        li The Taxpayer Identification Number or Social Security Number I provided is correct;
+        li I am not subject to backup withholding because: (a) I am exempt from backup withholding, or (b) I have not been notified by the Internal Revenue Service (IRS) that I am subject to backup withholding as a result of a failure to report all interest or dividends, or (c) the IRS has notified me that I am no longer subject to backup withholding; and
+        li I am a U.S. citizen or other U.S. person; and
+        li The FATCA code(s) entered (if any) indicating that I am exempt from FATCA reporting is correct.
+    p The Internal Revenue Service does not require your consent to any provision of this document other than the certifications required to avoid backup withholding.
+    .form-group
+      .checkbox: label
+        = f.check_box :ssn_agreement, required: true
+        | &nbsp;I certify
     hr
 
 .flybuy-address-block
