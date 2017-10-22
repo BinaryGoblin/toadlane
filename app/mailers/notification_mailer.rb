@@ -20,7 +20,7 @@ class NotificationMailer < ApplicationMailer
     @request = request
     @request_owner = @request.owner
 
-    mail to: @offer.owner.email, subject: "#{@offer.owner.name} offered you #{@offer.name} for #{number_to_currency(@offer.unit_price)}/Unit"
+    mail to: @request.owner.email, subject: "#{@request.owner.name} offered you #{@offer.name} for #{number_to_currency(@offer.unit_price)}/Unit"
   end
 
   def additional_seller_removed_notification_email(product, user, current_user, admins)
