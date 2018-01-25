@@ -52,3 +52,7 @@ Make sure to use `$ foreman start` to run the server and process background jobs
 1. `$ rake db:populate_db_product`
 1. `$ foreman start`
 1. `$ elasticsearch`
+
+## Various Pages
+
+1. Landing Page - \app\views\devise\registrations\new.html.erb
