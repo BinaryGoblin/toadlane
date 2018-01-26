@@ -16,9 +16,24 @@ class StaticPagesController < ApplicationController
   def toadlane_trust
   end
   
-  def faque
+  def about
   end
 
+  def solution
+  end
+  
+  def how
+  end
+  
+  def buyers
+  end
+  
+  def sellers
+  end
+  
+  def wholesale
+  end
+  
   def home
     if current_user
       redirect_to products_path

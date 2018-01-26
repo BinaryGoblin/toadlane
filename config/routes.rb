@@ -41,7 +41,12 @@ Toad::Application.routes.draw do
   get 'fly' => 'static_pages#escrow_faq', as: :escrow_faq
   get 'trust' => 'static_pages#toadlane_trust', as: :toadlane_trust
   get 'faq' => 'static_pages#faq', as: :faq
-  get 'faque' => 'static_pages#faque', as: :faque
+  get 'About Us' => 'static_pages#about', as: :about
+  get 'Solution' => 'static_pages#solution', as: :solution
+  get 'How It Works' => 'static_pages#how', as: :how
+  get 'Buyers' => 'static_pages#buyers', as: :buyers
+  get 'Sellers' => 'static_pages#sellers', as: :sellers
+  get 'Wholesale' => 'static_pages#wholesale', as: :wholesale
   get 'terms_of_service' => 'static_pages#terms_of_service'
   get 'pay' => 'static_pages#pay'
   get 'account_deactivated' => 'static_pages#account_deactivated'
