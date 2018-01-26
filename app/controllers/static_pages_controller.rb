@@ -15,8 +15,6 @@ class StaticPagesController < ApplicationController
 
   def toadlane_trust
   end
-  def faque
-  end
 
   def home
     if current_user
