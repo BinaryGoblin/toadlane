@@ -1,0 +1,44 @@
+doctype html
+html
+  head
+    meta name="google-site-verification" content="WEP_TeKUjhxNOVnpHBwR51hdRTETJavyy-co5Xk_VG4"
+    title Toadlane
+    meta charset="utf-8"
+    meta http-equiv="X-UA-Compatible" content="IE=edge"
+    meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"
+    meta name="keywords" content=""
+    meta name="description" content=""
+    meta name="google-site-verification" content="cIwuaMOr9UNAguTJwHKlX_JFlfUJRUH6VQq8Ro-NzYo"
+    script[type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/1.4.1/fingerprint2.min.js"]
+    = stylesheet_link_tag 'toad', :media => 'all'
+    = javascript_include_tag 'toad'
+    = csrf_meta_tags
+
+  body
+    / - if flash[:alert]
+      .main-alert data-behavior="FlashMessages"= flash[:alert].upcase
+    / - elsif flash[:notice]
+      .main-notice data-behavior="FlashMessages"= flash[:notice].upcase
+
+    = render '/shared/header'
+    = render '/shared/flash_message'
+    / .find-and-explore
+    /   .wrap
+    /     .fe-search
+    /
+    /       = form_tag search_path, method: :get, id: "search_form" do
+    /
+    /         = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, all_category.try(:id) || params[:cat_id] ), class: 'fe-categories', data: { behavior: 'CustomSelect' }
+    /
+    /         = submit_tag 'Find now', class: 'btn btn-warning fe-btn'
+    /
+    /         = hidden_field_tag 'count', '16'
+
+
+            - if @related_searches.present?
+                - unless @related_searches.count == 1 && @related_searches.last["normalized_query"] == params[:query]
+                    = render partial: "/shared/related_searches", locals: { related_searches: @related_searches, query: params[:query] }
+    .main-container.mobile-main-container
+      == yield
+
+    = render '/shared/footer'

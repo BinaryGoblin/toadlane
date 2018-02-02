@@ -1,0 +1,25 @@
+$("#thread_<%= @thread.id %>_new_comment_form_div").html("<%= escape_javascript(
+  render :partial => 'form',
+         :locals => { :comment => @comment,
+                      :thread => @thread,
+                      :per_page => @per_page }) %>");
+
+$("#thread_<%= @thread.id %>_new_comment_form_div").fadeIn()[0].scrollIntoView();
+
+$("#thread_<%= @thread.id %>_new_comment_link_div").hide();
+
+var last_comment_block, last_comment_block_id;
+
+if ($('.comment-block').find('.comment').length > 0) {
+  last_comment_block = $('.comment-block').find('.comment:last');
+  last_comment_block_id = last_comment_block.attr('id');
+  $("body").animate({
+    scrollTop: $('#' + last_comment_block_id).position().top + 83
+  }, 'fast');
+} else {
+  $("body").animate({
+    scrollTop: $(".comment-block").position().top
+  }, 'fast');
+}
+
+<%= javascript_proc %>

@@ -1,0 +1,98 @@
+= form_for(amg_order, remote: true) do |f|
+  -if user && !user.addresses.nil?
+    table.table data-behavior="assignShippingAddress"
+      thead
+        tr
+          th shipping address
+      tbody
+        - amg_shipping_addresses = Address.where(:user => user).order('created_at')
+        = f.collection_radio_buttons(:address_id, amg_shipping_addresses, :id, :get_inline_address) do |b|
+          tr
+            td
+              = b.label { b.radio_button(:"data-behavior" => "AssignShipping", :"checked" => (b.object.id == amg_shipping_addresses.first.id)) + b.text }
+        tr
+          td
+            = radio_button 'amg_order', :address_id, "-1", default: true, 'data-behavior' => "AssignShipping", id: 'amg_order_address_id__1'
+            = label :address_id, " Enter new address", for: 'amg_order_address_id__1'
+  table.table
+    - if !product.shipping_estimates.nil?
+      thead
+        tr
+          th shipping method
+      tbody
+        - amg_shipping_estimates = ShippingEstimate.where(:product => product).order('created_at')
+        = f.collection_radio_buttons(:shipping_estimate_id, amg_shipping_estimates, :id, :get_label) do |b|
+          tr
+            td
+              = b.label { b.radio_button(:"data-behavior" => "EstimateShipping", :"data-cost" => b.object.cost, :"data-type" => b.object.type, :"checked" => (b.object.id == amg_shipping_estimates.first.id)) + b.text }
+  .amgDetails.form-horizontal
+    .form-group
+      = f.label :first_name, 'First Name *', class: 'control-label col-sm-4'
+      .col-sm-8
+        = f.text_field :first_name, class: 'form-control', :value => "#{user.try(:name).try(:split, " ").try(:first)}", required: true
+    .form-group
+      = f.label :last_name, 'Last Name *', class: 'control-label col-sm-4'
+      .col-sm-8
+        = f.text_field :last_name, class: 'form-control', :value => "#{user.try(:name).try(:split, " ").try(:last)}", required: true
+    - amg_address = user.try(:addresses).try(:last)
+    - f.object.address_country = amg_address.try(:country)
+    .form-group
+      = f.label :address_country, "Country *", class: "control-label col-sm-4"
+      .col-sm-8
+        = f.select :address_country, region_options_for_select(only_us_and_canada, f.object.address_country), {prompt: 'Please select a country'}, class: 'form-control', required: true
+    .form-group
+      = f.label :address_state, "State *", class: "control-label col-sm-4"
+      .col-sm-8
+        = render partial: 'products/subregion_select', locals: {parent_region: f.object.address_country, user_state: get_state(amg_address.try(:state)), parent_object_sym: "amg_order"}
+    .form-group
+      = f.label :address_city, 'City *', class: 'control-label col-sm-4'
+      .col-sm-8
+        = f.text_field :address_city, class: 'form-control', :value => "#{amg_address.try(:city)}", required: true
+    .form-group
+      = f.label :address_zip, 'Zip *', class: 'control-label col-sm-4'
+      .col-sm-8
+        = f.text_field :address_zip, class: 'form-control', :value => "#{amg_address.try(:zip)}", required: true
+    .form-group
+      = f.label :address1, 'Address1 *', class: 'control-label col-sm-4'
+      .col-sm-8
+        = f.text_field :address1, class: 'form-control', :value => "#{amg_address.try(:line1)}", required: true
+    .form-group
+      = label_tag 'billing-cc-number', 'Billing CC Number: *', class: 'control-label col-sm-4'
+      .col-sm-8
+        = text_field_tag 'billing-cc-number', nil, class: 'form-control', required: true
+    .form-group
+      = label_tag 'billing-cc-exp', 'Billing CC Exp: *', class: 'control-label col-sm-4'
+      .col-sm-8
+        = text_field_tag 'billing-cc-exp', nil, class: 'form-control', required: true
+        p.help-block Your CC Expiry date in the format MMYY, MM/YY or MM-YY.
+    .form-group
+      = label_tag 'billing-cvv', 'Billing CVV:', class: 'control-label col-sm-4'
+      .col-sm-8
+        = text_field_tag 'billing-cvv', nil, class: 'form-control'
+  .payment-button.text-right
+    = f.hidden_field :product_id, :value => product.id
+    = f.hidden_field :unit_price, :value => number_with_precision(product.unit_price, precision: 2, delimiter: '')
+    = f.hidden_field :total, :value => number_with_precision(product.unit_price, precision: 2, delimiter: '')
+    = f.hidden_field :count, :value => data[:quantity], class: 'calc-quantity'
+    = f.hidden_field :summary, :value => 'products to ' + product.status_characteristic
+    = f.hidden_field :description, :value => strip_tags(product.description)
+
+    = f.hidden_field :fee, :value => '0'
+    = f.hidden_field :rebate, :value => '0'
+    = f.hidden_field :rebate_percent, :value => '0'
+    = f.hidden_field :shipping_cost, :value => '0'
+
+    - if user
+      - if product.status_characteristic == 'sell'
+        = f.hidden_field :seller_id, :value => product.user.id
+        = f.hidden_field :buyer_id, :value => user.id || 0
+
+        button.btn.btn-default type="button" data-dismiss="modal" Cancel
+
+        = f.submit 'Checkout', class: "btn btn-primary"
+
+      - else
+        = f.hidden_field :seller_id, value: user.id
+        = f.hidden_field :buyer_id, value: product.user.id
+
+        = f.submit 'Checkout', class: "btn btn-primary"

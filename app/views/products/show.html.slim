@@ -1,0 +1,322 @@
+= render '/shared/tabs'
+
+.view-product
+
+  .complete-profile-error
+    = display_error_message
+  .clearfix
+
+  .actions-panel-product.wrap-sm
+    h1= @product.name
+    - if all_categories_of_product(@product.id).present?
+      h4
+        span Categories:
+        = all_categories_of_product @product.id
+  .clearfix
+
+  .wrap-sm.product-show-block
+    .row
+      .col-md-7
+        - if @product.amount.present?
+          - if @product.status_characteristic == 'sell'
+            - sold_out = (@product.sold_out.present? ? @product.sold_out : 0)
+            - available = @product.amount - sold_out
+            - maxoptions = ',"max":' + available.to_s
+            - minimum_order_quantity = @product.minimum_order_quantity
+          - else
+            - purchased = (@product.sold_out.present? ? @product.sold_out : 0)
+            - desired = @product.amount - purchased
+            - maxoptions = ',"max":' + desired.to_s
+        .vp-left-col
+          - if @product.images.any?
+            #slider.vp-carousel.carousel.slide data-ride="carousel"
+              ol.carousel-indicators
+                - if @product.images.count > 1
+                  - @product.images.each_with_index do |item, index|
+                    li class="#{'active' if index == 0}" data-target="#slider" data-slide-to="#{index}"
+
+              .carousel-inner
+                - @product.images.each_with_index do |item, index|
+                  .item class="#{'active' if index == 0}"= image_tag item.image(:big)
+
+              - if @product.images.count > 1
+                a.left.carousel-control href="#slider" role="button" data-slide="prev"
+                a.right.carousel-control href="#slider" role="button" data-slide="next"
+
+          - if @product.description.present?
+            .white-panel= simple_format @product.description
+
+    	  .white-panel.vp-calculation data-behavior="CalculationProduct" data-options='{"pricebreaks":#{@product.pricebreaks.collect { |p| { quantity: (p.quantity - 1), price: p.price } }.to_json},"maxquantity":#{available.present? ? available.to_s : '"Infinity"'}}'
+
+            - if @product.status_characteristic == 'sell'
+              .progress: i style="width:#{100-((sold_out/@product.amount)*100)}%"
+            - else
+              .progress: i style="width:#{100-((desired/@product.amount)*100)}%"
+
+    		- if @product.status_characteristic == 'sell'
+              -if available < minimum_order_quantity
+                .sold_out Out of Stock
+              - else
+                table.sale-summary: tr
+                  td
+                    span For sale:
+                    b= @product.amount
+                  td
+                    span Sold:
+                    b= sold_out
+                  td
+                    span Available to buy:
+                    b.text-green= available
+            - else
+              table.sale-summary: tr
+                td
+                  span Total Sought:
+                  b= @product.amount
+                td
+                  span Units Purchased:
+                  b= purchased
+                td
+                  span Units Still Desired:
+                  b.text-orange= desired;
+
+            hr
+            .white-panel.wp-table
+              - if @product.pricebreaks.any?
+                .vp-title Pricebreaks:
+                - if @product.status_characteristic == 'sell'
+                  = pricebreak_table @product.pricebreaks, @product.unit_price, available
+                - else
+                  = pricebreak_table @product.pricebreaks, @product.unit_price, desired
+            .quantity
+              .pull-left
+                span.text-left Quantity:
+                .form-control-number data-behavior="FieldQuantity" data-options='{"min":1#{maxoptions}}'
+                  input.calc-quantity.form-control.text-center type="text" value="#{minimum_order_quantity}"
+                = hidden_field_tag 'minimum_order_quantity', minimum_order_quantity
+                - if minimum_order_quantity > 1
+                  span.min_order_note
+                    | *Minimum order: &nbsp;
+                    b = minimum_order_quantity
+                    | &nbsp;units
+
+              .pull-right
+                span.text-right Totals:
+                .price data-unit-price="#{number_with_precision(@product.unit_price, precision: 2, delimiter: '')}"
+                  span.strike #{number_to_currency(@product.unit_price, :unit => "$", precision: 2)}/Unit
+
+            ul
+              li
+                b Subtotal
+                b.pull-right.subTotal 0.00
+
+              li
+                span <span class="calc-rebate">0.00</span>% rebate for purchasing <span class="calc-pcs">0</span> pcs:
+                b.pull-right.calc-rebate-price 0.00
+
+              li
+                span.toadlane-fee data-fees="#{@fee}" Toadlane Fee:
+                b.pull-right.calc-fees-price 0.00
+
+              - if @product.default_payment_flybuy?
+                li.hide
+                  span.fly-by-fee data-fees-fly-buy-over-million="#{Fee::FLY_BUY[:over_million]}" data-fees-fly-buy-under-million="#{Fee::FLY_BUY[:under_million]}" Fly & Buy Fee:
+
+                  b.pull-right.calc-fees-fly-buy-price 0.00
+
+              li
+                span Shipping Estimate ($<span class="calc-shipping" data-type="#{@product.shipping_estimate_type}">#{@product.shipping_rate}</span>/unit):
+                b.pull-right.calc-shipping-price 0.00
+              - if @product.default_payment_flybuy?
+                li
+                  span
+                    = check_box_tag :inspection_service, 'yes', nil, class: 'inspection_service', data: { behavior: 'optInInspectionService' }
+                    label for = 'inspection_service' &nbsp; Would you like to send a Toadlane Agent to inspect this?
+                  div#inspection_service_block.hide
+                    label How many do you want inspected?
+                    br
+                    = select_tag 'number_of_items_to_inspect', options_for_select(percentage_value_for_inspection), class: 'form-control select-inspect-percentage',  data: { behavior: "inspectionServicePercentageField" }
+                    span.item-count
+                    = text_field_tag :inspection_service_comment, nil, class: 'form-control inspect-service-comment', placeholder: 'Additional comments'
+                    b.pull-right 0.00
+                    span.clearfix
+                    br
+              hr
+              - if @product.status_characteristic == 'sell'
+                li.text-green
+                  b Cart Subtotal:
+                  b.pull-right.calc-cart 0.00
+              - else
+                li.text-orange
+                  b Cart Subtotal
+                  b.pull-right.calc-cart 0.00
+              - if @product.default_payment_same_day?
+                br
+                = text_field_tag :inspection_service_comment, nil, class: 'form-control inspect-service-comment', placeholder: 'What terms need to be met before you release funds?'
+          - if @product.default_payment_flybuy?
+            .warning.note Note: All inspections include live video testing at suppliers warehouse, a video report, and detailed involvement with the buyer. Additional travel fees may apply. For larger transactions additional travel fees are usually waived. We will be intouch with you immediately to confirm costs before inspection takes place.
+
+          .white-panel.wp-table
+            - if current_user.present?
+              -if @product.status_characteristic == 'sell'
+                - unless available < minimum_order_quantity
+                  - if strip_tags(time_left(@product.end_date)) == 'Time ended'
+                    .wrong.text-center
+                      | The Time allocated by seller has ended for this product.
+                  - else
+                    = render partial: 'products/shared/product_checkout_form',
+                        locals: { product: @product, fly_buy_order: @fly_buy_order,
+                                  user: current_user }
+                end
+              -else
+                .text-center= link_to 'Make Sale', '#', class: 'btn btn-success-sell btn-lg checkout', data: {  toggle: 'modal', target: '#stripe_form_checkout'  }
+            - else
+              .wrong.text-center
+                | Please&nbsp;
+                = link_to "sign in", new_user_session_path
+                | &nbsp;to place an order.
+        .comment-block
+          = commontator_thread(@product)
+      .col-md-5
+        .vp-right-col
+          .time-left
+            h3 time left:
+            = time_left @product.end_date
+            .product-end-date-countdown data-countdown="#{@product.end_date.utc}"
+
+          .vp-seller: .white-panel
+            - if @product.status_characteristic == 'sell'
+              .vp-title Seller
+            - else
+              .vp-title Buyer
+            table: tr
+              td
+                .img= image_tag @product.user.asset(:small) if @product.user.asset?
+                / .rating
+                /   | Rating:
+                /   div
+                /     span.star
+                /     span.star
+                /     span.star.active
+                /     span.star
+                /     span.star
+              td
+                .status.text-uppercase
+                  - if @product.owner_default_payment_verified?
+                    b Status:&nbsp;
+                    span.text-green
+                      b = show_account_status(@product)
+                  - else
+                    b Status:&nbsp;
+                    span.text-red
+                      |
+                        Unverified
+
+                .name
+                  - if is_a_group_product? @product
+                    b= @product.group.name
+                    span
+                      - @product.group.group_sellers.each do |gs|
+                        |  #{gs.user.name},
+                      br
+                      b Private Members: #{@product.group.group_sellers.private_members.count}
+                  - else
+                    b= @product.user.name
+                    - if !@product.user.addresses[0].nil?
+                      span = @product.user.addresses[0].country
+
+                .user_accounts
+                  p
+                    b PAYMENT METHOD:
+                    br
+                    - if @product.default_payment_green?
+                      span.label.label-green
+                        | Echeck
+                    - elsif @product.default_payment_stripe?
+                      span.label.label-blue
+                        | Stripe
+                    - elsif @product.default_payment_amg?
+                      span.label.label-dark-blue
+                        | AMG
+                    - elsif @product.default_payment_emb?
+                      span.label.label-dark-blue
+                        | EMB
+                    - elsif @product.default_payment_flybuy?
+                      span.label.label-orange
+                        | Fly & Buy
+                    - elsif @product.default_payment_same_day?
+                      span.label.label-orange
+                        | Same Day
+                    - else
+                        | Payment option has not been selected by the seller for this product.
+                  - if current_user == @product.user
+                    | You can now choose a payment method for a product
+                - unless is_a_group_product? @product
+                  .sell
+                    b I BUY AND SELL:
+                    .sell-list= @product.user.tag_list.reject{ |e| e.empty? }.join(', ')
+
+                - if @product.user.facebook.present?
+                  .fb-link= link_to 'Facebook profile', @product.user.facebook, class: 'link link-ulined link-sm text-uppercase', target: '_blank'
+
+            - unless current_user == @product.user
+              a.vp-title href="#" data-toggle="modal" data-target="#form_message" Send a message <i class="fa fa-plus-square pull-right"></i>
+
+          .white-panel.vp-share
+            b.text-uppercase Share:
+            .addthis_sharing_toolbox
+            = javascript_include_tag '//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51a8787656fab455'
+
+          - if @product.certificates.present?
+            .white-panel.certificates-panel
+              .vp-title
+                | Product Information
+              .list-group
+                - @product.certificates.each do |certificate|
+                  = link_to "#{certificate.filename}", get_certificate_products_path(certificate.id), class: 'list-group-item'
+
+          - if @product.videos.any?
+            .white-panel.certificates-panel
+              .vp-title
+                | Product Video
+            - @product.videos.each do |video|
+              = video_tag video.video.url(:medium), controls: true, type: "video/mp4", width: "100%"
+      .clearfix
+  .clearfix
+  - if @related_products.any?
+    .wrap.wrap-sm
+      -if @product.status_characteristic == 'sell'
+        .carousel-product-title: h3 Related products
+      -else
+        .carousel-product-title-sell: h3 Related products
+
+      #related_products.product-carousel.slide
+        ul.bxslider[style='transform: translate3d(-41px, 0px, 0px);']
+          - @related_products.each do |product|
+            li
+              = render partial: '/shared/product', locals: { product: product }
+    .clearfix
+    .wrap-sm.text-center= link_to 'See all related products', '#', class: 'btn btn-success'
+    .clearfix
+
+= render partial: 'modals', locals: { product: @product }
+
+= render partial: 'products/shared/set_inspection_date_by_buyer',
+    :locals => { product: @product, data: @data, fly_buy_order: @fly_buy_order }
+
+- if params[:fly_buy_order_id].present? && params[:buyer_request_inspection_date] == "true"
+  = render partial: 'set_inspection_date_by_seller',
+      locals: { product: @product, fly_buy_order: @fly_buy_order }
+
+javascript:
+  $(function(){
+    $('[data-countdown]').each(function() {
+      var $this = $(this), finalDate = $(this).data('countdown');
+      $this.countdown(finalDate, function(event) {
+        $(this).parent().find('.days').find('span:nth-child(1)').text(event.strftime('%D'))
+        $(this).parent().find('.hours').find('span:nth-child(1)').text(event.strftime('%H'))
+        $(this).parent().find('.min').find('span:nth-child(1)').text(event.strftime('%M'))
+        $(this).parent().find('.sec').find('span:nth-child(1)').text(event.strftime('%S'))
+        //$this.html(event.strftime('%D days %H hours %M min %S sec'));
+      });
+    });
+  });

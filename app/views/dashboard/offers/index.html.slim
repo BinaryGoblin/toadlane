@@ -1,0 +1,55 @@
+= render '/shared/tabs'
+
+.wrap-sm
+  h4 My offers:
+  .table-options
+
+    / .selected-labels
+      span Selected:
+      = link_to 'Delete', delete_cascade_dashboard_products_path, method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'label label-red'
+      = link_to 'Active', active_cascade_dashboard_products_path, method: :post, remote: true, data: { confirm: 'Are you sure?' }, class: 'label label-green'
+      = link_to 'Inactive', inactive_cascade_dashboard_products_path, method: :post, remote: true, data: { confirm: 'Are you sure?' }, class: 'label label-orange'
+
+  .table-responsive
+    table.table.products-table data-behavior="TableCheckbox"
+      thead
+        tr
+          th: input type="checkbox"
+          th Status:
+          th name:
+          th target price:
+          th Target quantity:
+          th your price:
+          th your quantity:
+          th
+
+      tbody
+        - @offers.each do |offer|
+          tr
+            td: input type="checkbox" value="#{offer.id}"
+            td
+              - if offer.status
+                .text-green Active
+              - else
+                .text-orange Inactive
+
+            td
+              = link_to offer.request.name, dashboard_request_path(offer.request), class: 'link link-ulined'
+            td= number_to_currency(offer.request.unit_price, :unit => "$", precision: 2)
+            td= offer.request.amount
+            td= number_to_currency(offer.unit_price, :unit => "$", precision: 2)
+            td= offer.amount
+            td
+              = link_to 'View', dashboard_offer_path(offer), class: 'view'
+              |  |
+              = link_to 'Edit', edit_dashboard_offer_path(offer), class: 'view'
+              / |  |
+              / = link_to 'Delete', dashboard_offer_path(offer), method: :delete, data: { confirm: 'Are you sure?' }, class: 'view view-red'
+
+
+.footer-actions: .fa-container: .wrap-sm
+  .show-all
+    - unless params[:count].present? || @offers_count < 20
+      = link_to 'Show all', dashboard_offers_path(count: @offers_count), class: 'link link-ulined'
+
+  = will_paginate @offers

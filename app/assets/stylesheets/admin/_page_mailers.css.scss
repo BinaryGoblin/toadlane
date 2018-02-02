@@ -1,0 +1,84 @@
+.mailers {
+  > .fa {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -20px 0 0 -20px;
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+    color: #cccfd3;
+    text-align: center;
+  }
+
+  a {
+    font-size: 16px;
+  }
+
+  h3 {
+    line-height: 1;
+    font-size: 28px;
+    text-align: center;
+    color: #cccfd3;
+    text-transform: uppercase;
+    margin-top: 30px;
+    margin-bottom: 1  0px;
+    padding: 10px 0;
+    text-shadow: 0 0 1px white;
+  }
+
+  ul.list-container {
+    list-style: none;
+    margin: 0 20px 20px;
+    padding: 0;
+    overflow-y: scroll;
+    max-height: 400px;
+  }
+  
+  li {
+    @include clearfix;
+    @include transition(.2s);
+
+    &:hover {
+      background: white;
+    }
+  }
+
+  label {
+    padding: 8px 2px 6px 10px;
+    display: block;
+  }
+
+  .mtitle-users {
+    margin-top: 30px;
+    right: 0;
+  }
+
+  .icheckbox {
+    float: left;
+    margin-right: 10px;
+  }
+
+  .price {
+    margin: -6px 0 0 15px;
+  }
+}
+
+.mailers-product {
+  left: 0%;
+
+  .name {
+    overflow: hidden;
+    @include text-overflow;
+  }
+}
+      
+.mailers-users {
+  right: 0%;
+
+  .name {
+    font-size: 14px;
+    overflow: hidden;
+    @include text-overflow;
+  }
+}

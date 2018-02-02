@@ -1,0 +1,64 @@
+= render '/shared/tabs'
+
+.wrap-sm
+  - if flash[:error].present?
+    .error-explanation.text-center
+      - if flash[:error].kind_of?(Array)
+        - flash[:error].each do |error|
+          = error
+      - else
+        = flash[:error].scan(/[a-zA-Z0-9]+/).join(' ')
+  - elsif flash[:account_error].present?
+    .error-explanation.text-center
+      - if flash[:account_error] == 'You must complete your profile before you can create a bank account.'
+        | You must complete your&nbsp;
+        = link_to 'profile', dashboard_profile_path, class: 'view'
+        | &nbsp;to add bank account.
+      - else
+        = flash[:account_error]
+        | &nbsp;
+        - if flash[:account_error].include? 'company name'
+          = link_to 'Click Here To Edit', dashboard_profile_path(req_company: true), class: 'view'
+        - else
+          = link_to 'Click Here To Edit', dashboard_profile_path(req_name: true), class: 'view'
+  - if @fly_buy_profile.present? && @fly_buy_profile.error_details.present?
+    .error-explanation.text-center
+      - if @fly_buy_profile.error_details['en'].present?
+        = @fly_buy_profile.error_details['en']
+
+  .row.account-table
+    .col-md-3
+      h4 Connected<br />Accounts:
+    .col-md-9
+      .row.account-list-table
+        .col-md-8
+          = render partial: 'dashboard/accounts/accounts_partials/fly_buy_account_create_partial', locals: { user: @user, fly_buy_profile: @fly_buy_profile }
+      /***Stripe payment removed***
+      / hr
+      / .row.account-list-table
+      /   = render partial: 'dashboard/accounts/accounts_partials/stripe_payment',
+      /             :locals => { :user => @user }
+
+      hr
+      .row.account-list-table
+        .col-md-8
+          = render partial: 'dashboard/accounts/accounts_partials/green_payment',
+                    :locals => { :green_profile => @green_profile }
+
+      hr
+      .row.account-list-table
+        .col-md-8
+          = render partial: 'dashboard/accounts/accounts_partials/amg_payment',
+                    :locals => {  :user => @user,
+                                  :amg_profile => @amg_profile}
+
+      hr
+      .row.account-list-table
+        .col-md-8
+          = render partial: 'dashboard/accounts/accounts_partials/emb_payment',
+                    :locals => {  :user => @user,
+                                  :emb_profile => @emb_profile}
+
+      hr
+
+.clearfix

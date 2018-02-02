@@ -1,0 +1,86 @@
+= render '/shared/tabs'
+
+.view-product
+  .wrap-sm.request-show-block
+    .col-md-7
+      .row.text-uppercase
+        .col-md-6.pull-left
+          .name
+            h3
+              b #{@request.owner.name}
+              span.flag-icon.flag-icon-us title=("US") &nbsp;
+          .status.text-uppercase.pull-left
+            b Status:&nbsp;
+            - if @request.owner.has_payment_account?
+              span.text-green Verified
+            - else
+              - if current_user == @request.owner
+                span
+                  = link_to 'Unverified', dashboard_accounts_path, class: 'text-red'
+              - else
+                span.text-red Unverified
+        .col-md-6.pull-left
+          - unless current_user == @request.owner
+            = link_to 'Place your Offer', new_dashboard_offer_path(request_id: @request.id), class: 'btn btn-primary'
+      .row.request-name.text-uppercase
+        h1
+          | #{@request.name}
+        h3
+          span Categories: &nbsp;
+          = all_categories_of_product @request.id
+        h3
+          | Tags: &nbsp;
+          = all_tags_of_product @request.id
+      .white-panel
+        h3 Description:
+        p #{@request.description}
+      .row.request-info
+        .col-md-6.pull-left
+          h2 Request Price: #{@request.unit_price}/Unit
+        .col-md-6.pull-left
+          h2 Request Quantity: #{@request.amount}
+    .col-md-5
+  .wrap-sm.offers#request-offers
+    .col-md-12
+      h1.text-uppercase
+        | Offers(#{@request.offers.count})
+
+    - @offers.each do|offer|
+      .col-md-6
+        .green_border
+          .pull-left.seller-img
+            img alt=("Toadlane Logo") src="https://www.toadlane.com/assets/product-missing-09ff685e51c99351a07e5332f0996ef2.png" /
+          .pull-left.seller-info
+            .name
+              b #{offer.owner.name}&nbsp;
+              span.flag-icon.flag-icon-us title=("US") &nbsp;
+            .status.text-uppercase
+              b Status:&nbsp;
+              / span.text-green Verified
+              - if offer.owner_default_payment_verified?
+                span.text-green
+                  | Verified
+              - else
+                span.text-red
+                  | Unverified
+            div
+              b PAYMENT METHOD:
+              br
+              = offer_payment_mode(offer)
+          .offer-info.text-uppercase
+            .amount-price.pull-left
+              b offer price:
+              | &nbsp; #{offer.unit_price}/unit
+            .amount-price.pull-left
+              b Quantity:
+              | &nbsp; #{offer.amount}
+            -if offer.remaining_amount > 0
+              .place-order.pull-left
+                - if @request.owner == current_user
+                  = link_to 'View Offer', dashboard_offer_path(offer), class: 'btn btn-primary'
+            - else
+              .offer_sold_out Sold
+          .clearfix
+
+
+

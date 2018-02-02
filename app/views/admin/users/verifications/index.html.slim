@@ -1,0 +1,40 @@
+= render 'admin/users/tabs'
+
+.wrap-sm
+  .table-responsive
+    table.table
+      thead
+        tr
+          th ID
+          th Name
+          th Company
+          th Email
+          th Certificate
+          th.text-center Verified
+          th
+
+      tbody
+        - @users.each do |user|
+          tr
+            td = user.id
+            td = user.name
+            td = user.company
+            td = user.email	
+            td = link_to 'Get certificate', get_certificate_admin_users_verification_path(user.id) if user.certificate.present?
+            - if user.is_reseller
+              td.text-center: span.label.label-green Yes
+              td.text-right= link_to 'Unverify', admin_users_verification_path(user), method: :delete, data: { confirm: 'Are you sure?' }, class: 'view view-red'
+            - else
+              td.text-center: span.label.label-red No
+              - if user.certificate.present?
+                td.text-right= link_to 'Verify', admin_users_verification_path(user), method: :put, data: { confirm: 'Are you sure?' }, class: 'view'
+              - else
+                td.text-right No certificate
+              
+.footer-actions: .fa-container: .wrap-sm
+  .show_all style="font-size:14px;padding-top:8px"
+    | #{@users.count} Users 
+    - unless params[:count].present? || @users.count < 20
+      = link_to 'Show all', admin_users_verifications_path(count: @users.count), class: 'link link-ulined'
+
+  = will_paginate @users

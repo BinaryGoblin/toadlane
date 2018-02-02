@@ -1,0 +1,13 @@
+.related_searches{
+  padding: 20px 0 0 221px;
+  h4{
+    display: inline-block;
+  }
+  a{
+    margin-left: 10px;
+    display: inline-block;
+    &:hover{
+      text-decoration: underline;
+    }
+  }
+}

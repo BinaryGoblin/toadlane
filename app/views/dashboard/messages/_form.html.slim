@@ -1,0 +1,12 @@
+= form_tag reply_dashboard_message_path(conversation, :user_id => other_user_id) do
+  = hidden_field :conversation, 'subject', value: conversation.subject
+  = hidden_field :conversation, 'conversation', value: conversation
+
+  .form-group
+    = label_tag 'body', 'Body:'
+    = text_area_tag 'conversation[body]', '', class: 'form-control'
+
+  .form-group
+    = button_tag :submit, data: { disable_with: 'Please wait...' }, class: 'btn btn-primary'
+
+  br

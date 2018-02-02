@@ -1,0 +1,38 @@
+*,
+*:before,
+*:after {
+  @include box-sizing(border-box);
+}
+
+:focus {
+  outline: 0 !important;
+}
+
+html {
+  height: 100%;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100%;
+  color: #060506;
+  background: #f4f6f8;
+  position: relative;
+  /*padding-bottom: $footer-height;*/
+  font-family: 'PT Sans', sans-serif;
+}
+
+a {
+  color: #1e8dcc;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+hr {
+  border: none;
+  border-top: 1px dashed #aeb5c1;
+  margin: 30px 0;
+}

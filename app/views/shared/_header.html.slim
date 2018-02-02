@@ -1,0 +1,99 @@
+- if signed_in?
+  - logo_path = image_tag('forg.png')
+  - div_class_name = 'logo-div'
+  - path = products_path
+- else
+  - logo_path =image_tag('newLogo.png')
+  - div_class_name = 'public-page-logo-div'
+  - path = '/'
+header.header.navbar.navbar-default.navbar-fixed-top
+  .find-and-explore
+    div class=div_class_name
+      =link_to logo_path, path, class: 'logoSideNav'
+
+    - if current_user
+
+      .fe-search
+
+        = form_tag search_path, method: :get, id: "search_form" do
+
+          / = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, all_category.try(:id) || params[:cat_id] ), class: 'fe-categories', data: { behavior: 'CustomSelect' }
+
+          / = submit_tag '<i class="fa fa-search" aria-hidden="true"></i>'
+          = button_tag(type: "submit", class: "btn-search") do
+            <i class="fa fa-search" aria-hidden="true"></i>
+          /
+          = hidden_field_tag 'count', '16'
+
+          .query-container
+              = text_field_tag :query, params[:query], placeholder: 'Search Toadlane'
+
+      .header-user.pull-left
+        = link_to 'Request', new_dashboard_request_path, class: 'requestBtn'
+        = link_to 'Sell', new_dashboard_product_path, class: 'sellBtn'
+
+        = link_to '<i class="fa fa-home" aria-hidden="true"></i>'.html_safe, products_path, class: 'headerIcons'
+
+        = link_to fa_icon('comment', text: get_user_unread_message_count), dashboard_messages_path, class: 'headerIcons messageNotification'
+
+        = link_to fa_icon('bell', text: get_user_unread_notification_count), dashboard_notifications_path, class: 'headerIcons otherNotification'
+
+        a href="#" class="peopleInviteIcon"
+          img  alt="Invite people" src="/assets/peopleInvite.png"/
+          = get_user_group_invitation_count
+
+        .InvitePpl
+          =link_to fa_icon('caret-up', text: ""),'' , class: 'topArrowIcon'
+
+          ul#invitePplList
+            li.headingList
+              span.createGroupHeading Pending Invitations
+              .create-group-wrapper
+                = link_to 'Create Group', new_dashboard_group_path, class: 'createGroupBtn'
+              .clearfix
+            .clearfix
+
+            - get_user_group_invitation.each do |gsinv|
+              - if gsinv.group.present?
+                li
+                  .userPic
+                    - product = gsinv.group.product
+                    - if product.images.present? && product.images.first.image(:small).present?
+                      = image_tag get_image(product.images.first.image(:small)), :class => "notification-image"
+                    - else
+                      img[src="https://www.toadlane.com/assets/product-missing-09ff685e51c99351a07e5332f0996ef2.png"]
+
+                  .userDetails
+                    .userName
+                      = link_to gsinv.group.name, dashboard_group_path(gsinv.group)
+                    .userdetails Interested to be a part of the deal
+                  .userAction
+                    = link_to 'Accept', accept_deal_dashboard_groups_url(product_id: product.id, group_seller_id: gsinv.id), class: 'acceptBtn'
+                    = link_to 'Decline', reject_deal_dashboard_groups_url(product_id: product.id, group_seller_id: gsinv.id), class: 'DeclineBtn'
+
+            .clearfix
+            .go-to-groups-page= link_to fa_icon('users', text: 'Go to group page'),  dashboard_groups_path, is: 'groups'
+
+        img.logoutIcon  alt="Logout" src="/assets/logout.png"/
+
+        .logOutOptions
+          =link_to fa_icon('caret-up', text: ""), '', class: 'logOutTopArrowIcon'
+
+          ul#logOutOptionsList
+            li.headingList YOUR OPTIONS
+            li= link_to fa_icon('caret-square-o-left', text: 'Refunds'),  dashboard_refund_requests_path(bought_or_sold: 'bought'), is: 'refund_requests'
+            li= link_to fa_icon('power-off', text: 'Logout'), destroy_user_session_path, class: 'logout'
+
+    - elsif (controller_name == 'registrations') || (controller_name != 'sessions')
+      div class="login-form"
+        = form_tag session_path(:user) do
+          = email_field_tag 'user[email]', nil, autofocus: true, placeholder: 'email', class: 'controls form-control pull-left'
+          = password_field_tag 'user[password]', nil, autocomplete: "off", placeholder: 'password', class: 'controls form-control pull-left'
+          = submit_tag "Sign in", class: 'btn btn-primary pull-left'
+          span class="clearfix"
+          span class="forgot-password"
+            a href="/users/password/new"  Forgot your password?
+
+  - if signed_in?
+    a href="#side-panel" data-toggle="collapse" id="collapse-link1" class="hide"
+      .span.glyphicon.glyphicon-menu-down

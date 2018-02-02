@@ -1,0 +1,146 @@
+= render '/shared/tabs'
+
+.wrap-sm
+  h4 My Orders:
+  - if !flash[:error].nil?
+    .error-explanation
+      - if flash[:error].kind_of?(Array)
+        - flash[:error].each do |error|
+          = error
+      - else
+        = flash[:error].scan(/[a-zA-Z0-9]+/).join(' ')
+  .error-explanation
+    = flash[:cancel_trans_error] if flash[:cancel_trans_error].present?
+
+  .table-responsive
+    table.table data-behavior="TableCheckbox" data-options='{"paramName":"order_details"}'
+      thead
+        tr
+          th: input type="checkbox"
+          th Order ID
+          th Status
+          th.text-center Product name
+          th Quantity
+          th Order Total
+          th.text-center Details
+          th.text-center Action
+          th.text-center Payment Type
+          th.text-center Inspection Date
+
+      tbody
+        - @orders.each do |order|
+          tr
+            td: input type="checkbox" value="#{order.id}" data-order-type="#{order.class.name}"
+            td= order.id
+            td
+              span.label
+                - if order.status == 'pending_confirmation'
+                  = link_to order.status, '#modal_pending_confirmation', class: 'link link-ex-sm link-ulined pending_confirmation_status', data: { toggle: 'modal' }
+                - else
+                  = order.status
+            td.text-center
+              - if order.product.is_for_sell?
+                = link_to order.product.name.titleize, product_path(order.product, cat_id: order.product.main_category), class: 'link link-ulined', target: '_blank'
+              - else
+                = link_to order.product.name.titleize, dashboard_offer_path(order.product), class: 'link link-ulined', target: '_blank'
+              - if order.class.to_s == "FlyBuyOrder"
+                - if order.seller_group.present?
+                  br
+                  = link_to order.seller_group.name.titleize, dashboard_group_path(order.seller_group), class: 'link-ulined text-success', target: '_blank'
+            td.text-center= order.count
+            td.text-center
+              = number_to_currency(order.total, :unit => "$", precision: 2)
+            td.text-center
+              = link_to 'View', '#modal_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
+              - if is_cancellable?(order)
+                | &nbsp;
+                = link_to 'Cancel Order', cancel_order_dashboard_orders_path(id: order.id, type: params['type']), method: :get, remote: true, data: {confirm: 'Are you sure?'}, class: 'view'
+              - elsif refund_requested?(order)
+                | &nbsp;
+                = link_to 'Refund Requested', dashboard_refund_requests_path, class: 'view'
+            td.text-center
+              - if order.buyer == current_user && order.status != 'cancelled' && order.instance_of?(FlyBuyOrder)
+                - if FlyBuyOrder::CANCEL_ORDER_STATE.include?(order.status)
+                  = link_to 'Cancel Order', "#modal_cancel_order_#{order.id}", class: 'view', data: { toggle: 'modal' }
+                  br
+                - if order.not_inspected && order.status == 'pending_inspection' && order.inspection_date_today_onward? && order.funds_in_escrow?
+                  = link_to 'Complete Inspection', fly_buy_order_complete_inspection_path(order.id), class: 'view'
+                - elsif order.order_type == 'fly_buy' && order.inspected && order.status == 'placed' && order.funds_in_escrow?
+                  = link_to 'Release Payment', fly_buy_order_release_payment_path(order.id), data: { confirm: 'Please confirm your order.' }, class: 'view'
+                - elsif order.order_type == 'same_day' && order.status == 'placed' && order.funds_in_escrow?
+                  = link_to 'Release Payment', fly_buy_order_release_payment_path(order.id), data: { confirm: 'Please confirm your order.' }, class: 'view'
+                - elsif order.payment_release == true && order.status == 'completed'
+                  span.label
+                    | Payment Released
+              - elsif order.seller == current_user && order.status == 'completed' && order.instance_of?(FlyBuyOrder) && order.payment_release?
+                - if order.seller_group.present?
+                  - if !order.additional_sellers_account_created_verified?
+                    = link_to 'Release Payment To Additional Sellers', '#modal_release_payment_info_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
+                  - else
+                    = link_to 'Release Payment To Additional Sellers', fly_buy_order_release_payment_to_additional_sellers_path(order.id), class: 'view'
+                - else
+                  = link_to 'Release Payment To Additional Sellers', fly_buy_order_release_payment_to_additional_sellers_path(order.id), class: 'view'
+              - elsif order.seller == current_user && order.class.to_s == "FlyBuyOrder"
+                - if order.payment_released_to_group?
+                  span.label
+                    | Payment Released To Group
+              - else
+                | -
+            td.text-center
+              // for displaying type of order
+              - if order.instance_of?(FlyBuyOrder) && order.order_type == 'fly_buy'
+                span.label.label-orange
+                  | Fly & Buy
+              - elsif order.instance_of?(FlyBuyOrder) && order.order_type == 'same_day'
+                span.label.label-green
+                  | Same Day
+              - elsif order.instance_of? GreenOrder
+                span.label.label-green
+                  | Green By Phone
+              - elsif order.instance_of? StripeOrder
+                  span.label.label-blue
+                    | Stripe
+              - elsif order.instance_of? AmgOrder
+                  span.label.label-dark-blue
+                    | AMG
+              - elsif order.instance_of? EmbOrder
+                  span.label.label-dark-blue
+                    | EMB
+              - else
+                | No type present
+              // for displaying bought and sold
+              - if current_user.id == order.buyer_id
+                span.label
+                  | Bought
+              - elsif current_user.id == order.seller_id
+                span.label.label-green
+                  | Sold
+            td.text-center
+              - if order.instance_of?(FlyBuyOrder) && order.order_type == 'fly_buy'
+                - fbo_inspection_date = order.inspection_dates.first
+                - if order.selected_inspection_date.present?
+                  = order.selected_inspection_date.get_inspection_date
+                  - if !order.cancelled? && order.not_inspected && current_user_is_a_buyer?(order)
+                    br
+                    a href="#" data-toggle="modal" data-target="#newInpsectionDateModal_#{order.id}" request a different inspection date
+                    = render partial: 'request_new_inspection_date', locals: { fly_buy_order: order, product: order.product}
+                - if fbo_inspection_date.new_requested_date.present? && !order.selected_inspection_date.present?
+                  | #{fbo_inspection_date.creator_type.titleize} Requested new date
+                  br
+                  = fbo_inspection_date.get_new_inspection_date
+                  - if current_user_is_a_buyer?(order) && fbo_inspection_date.creator_type == "seller"
+                    br
+                    a href="#" data-toggle="modal" data-target="#ApproveChangeInspectionDateModal_#{order.id}" Approve/change
+                    = render partial: 'approve_change_inspection_date', locals: { fly_buy_order: order, product: order.product}
+                  - if current_user_is_a_seller?(order) && fbo_inspection_date.creator_type == "buyer"
+                    br
+                    a href="#" data-toggle="modal" data-target="#ApproveChangeInspectionDateModal_#{order.id}" Approve/change
+                    = render partial: 'approve_change_inspection_date', locals: { fly_buy_order: order, product: order.product}
+
+          = render partial: 'dashboard/orders/cancel_transaction_pop_up', locals: { order: order}
+          = render partial: 'dashboard/orders/release_payment_group_seller_flybuy_account_not_created', locals: { order: order}
+.footer-actions: .fa-container: .wrap-sm
+
+= render partial: '/shared/order', collection: @orders
+
+= render partial: 'dashboard/orders/pending_confirmation_pop_up'

@@ -1,0 +1,79 @@
+.devise {
+  max-width: 506px;
+  padding: 20px 30px 25px;
+  border-radius: 5px;
+  top: 45px;
+
+  #new_user{
+    max-width: 400px;
+  }
+
+  &.content{
+    margin: 30px 0 0 70px;
+
+    b {
+      margin-right:10px;
+    }
+
+    p{
+      font-size: 17px;
+      margin-top: 30px;
+    }
+    h1{
+      text-align: left;
+    }
+  }
+
+  .header-adjust{
+    margin-bottom: 10px;
+    text-align: center
+  }
+
+  .terms_of_service{
+    margin-top: 20px;
+    font-size: 12px;
+    .icheckbox{
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  h4{
+    text-align: center;
+  }
+
+  .icheckbox {
+    margin-top: 0;
+    margin-right: 5px;
+    float: left;
+  }
+
+  div h2 {
+    font-size: 16px;
+    color: red;
+    margin-top: -5px;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0 0 15px;
+    padding: 0;
+  }
+
+  li {
+    color: red;
+    font-size: 14px;
+
+    &:before {
+      content: '- ';
+    }
+  }
+
+  .btn-signup{
+    float: left;
+  }
+  .btn-signin{
+    float: left;
+    margin: 6px 0 0 21px;
+  }
+}

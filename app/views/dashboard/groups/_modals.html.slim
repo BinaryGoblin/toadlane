@@ -1,0 +1,15 @@
+#form_message.modal.fade tabindex="-1" role="dialog"
+  = form_tag group_member_message_messages_path
+    = hidden_field_tag 'message[group_member_id]'
+    = hidden_field_tag 'message[subject]', "#{@group.name} #{current_user.name} messaged you!"
+    .modal-dialog: .modal-content
+      .modal-header
+        .pull-right data-dismiss="modal"= fa_icon 'close'
+        h4.modal-title Send a message
+
+      .modal-body
+        .form-group
+          = label_tag 'message_body', 'Your message:'
+          = text_area_tag 'message[body]', nil, class: 'form-control'
+
+      .modal-footer= button_tag 'Send', class: 'btn btn-warning', data: { disable_with: 'Please wait...' }

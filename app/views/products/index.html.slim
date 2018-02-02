@@ -1,0 +1,73 @@
+= render '/shared/tabs'
+
+.wrap-sm.view-product
+  .miniDashboard
+    .subSection
+      span.subSectionCount $#{total_earning}
+      span.subsectionDetail Earned
+
+    = link_to dashboard_products_path
+      .subSection
+        span.subSectionCount #{available_products_for_user}
+        span.subsectionDetail Available Products
+
+    = link_to dashboard_orders_path
+      .subSection
+        span.subSectionCount #{current_user.pending_orders.count}
+        span.subsectionDetail Orders Pending
+
+    = link_to dashboard_products_path
+      .subSection
+        span.subSectionCount.productViewCount #{total_viewers}
+        span.subsectionDetail Views
+    .clearfix
+
+  - if @folders.present?
+    .bulk-products
+      h2 Bulk Products
+      - @folders.each do |folder|
+        = link_to folder.name, dashboard_folder_path(folder)
+        | &nbsp;
+
+  - if @latest_activities.present?
+    .activityNotification
+      ul.pull-left
+        - @latest_activities.each do |latest_activity|
+          li
+            =raw latest_activity.description
+      / .industryTags.pull-right
+      /   - if current_user.tag_list.present?
+      /     | Tags:&nbsp;
+      /     = current_user.tag_list.join(', ')
+      .clearfix
+
+  .carousel-product-title
+    h3 Newest
+    .clearfix
+
+  #products_first.product-carousel.slide
+    - if @newest_products.present?
+      ul.bxslider
+        - @newest_products.each do |product|
+          li
+            = render partial: '/shared/product', locals: { product: product }
+  .clearfix
+
+  .carousel-product-title
+    h3 Most Viewed
+    .clearfix
+
+  #products_second.product-carousel.slide
+    - if @most_viewed_products.present?
+      ul.bxslider
+        - @most_viewed_products.each do |product|
+          li
+            = render partial: '/shared/product', locals: { product: product }
+  .clearfix
+
+- if @i_buy_and_sell == "false"
+  = render partial: 'i_buy_sell_modal', locals: { user: current_user }
+
+.clearfix
+.few: .wrap
+.clearfix
