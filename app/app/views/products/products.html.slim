@@ -1,0 +1,13 @@
+.wrap-sm
+  .products.all_products
+    = render partial: '/shared/product', collection: @products
+
+.clearfix
+
+.footer-actions
+  .fa-container
+    .wrap-sm
+      - if @products
+        = will_paginate @products
+
+    .clearfix

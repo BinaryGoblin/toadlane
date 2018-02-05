@@ -1,0 +1,10 @@
+- if flash[:notice]
+  .main-notice data-behavior="FlashMessages"
+    = flash[:notice]
+- elsif flash[:error]
+  .main-alert data-behavior="FlashMessages"
+    = flash[:error].html_safe
+- elsif flash[:alert]
+  .main-alert data-behavior="FlashMessages"
+    = flash[:alert]
+

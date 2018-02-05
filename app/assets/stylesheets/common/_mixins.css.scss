@@ -1,0 +1,23 @@
+@mixin vertical-align {
+  position: relative;
+  top: 50%;
+  @include transform(translateY(-50%));
+}
+
+// Retina image
+@mixin img-retina($img-1x, $img-2x, $w:'', $h:'') {
+  background-image: image-url('#{$img-1x}');
+
+  @media
+  only screen and (-webkit-min-device-pixel-ratio: 2),
+  only screen and (   min--moz-device-pixel-ratio: 2),
+  only screen and (     -o-min-device-pixel-ratio: 2/1),
+  only screen and (        min-device-pixel-ratio: 2),
+  only screen and (                min-resolution: 192dpi),
+  only screen and (                min-resolution: 2dppx) {
+    background-image: image-url('#{$img-2x}');
+    @if $w != '' or $h != '' {
+      background-size: #{$w} #{$h};
+    }
+  }
+}

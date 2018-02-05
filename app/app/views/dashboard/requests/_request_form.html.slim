@@ -1,0 +1,69 @@
+- if @request.errors.any?
+  .error-explanation
+    h5= "Error:"
+    ul
+      - @request.errors.full_messages.each do |message|
+        li = message
+- elsif @errors.present?
+  .error-explanation
+    / h5= "Error:"
+    ul
+      li = @errors
+- elsif flash[:error].present?
+  .error-explanation
+    = flash[:error]
+
+.row
+  .col-md-6
+    .form-group
+      = f.label :name, 'Product name:', class: 'required'
+      = f.text_field :name, class: 'form-control'
+
+    .form-group
+      = f.label :main_category, 'Main category:', class: 'required'
+      = f.select :main_category, options_from_collection_for_select(main_categories, :id, :name, f.object.main_category), {}, data: { behavior: 'Select' }, placeholder: 'Select the main category...'
+
+    .form-group
+      = f.label :tag_list, 'Product Tags:', class: 'required'
+      = f.select :tag_list, options_from_collection_for_select(get_all_tags, :name, :name, f.object.tag_list), {}, multiple: true, data: { behavior: 'Select', options: '{"plugins":["remove_button"],"create":"true"}' }
+      p.product-tags-error
+
+    .form-group
+      = f.label :description, 'please describe what you are looking for:'
+      = f.text_area :description, class: 'form-control', placeholder: 'Write something about your product...', maxlength: '1000'
+
+  .col-md-6
+    .clearfix
+      .status
+        = f.label :status, 'Product status:'
+        .checkbox: label
+          = f.check_box :status
+          | Is Active
+
+    .row.row-top-padding-10
+      .col-md-6
+        .form-group
+          label.required request valid until:
+          .input-group.date#end-date
+            = f.text_field :end_date, class: "form-control"
+            span.input-group-addon.group-addon-date
+              span.glyphicon.glyphicon-calendar
+            p.product-end-date-error
+    .row.row-top-padding-10
+      .col-md-6
+        .form-group
+          = f.label :unit_price, 'target price (USD):', class: 'required'
+          span.input-group-addon.group-addon-price $
+          = f.number_field :unit_price, in: 0...1000000, step: "any", class: 'form-control width-60 right-rounded-corner'
+      .col-md-6
+        .form-group
+          = f.label :amount, 'how many do you need to buy?', class: 'required number'
+          = f.number_field :amount, class: 'form-control width-70'
+
+      .status_action
+        = f.hidden_field :status_characteristic, :value => 'buy'
+    .footer-actions.row-top-padding-10
+      = f.button fa_icon('check', text: 'Save & close'), value: 'close', class: 'btn btn-success pull-right'
+      = f.button fa_icon('save', text: 'Save & add new'), value: 'new', class: 'btn btn-default pull-right'
+      / = link_to fa_icon('trash-o', text: 'Delete this request'), dashboard_request_path(@product.id), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default pull-left' if @product.id?
+  .clearfix

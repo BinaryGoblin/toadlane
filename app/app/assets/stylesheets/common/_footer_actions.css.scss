@@ -1,0 +1,13 @@
+.footer-actions {
+  padding: 10px 0;
+
+  .btn {
+    &.pull-left + .btn.pull-left {
+      margin-left: 10px;
+    }
+
+    &.pull-right + .btn.pull-right {
+      margin-right: 10px;
+    }
+  }
+}

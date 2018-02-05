@@ -1,0 +1,39 @@
+- if flash[:notice]
+  .main-notice data-behavior="FlashMessages"= flash[:notice]
+
+#main_slider.carousel.slide data-ride="carousel"
+  .carousel-inner.carousel-inner-shadow
+    .item.active
+      = image_tag 'slides/1.jpg'
+      .carousel-content
+        h1 Online Wholesale Trading
+        = image_tag 'slide-content-img.png'
+        p The best products at the best prices - in bulk.
+        //=# link_to 'preview site', products_path, class: 'btn btn-success'
+        |
+        = link_to 'sign up now', new_user_registration_path, class: 'btn btn-success'
+
+
+.buy-sell: .wrap
+  .main-buy.pull-left
+    h2 buy
+    p Safe and secure MASS purchasing of the best products on the market at the best prices.
+    p Connect with world class distributors and bring new exclusive products to your market.
+
+  .main-sell.pull-right
+    h2 sell
+    p Got tons of product to unload?
+    p Gain access to the world’s largest group of industry leading, influential, bulk buyers and market expanders.
+
+.wrap
+  .try-out
+    p Try out our tiered pricing model and see how much you save
+    = link_to 'sign up & see all products', new_user_registration_path, class: 'btn btn-success btn-lg'
+
+.few: .wrap
+  span here are a few of our partners that make the Toadlane experience more secure and profitable
+
+  .brands-logo
+    = link_to image_tag('stripe_logo_medium.png'), 'http://www.stripe.com', :target => 'blank'
+    = link_to image_tag('green-money-logo.png'), 'http://www.green.money/', :target => 'blank'
+    = link_to image_tag('synapse-logo.png'), 'https://synapsepay.com/', :target => 'blank'

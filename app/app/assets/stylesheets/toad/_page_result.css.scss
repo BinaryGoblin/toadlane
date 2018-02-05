@@ -1,0 +1,77 @@
+.result-action {
+  background: white;
+  padding: 15px 34px 15px 44px;
+  font-family: 'PT Sans Narrow', sans-serif;
+
+  select {
+    @include opacity(0);
+  }
+
+  .wrap-sm {
+    padding: 0;
+  }
+
+  .ui-selectmenu-button {
+    width: auto !important;
+    min-width: 42px;
+    padding: 0;
+    float: left;
+  }
+
+  .ui-selectmenu-text {
+    color: $color-soft-black;
+    line-height: 1.2 !important;
+  }
+
+  .ui-icon {
+    padding: 1px 0 0 5px;
+  }
+
+  .act {
+    float: left;
+    font-size: 18px;
+    font-weight: 800;
+    text-transform: uppercase;
+    vertical-align: top;
+
+    > b {
+      color: #2c2e30;
+      margin-right: 10px;
+      float: left;
+    }
+  }
+
+  .cat {
+    width: 300px;
+  }
+
+  .view {
+    width: 230px;
+
+    .fa {
+      font-size: 24px;
+      vertical-align: -14%;
+    }
+
+    a {
+      margin-right: 15px;
+      color: $color-soft-black;
+      @include transition(color .2s);
+
+      &:hover,
+      &.active {
+        color: #ff8724;
+      }
+    }
+  }
+
+  .sort {
+    width: 250px;
+    // width: 30%;
+  }
+
+  .count-item {
+    float: right;
+    // width: 15%;
+  }
+}

@@ -1,0 +1,19 @@
+.table {
+  margin-bottom: 30px;
+
+  td {
+    &:last-child {
+      text-align: right;
+    }
+  }
+
+  th {
+    &:last-child {
+      text-align: right;
+    }
+  }
+}
+
+.footer-actions{
+  padding-bottom: 64px;
+}

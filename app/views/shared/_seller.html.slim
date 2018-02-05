@@ -1,0 +1,17 @@
+.featured-seller
+  - if seller.asset.present?
+    = link_to image_tag(seller.asset(:medium)), '#', class: 'img'
+  - else
+    = link_to image_tag('product-missing.png'), '#', class: 'img'
+
+  .view
+    .view-name= seller.name
+    = link_to 'View profile', '#', class: 'btn btn-warning'
+
+  .name= link_to seller.name, '#'
+
+  .article OH 45236
+
+  - if seller.benefits.reject{ |e| e.empty? }.any?
+    .sell Sell:
+    .sell-tags= seller.benefits.reject{ |e| e.empty? }.join(', ')

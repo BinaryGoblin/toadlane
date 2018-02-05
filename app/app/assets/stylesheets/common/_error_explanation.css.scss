@@ -1,0 +1,35 @@
+.error-explanation {
+  margin: 10px 0 25px;
+  clear: both;
+  color: $brand-danger;
+
+  h5 {
+    font-size: 14px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0 0 0 17px;
+    font-size: 14px;
+  }
+}
+
+.success-explanation {
+  margin: -10px 0 25px;
+  clear: both;
+  color: green;
+
+  h5 {
+    font-size: 14px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0 0 0 17px;
+    font-size: 14px;
+  }
+}

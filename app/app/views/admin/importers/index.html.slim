@@ -1,0 +1,8 @@
+= form_tag @importer, url: admin_importers_path,:html => { multipart: true }
+  .form-group
+  = label_tag :description, 'description'
+
+  = file_field_tag :asset
+
+  = submit_tag 'Upload'
+

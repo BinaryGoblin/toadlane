@@ -1,0 +1,46 @@
+.tabs.wrap-sm
+  .span.close-collapse
+    i.fa.fa-times aria-hidden="true"
+  ul#side-panel
+    / li=
+    / .profile-user-image
+    /       - if @user.asset?
+    /       .image-tag style='background-image:url(#{@user.asset(:small)})'
+    /       = f.text_field :name, class: 'tab_form-control'
+
+    li#profilePicRow
+      .userPic
+        = link_to image_tag(current_user.asset(:small)), ''
+
+      .userDetails
+        .userName
+          = current_user.name
+        .userdetails
+          = link_to 'Edit Profile', dashboard_profile_path, class: 'editProfile'
+
+
+    li= link_to fa_icon('briefcase', text: 'Accounts'), dashboard_accounts_path, is: 'accounts'
+    li= link_to fa_icon('cubes', text: 'My products'), dashboard_products_path, is: 'products'
+    li= link_to fa_icon('upload', text: 'Bulk uploads'), dashboard_folders_path, is: 'products'
+    li= link_to image_tag("/assets/request.png") + ' My requests', dashboard_requests_path, is: 'request', class: 'request_icon'
+
+    li= link_to fa_icon('users', text: 'My groups'),  dashboard_groups_path, is: 'groups'
+    li= link_to fa_icon('gift', text: 'My offers'), dashboard_offers_path, is: 'offers'
+    li= link_to fa_icon('truck', text: 'Orders'), dashboard_orders_path, is: 'orders'
+
+    li= link_to fa_icon('money', text: 'Financing'), dashboard_finances_path, is: 'forms'
+    li= link_to fa_icon('th-large', text: 'Categories'), '', is: 'categories'
+    / ul#categoriesSection
+    /   li   = select_tag :cat_id, options_from_collection_for_select(main_categories, :id, :name, params[:cat_id]), class: 'dd-small-list', data: { behavior: 'CustomSelect' }
+
+
+  //  link_to fa_icon('newspaper-o', text: 'My Profile'), dashboard_profile_path, is: 'profiles'
+  //  li= tab_link_to 'My profile', dashboard_profile_path, is: 'profiles'
+    //li= tab_link_to 'Accounts', dashboard_accounts_path, is: 'accounts'
+  //  li= tab_link_to 'My products', dashboard_products_path, is: 'products'
+  //  li= tab_link_to 'Orders', dashboard_orders_path, is: 'orders'
+  //  li= tab_link_to 'Refunds', dashboard_refund_requests_path(bought_or_sold: 'bought'), is: 'refund_requests'
+  //  li= tab_link_to 'Verify', dashboard_forms_path, is: 'forms'
+  //  li= tab_link_to 'Financing', dashboard_finances_path, is: 'finances'
+    //li= tab_link_to "Messages (#{get_user_unread_message_notifications})", dashboard_messages_path(box: 'inbox'), is: 'messages'
+    //xli= tab_link_to "Notifications (#{get_user_unread_notifications})", dashboard_notifications_path, is: 'notifications'

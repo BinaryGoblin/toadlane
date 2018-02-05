@@ -1,0 +1,199 @@
+$form-control-border-radius: 4px;
+
+.form-control {
+  width: 100%;
+  height: 32px;
+  font-size: 14px;
+  padding: 5px 8px;
+  background: white;
+  border: none;
+  border-radius: $form-control-border-radius;
+  @include box-shadow(inset 0 1px 5px #afafaf);
+
+  &[type=file] {
+    padding-top: 8px;
+  }
+
+  &[multiple] {
+    height: 100px;
+  }
+}
+
+.spinner {
+  background-image: image-url('spinner.gif');
+  background-position: 97% 50%;
+  background-repeat: no-repeat;
+}
+
+label.error {
+  font-weight: 400 !important;
+  text-transform: none !important;
+  display: block !important;
+  height: 12px;
+  line-height: 1;
+  margin: 2px 0 -14px !important;
+}
+
+.checkout-payment-gateway label.error{
+  margin: 2px 0 !important;
+}
+
+.error,
+.field_with_errors {
+  color: $brand-danger;
+
+  .form-control {
+    border: 1px solid $brand-danger;
+  }
+}
+
+textarea.form-control {
+  height: 150px;
+  resize: vertical;
+}
+
+// input[type=radio],
+[data-behavior=CustomSelect],
+input[type=checkbox] {
+  @include opacity(0);
+}
+
+select[data-behavior=Select] {
+  display: none;
+}
+
+.form-control-number {
+  position: relative;
+  overflow: hidden;
+  border-radius: $form-control-border-radius;
+
+  div {
+    position: absolute;
+    top: 0;
+    bottom: 1px;
+    width: 24px;
+    padding: 7px 5px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+    @include box-shadow(0 1px 0 #aeb5c1, 0 0 10px rgba(0,0,0,.5));
+    @include gradient-vertical(#e0e3e5, #c3c8cf);
+
+    &:hover {
+      color: white;
+      @include box-shadow(0 1px 0 #007a01, 0 0 10px rgba(0,0,0,.5));
+      @include gradient-vertical(#64c50d, #0f900e);
+    }
+  }
+
+  .minus {
+    left: 0;
+    @include border-left-radius($form-control-border-radius);
+  }
+
+  .plus {
+    right: 0;
+    @include border-right-radius($form-control-border-radius);
+  }
+}
+
+.form-upload-file {
+  position: relative;
+  overflow: hidden;
+  border-radius: $form-control-border-radius;
+  margin-right: 40px;
+  [type=file] {
+    position: absolute;
+    left: -10px;
+    top: -10px;
+    font-size: 50px;
+    z-index: 10;
+    @include opacity(0);
+  }
+
+  .btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 0;
+    z-index: 1;
+
+    .win & {
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+  }
+
+  + .btn-remove {
+    float: right;
+    margin-top: -32px;
+    padding: 5px 10px !important;
+
+    .fa {
+      margin-right: 0;
+    }
+  }
+}
+
+.form-group {
+  margin-top: 22px;
+  font-size: 12px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  label {
+    margin-bottom: 2px;
+    display: inline-block;
+    text-transform: uppercase;
+    font-weight: 800;
+  }
+
+  span {
+    color: #2c2e30;
+    padding-top: 2px;
+    display: inline-block;
+  }
+
+  small {
+    font-size: 10px;
+    color: #888;
+    padding-top: 3px;
+    display: block;
+  }
+  .date{
+    input{
+      width: 151px;
+    }
+  }
+}
+
+.checkbox {
+  input {
+    vertical-align: top;
+    margin-top: 2px;
+    margin-right: 7px;
+  }
+  span{
+    margin: 0px 0px 0px 5px;
+  }
+}
+
+.required:after {
+  content: '*';
+  color: $brand-danger;
+  vertical-align: top;
+  margin-left: 3px;
+}
+
+.insert_inspection_dates, .account-armor, .edit_armor_profile{
+  .checkbox label {
+    padding-left: 0px;
+  }
+}
+
+.insert_inspection_dates select
+{
+  font-size: 11px;
+}

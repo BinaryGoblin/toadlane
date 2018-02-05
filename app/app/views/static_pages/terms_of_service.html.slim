@@ -1,0 +1,29 @@
+- if current_user.present?
+  = render '/shared/tabs'
+  - css_class_name = 'wrap-sm'
+- else
+  - css_class_name = 'infos'
+
+div class="#{css_class_name}"
+  .infos-title: h2 Terms of Service
+
+  .infos-content
+    = render '/shared/terms'
+
+    - if (current_user.present? and current_user.has_role?(:user))
+      - if current_user.terms_of_service != true
+        = form_for current_user, url: update_terms_dashboard_terms_of_services_path, method: :put do |f|
+          - if current_user.errors.any?
+            .error-explanation
+              h5= "#{pluralize(current_user.errors.count, "error")} data from being saved:"
+              ul
+                - current_user.errors.full_messages.each do |message|
+                  li = message
+          .form-group.label_terms
+            = f.check_box :terms_of_service
+            label  &nbsp;&nbsp;I agree to the Terms of Service
+            = f.hidden_field :terms_accepted_at, :value=> Time.now
+
+          = f.submit 'Proceed', class: 'btn btn-primary'
+    br
+  .clearfix

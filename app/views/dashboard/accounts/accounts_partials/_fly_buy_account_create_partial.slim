@@ -1,0 +1,58 @@
+.account-flybuy
+  h4 Fly And Buy:
+  h3
+    |To get verified, use <a href="/fly">Fly & Buy</a> and <a href="/pay">Same Day Pay</a> please select a verification level.
+
+  - if user.fly_buy_profile_account_added?
+    - if fly_buy_profile.unverify_by_admin?
+      p <b>Status:</b> <span class="warning">You cannot currently use Fly & Buy services. Please contact <a href="mailto:hello@toadlane.com">hello@toadlane.com</a> for more information</span>
+    - else
+      p <b>Status:</b> <span class="success">You are verified for #{user.fly_buy_profile.tier}</span>
+
+
+  - elsif fly_buy_profile.present? && fly_buy_profile.kba_questions.present?  && !fly_buy_profile.permission_scope_verified?
+
+    - case fly_buy_profile.kba_questions['document_type']
+    - when 'TIN'
+      p Your employee identification number has been partially matched. Please answer the questions below to verify your identity.
+    - when 'SSN'
+      p Your social security number has been partially matched. Please answer the questions below to verify your identity.
+
+    = form_for fly_buy_profile, url: answer_kba_question_dashboard_accounts_path, method: :post do |f|
+
+      = render partial: 'shared/kba_questions_partial',
+                    :locals => {  :f => f, :fly_buy_profile => fly_buy_profile}
+
+      = f.submit 'Submit', class: 'btn btn-primary'
+
+  - elsif fly_buy_profile.present? && fly_buy_profile.profile_submited?
+    p <b>Status:</b> <span class="warning">You have successfully submitted your information. You will receive updates as your account is verified.</span>
+
+  - else
+    p <b>Status:</b> <span class="warning">Add your company information to send and receive funds.</span>
+
+    = form_for fly_buy_profile, url: create_fly_buy_profile_dashboard_accounts_path, method: :post, html: { class: 'create_fly_buy_profile' } do |f|
+      = f.hidden_field :fingerprint, value: nil
+
+      - profile_type_present = fly_buy_profile.present? && fly_buy_profile.profile_type.present?
+      - display_profile_options = profile_type_present ? 'show' : 'hide'
+
+      - unless profile_type_present
+        .row
+          .col-md-6
+            .form-group
+              .profileType
+                .first
+                  = f.label :profile_type, 'Verification Level:', class: 'required'
+                  = f.select :profile_type, user_identification_program_options, { prompt: 'Please choose a verification level' }, class: 'form-control', required: true, data: { behavior: 'SelectProfileType' }
+                .second
+                  = link_to toadlane_trust_path, title: 'Why do we need this?', target: :_blank
+                    span
+                      .info-btn
+                        i.fa.fa-question-circle
+                .clearfix
+
+      .profileOptions class="#{display_profile_options}"
+        hr
+
+        = render partial: 'dashboard/accounts/accounts_partials/form_for_fly_buy_bank_account', locals: {  f: f, user: user, fly_buy_profile: fly_buy_profile }

@@ -1,0 +1,114 @@
+$featured-seller-height: 355px;
+$featured-seller-width: 240px;
+$featured-seller-offset: 6px;
+$featured-seller-carousel-height: $featured-seller-height + 54px;
+
+.featured-sellers {
+  background: white;
+}
+
+.featured-seller {
+  background: #f4f6f8;
+  float: left;
+  width: $featured-seller-width;
+  height: $featured-seller-height;
+  margin: 20px;
+  padding: $featured-seller-offset;
+  position: relative;
+  line-height: 1;
+  font-family: 'PT Sans', sans-serif;
+  @include transition(box-shadow .3s);
+
+  .img {
+    display: block;
+    margin: (-$featured-seller-offset) 0 8px (-$featured-seller-offset);
+    height: 224px;
+  }
+
+  .view {
+    background: rgba(0,0,0,.7);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 224px;
+    text-align: center;
+    @include opacity(0);
+    @include transition(opacity .2s);
+  }
+
+  .view-name {
+    color: white;
+    text-transform: uppercase;
+    font-weight: 800;
+    margin: 80px 0 10px;
+  }
+
+  .name {
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin: 0 0 2px;
+    @include text-overflow;
+
+    a {
+      color: black;
+    }
+  }
+
+  .article {
+    font-size: 14px;
+    color: black;
+    margin-bottom: 20px;
+  }
+
+  .sell {
+    color: #ff8724;
+    font-size: 12px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  .sell-tags {
+    color: #90959c;
+    font-size: 14px;
+    line-height: 1.2;
+  }
+
+  &:hover {
+    @include box-shadow(0 0 5px rgba(0,0,0,.3));
+
+    .view {
+      @include opacity(1);
+    }
+  }
+}
+
+.featured-seller-carousel {
+  max-height: $featured-seller-carousel-height;
+
+  .carousel-inner {
+    height: $featured-seller-carousel-height;
+    width: auto;
+    margin: 0 56px;
+    padding: 0 4px;
+    position: relative;
+
+    &:after {
+      content: '';
+      position: absolute;
+      left: 4px;
+      right: 4px;
+      bottom: 0;
+      border-bottom: 4px solid #cccfd3;
+    }
+  }
+  
+  .featured-seller {
+    margin: 20px 0 0 40px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}

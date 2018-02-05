@@ -1,0 +1,9 @@
+.infos-title: .wrap-sm: h2 account deactivated
+  
+.infos-content: .wrap-sm
+  p.text-center 
+    |
+      Your account has been suspended. If you would like to have it reactivated, or if you believe that this was done in error, please email 
+    = mail_to 'hello@toadlane.com'
+  br
+  center= link_to fa_icon('power-off', text: 'Logout'), destroy_user_session_path, class: 'btn btn-success'

@@ -1,0 +1,18 @@
+@media (max-width:1080px) {
+  .search-result{
+    .products{
+      margin-left: -15px;
+      margin-right: -15px;
+
+      .product-list{
+        margin-left: 15px;
+        margin-right: 15px;
+        float: none;
+        width: auto;
+      }
+    }
+  }
+  .btn-signin{
+    display: none;
+  }
+}

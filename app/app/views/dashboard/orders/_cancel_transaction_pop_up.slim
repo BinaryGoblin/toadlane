@@ -1,0 +1,10 @@
+.modal.modal-lg.fade tabindex="-1" role="dialog" id="modal_cancel_order_#{order.id.to_s}"
+  .modal-dialog: .modal-content
+    .modal-header
+      .pull-right data-dismiss="modal"= fa_icon 'close'
+      h4.modal-title Cancel Order
+
+    .modal-body
+      p Are you sure you want to cancel Order Id: #{order.id}
+      .pull-right
+        = link_to "Cancel Order", fly_buy_order_cancel_transaction_path(order.id), class: "btn btn-success"

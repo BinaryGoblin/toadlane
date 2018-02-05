@@ -1,0 +1,536 @@
+.profile-table {
+  font-size: 12px;
+
+  &.last tr:last-child td {
+    padding-top: 30px;
+  }
+
+  td {
+    vertical-align: top;
+
+    &:first-child {
+      width: 240px;
+    }
+
+    &:last-child:not([colspan]) {
+      width: 450px;
+      padding-left: 70px;
+    }
+  }
+
+  h4 {
+    line-height: 1;
+    font-size: 20px;
+    color: #cccfd3;
+    text-transform: uppercase;
+  }
+
+  .checkbox {
+    font-size: 14px;
+    margin-top: 10px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  .icheckbox {
+    margin: -3px 5px 0 0;
+  }
+
+  input[disabled] {
+    background: #eee;
+  }
+}
+
+.account-table {
+  font-size: 12px;
+
+  td {
+    &:first-child {
+      width: 20%;
+      horizontal-align: left;
+      vertical-align: top;
+    }
+
+    &:last-child {
+      width: 80%;
+      horizontal-align: right;
+    }
+  }
+}
+
+.account-list-table {
+  font-size: 12px;
+
+  td {
+    &:first-child {
+      width: 80%;
+      align: left;
+    }
+
+    &:last-child {
+      width: 20%;
+      horizontal-align: right;
+    }
+  }
+
+  h4 {
+    line-height: 1;
+    font-size: 20px;
+    color: black;
+    text-transform: none;
+  }
+
+  p {
+    .warning {
+      color: red;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .info {
+      color: #5bc0de;
+    }
+  }
+}
+
+.profile-image-container {
+  width: 175px;
+  margin-top: 10px;
+
+  label {
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 800;
+    margin-bottom: 2px;
+    display: inline-block;
+  }
+
+  .text-center {
+    margin-bottom: 5px;
+  }
+
+  .btn-black {
+    margin-left: 10px;
+  }
+
+  .btn-primary {
+    display: block;
+    overflow: hidden;
+    position: relative;
+
+    input {
+      position: absolute;
+      left: -10px;
+      top: -10px;
+      font-size: 50px;
+      @include opacity(0);
+    }
+  }
+
+  .fa-trash-o {
+    margin-right: 0;
+  }
+}
+
+
+
+.profile-user-image {
+  background: white;
+  border: 1px dashed #cccfd3;
+  border-radius: 4px;
+  padding: 9px;
+  height: 175px;
+  width: 175px;
+  margin-bottom: 5px;
+  position: relative;
+
+  &:empty:before {
+    @extend .fa;
+    @extend .fa-camera;
+    font-size: 26px;
+    color: #cccfd3;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 26px;
+    height: 24px;
+  }
+
+  .image-tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    background-position: 50% 50%;
+    @include background-size(cover);
+  }
+}
+
+.card {
+  border: 1px dashed #aeb5c1;
+  border-radius: 5px;
+  padding: 20px;
+  position: relative;
+  height: 230px;
+}
+
+.card-naumber {
+  @include clearfix;
+
+  label {
+    float: left;
+    width: 100%;
+  }
+
+  input {
+    width: 23%;
+    margin-right: 2.6666%;
+    float: left;
+    text-align: center;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.card-valid {
+  label {
+    float: left;
+    width: 100%;
+  }
+
+  input {
+    float: left;
+    text-align: center;
+    width: 40px;
+  }
+
+  span {
+    float: left;
+    margin: 2px 7px 0;
+    font-size: 20px;
+  }
+}
+
+.card-back {
+  padding-top: 95px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 48px;
+    background: #4d5154;
+  }
+
+  .form-group {
+    float: right;
+
+    &::before {
+      position: absolute;
+      left: 20px;
+      right: 140px;
+      height: 32px;
+      background: #cbd1d6;
+      border-radius: 4px;
+      content: '';
+    }
+
+    label {
+      float: left;
+      margin: 10px 10px 0 0;
+    }
+
+    input {
+      float: left;
+      width: 60px;
+      text-align: center;
+    }
+  }
+
+  p {
+    position: absolute;
+    top: 145px;
+    left: 20px;
+    right: 5px;
+    padding-left: 30px;
+    font-size: 12px;
+    color: #6b737c;
+  }
+
+  .fa {
+    color: #3795cf;
+    font-size: 24px;
+    margin-left: -30px;
+    float: left;
+  }
+}
+
+.finances-table {
+  width: 100%;
+  font-size: 12px;
+
+  &.last tr:last-child td {
+    padding-top: 30px;
+  }
+
+  td {
+    vertical-align: top;
+
+    &:first-child {
+      width: 240px;
+    }
+
+    &:last-child:not([colspan]) {
+      width: 450px;
+    }
+  }
+
+  .checkbox {
+    font-size: 14px;
+    margin-top: 10px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  .icheckbox {
+    margin: -3px 5px 0 0;
+  }
+
+  input {
+    width: 300px;
+  }
+
+  input[disabled] {
+    background: #eee;
+  }
+}
+
+.selected-labels {
+  text-transform: uppercase;
+  font-size: 12px;
+  margin-top: 10px;
+
+  span {
+    padding-right: 5px;
+  }
+}
+
+.show-all {
+  text-transform: uppercase;
+  font-size: 14px;
+  position: absolute;
+  margin-top: 1px;
+
+  div {
+    margin-top: 7px;
+    float: left;
+    clear: both;
+  }
+
+  a {
+    margin-top: 18px;
+    float: left;
+
+    ~ div {
+      margin-top: -38px;
+    }
+  }
+}
+
+.form-conversation {
+  width: 400px;
+  margin-left: 30px;
+}
+
+.conversation {
+  h3 {
+    line-height: 1;
+    font-size: 26px;
+    color: #cccfd3;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+}
+
+.messages-list {
+  padding: 0;
+  margin: 0 0 20px;
+  list-style: none;
+  overflow: hidden;
+
+  li {
+    padding: 10px;
+    border-top: 1px solid #ddd;
+
+    &:first-child {
+      border: none;
+    }
+
+    &.unread {
+      background: lightyellow;
+    }
+  }
+
+  b {
+    font-size: 12px;
+    color: #333;
+  }
+
+  p {
+    margin: 2px 0 0;
+  }
+
+  small {
+    color: #aaa;
+    font-size: 12px;
+  }
+}
+
+.radios {
+  margin: 11px 0 0;
+
+  label {
+    margin-right: 20px;
+    font-weight: 400;
+  }
+
+  input {
+    margin-right: 5px;
+  }
+}
+
+.notification-settings{
+  .radio label, .checkbox label{
+    padding-left: 0;
+  }
+}
+
+#html5-watermark {
+    display:none !important;
+ }
+
+.account-list-table{
+  .account-armor{
+    .create-payoneer-btn{
+      margin-top: 15px;
+      margin-bottom: 20px;
+    }
+    .benefit-content{
+      text-align: justify;
+    }
+    .escrow-benefit-content{
+      margin-bottom: 15px;
+    }
+  }
+  .tabs-for-armor{
+    ul.nav.nav-tabs{
+      margin-bottom: 20px;
+    }
+
+    .tab-content{
+      text-align: justify;
+    }
+  }
+  .account-flybuy{
+    p.warning{
+      color: red;
+    }
+    .create_fly_buy_profile{
+      .offer-item {
+        @include clearfix;
+
+        &:first-child {
+          margin-bottom: 20px;
+        }
+
+        > label {
+          width: 145px;
+          float: left;
+          margin-top: 26px;
+        }
+
+        > div {
+          float: left;
+
+          label {
+            display: block;
+          }
+        }
+
+        .selectize-input {
+          padding-right: 20px;
+        }
+
+        .offer-date {
+          margin-right: 20px;
+          width: 300px;
+
+          .selectize-control {
+            float: left;
+
+            &:nth-child(3) {
+              width: 96px;
+              margin-right: 5px;
+            }
+
+            &:nth-child(5) {
+              width: 50px;
+              margin-right: 5px;
+            }
+
+            &:nth-child(7) {
+              width: 64px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+a.pending_confirmation_status{
+  color: white;
+}
+
+.invoice-note{
+  padding-left: 10px;
+}
+
+.group-table{
+  .member-role{
+    width: 155px;
+  }
+}
+.product-form,
+.group-form{
+  ul.sellergroups{
+    li.sellergroup{
+      .add-additional-seller{
+        width: 192px;
+      }
+    }
+  }
+}
+
+.group-form{
+  .sellergroup{
+    .select-additional-seller-role{
+      width: 150px;
+    }
+  }
+}

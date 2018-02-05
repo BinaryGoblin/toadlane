@@ -1,0 +1,43 @@
+h1 Listing armor_orders
+
+table
+  thead
+    tr
+      th Seller
+      th Buyer
+      th Order
+      th Account
+      th Status
+      th Amount
+      th Summary
+      th Description
+      th Invoice num
+      th Purchase order num
+      th Status change
+      th Uri
+      th
+      th
+      th
+
+  tbody
+    - @armor_orders.each do |armor_order|
+      tr
+        td = armor_order.seller_id
+        td = armor_order.buyer_id
+        td = armor_order.order_id
+        td = armor_order.account_id
+        td = armor_order.status
+        td = armor_order.amount
+        td = armor_order.summary
+        td = armor_order.description
+        td = armor_order.invoice_num
+        td = armor_order.purchase_order_num
+        td = armor_order.status_change
+        td = armor_order.uri
+        td = link_to 'Show', armor_order
+        td = link_to 'Edit', edit_armor_order_path(armor_order)
+        td = link_to 'Destroy', armor_order, data: {:confirm => 'Are you sure?'}, :method => :delete
+
+br
+
+= link_to 'New Armor order', new_armor_order_path

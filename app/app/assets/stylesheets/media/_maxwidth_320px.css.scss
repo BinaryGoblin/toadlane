@@ -1,0 +1,120 @@
+@media (max-width: 320px) {
+  .find-and-explore{
+    .sellBtn{
+      margin-left: -2px;
+    }
+
+    .InvitePpl {
+      .createGroupBtn {
+        font-size: 11px !important;
+      }
+
+      .topArrowIcon {
+        margin-left: -14.5% !important;
+        margin-top: 8.3% !important;
+      }
+
+      #invitePplList {
+        width: auto !important;
+        min-width: 300px;
+        margin-left: 7px !important;
+        margin-top: 17.6%;
+        height: 300px !important;
+
+        li {
+          .userDetails {
+            width: 46% !important;
+          }
+        }
+      }
+    }
+
+    .go-to-groups-page {
+      margin-top: 100px !important;
+    }
+
+    .logOutOptions {
+      .logOutTopArrowIcon {
+        margin-left: -7% !important;
+        margin-top: 8.4% !important;
+      }
+
+      #logOutOptionsList {
+        margin-left: 42% !important;
+        margin-top: 17.9%;
+      }
+    }
+  }
+
+  #inspection_service_block{
+    .item-count{
+      margin: 0 0 0 7px !important;
+    }
+    .inspect-service-comment{
+      left: 15px !important;
+    }
+    b{
+      margin-top: 6px;
+    }
+  }
+  .mobile{
+    display: block;
+  }
+
+  .header-user {
+    .requestBtn, .sellBtn {
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 18px;
+      margin-right: 12px;
+      padding: 8px 10px;
+    }
+
+    .headerIcons {
+      margin-left: 10px;
+    }
+  }
+
+  .view-product .offers {
+    .seller-info {
+      width: 63% !important;
+    }
+  }
+  .footer-actions{
+    position: none;
+    .btn{
+      float: none !important;
+      margin: 10px 10px 0 0 !important;
+    }
+  }
+  .product-form .estimates{
+    margin: 0;
+    li{
+      margin: 0 0 10px 0;
+      padding: 10px;
+      height: auto;
+    }
+    .estimate, .estimate-delete{
+      position: relative;
+      .btn.remove{
+        margin: 0;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+      }
+    }
+    .index{
+      float: none;
+      margin: 0;
+    }
+    .estimate-type, .estimate-cost{
+      width: 45% !important;
+      margin: 0 10px 10px 0;
+    }
+    .estimate-description{
+      float: none;
+      width: 100% !important;
+      margin: 0 0 10px 0;
+    }
+  }
+}

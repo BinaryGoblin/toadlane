@@ -1,0 +1,11 @@
+.modal.modal-lg.fade tabindex="-1" role="dialog" id="modal_release_payment_info_#{order.id.to_s}"
+  .modal-dialog: .modal-content
+    .modal-header
+      .pull-right data-dismiss="modal"= fa_icon 'close'
+      h4.modal-title Payment Release To Additional Sellers
+
+    .modal-body
+      p Some of the members in the group has not added or verified FlyBuy Account
+      .pull-right
+      = link_to 'Send Notification', fly_buy_order_release_payment_to_additional_sellers_not_possible_path(order.id), class: 'btn btn-success'
+

@@ -1,0 +1,107 @@
+@import "compass/css3";
+@import 'bootstrap-sprockets';
+@import "bootstrap";
+@import "font-awesome";
+
+@import "common/variables";
+@import "common/mixins";
+@import "common/fonts";
+@import "common/normalize";
+@import "common/helpers";
+@import "common/basic";
+@import "common/footer";
+@import "common/typeahead";
+@import "common/forms";
+@import "common/checkboxes";
+@import "common/tabs";
+@import "common/tables";
+@import "common/labels";
+@import "common/modals";
+@import "common/price_labels";
+@import "common/links";
+@import "common/buttons";
+@import "common/paginations";
+@import "common/footer_actions";
+@import "common/error_explanation";
+@import "common/selectize";
+@import "common/devise";
+@import "common/intl_tel_input";
+
+@import "admin/header";
+@import "admin/tables";
+@import "admin/notice";
+
+@import "admin/page_categories";
+@import "admin/page_mailers";
+@import "admin/page_taxes";
+@import "admin/page_users";
+
+@import "toad/products";
+@import "toad/sellers";
+@import "toad/carousel";
+@import "toad/slider";
+@import "toad/actions_panel_product";
+@import "toad/time_left";
+@import "toad/custom_select";
+@import "toad/find_and_explore";
+@import "toad/page_view_product";
+@import 'bootstrap-datetimepicker';
+
+@import "media/*";
+
+.modal-lg {
+  width: auto;
+}
+.admin_dashboard .wrap-sm
+{
+  margin-top:10%;
+}
+.admin_dashboard .header
+{
+  height:135px;
+  border-bottom:1px #ccc dashed;
+}
+.admin_dashboard .pagination
+{
+  border-radius: 4px;
+  float: left;
+  width: 100%;
+  position: fixed;
+  bottom: 50px !important;
+  background: #ddd;
+  border-top: 1px #ccc solid;
+  padding: 5px 0px;
+  left: 0;
+}
+
+.admin_dashboard .show_all
+{
+  font-size: 14px;
+  padding-top: 8px;
+  position: fixed;
+  bottom: 80px;
+  z-index: 99999999999;
+  background: #ccc;
+  margin-top: 0%;
+}
+.admin_dashboard .table-responsive
+{
+  height:370px;
+}
+.admin_dashboard .mailers-product
+{
+  height:300px;
+}
+.admin_dashboard .mailers-users
+{
+  height:300px;
+}
+.admin_dashboard .mailers ~ .footer-actions .fa-container
+{
+  display:none;
+}
+.admin_dashboard .mailers .col-md-6
+{
+  position:relative;
+  top:-50px;
+}

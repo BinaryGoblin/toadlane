@@ -1,0 +1,26 @@
+= render '/shared/tabs'
+
+.wrap-sm
+  .table-options
+    table width="100%"
+      tr
+        td.pull-right
+          strong
+            p #{@product.views_count - @users.count } Viewed from preview mode
+
+  .table-responsive
+    table.table
+      thead
+        tr
+          th Name
+          th Company
+          th
+
+      tbody
+        - @users.each do |user|
+          tr
+            td = user.name
+            td = user.company
+            td.text-center=link_to 'Message', '#modal_message_' + user.id.to_s, class: 'view', data: { toggle: 'modal' }
+
+= render partial: 'user', collection: @users, locals: { product: @product }

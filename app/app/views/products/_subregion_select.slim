@@ -1,0 +1,12 @@
+.order_state_code_wrapper
+  - parent_region ||= params[:parent_region]
+  - user_state ||= params[:user_state]
+  - parent_object_sym ||= params[:parent_object_sym]
+  - country = Carmen::Country.coded(parent_region)
+
+  - if country.nil?
+    em Please select a country above
+  - elsif country.subregions?
+    = subregion_select(parent_object_sym.to_sym, :address_state, parent_region, {selected: user_state}, {class: 'form-control', required: true})
+  - else
+    = text_field(parent_object_sym.to_sym, :address_state, class: 'form-control')

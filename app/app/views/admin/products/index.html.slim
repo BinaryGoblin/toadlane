@@ -1,0 +1,47 @@
+.wrap-sm
+  .table-options= link_to fa_icon('plus', text: 'Create New Product'), new_admin_product_path, class: 'btn btn-default pull-right'
+
+  .table-responsive
+    table.table
+      thead
+        tr
+          th ID
+          th Product name
+          th Type
+          th Tags
+          th Unit price
+          th Valid from
+          th Valid until
+          th Status
+          th Actions
+
+      tbody
+        - @products.each do |product|
+          tr
+            td= product.id
+            td
+              - if product.is_for_sell?
+                = link_to product.name, product_path(product, cat_id: product.main_category), class: 'link link-ulined', target: '_blank'
+              - elsif product.request_to_buy?
+                = link_to product.name, dashboard_request_path(product), class: 'link link-ulined', target: '_blank'
+              - elsif product.offer_for_request?
+                = link_to product.name, dashboard_offer_path(product), class: 'link link-ulined', target: '_blank'
+            td= product.status_characteristic
+            td= product.tag_list
+            td= number_to_currency(product.unit_price, :unit => "$ ", precision: 2)
+            td
+              small.date= product.start_date.strftime('%d-%m-%Y')
+              small.time= product.start_date.strftime('%T')
+            td
+              small.date= product.end_date.strftime('%d-%m-%Y')
+              small.time= product.end_date.strftime('%T')
+            td= product.display_status
+            td= link_to "Edit", edit_admin_product_path(product), class: 'link link-ulined'
+
+.footer-actions: .fa-container: .wrap-sm
+  .show_all style="font-size:14px;padding-top:8px"
+    | #{@products.count} Products
+    - unless params[:count].present? || @products.count < 20
+      = link_to 'Show all', admin_products_path(count: @products.count), class: 'link link-ulined'
+
+  = will_paginate @products

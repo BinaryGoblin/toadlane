@@ -1,0 +1,49 @@
+.tabs-for-armor style="display:none;"
+  ul.nav.nav-tabs
+    li.active
+      a data-toggle="tab" href="#escrow-describe"  Tab 1
+    li
+      a data-toggle="tab" href="#fee"  Tab 2
+    li
+      a data-toggle="tab" href="#pays-fees"  Tab 3
+      
+  .tab-content
+    #escrow-describe.tab-pane.fade.in.active
+      h3 What is escrow payment?
+      p Escrow payment reduces risks for buyers and sellers by using a trusted third party to hold funds
+        from a buyer until goods have been delivered. Sellers can ship goods with confidence, knowing
+        the buyer has paid, and buyers can be sure that the seller will not paid until they have received
+        the goods
+      p We have selected Payoneer Escrow for this service.
+      
+    #fee.tab-pane.fade
+      h3 What is the fee for Payoneer Escrow?
+      p The Payoneer Escrow fee is based on the total value of the order, and will automatically be
+        deducted from the funds held in escrow before they get released.
+      p The escrow fee schedule is calculated as follows:
+      ul
+        li For an Order value up to $5,000: 1.5% or $10, whichever is higher.
+        li For an Order value from $5,000 to $50,000: $75 + 1% of order value over $5,000
+        li For an Order value from $50,000 to $500,000: $525 + 0.75% of order value over $50,000
+        li For an Order value over $500,000: $3,900 + 0.5% of order value over $500,000
+        li For an Order value over $1,000,000: $6,400 + 0.35% of order value over $1,000,000
+      p Additional 0.25% Toadlane Fee is also added.
+      p Example:
+      p
+        | The fee for a $7,000 order is $95 ($75 + $20)
+      | [1.5% fee up to $5,000 = $75, plus 1% on $2000 = $20]
+      p Notes:
+      ul
+        li Payments to Sellers or refunds to Buyers requiring an international wire will be charged an additional $45.
+        li If a transaction is cancelled, Payoneer will refund the full amount to the Buyer via bank
+          transfer (ACH) free of charge. Additional costs for international wire transfer will apply.
+          The Armor Payments fee is based on the payment value of a completed order. The fee
+          is payable at the time the payment is released from escrow, and will be automatically
+          deducted.
+      p For more information about Armor Payments Escrow fees and how to calculate them, visit
+        <a href="http://armorpayments.com/fees">http://armorpayments.com/fees</a>. Payments to payees will be subject to the Payoneer account
+        fee structure.
+    
+    #pays-fees.tab-pane.fade
+      h3 Who pays the fees for Payoneer Escrow?
+      p These are seller fees. An additional buyer fee is charged by Toadlane.

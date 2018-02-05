@@ -1,0 +1,34 @@
+.label {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: white;
+  border-radius: 4px;
+  line-height: 1;
+  padding: 3px 4px 2px;
+  display: inline-block;
+  background: grey;
+
+  + .label {
+    margin-left: 5px;
+  }
+}
+
+.label-green {
+  background: #5c8f10;
+}
+
+.label-red {
+  background: #b90012;
+}
+
+.label-orange {
+  background: #ff8724;
+}
+
+.label-blue {
+  background: #22a3ec;
+}
+
+.label-dark-blue{
+  background: #104170;
+}
