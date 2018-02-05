@@ -1,9 +1,0 @@
-| Hello #{@user.name}
-br
-br
-'Products:
-br
-- @products.each do |product|
-  = link_to product.name, product_url(product, cat_id: product.main_category)
-  br
-
