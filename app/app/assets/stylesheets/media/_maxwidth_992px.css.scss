@@ -1,0 +1,28 @@
+@media (max-width:992px) {
+  .buy-sell .wrap div:first-child, .buy-sell .wrap-sm div:first-child{
+    margin-left: 2.5%;
+  }
+  .buy-sell .wrap div:last-child, .buy-sell .wrap-sm div:last-child{
+    margin-right: 2.5%;
+  }
+  .fe-search{
+    width: 100%;
+  }
+  .carousel-product-title{
+    text-align: left;
+  }
+  .carousel-product-title .actions{
+    right: 0;
+  }
+  .profile-image-container{
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .md-mid{
+    text-align: center;
+  }
+  .bx-wrapper{
+    margin-left: 30px !important;
+    margin-right: 30px !important;
+  }
+}

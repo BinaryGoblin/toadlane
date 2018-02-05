@@ -1,0 +1,17 @@
+= render '/shared/tabs'
+
+.wrap-sm
+  .group-admin-message
+    h2 #{@message}
+    br
+    h3 Send message to group admin
+    br
+    = form_tag send_group_admin_message_messages_path
+      = hidden_field_tag 'message[admins]', @admins
+      = label_tag 'subject', 'Subject:'
+      = text_field_tag 'message[subject]', nil, class: 'form-control'
+      = label_tag 'message_body', 'Message:'
+      = text_area_tag 'message[body]', nil, class: 'form-control'
+      .footer-actions
+         = submit_tag 'Send', class: "btn btn-success group-submit-btn"
+.clearfix

@@ -1,0 +1,17 @@
+= render '/shared/tabs'
+
+.wrap-sm
+  .product-form
+    h4 Edit Group:
+
+    = form_for @group, url: dashboard_group_path(@group.id), method: "put" do |f|
+      - if @group.errors.any?
+        .error-explanation
+          h5= "Error:"
+          ul
+            - @group.errors.full_messages.each do |message|
+              li = message
+      = render partial: 'dashboard/groups/group_form', locals: { group: @group, f: f}
+
+      .footer-actions
+        = f.submit 'Save', class: "btn btn-success group-submit-btn"

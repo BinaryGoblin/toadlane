@@ -1,0 +1,77 @@
+.ui-slider {
+  position: relative;
+  text-align: left;
+
+  .ui-slider-handle {
+    position: absolute;
+    z-index: 2;
+    cursor: default;
+    -ms-touch-action: none;
+    touch-action: none;
+  }
+
+  .ui-slider-range {
+    position: absolute;
+    z-index: 1;
+    font-size: .7em;
+    display: block;
+    border: 0;
+    background-position: 0 0;
+  }
+
+}
+
+.ui-slider-horizontal {
+  .ui-slider-range {
+    top: 0;
+    height: 100%;
+  }
+
+  .ui-slider-range-min {
+    left: 0;
+  }
+
+  .ui-slider-range-max {
+    right: 0;
+  }
+}
+
+
+// Slider Theme
+.ui-slider {
+  border-top: 2px solid #cccfd3;
+  border-left: 1px solid #cccfd3;
+  border-right: 1px solid #cccfd3;
+  height: 6px;
+  margin-top: 10px;
+
+  &:before,
+  &:after {
+    content: '';
+    top: 0;
+    position: absolute;
+    height: 4px;
+  }
+
+  &:before {
+    left: 25%;
+    right: 25%;
+    border-left: 1px solid #cccfd3;
+    border-right: 1px solid #cccfd3;
+  }
+
+  &:after {
+    left: 50%;
+    border-left: 1px solid #cccfd3;
+  }
+}
+
+.ui-slider-handle {
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  width: 15px;
+  height: 20px;
+  top: -10px;
+  margin-left: -7px;
+  @include img-retina('slider-btn.png', 'slider-btn@2x.png', cover);
+}

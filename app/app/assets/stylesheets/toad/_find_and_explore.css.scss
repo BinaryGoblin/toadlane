@@ -1,0 +1,142 @@
+.find-and-explore {
+  background: #333 /*image-url('user-header-bg-1.jpg') 50% 0 repeat-x*/;
+  text-align: center;
+  padding: 10px 0px;
+  @include background-size(cover);
+  width:100%;
+  height: 60px;
+  float: left;
+
+  h2 {
+    font-size: 48px;
+    text-transform: uppercase;
+    color: white;
+    font-family: 'PT Sans Narrow', sans-serif;
+    text-shadow: 0 1px 5px black;
+  }
+
+  select {
+    display: none;
+  }
+
+  .ui-selectmenu-button {
+    float: left;
+    width: 115px !important;
+    margin: 5px 0 5px 5px;
+    border-right: 2px solid #cccfd3;
+    height: 30px;
+    color: #cccfd3;
+    font-size: 16px;
+    text-transform: uppercase;
+    font-family: 'PT Sans Narrow', sans-serif;
+    font-weight: 800;
+  }
+
+  .ui-selectmenu-text {
+    margin-top: 5px;
+  }
+
+  .ui-icon {
+    color: #484b4f;
+    margin: 8px 0 0 6px;
+  }
+}
+
+.fe-search {
+  width: 800px;
+  height: 40px;
+  background: white;
+  display: inline-block;
+  position: relative;
+  z-index: 101;
+  border:1px #ddd solid;
+  @include border-radius(3px);
+//  @include box-shadow(inset 0 1px 4px #afafaf, 0 1px 5px -1px rgba(0,0,0,.5));
+  .query-container{
+//    margin: 0 83px 0 120px;
+    margin: 0 83px 0 0px;
+  }
+  [type=text] {
+    width: 100%;
+    height: 40px;
+    font-family: 'PT Sans', sans-serif;
+    border: none;
+    background: none !important;
+    display: inline-block !important;
+    padding-left: 5px;
+  }
+}
+
+.fe-categories {
+  margin-left: -5px !important;
+
+  .ui-menu-item {
+    font-size: 16px;
+    margin: 8px 0;
+
+    &:before {
+      font-size: 12px;
+      padding-top: 4px;
+    }
+  }
+}
+
+.fe-btn {
+  margin: 0px -1px 0 0;
+  float: right;
+  font-size: 16px;
+  padding: 9px $padding-base-horizontal 8px !important;
+  line-height: 23px;
+}
+
+.btn-search{
+  height: 40px;
+  width:39px;
+  float: right;
+  border: 0 none;
+  margin: -1px -2px 0 0;
+  border-radius: 0 2px 3px 0;
+  color: $color-white;
+  background-color: $color-curious-blue;
+  i{
+    padding-left: 5px;
+  }
+}
+
+.fe-toggle {
+  position: absolute;
+  left: -126px;
+  top: 2px;
+  display: inline-block;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 120px;
+  margin: auto;
+  @include box-shadow(0 1px 5px -1px rgba(0,0,0,.5));
+  @include clearfix;
+
+  .text {
+    float: left;
+    width: 50%;
+    line-height: 1;
+    font-family: 'PT Sans Narrow', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    color: #ccc;
+    text-transform: uppercase;
+    padding: 11px 0 9px;
+    cursor: pointer;
+    @include box-shadow(none !important);
+  }
+
+  input {
+    display: none;
+
+    &:checked + label {
+      @extend .btn;
+      @extend .btn-success;
+      cursor: default;
+    }
+  }
+}

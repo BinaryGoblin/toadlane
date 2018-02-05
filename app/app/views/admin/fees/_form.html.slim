@@ -1,0 +1,23 @@
+= form_for [:admin, @fee] do |f|
+  .wrap-sm: .fee-form
+    - if @fee.errors.any?
+      .error-explanation
+        h5= "#{pluralize(@fee.errors.count, "error")} prohibited this test from being saved:"
+        ul
+          - @fee.errors.full_messages.each do |message|
+            li = message
+
+    .form-group
+      = f.label :name, 'Fee Module Name:', class: 'required'
+      = f.text_field :module_name, class: 'form-control'
+
+    .form-group
+      = f.label :fee_type, 'Type:'
+      = f.text_field :fee_type, class: 'form-control'
+
+    .form-group
+      = f.label :value, 'Fee Value:', class: 'required'
+      = f.text_field :value, class: 'form-control', placeholder: '0.000'
+
+  .footer-actions: .fa-container: .wrap-sm
+    = f.button fa_icon('check', text: 'Save'), class: 'btn btn-success pull-right'

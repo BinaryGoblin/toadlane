@@ -1,0 +1,68 @@
+= render '/shared/tabs'
+
+.wrap-sm
+  h4 My Products:
+  .table-options
+    = link_to fa_icon('plus', text: 'New product'), new_dashboard_product_path, class: 'btn btn-default pull-right', disabled: false
+
+    .selected-labels
+      span Selected:
+      = link_to 'Delete', delete_cascade_dashboard_products_path, method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'label label-red'
+      = link_to 'Active', active_cascade_dashboard_products_path, method: :post, remote: true, data: { confirm: 'Are you sure?' }, class: 'label label-green'
+      = link_to 'Inactive', inactive_cascade_dashboard_products_path, method: :post, remote: true, data: { confirm: 'Are you sure?' }, class: 'label label-orange'
+
+  .table-responsive
+    table.table.products-table data-behavior="TableCheckbox"
+      thead
+        tr
+          th: input type="checkbox"
+          th Status:
+          th Product name:
+          th Unit price:
+          th Valid from:
+          th Valid until:
+          th
+
+      tbody
+        - @products.each do |product|
+          tr
+            td: input type="checkbox" value="#{product.id}"
+            td
+              - if product.status
+                .text-green Active
+              - else
+                .text-orange Inactive
+                - if !current_user.has_payment_account?
+                  = link_to "Add an account to receive payment", dashboard_accounts_path, class: 'link view'
+                - elsif !current_user.fly_buy_profile_account_added?
+                  = link_to "Update your account with Fly & Buy", dashboard_accounts_path, class: 'link view'
+                -elsif product.expired?
+                  |Product offer expired
+
+            td
+              = link_to product.name, product_path(product, cat_id: product.main_category), class: 'link link-ulined', target: '_blank'
+              br
+              = link_to "#{product_views_text(product.views_count)}", viewers_dashboard_products_path(product), class: 'link-ulined text-success'
+              - if product.group.present?
+                br
+                = link_to "#{product.group.name}", dashboard_group_path(product.group), class: 'link-ulined text-success'
+            td= number_to_currency(product.unit_price, :unit => "$", precision: 2)
+            td
+              small.date= product.start_date.strftime('%d-%m-%Y')
+              small.time= product.start_date.strftime('%T')
+            td
+              small.date= product.end_date.strftime('%d-%m-%Y')
+              small.time= product.end_date.strftime('%T')
+            td
+              = link_to 'Edit', edit_dashboard_product_path(product), class: 'view'
+              |  |
+              = link_to 'Delete', dashboard_product_path(product), method: :delete, data: { confirm: 'Are you sure?' }, class: 'view view-red'
+
+
+.footer-actions: .fa-container: .wrap-sm
+  .show-all
+    - unless params[:count].present? || @products_count < 20
+      = link_to 'Show all', dashboard_products_path(count: @products_count), class: 'link link-ulined'
+    div You have: #{@products_count} Products
+
+  = will_paginate @products

@@ -1,0 +1,24 @@
+.pagination {
+  text-align: center;
+
+  a,
+  .gap {
+    @extend .btn;
+    @extend .btn-default;
+  }
+
+  .gap {
+    @extend .disabled;
+  }
+
+  .current {
+    @extend .btn;
+    @extend .btn-black;
+    font-style: normal;
+  }
+
+  .previous_page,
+  .next_page {
+    display: none;
+  }
+}

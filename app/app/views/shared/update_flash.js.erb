@@ -1,0 +1,5 @@
+<%- if flash[:notice].present? %>
+  $('body').prepend("<div class='main-notice' data-behavior='FlashMessages'><%= flash[:notice].to_json %></div>");
+<%- elsif flash[:alert].present? %>
+  $('body').prepend("<div class='main-alert' data-behavior='FlashMessages'><%= flash[:alert].to_json %></div>");
+<%- end %>

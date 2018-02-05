@@ -1,0 +1,47 @@
+.actions-panel-product {
+  background: white;
+  height: 72px;
+  font-family: 'PT Sans', sans-serif;
+
+  .btn + .btn {
+    margin-right: 10px;
+  }
+
+  h1 {
+    font-size: 22px;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-top: -3px;
+    /*position: absolute;*/
+    top: 10px;
+  }
+
+  h4 {
+    font-size: 14px;
+    color: #cccfd3;
+    margin-top: 24px;    
+
+    + h1 {
+      top: 0;
+    }
+
+    a {
+      font-weight: 400;
+      color: #ff8724;
+      text-decoration: underline;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    span {
+      margin-right: 4px;
+      text-transform: uppercase;
+    }
+
+    div {
+      display: inline-block;
+    }
+  }
+}

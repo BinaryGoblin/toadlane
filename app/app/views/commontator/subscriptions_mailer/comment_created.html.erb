@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html style="margin: 0;padding: 0;">
+  <head style="margin: 0;padding: 0;">
+    <title style="margin: 0;padding: 0;">Toadlane Email</title>
+    <style style="margin: 0;padding: 0;">
+      *{
+        margin: 0;
+        padding: 0;
+      }
+      body{
+        background: #f4f6f8;
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        line-height: 20px;
+        padding-bottom: 20px;
+      }
+      .text-center{
+        text-align: center;
+      }
+      .container{
+        background: #fff;
+        padding: 15px;
+        margin: 15px;
+        border: 1px solid #eaebec;
+        border-radius: 3px;
+      }
+      a{
+        color: #5c8f10;
+      }
+      a:hover{
+        text-decoration: none;
+      }
+      .message-header{
+        vertical-align: middle;
+        font-size: 18px;
+        font-weight: 100;
+        margin-bottom: 20px;
+      }
+      img.pro-img{
+        height: 75px;
+        vertical-align: middle;
+        margin-right: 10px;
+        border-radius: 5px;
+        border: 1px solid #eaebec;
+        padding: 5px;
+      }
+      .message-section{
+        background: #eee;
+        padding: 15px;
+        border-radius: 3px;
+        margin-bottom: 20px;
+      }
+      .btn{
+        color: white;
+        border: 1px solid transparent;
+        border-bottom-color: #3d6411;
+        border-top-color: #59af0c;
+        text-shadow: 0 1px 0 #3d6411;
+        text-decoration: none;
+        padding: 7px 13px;
+        background-image: -webkit-linear-gradient(top, #59af0c 0%, #5c8f10 100%);
+        background-image: -o-linear-gradient(top, #59af0c 0%, #5c8f10 100%);
+        background-image: linear-gradient(to bottom, #59af0c 0%, #5c8f10 100%);
+        background-repeat: repeat-x;
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF59AF0C', endColorstr='#FF5C8F10', GradientType=0);
+        border-radius: 3px;
+        display: inline-block;
+      }
+      .btn:hover{
+        color: white;
+        background-image: -webkit-linear-gradient(top, #5c8f10 0%, #59af0c 100%);
+        background-image: -o-linear-gradient(top, #5c8f10 0%, #59af0c 100%);
+        background-image: linear-gradient(to bottom, #5c8f10 0%, #59af0c 100%);
+        background-repeat: repeat-x;
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF5C8F10', endColorstr='#FF59AF0C', GradientType=0);
+      }
+      .pull-right{
+        float: right;
+      }
+      .email-head{
+        font-size: 16px;
+        font-weight: 100;
+      }
+      .email-head img.pro-img{
+        background-color: #fff;
+        margin-right: 15px;
+        margin-left: 10px;
+        height: 30px;
+      }
+      .email-head .pull-right{
+        margin-top: 25px;
+      }
+      img.logo{
+        height: 100px;
+      }
+    </style>
+  </head>
+  <body style="margin: 0;padding: 0;background: #f4f6f8;font-family: Helvetica, Arial, sans-serif;font-size: 14px;line-height: 20px;padding-bottom: 20px;">
+    <div class="email-head" style="margin: 0;padding: 0;font-size: 16px;font-weight: 100;">
+      <img class="logo" src="https://www.toadlane.com/assets/logo-header-09ff685e51c99351a07e5332f0996ef2.png" alt="Toadlane Logo" style="margin: 0;padding: 0;height: 100px;">
+      <div class="pull-right" style="margin: 0;padding: 0;float: right;margin-top: 25px;">
+        <strong><%= @comment.thread.commontable.user.name || @comment.thread.commontable.user.email %></strong>
+        <%= image_tag get_image(@comment.thread.commontable.user.asset(:small)), height: '50', :class => "pro-img", :style => "margin: 0;padding: 5px;height: 30px;vertical-align: middle;margin-right: 15px;border-radius: 5px;border: 1px solid #eaebec;background-color: #fff;margin-left: 10px;" %>
+      </div>
+    </div>
+    <div class="container" style="margin: 15px;padding: 15px;background: #fff;border: 1px solid #eaebec;border-radius: 3px;">
+      <div class="message-each" style="margin: 0;padding: 0;">
+        <div class="message-header" style="margin: 0;padding: 0;vertical-align: middle;font-size: 18px;font-weight: 100;margin-bottom: 20px;">
+          <%= image_tag get_image(@creator.asset(:small)), :class => "pro-img", :style => "margin: 0;padding: 5px;height: 75px;vertical-align: middle;margin-right: 10px;border-radius: 5px;border: 1px solid #eaebec;" %>
+          <strong><%= @creator.name || @creator.email %></strong> commented on <%= @commontable_name %>
+        </div>
+        <div class="message-section" style="margin: 0;padding: 15px;background: #eee;border-radius: 3px;margin-bottom: 20px;">
+          <p style="margin: 0;padding: 0;">
+            <%= render :partial => 'commontator/comments/body',
+                       :locals => { :comment => @comment } %>
+          </p>
+        </div>
+        <div class="message-footer" style="margin: 0;padding: 0;">
+          <%= link_to "Reply", @comment_url,
+                {:style => "margin: 0;padding: 7px 13px;color: white;border: 1px solid transparent;border-bottom-color: #3d6411;border-top-color: #59af0c;text-shadow: 0 1px 0 #3d6411;text-decoration: none;background-image: linear-gradient(to bottom, #59af0c 0%, #5c8f10 100%);background-repeat: repeat-x;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF59AF0C', endColorstr='#FF5C8F10', GradientType=0);border-radius: 3px;display: inline-block;"}%>
+        </div>
+      </div>
+    </div>
+    <div class="text-center" style="margin: 0;padding: 0;text-align: center;">
+      <a href="#{faq_url}" style="margin: 0;padding: 0;color: #5c8f10;">FAQ</a> | <a href="#{terms_of_service_url}" style="margin: 0;padding: 0;color: #5c8f10;">TERMS OF SERVICES</a> | <a href="http://toadchat.blogspot.com/" style="margin: 0;padding: 0;color: #5c8f10;">BLOG</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+= render '/shared/tabs'
+
+.wrap-sm
+  h4 Notifications:
+  .table-options
+    table width="100%"
+      tr
+        td
+          .selected-labels
+            span Selected:
+            = link_to 'Delete', delete_cascade_dashboard_notifications_path, method: :delete, remote: true, data: {confirm: 'Are you sure?'}, class: 'label label-red'
+
+  .table-responsive
+    table.table data-behavior="TableCheckbox" data-options='{"paramName":"notification_ids"}'
+      thead
+        tr
+          th: input type="checkbox"
+          th Title:
+          th.text-right Date:
+
+      tbody
+        - @notifications.each do |notification|
+          tr
+            td: input type="checkbox" value="#{notification.id}"
+            - if notification.notifiable_type == 'Product'
+              td
+                = "#{notification.notifiable.owner.name.titleize} added "
+                - if notification.notifiable.is_for_sell?
+                  = link_to notification.notifiable.name, product_path(notification.notifiable, cat_id: notification.notifiable.main_category), class: 'link link-ulined', target: '_blank'
+                - else
+                  = link_to notification.notifiable.name, dashboard_request_path(notification.notifiable), class: 'link link-ulined', target: '_blank'
+            - else
+              td= notification.title
+            td
+              = time_ago_in_words notification.created_at
+              | &nbsp;ago

@@ -1,0 +1,59 @@
+= render '/shared/tabs'
+
+.wrap-sm
+  h4 My requests:
+  .table-options
+    = link_to fa_icon('plus', text: 'New request'), new_dashboard_request_path, class: 'btn btn-default pull-right', disabled: false
+
+    / .selected-labels
+      span Selected:
+      = link_to 'Delete', delete_cascade_dashboard_products_path, method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'label label-red'
+      = link_to 'Active', active_cascade_dashboard_products_path, method: :post, remote: true, data: { confirm: 'Are you sure?' }, class: 'label label-green'
+      = link_to 'Inactive', inactive_cascade_dashboard_products_path, method: :post, remote: true, data: { confirm: 'Are you sure?' }, class: 'label label-orange'
+
+  .table-responsive
+    table.table.products-table data-behavior="TableCheckbox"
+      thead
+        tr
+          th: input type="checkbox"
+          th Status:
+          th Product name:
+          th Request price:
+          th Valid from:
+          th Valid until:
+          th
+
+      tbody
+        - @requests.each do |request|
+          tr
+            td: input type="checkbox" value="#{request.id}"
+            td
+              - if request.status
+                .text-green Active
+              - else
+                .text-orange Inactive
+
+            td
+              = link_to request.name, dashboard_request_path(request), class: 'link link-ulined'
+              br
+              = link_to "Offers(#{request.active_offers.count})", dashboard_request_path(request, anchor: 'request-offers'), class: 'link-ulined text-success'
+            td= number_to_currency(request.unit_price, :unit => "$", precision: 2)
+            td
+              small.date= request.start_date.strftime('%d-%m-%Y')
+              small.time= request.start_date.strftime('%T')
+            td
+              small.date= request.end_date.strftime('%d-%m-%Y')
+              small.time= request.end_date.strftime('%T')
+            td
+              = link_to 'Edit', edit_dashboard_request_path(request), class: 'view'
+              |  |
+              = link_to 'Delete', dashboard_request_path(request), method: :delete, data: { confirm: 'Are you sure?' }, class: 'view view-red'
+
+
+.footer-actions: .fa-container: .wrap-sm
+  .show-all
+    - unless params[:count].present? || @requests_count < 20
+      = link_to 'Show all', dashboard_requests_path(count: @requests_count), class: 'link link-ulined'
+    div You have: #{@requests_count} requests
+
+  = will_paginate @requests

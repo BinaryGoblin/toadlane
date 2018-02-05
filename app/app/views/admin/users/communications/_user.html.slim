@@ -1,0 +1,15 @@
+.modal.modal-lg.fade tabindex="-1" role="dialog" id="modal_message_#{user.id.to_s}"
+  .modal-dialog: .modal-content
+    = form_tag individual_user_messages_path(user.id)
+      .modal-header
+        .pull-right data-dismiss="modal"= fa_icon 'close'
+        h4.modal-title Send a message
+
+      .modal-body
+        .form-group
+          = label_tag 'subject', 'Subject:'
+          = text_field_tag 'message[subject]', nil, class: 'form-control'
+          = label_tag 'message_body', 'Message:'
+          = text_area_tag 'message[body]', nil, class: 'form-control'
+
+      .modal-footer= button_tag 'Send', class: 'btn btn-warning', data: { disable_with: 'Please wait...' }

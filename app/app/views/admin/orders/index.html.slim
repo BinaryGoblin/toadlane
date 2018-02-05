@@ -1,0 +1,39 @@
+.wrap-sm
+  .table-responsive
+    table.table data-behavior="TableCheckbox" data-options='{"paramName":"orders_ids"}'
+      thead
+        tr
+          th Order ID
+          th Product name
+          th Status
+          th Total
+          th Order Date
+          th Seller Name
+          th Seller Company
+          th Buyer Name
+          th Buyer Company
+          th Invoice
+
+      tbody
+        - @orders.each do |order|
+          tr
+            td= order.id
+            td= link_to order.product.name.truncate(30), product_path(order.product), class: 'link link-ulined', target: '_blank' rescue nil
+            td=order.status
+            td= number_to_currency(order.total, :unit => "$ ", precision: 2)
+            td #{order.created_at.strftime('%m-%d-%Y')}
+            td= order.seller.name
+            td= order.seller.company
+            td= order.buyer.name
+            td= order.buyer.company
+            td.text-center= link_to 'View', '#modal_order_' + order.id.to_s, class: 'view', data: { toggle: 'modal' }
+
+.footer-actions: .fa-container: .wrap-sm
+  .show_all style="font-size:14px;padding-top:8px"
+    | #{@orders.count} Orders
+    - unless params[:count].present? || @orders.count < 20
+      = link_to 'Show all', admin_orders_path(count: @orders.count), class: 'link link-ulined'
+
+  / = will_paginate @orders
+
+= render partial: '/shared/order', collection: @orders
