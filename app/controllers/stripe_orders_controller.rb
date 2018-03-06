@@ -5,11 +5,11 @@ class StripeOrdersController < ApplicationController
   def show
     @stripe_order = StripeOrder.find(params[:id])
   end
-<<<<<<< HEAD
+#<<<<<<< HEAD
   
-=======
+#=======
    # Isaac Laris comment
->>>>>>> 995900920cfc1a063731bf907bfd97d5dc5fbce8
+#>>>>>>> 995900920cfc1a063731bf907bfd97d5dc5fbce8
 
 
   def create
