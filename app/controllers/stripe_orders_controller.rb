@@ -5,7 +5,7 @@ class StripeOrdersController < ApplicationController
   def show
     @stripe_order = StripeOrder.find(params[:id])
   end
-   <%-# Isaac Laris comment -%>
+  
 
 
   def create

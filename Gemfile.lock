@@ -655,5 +655,8 @@ DEPENDENCIES
   will_paginate (~> 3.0.7)
   wkhtmltoimage-binary (~> 0.12.2)
 
+RUBY VERSION
+   ruby 2.3.0p0
+
 BUNDLED WITH
    1.16.1
