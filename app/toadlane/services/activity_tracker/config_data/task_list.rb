@@ -14,7 +14,7 @@ module Services
         adding_emb_profile_account:       { positive: 3, negative: 0, description: '%{img} <b>%{u}</b> (%{rank}) is now accepting e merchant broker payments. %{link} to view <b>%{u}\'s</b> listings.' },
         adding_fly_and_buy_account:       { positive: 2, negative: 0, description: '%{img} <b>%{u}</b> (%{rank}) is now accepting fly and buy payments. %{link} to view <b>%{u}\'s</b> listings.' },
         placing_order:                    { positive: 2, negative: 0, description: 'An order for <b>%{p}</b> has just been placed! There are %{q} units left. %{link}' },
-        fund_release:                     { positive: 3, negative: 0, description: '%{img} <b>%{u}</b> (%{rank}) just succesfully sold <b>%{p}</b>! %{link}' },
+        fund_release:                     { positive: 3, negative: 0, description: '%{img} <b>%{u}</b> (%{rank}) just successfully sold <b>%{p}</b>! %{link}' },
         not_sending_funds_into_escrow:    { positive: 0, negative: 3 },
         invite_users_outside_toadlane:    { positive: 1, negative: 0 }
       }
