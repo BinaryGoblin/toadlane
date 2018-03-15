@@ -35,7 +35,7 @@ logfile
 # Ignore Windows Hackery
 /.env
 /Procfile.dev
-/config/database.yml
+
 /config/puma.rb
 /db/schema.rb
 /vendor/postgresql
