@@ -12,8 +12,7 @@
 #
 
 class Image < ActiveRecord::Base
-  belongs_to :product
-  belongs_to :request 
+  belongs_to :product 
 
   validates_presence_of :image_file_name, :image_file_size, :image_content_type
 
