@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171019231658) do
+ActiveRecord::Schema.define(version: 20180326210536) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -718,6 +718,16 @@ ActiveRecord::Schema.define(version: 20171019231658) do
     t.boolean  "deleted",        default: false
   end
 
+  create_table "request_images", force: :cascade do |t|
+    t.integer  "request_id"
+    t.datetime "create_at"
+    t.datetime "updated_at"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+  end
+
   create_table "requests", force: :cascade do |t|
     t.integer  "sender_id"
     t.integer  "receiver_id"
@@ -971,6 +981,7 @@ ActiveRecord::Schema.define(version: 20171019231658) do
   add_foreign_key "mailboxer_conversation_opt_outs", "mailboxer_conversations", column: "conversation_id", name: "mb_opt_outs_on_conversations_id"
   add_foreign_key "mailboxer_notifications", "mailboxer_conversations", column: "conversation_id", name: "notifications_on_conversation_id"
   add_foreign_key "mailboxer_receipts", "mailboxer_notifications", column: "notification_id", name: "receipts_on_notification_id"
+  add_foreign_key "request_images", "requests", name: "request_images_request_id_fkey"
   add_foreign_key "shipping_estimates", "products"
   add_foreign_key "stripe_orders", "addresses"
   add_foreign_key "stripe_orders", "shipping_estimates"
