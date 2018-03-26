@@ -1,8 +1,11 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-production:
-  <<: *default
-  adapter: postgresql
-  database: db/production.sqlite3
 
+development:
+  <<: *default
+  database: toadlane_development
+
+test:
+  <<: *default
+  database: toadlane_test
