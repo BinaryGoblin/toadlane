@@ -48,8 +48,8 @@
               .item: .photo
                 .image-tag style="background:url(#{item.image(:small)})"
                 a.delete-image= fa_icon 'trash-o', text: 'Delete'
-                = hidden_field_tag "request[images_attributes][#{index}][id]", "#{item.id}"
-                = hidden_field_tag "request[images_attributes][#{index}][_destroy]", false, class: 'item_ds'
+                = hidden_field_tag "request[request_images_attributes][#{index}][id]", "#{item.id}"
+                = hidden_field_tag "request[request_images_attributes][#{index}][_destroy]", false, class: 'item_ds'
 
             - if 4 - @request.images.count > 0
               - (1..4-@request.images.count).each_with_index do |value, index|
@@ -58,7 +58,7 @@
                     a.delete-image= fa_icon 'trash-o', text: 'Delete'
                   .select
                     span Select photo
-                    = file_field_tag "request[images_attributes][#{index + @request.images.count}][image]", accept: 'image/*'
+                    = file_field_tag "request[request_images_attributes][#{index + @request.images.count}][image]", accept: 'image/*'
 
           - else
             - (1..4).each_with_index do |value, index|
@@ -67,7 +67,7 @@
                   a.delete-image= fa_icon 'trash-o', text: 'Delete'
                 .select
                   span Select photo
-                  = file_field_tag "request[images_attributes][#{index}][image]", accept: 'image/*'
+                  = file_field_tag "request[request_images_attributes][#{index}][image]", accept: 'image/*'
         .clearfix
           #add_photo.btn.btn-primary Add photo item
           span.photo-ex Supported extensions: jpg, png, gif.<br>Max. upload file size 5MB.
@@ -78,7 +78,7 @@
               a.delete-image= fa_icon 'trash-o', text: 'Delete'
             .select
               span Select photo
-              input type="file" name="request[images_attributes][][image]" accept="image/*"
+              input type="file" name="request[request_images_attributes][][image]" accept="image/*"
 
 
 

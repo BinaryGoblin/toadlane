@@ -28,6 +28,21 @@
         h3
           span Categories: &nbsp;
           = all_categories_of_product @request.id
+        p
+          - if @request.images.any?
+            #slider.vp-carousel.carousel.slide data-ride="carousel"
+              ol.carousel-indicators
+                - if @request.images.count > 1
+                  - @request.images.each_with_index do |item, index|
+                    li class="#{'active' if index == 0}" data-target="#slider" data-slide-to="#{index}"
+
+              .carousel-inner
+                - @request.images.each_with_index do |item, index|
+                  .item class="#{'active' if index == 0}"= image_tag request.image(:big)
+
+              - if @request.images.count > 1
+                a.left.carousel-control href="#slider" role="button" data-slide="prev"
+                a.right.carousel-control href="#slider" role="button" data-slide="next"
         h3
           | Tags: &nbsp;
           = all_tags_of_product @request.id
