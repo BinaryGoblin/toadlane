@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
-ruby '2.3.0'
+ruby '2.4.1'
 
-gem 'rails', '~> 4.2.0'
+gem 'rails', '~> 4.2', '>= 4.2.10'
 gem 'pg', '~> 0.18.1'
 
 gem 'sass-rails', '~> 5.0.1'
@@ -39,7 +39,7 @@ gem 'elementaljs-rails', '~> 0.0.11'
 gem 'paperclip', '~> 4.2.1'
 gem 'paperclip-av-transcoder', '~> 0.6.4'
 gem 'aws-sdk', '< 2.0'
-gem 'elasticsearch', '1.0.15'
+gem 'elasticsearch'
 gem 'searchkick', '~> 0.8.7'
 gem 'searchjoy', '~> 0.0.10'
 gem 'kaminari', '~> 0.16.3'
@@ -112,6 +112,8 @@ group :development, :test do
   gem 'faker', '~> 1.4.3'
   gem 'railroady'
   gem 'mailcatcher'
+  # Shim to load environment variables from .env into ENV in development.
+  gem 'dotenv-rails'
 end
 
 gem 'rails_12factor', group: [:production, :staging]
@@ -123,7 +125,7 @@ gem 'will_paginate', '~> 3.0.7'
 gem 'mailboxer', github: 'lacco/mailboxer'
 
 gem 'paper_trail', '~> 3.0.7'
-gem 'puma', '~> 3.6.2'
+gem 'puma', '~> 3.11', '>= 3.11.4'
 
 gem 'httparty', '~> 0.13.7'
 gem 'carmen-rails', '~> 1.0.0'
