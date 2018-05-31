@@ -11,6 +11,8 @@
 - `ARMOR_API_SECRET`
 - `ARMOR_PARTNER_ID`
 - `DEVISE_SECRET_KEY`
+- `ENVIRONMENT`
+- `HOST`
 
 ## Heroku deployment notes
 
