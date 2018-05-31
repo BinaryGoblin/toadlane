@@ -78,11 +78,11 @@ Toad::Application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
-  config.action_mailer.default_url_options = { host: 'toadlane.com' }
+  config.action_mailer.default_url_options = { host: ENV['HOST'] }
   config.action_mailer.perform_deliveries = true
   config.action_mailer.delivery_method = :smtp
-  routes.default_url_options = { host: 'toadlane.com' }
-  config.action_mailer.asset_host = 'http://toadlane.com'
+  routes.default_url_options = { host: ENV['HOST'] }
+  config.action_mailer.asset_host = "http://#{ENV['HOST']}"
 
   config.action_mailer.smtp_settings = {
     address: 'smtp.sendgrid.net',
@@ -107,6 +107,8 @@ Toad::Application.configure do
     }
   }
 
+  Paperclip::Attachment.default_options[:s3_host_name] = 's3-us-west-2.amazonaws.com'
+  Paperclip::Attachment.default_options[:path] = '/:class/:attachment/:id_partition/:style/:filename'
   Paperclip::Attachment.default_options[:s3_host_name] = 's3-us-west-2.amazonaws.com'
 
    # Error notifier
