@@ -82,7 +82,7 @@ Toad::Application.configure do
   config.action_mailer.perform_deliveries = true
   config.action_mailer.delivery_method = :smtp
   routes.default_url_options = { host: ENV['HOST'] }
-  config.action_mailer.asset_host = "http://#{ENV['HOST']}"
+  config.action_mailer.asset_host = "https://#{ENV['HOST']}"
 
   config.action_mailer.smtp_settings = {
     address: 'smtp.sendgrid.net',
