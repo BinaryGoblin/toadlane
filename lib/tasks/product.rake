@@ -12,7 +12,7 @@ namespace :db do
 #      find << user.roles.pluck(:id).include?(role)
 #    end
 
-    # TODO without array
+# TODO without array
     data_users = ["user1@example.com", "user2@example.com", "user3@example.com", "user4@example.com", "user5@example.com"]
 
     user = User.find_by_email(data_users.sample).id
@@ -32,7 +32,8 @@ namespace :db do
           user_id: user,
           status_action: ["active", "disabled", "futured", "recommended", "best"].sample,
           # status_characteristic: ["sell", "buy"].sample
-          status_characteristic: "sell"
+          status_characteristic: "sell",
+          tag_list: "electronics, mobile"
         )
         product.shipping_estimates << shipping_estimate
 
