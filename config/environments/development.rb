@@ -15,7 +15,7 @@ Toad::Application.configure do
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.asset_host = 'http://localhost:3000'
+  config.action_mailer.asset_host = "http://#{ENV['HOST']}"
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
@@ -29,7 +29,7 @@ Toad::Application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = { address: 'localhost', port: 1025 }
-  config.action_mailer.default_url_options = { host: 'localhost:3000' }
+  config.action_mailer.default_url_options = { host: ENV['HOST'] }
 
   ENV['STRIPE_CLIENT_ID'] = 'ca_84wji8nX79sEzFhHa9WifOU5d69WNSVs'
   ENV['STRIPE_API_KEY'] = 'sk_test_Ejq6XT0escvFPGdciJ4DMECe'

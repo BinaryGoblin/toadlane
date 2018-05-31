@@ -290,9 +290,9 @@ class PromiseOrdersController < ApplicationController
   end
 
   def set_promise_order_id(promise_order)
-    if Rails.env.development?
+    if ENV['ENVIRONMENT'] == 'development'
       'dev_item_id' + promise_order.id.to_s
-    elsif Rails.env.staging?
+    elsif ENV['ENVIRONMENT'] == 'staging'
       'stag_item_id' + promise_order.id.to_s
     else
       promise_order.id
