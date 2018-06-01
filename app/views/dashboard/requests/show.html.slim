@@ -29,7 +29,7 @@
           span Categories: &nbsp;
           = all_categories_of_product @request.id
         p
-        - if @request.request.request_images.any?
+        - if @request.request.present? and @request.request.request_images.present?
             #slider.vp-carousel.carousel.slide data-ride="carousel"
               ol.carousel-indicators
                 - if @request.request.request_images.count > 1
