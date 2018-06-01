@@ -29,18 +29,18 @@
           span Categories: &nbsp;
           = all_categories_of_product @request.id
         p
-        - if @request.images.any?
+        - if @request.request.request_images.any?
             #slider.vp-carousel.carousel.slide data-ride="carousel"
               ol.carousel-indicators
-                - if @product.images.count > 1
-                  - @product.images.each_with_index do |item, index|
+                - if @request.request.request_images.count > 1
+                  - @request.request.request_images.each_with_index do |item, index|
                     li class="#{'active' if index == 0}" data-target="#slider" data-slide-to="#{index}"
 
               .carousel-inner
-                - @product.images.each_with_index do |item, index|
+                - @request.request.request_images.each_with_index do |item, index|
                   .item class="#{'active' if index == 0}"= image_tag item.image(:big)
 
-              - if @product.images.count > 1
+              - if @request.request.request_images.count > 1
                 a.left.carousel-control href="#slider" role="button" data-slide="prev"
                 a.right.carousel-control href="#slider" role="button" data-slide="next"
       
