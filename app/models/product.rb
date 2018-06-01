@@ -77,7 +77,10 @@ class Product < ActiveRecord::Base
   belongs_to :folder
   has_many :activities, class_name: 'Task', as: :taskable, dependent: :destroy
   has_many :offers, class_name: 'Product', foreign_key: 'request_id', dependent: :destroy
-  belongs_to :request, class_name: 'Product', foreign_key: 'request_id'
+  # belongs_to :request, class_name: 'Product', foreign_key: 'request_id'
+  #
+  has_one :request, dependent: :destroy
+  accepts_nested_attributes_for :request, allow_destroy: true
 
   accepts_nested_attributes_for :images, allow_destroy: true
   accepts_nested_attributes_for :certificates, allow_destroy: true

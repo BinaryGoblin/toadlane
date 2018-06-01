@@ -3,6 +3,6 @@
 .wrap-sm
   .product-form
     h4 New request:
-    = form_for @request, url: dashboard_requests_path, metod: :post , :html => {class: "request_form_partial request_#{params["action"]}" } do |f|
+    = form_for setup_request(@request), url: dashboard_requests_path, metod: :post , :html => {class: "request_form_partial request_#{params["action"]}" } do |f|
       = render partial: 'request_form', locals: { f: f }
 .clearfix

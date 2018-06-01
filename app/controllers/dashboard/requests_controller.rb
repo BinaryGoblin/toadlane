@@ -26,6 +26,7 @@ class Dashboard::RequestsController < DashboardController
   end
 
   def update
+    puts params
     update_request
   end
 

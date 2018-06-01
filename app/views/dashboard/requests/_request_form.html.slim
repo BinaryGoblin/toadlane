@@ -42,32 +42,23 @@
 
     .request-images
         label Photos:
-        .product-form-photos data-behavior="UploadImages" data-options='{"template":"#template-select-image","btnAdd":"#add_photo","deleteImage":".delete-image"}'
-          - if @request.images.present?
-            - @request.images.each_with_index do |item, index|
+        .product-form-photos data-behavior="UploadRequestImages" data-options='{"template":"#template-select-image","btnAdd":"#add_photo","deleteImage":".delete-image"}'
+          - if @request.request.present? and @request.request.persisted? and @request.request.request_images.present?
+            - @request.request.request_images.each_with_index do |item, index|
               .item: .photo
                 .image-tag style="background:url(#{item.image(:small)})"
                 a.delete-image= fa_icon 'trash-o', text: 'Delete'
-                = hidden_field_tag "request[request_images_attributes][#{index}][id]", "#{item.id}"
-                = hidden_field_tag "request[request_images_attributes][#{index}][_destroy]", false, class: 'item_ds'
-
-            - if 4 - @request.images.count > 0
-              - (1..4-@request.images.count).each_with_index do |value, index|
+                = hidden_field_tag "product[request_attributes][id][#{@request.request.id}][request_images_attributes][#{index}][id]", "#{item.id}"
+                = hidden_field_tag "product[request_attributes][id][#{@request.request.id}][request_images_attributes][#{index}][_destroy]", false, class: 'item_ds'
+          - else
+            = f.fields_for :request do |ff|
+              = ff.fields_for :request_images do |fff|
                 .item.new
                   .photo
                     a.delete-image= fa_icon 'trash-o', text: 'Delete'
                   .select
                     span Select photo
-                    = file_field_tag "request[request_images_attributes][#{index + @request.images.count}][image]", accept: 'image/*'
-
-          - else
-            - (1..4).each_with_index do |value, index|
-              .item.new
-                .photo
-                  a.delete-image= fa_icon 'trash-o', text: 'Delete'
-                .select
-                  span Select photo
-                  = file_field_tag "request[request_images_attributes][#{index}][image]", accept: 'image/*'
+                    = fff.file_field :image, accepts: 'image/*'
         .clearfix
           #add_photo.btn.btn-primary Add photo item
           span.photo-ex Supported extensions: jpg, png, gif.<br>Max. upload file size 5MB.
@@ -78,7 +69,7 @@
               a.delete-image= fa_icon 'trash-o', text: 'Delete'
             .select
               span Select photo
-              input type="file" name="request[request_images_attributes][][image]" accept="image/*"
+              input type="file" name="product[request_attributes][request_images_attributes][][image]" accept="image/*"
 
 
 

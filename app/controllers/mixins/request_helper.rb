@@ -55,8 +55,8 @@ module Mixins
       params.require(:product)
       .permit(:id, :name, :description, :main_category,
         :user_id, :unit_price, :status_action, :start_date, :end_date,
-        :status, :status_characteristic, :amount, { tag_list: []},
-	request_images_attributes: [:id, :image, :request_id, :_destroy]
+        :status, :status_characteristic, :amount, tag_list: [],
+              request_attributes: [:id, request_images_attributes: [:id, :image, :_destroy]]
       )
     end
 
